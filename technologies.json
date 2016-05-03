@@ -1,0 +1,171 @@
+{
+    "technologies": [
+        {
+            "name": "agriculture",
+            "cost": 60,
+            "unlocks": [
+                {
+                    "name": "farms",
+                    "type": "improvement"
+                }
+            ]
+        },
+        {
+            "name": "fishing",
+            "cost": 40,
+            "unlocks": [
+                {
+                    "name": "work water tiles",
+                    "type": "action"
+                }
+            ]
+        },
+        {
+            "name": "hunting",
+            "cost": 40,
+            "unlocks": [
+                {
+                    "name": "camps",
+                    "type": "improvement"
+                }
+            ]
+        },
+        {
+            "name": "mining",
+            "cost": 50,
+            "unlocks": [
+                {
+                    "name": "mines",
+                    "type": "improvement"
+                }
+            ]
+        },
+        {
+            "name": "mysticism",
+            "cost": 50
+        },
+        {
+            "name": "the wheel",
+            "cost": 60,
+            "unlocks": [
+                {
+                    "name": "roads",
+                    "type": "improvement"
+                }
+            ]
+        },
+        {
+            "name": "animal husbandry",
+            "cost": 100,
+            "unlocks": [
+                {
+                    "name": "horses",
+                    "type": "resource"
+                },
+                {
+                    "name": "pastures",
+                    "type": "improvement"
+                }
+            ],
+            "optional": [
+                "agriculture",
+                "hunting"
+            ]
+        },
+        {
+            "name": "pottery",
+            "cost": 80,
+            "unlocks": [
+                {
+                    "name": "cottages",
+                    "type": "improvement"
+                }
+            ],
+            "requires": [
+                "the wheel"
+            ],
+            "optional": [
+                "agriculture",
+                "fishing"
+            ]
+        },
+        {
+            "name": "sailing",
+            "cost": 100,
+            "unlocks": [
+                {
+                    "name": "trade on coast",
+                    "type": "bonus"
+                },
+                {
+                    "name": "trade on rivers",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [
+                "fishing"
+            ]
+        },
+        {
+            "name": "bronze working",
+            "cost": 120,
+            "unlocks": [
+                {
+                    "name": "copper",
+                    "type": "resource"
+                },
+                {
+                    "name": "slavery",
+                    "type": "civic"
+                },
+                {
+                    "name": "chop down forests",
+                    "type": "action"
+                }
+            ],
+            "requires": [
+                "mining"
+            ]
+        },
+        {
+            "name": "masonry",
+            "cost": 80,
+            "unlocks": [
+                {
+                    "name": "quarries",
+                    "type": "improvement"
+                }
+            ],
+            "optional": [
+                "mining",
+                "mysticism"
+            ]
+        },
+        {
+            "name": "meditation",
+            "cost": 80,
+            "unlocks": [
+                {
+                    "name": "buddhism",
+                    "type": "religion"
+                }
+            ],
+            "requires": [
+                "mysticism"
+            ]
+        },
+        {
+            "name": "polytheism",
+            "cost": 100,
+            "unlocks": [
+                {
+                    "name": "hinduism",
+                    "type": "religion"
+                }
+            ],
+            "requires": [
+                "mysticism"
+            ]
+        }
+    ]
+}
