@@ -8,7 +8,9 @@
                     "name": "farms",
                     "type": "improvement"
                 }
-            ]
+            ],
+            "requires": [ ],
+            "optional": [ ]
         },
         {
             "name": "fishing",
@@ -18,7 +20,9 @@
                     "name": "work water tiles",
                     "type": "action"
                 }
-            ]
+            ],
+            "requires": [ ],
+            "optional": [ ]
         },
         {
             "name": "hunting",
@@ -28,7 +32,9 @@
                     "name": "camps",
                     "type": "improvement"
                 }
-            ]
+            ],
+            "requires": [ ],
+            "optional": [ ]
         },
         {
             "name": "mining",
@@ -38,7 +44,9 @@
                     "name": "mines",
                     "type": "improvement"
                 }
-            ]
+            ],
+            "requires": [ ],
+            "optional": [ ]
         },
         {
             "name": "mysticism",
@@ -52,7 +60,9 @@
                     "name": "roads",
                     "type": "improvement"
                 }
-            ]
+            ],
+            "requires": [ ],
+            "optional": [ ]
         },
         {
             "name": "animal husbandry",
@@ -67,6 +77,7 @@
                     "type": "improvement"
                 }
             ],
+            "requires": [ ],
             "optional": [
                 "agriculture",
                 "hunting"
@@ -104,7 +115,8 @@
             ],
             "requires": [
                 "fishing"
-            ]
+            ],
+            "optional": [ ]
         },
         {
             "name": "bronze working",
@@ -125,7 +137,8 @@
             ],
             "requires": [
                 "mining"
-            ]
+            ],
+            "optional": [ ]
         },
         {
             "name": "masonry",
@@ -136,6 +149,7 @@
                     "type": "improvement"
                 }
             ],
+            "requires": [ ],
             "optional": [
                 "mining",
                 "mysticism"
@@ -152,7 +166,8 @@
             ],
             "requires": [
                 "mysticism"
-            ]
+            ],
+            "optional": [ ]
         },
         {
             "name": "polytheism",
@@ -165,7 +180,8 @@
             ],
             "requires": [
                 "mysticism"
-            ]
+            ],
+            "optional": [ ]
         }
     ]
 }
