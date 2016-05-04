@@ -30,6 +30,7 @@ d3.json("technologies.json", function(data) {
         data.technologies[i].pos = i;
     }
     
+    var arcDists = []; // list of recent arcRanks
     // Then add in the technologies into their prerequisites so that the arcs can be set up
     for (var i = 0; i < data.technologies.length; i++) {
         var rekked = []; // copy leads to required technologies
@@ -62,7 +63,21 @@ d3.json("technologies.json", function(data) {
             data.technologies[i].lopt = opted;
         }
         data.technologies[i].arcDist = ((2 * Math.PI) / data.technologies.length) * arcDist;
-        data.technologies[i].arcRank = i;
+        
+        // Set rank - distance of arc from centre
+        var ranked = 0;
+        for (var j = 0; j < arcDists.length; j++) {
+            if (arcDists[j] < i) {
+                arcDists[j] = i + arcDist;
+                data.technologies[i].arcRank = j;
+                ranked = 1;
+                break;
+            }
+        }
+        if (ranked == 0) {
+            arcDists.push(i + arcDist);
+            data.technologies[i].arcRank = (arcDists.length - 1);
+        }
     }
     
     console.log(data.technologies);

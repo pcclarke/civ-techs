@@ -136,10 +136,7 @@
                     "type": "improvement"
                 }
             ],
-            "optional": [
-                "mining",
-                "mysticism"
-            ]
+            "optional": [ "mining", "mysticism" ]
         },
         {
             "name": "meditation",
@@ -166,6 +163,22 @@
             "requires": [
                 "mysticism"
             ]
+        },
+        {
+            "name": "priesthood",
+            "cost": 60,
+            "optional": [ "meditation", "polytheism" ]
+        },
+        {
+            "name": "writing",
+            "cost": 120,
+            "unlocks": [
+                {
+                    "name": "open borders",
+                    "type": "diplomacy"
+                }
+            ],
+            "optional": [ "priesthood", "animal husbandry", "pottery" ]
         }
     ]
 }
