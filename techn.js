@@ -64,21 +64,63 @@ d3.json("technologies.json", function(data) {
         }
         data.technologies[i].arcDist = ((2 * Math.PI) / data.technologies.length) * arcDist;
         
-        // Set rank - distance of arc from centre
-        var ranked = 0;
-        for (var j = 0; j < arcDists.length; j++) {
-            if (arcDists[j] < i) {
-                arcDists[j] = i + arcDist;
-                data.technologies[i].arcRank = j;
-                ranked = 1;
-                break;
+        // Set arc rank - distance of arc from centre
+        if (data.technologies[i].lreq || data.technologies[i].lopt) {
+            var ranked = 0;
+            for (var j = 0; j < arcDists.length; j++) {
+                if (arcDists[j] < i) {
+                    arcDists[j] = i + arcDist;
+                    data.technologies[i].arcRank = j;
+                    ranked = 1;
+                    break;
+                }
             }
-        }
-        if (ranked == 0) {
-            arcDists.push(i + arcDist);
-            data.technologies[i].arcRank = (arcDists.length - 1);
+            if (ranked == 0) {
+                arcDists.push(i + arcDist);
+                data.technologies[i].arcRank = (arcDists.length - 1);
+            }
+        } else {
+            data.technologies[i].arcRank = 500;
         }
     }
+    
+    // Set spoke rank - where to start drawing spoke
+    for (var i = data.technologies.length - 1; i >= 0; i--) {
+        if (data.technologies[i].arcRank > 0) {
+            var spokeRank = data.technologies[i].arcRank;
+            if (data.technologies[i].requires) {
+                for (var j = 0; j < data.technologies[i].requires.length; j++) {
+                    for (var k = 0; k < data.technologies.length; k++) {
+                        if (data.technologies[i].requires[j] === data.technologies[k].name) {
+                            if (data.technologies[k].arcRank < spokeRank) {
+                                spokeRank = data.technologies[k].arcRank;
+                                
+                            }
+                        }
+                    }
+                }
+            }
+            if (data.technologies[i].optional) {
+                for (var j = 0; j < data.technologies[i].optional.length; j++) {
+                    for (var k = 0; k < data.technologies.length; k++) {
+                        if (data.technologies[i].optional[j] === data.technologies[k].name) {
+                            if (data.technologies[k].arcRank < spokeRank) {
+                                spokeRank = data.technologies[k].arcRank;
+                            }
+                        }
+                    }
+                }
+            }
+            data.technologies[i].spokeRank = spokeRank;
+        } else {
+            data.technologies[i].spokeRank = 0;
+        }
+    }
+
+    // Reverse order of data so that arcs are drawn over spokes
+    data.technologies.sort(function(a, b) {
+        return b.pos - a.pos;
+    });
     
     console.log(data.technologies);
     
@@ -96,7 +138,12 @@ d3.json("technologies.json", function(data) {
             
     spokes.append("line")
         .attr("x1", 0)
-        .attr("y1", 0)
+        .attr("y1", function(d) {
+            if (!d.requires && !d.optional) {
+                return 0;
+            } 
+            return -(180 + (5 * d.spokeRank));
+        })
         .attr("x2", 0)
         .attr("y2", -(width / 2))
         .attr("stroke", "black")
