@@ -1,0 +1,564 @@
+{
+    "technologies": [
+        {
+            "name": "agriculture",
+            "cost": 60,
+            "unlocks": [
+                {
+                    "name": "farms",
+                    "type": "improvement"
+                }
+            ]
+        },
+        {
+            "name": "fishing",
+            "cost": 40,
+            "unlocks": [
+                {
+                    "name": "work water tiles",
+                    "type": "action"
+                }
+            ]
+        },
+        {
+            "name": "hunting",
+            "cost": 40,
+            "unlocks": [
+                {
+                    "name": "camps",
+                    "type": "improvement"
+                }
+            ]
+        },
+        {
+            "name": "mining",
+            "cost": 50,
+            "unlocks": [
+                {
+                    "name": "mines",
+                    "type": "improvement"
+                }
+            ]
+        },
+        {
+            "name": "mysticism",
+            "cost": 50
+        },
+        {
+            "name": "the wheel",
+            "cost": 60,
+            "unlocks": [
+                {
+                    "name": "roads",
+                    "type": "improvement"
+                }
+            ]
+        },
+        {
+            "name": "animal husbandry",
+            "cost": 100,
+            "unlocks": [
+                {
+                    "name": "horses",
+                    "type": "resource"
+                },
+                {
+                    "name": "pastures",
+                    "type": "improvement"
+                }
+            ],
+            "optional": [
+                "agriculture",
+                "hunting"
+            ]
+        },
+        {
+            "name": "pottery",
+            "cost": 80,
+            "unlocks": [
+                {
+                    "name": "cottages",
+                    "type": "improvement"
+                }
+            ],
+            "requires": [ "the wheel" ],
+            "optional": [ "agriculture", "fishing" ]
+        },
+        {
+            "name": "sailing",
+            "cost": 100,
+            "unlocks": [
+                {
+                    "name": "trade on coast",
+                    "type": "bonus"
+                },
+                {
+                    "name": "trade on rivers",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [
+                "fishing"
+            ]
+        },
+        {
+            "name": "archery",
+            "cost": 60,
+            "requires": [ "hunting" ]
+        },
+        {
+            "name": "bronze working",
+            "cost": 120,
+            "unlocks": [
+                {
+                    "name": "copper",
+                    "type": "resource"
+                },
+                {
+                    "name": "slavery",
+                    "type": "civic"
+                },
+                {
+                    "name": "chop down forests",
+                    "type": "action"
+                }
+            ],
+            "requires": [
+                "mining"
+            ]
+        },
+        {
+            "name": "masonry",
+            "cost": 80,
+            "unlocks": [
+                {
+                    "name": "quarries",
+                    "type": "improvement"
+                }
+            ],
+            "optional": [ "mining", "mysticism" ]
+        },
+        {
+            "name": "horseback riding",
+            "cost": 250,
+            "requires": [ "animal husbandry" ]
+        },
+        {
+            "name": "meditation",
+            "cost": 80,
+            "unlocks": [
+                {
+                    "name": "buddhism",
+                    "type": "religion"
+                }
+            ],
+            "requires": [
+                "mysticism"
+            ]
+        },
+        {
+            "name": "polytheism",
+            "cost": 100,
+            "unlocks": [
+                {
+                    "name": "hinduism",
+                    "type": "religion"
+                }
+            ],
+            "requires": [
+                "mysticism"
+            ]
+        },
+        {
+            "name": "priesthood",
+            "cost": 60,
+            "optional": [ "meditation", "polytheism" ]
+        },
+        {
+            "name": "writing",
+            "cost": 120,
+            "unlocks": [
+                {
+                    "name": "open borders",
+                    "type": "diplomacy"
+                }
+            ],
+            "optional": [ "priesthood", "animal husbandry", "pottery" ]
+        },
+        {
+            "name": "monotheism",
+            "cost": 120,
+            "unlocks": [
+                {
+                    "name": "organized religion",
+                    "type": "civic"
+                },
+                {
+                    "name": "judaism",
+                    "type": "religion"
+                }
+            ],
+            "requires": [ "masonry", "polytheism" ]
+        },
+        {
+            "name": "metal casing",
+            "cost": 450,
+            "unlocks": [
+                {
+                    "name": "workshop",
+                    "type": "improvement"
+                }
+            ],
+            "requires": [ "pottery", "bronze working" ]
+        },
+        {
+            "name": "iron working",
+            "cost": 200,
+            "unlocks": [
+                {
+                    "name": "iron",
+                    "type": "resource"
+                },
+                {
+                    "name": "remove jungle",
+                    "type": "action"
+                }
+            ],
+            "requires": [ "bronze working" ]
+        },
+        {
+            "name": "aesthetics",
+            "cost": 300,
+            "requires": [ "writing" ]
+        },
+        {
+            "name": "mathematics",
+            "cost": 250,
+            "unlocks": [
+                {
+                    "name": "forts",
+                    "type": "improvement"
+                },
+                {
+                    "name": "workers produces 50% more hammers from chopping",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "writing" ]
+        },
+        {
+            "name": "alphabet",
+            "cost": 300,
+            "unlocks": [
+                {
+                    "name": "tech trading",
+                    "type": "diplomacy"
+                },
+                {
+                    "name": "build research",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "writing" ]
+        },
+        {
+            "name": "monarchy",
+            "cost": 300,
+            "unlocks": [
+                {
+                    "name": "hereditary rule",
+                    "type": "civic"
+                },
+                {
+                    "name": "wineries",
+                    "type": "improvement"
+                }
+            ],
+            "optional": [ "priesthood", "monotheism" ]
+        },
+        {
+            "name": "compass",
+            "cost": 400,
+            "requires": [ "sailing", "iron working" ]
+        },
+        {
+            "name": "literature",
+            "cost": 200,
+            "requires": [ "polytheism", "aesthetics" ]
+        },
+        {
+            "name": "calendar",
+            "cost": 350,
+            "unlocks": [
+                {
+                    "name": "plantations",
+                    "type": "improvement"
+                },
+                {
+                    "name": "centers world map",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "sailing", "mathematics" ]
+        },
+        {
+            "name": "construction",
+            "cost": 350,
+            "unlocks": [
+                {
+                    "name": "bridge building",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "masonry", "mathematics" ]
+        },
+        {
+            "name": "currency",
+            "cost": 400,
+            "unlocks": [
+                {
+                    "name": "gold trading",
+                    "type": "diplomacy"
+                },
+                {
+                    "name": "+1 trade route per city",
+                    "type": "bonus"
+                },
+                {
+                    "name": "build wealth",
+                    "type": "bonus"
+                }
+            ],
+            "optional": [ "mathematics", "alphabet" ]
+        },
+        {
+            "name": "machinery",
+            "cost": 700,
+            "unlocks": [
+                {
+                    "name": "windmill",
+                    "type": "improvement"
+                },
+                {
+                    "name": "watermill",
+                    "type": "improvement"
+                }
+            ],
+            "requires": [ "metal casing" ]
+        },
+        {
+            "name": "drama",
+            "cost": 300,
+            "unlocks": [
+                {
+                    "name": "adjust culture rate",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "aesthetics" ]
+        },
+        {
+            "name": "engineering",
+            "cost": 1000,
+            "unlocks": [
+                {
+                    "name": "+1 road movement",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "machinery", "construction" ]
+        },
+        {
+            "name": "code of laws",
+            "cost": 350,
+            "unlocks": [
+                {
+                    "name": "confucianism",
+                    "type": "religion"
+                },
+                {
+                    "name": "caste system",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "writing" ],
+            "optional": [ "priesthood", "currency" ]
+        },
+        {
+            "name": "feudalism",
+            "cost": 700,
+            "unlocks": [
+                {
+                    "name": "vassalage",
+                    "type": "civic"
+                },
+                {
+                    "name": "serfdom",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "writing", "monarchy" ]
+        },
+        {
+            "name": "optics",
+            "cost": 600,
+            "unlocks": [
+                {
+                    "name": "+1 sight across water",
+                    "type": "bonus"
+                },
+                {
+                    "name": "whaling boats",
+                    "type": "improvement"
+                }
+            ],
+            "requires": [ "compass", "machinery" ]
+        },
+        {
+            "name": "music",
+            "cost": 600,
+            "unlocks": [
+                {
+                    "name": "first to discover receives a great artist",
+                    "type": "bonus"
+                },
+                {
+                    "name": "build culture",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "mathematics" ],
+            "optional": [ "literature", "drama" ]
+        },
+        {
+            "name": "philosophy",
+            "cost": 800,
+            "unlocks": [
+                {
+                    "name": "taoism",
+                    "type": "religion"
+                },
+                {
+                    "name": "pacifism",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "meditation" ],
+            "optional": [ "drama", "code of laws" ]
+        },
+        {
+            "name": "civil service",
+            "cost": 800,
+            "unlocks": [
+                {
+                    "name": "farms spread irrigation",
+                    "type": "bonus"
+                },
+                {
+                    "name": "bureaucracy",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "mathematics" ],
+            "optional": [ "code of laws", "feudalism" ]
+        },
+        {
+            "name": "theology",
+            "cost": 500,
+            "unlocks": [
+                {
+                    "name": "christianity",
+                    "type": "religion"
+                },
+                {
+                    "name": "theocracy",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "writing", "monotheism" ]
+        },
+        {
+            "name": "divine right",
+            "cost": 1200,
+            "unlocks": [
+                {
+                    "name": "islam",
+                    "type": "religion"
+                }
+            ],
+            "requires": [ "theology", "monarchy" ]
+        },
+        {
+            "name": "paper",
+            "cost": 600,
+            "unlocks": [
+                {
+                    "name": "map trading",
+                    "type": "diplomacy"
+                }
+            ],
+            "optional": [ "theology", "civil service" ]
+        },
+        {
+            "name": "guilds",
+            "cost": 1000,
+            "unlocks": [
+                {
+                    "name": "+1 workshop hammers",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "feudalism", "machinery" ]
+        },
+        {
+            "name": "nationalism",
+            "cost": 1800,
+            "unlocks": [
+                {
+                    "name": "nationhood",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "civil service" ],
+            "optional": [ "philosophy", "divine right" ]
+        },
+        {
+            "name": "printing press",
+            "cost": 1600,
+            "unlocks": [
+                {
+                    "name": "+1 commerce village & town commerce",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "machinery", "alphabet", "paper" ]
+        },
+        {
+            "name": "education",
+            "cost": 1800,
+            "requires": [ "paper" ]
+        },
+        {
+            "name": "banking",
+            "cost": 700,
+            "unlocks": [
+                {
+                    "name": "mercantilism",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "currency", "guilds" ]
+        },
+        {
+            "name": "constitution",
+            "cost": 2000,
+            "unlocks": [
+                {
+                    "name": "representation",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "code of laws", "nationalism" ]
+        }
+    ]
+}

@@ -2,7 +2,7 @@ var margin = {top: 10, right: 10, bottom: 10, left: 10},
     width = 1200 - margin.left - margin.right,
     height = 1200 - margin.top - margin.bottom;
     
-var arcBase = 155;
+var arcBase = 100;
 var arcWidth = 5;
 var arcSpace = 15;
     
@@ -26,7 +26,7 @@ var svg = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("technologies.json", function(data) {
+d3.json("civ4bts-technologies.json", function(data) {
     
     // First, arrange the technologies
     // TODO: check pos for prerequisites
