@@ -16,7 +16,7 @@
             "unlocks": [
                 {
                     "name": "work water tiles",
-                    "type": "action"
+                    "type": "improvement"
                 }
             ]
         },
@@ -120,7 +120,7 @@
                 },
                 {
                     "name": "chop down forests",
-                    "type": "action"
+                    "type": "improvement"
                 }
             ],
             "requires": [
@@ -221,7 +221,7 @@
                 },
                 {
                     "name": "remove jungle",
-                    "type": "action"
+                    "type": "improvement"
                 }
             ],
             "requires": [ "bronze working" ]
@@ -527,7 +527,7 @@
             "cost": 1600,
             "unlocks": [
                 {
-                    "name": "+1 commerce village & town commerce",
+                    "name": "villages & towns +1 commerce",
                     "type": "bonus"
                 }
             ],
@@ -559,6 +559,316 @@
                 }
             ],
             "requires": [ "code of laws", "nationalism" ]
+        },
+        {
+            "name": "military tradition",
+            "cost": 2000,
+            "unlocks": [
+                {
+                    "name": "defensive pacts",
+                    "type": "diplomacy"
+                }
+            ],
+            "requires": [ "music", "nationalism" ]
+        },
+        {
+            "name": "replaceable parts",
+            "cost": 1800,
+            "unlocks": [
+                {
+                    "name": "lumbermills",
+                    "type": "improvement"
+                },
+                {
+                    "name": "windmills & watermills +1 hammer",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "banking", "printing press" ]
+        },
+        {
+            "name": "liberalism",
+            "cost": 1400,
+            "unlocks": [
+                {
+                    "name": "first to discover receives a free technology",
+                    "type": "bonus"
+                },
+                {
+                    "name": "free speech",
+                    "type": "civic"
+                },
+                {
+                    "name": "free religion",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "philosophy", "education" ]
+        },
+        {
+            "name": "economics",
+            "cost": 1400,
+            "unlocks": [
+                {
+                    "name": "first to discover receives a great merchant",
+                    "type": "bonus"
+                },
+                {
+                    "name": "free market",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "banking", "education"]
+        },
+        {
+            "name": "gunpowder",
+            "cost": 1200,
+            "unlocks": [
+                {
+                    "name": "pinch",
+                    "type": "promotion"
+                }
+            ],
+            "optional": [ "guilds", "education" ]
+        },
+        {
+            "name": "democracy",
+            "cost": 2800,
+            "unlocks": [
+                {
+                    "name": "universal suffrage",
+                    "type": "civic"
+                },
+                {
+                    "name": "emancipation",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "constitution", "printing press" ]
+        },
+        {
+            "name": "rifling",
+            "cost": 2400,
+            "requires": [ "gunpowder", "replaceable parts" ]
+        },
+        {
+            "name": "astronomy",
+            "cost": 2000,
+            "unlocks": [
+                {
+                    "name": "trade on ocean",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "calendar", "optics" ]
+        },
+        {
+            "name": "corporation",
+            "cost": 1600,
+            "unlocks": [
+                {
+                    "name": "+1 trade route per city",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "constitution", "economics" ]
+        },
+        {
+            "name": "chemistry",
+            "cost": 1800,
+            "unlocks": [
+                {
+                    "name": "+1 workshop hammers",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "engineering", "gunpowder" ]
+        },
+        {
+            "name": "steam power",
+            "cost": 3200,
+            "unlocks": [
+                {
+                    "name": "coal",
+                    "type": "resource"
+                },
+                {
+                    "name": "workers build improvements 50% faster",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "chemistry", "replaceable parts" ]
+        },
+        {
+            "name": "scientific method",
+            "cost": 2400,
+            "unlocks": [
+                {
+                    "name": "oil",
+                    "type": "resource"
+                },
+                {
+                    "name": "forest preserves",
+                    "type": "improvement"
+                }
+            ],
+            "requires": [ "printing press" ],
+            "optional": [ "chemistry", "astronomy" ]
+        },
+        {
+            "name": "military science",
+            "cost": 2000,
+            "unlocks": [
+                {
+                    "name": "blitz",
+                    "type": "promotion"
+                },
+                {
+                    "name": "commando",
+                    "type": "promotion"
+                }
+            ],
+            "requires": [ "chemistry" ]
+        },
+        {
+            "name": "steel",
+            "cost": 2800,
+            "requires": [ "iron working", "chemistry" ]
+        },
+        {
+            "name": "assembly line",
+            "cost": 5000,
+            "requires": [ "corporation", "steam power" ]
+        },
+        {
+            "name": "communism",
+            "cost": 2800,
+            "unlocks": [
+                {
+                    "name": "first to discover receives a great spy",
+                    "type": "bonus"
+                },
+                {
+                    "name": "permanent alliances",
+                    "type": "diplomacy"
+                },
+                {
+                    "name": "state property",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "liberalism", "scientific method" ]
+        },
+        {
+            "name": "physics",
+            "cost": 4000,
+            "unlocks": [
+                {
+                    "name": "uranium",
+                    "type": "resource"
+                },
+                {
+                    "name": "first to discover receives a great scientist",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "astronomy", "scientific method" ]
+        },
+        {
+            "name": "biology",
+            "cost": 3600,
+            "unlocks": [
+                {
+                    "name": "can build farms without irrigation",
+                    "type": "bonus"
+                },
+                {
+                    "name": "+1 farm food",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "chemistry", "scientific method" ]
+        },
+        {
+            "name": "railroad",
+            "cost": 4500,
+            "unlocks": [
+                {
+                    "name": "railroads",
+                    "type": "improvement"
+                }
+            ],
+            "requires": [ "steam power", "steel" ]
+        },
+        {
+            "name": "artillery",
+            "cost": 4000,
+            "requires": [ "physics", "steel", "rifling" ]
+        },
+        {
+            "name": "fascism",
+            "cost": 2400,
+            "unlocks": [
+                {
+                    "name": "first to discover receives a great general",
+                    "type": "bonus"
+                },
+                {
+                    "name": "police state",
+                    "type": "civic"
+                },
+                {
+                    "name": "permanent alliances",
+                    "type": "diplomacy"
+                }
+            ],
+            "requires": [ "assembly line", "nationalism" ]
+        },
+        {
+            "name": "electricity",
+            "cost": 4500,
+            "unlocks": [
+                {
+                    "name": "+1 windmill commerce",
+                    "type": "bonus"
+                },
+                {
+                    "name": "+2 watermill commerce",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "physics" ]
+        },
+        {
+            "name": "medicine",
+            "cost": 4500,
+            "unlocks": [
+                {
+                    "name": "environmentalism",
+                    "type": "civic"
+                }
+            ],
+            "requires": [ "optics", "biology" ]
+        },
+        {
+            "name": "combustion",
+            "cost": 3600,
+            "unlocks": [
+                {
+                    "name": "oil wells",
+                    "type": "improvement"
+                },
+                {
+                    "name": "whale",
+                    "type": "obsolete"
+                }
+            ],
+            "requires": [ "railroad" ]
+        },
+        {
+            "name": "flight",
+            "cost": 5000,
+            "requires": [ "physics", "combustion" ]
         }
     ]
 }

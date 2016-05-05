@@ -2,8 +2,8 @@ var margin = {top: 10, right: 10, bottom: 10, left: 10},
     width = 1200 - margin.left - margin.right,
     height = 1200 - margin.top - margin.bottom;
     
-var arcBase = 100;
-var arcWidth = 5;
+var arcBase = 150;
+var arcWidth = 3;
 var arcSpace = 15;
     
 var arc = d3.svg.arc()
@@ -147,7 +147,8 @@ d3.json("civ4bts-technologies.json", function(data) {
                 return "rotate(" + ang +")";
             });
             
-    spokes.append("line")
+    spokes.append("line") // Spoke lines from center
+        .attr("class", "spokeLine")
         .attr("x1", 0)
         .attr("y1", function(d) {
             if (!d.requires && !d.optional) {
@@ -156,16 +157,29 @@ d3.json("civ4bts-technologies.json", function(data) {
             return -(arcBase + (arcSpace * d.spokeRank));
         })
         .attr("x2", 0)
-        .attr("y2", -(width / 2))
-        .attr("stroke", "black")
-        .attr("stroke-width", 1);
+        .attr("y2", -(width / 2));
         
-    spokes.append("text")
-        .attr("x", 0)
-        .attr("y", -(width / 2) + 25)
+    spokes.append("text") // Technology text
+        .attr("class", "spokeText")
+        .attr("transform", "translate(3, " + (-(width / 2) + 100) + ") rotate(270)")
         .text(function(d) {
             return d.name;
+        })
+        .each(function(d) {
+            d.bbox = this.getBBox();
         });
+        
+    spokes.insert("rect", "text") // Box behind technology text
+            .attr("class", "spokeTextBox")
+            .attr("transform", "translate(-10, " + (-(width / 2) + 102) + ") rotate(270)")
+            .attr("rx", 3)
+            .attr("ry", 3)
+            .attr("width", function(d) {
+                return d.bbox.width + 5;
+            })
+            .attr("height", function(d) {
+                return d.bbox.height + 3;
+            });
         
     var reqArc = spokes.append("path")
         .style("fill", function(d) {
@@ -200,9 +214,9 @@ d3.json("civ4bts-technologies.json", function(data) {
        
      reqSquares.append("rect")
         .attr("x", -5)
-        .attr("y", -5)
-        .attr("width", 10)
-        .attr("height", 10)
+        .attr("y", -3.5)
+        .attr("width", 9)
+        .attr("height", 9)
         .attr("fill", function(d) {
             return color(d.pos);
         });

@@ -1,0 +1,33 @@
+html {
+    background: #fff9e7;
+}
+
+h1 {
+    font-size: 4em;
+    text-align: center;
+}
+
+#container {
+    margin: 0 auto;
+    width: 1200px;
+}
+
+.title {
+    font-family: "Goudy Trajan";
+    font-weight: normal;
+}
+
+.spokeLine {
+    stroke: #bcbec0;
+    stroke-width: 1px;
+}
+
+.spokeText {
+    font-family: "helvetica neue", "helvetica", "arial", "sans-serif";
+    font-size: 14px;
+}
+
+.spokeTextBox {
+    stroke: #bcbec0;
+    fill: #fff;
+}
