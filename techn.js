@@ -1,16 +1,17 @@
 var margin = {top: 10, right: 10, bottom: 10, left: 10},
-    width = 1000 - margin.left - margin.right,
-    height = 1000 - margin.top - margin.bottom;
+    width = 1200 - margin.left - margin.right,
+    height = 1200 - margin.top - margin.bottom;
     
 var arcBase = 155;
-var arcWidth = 20;
+var arcWidth = 5;
+var arcSpace = 15;
     
 var arc = d3.svg.arc()
     .innerRadius(function(d) {
-        return arcBase + (arcWidth * d.arcRank);
+        return arcBase + (arcSpace * d.arcRank);
     })
     .outerRadius(function(d) {
-        return 160 + (arcWidth * d.arcRank);
+        return (arcBase + arcWidth) + (arcSpace * d.arcRank);
     })
     .startAngle(0)
     .endAngle(function(d) {
@@ -152,7 +153,7 @@ d3.json("technologies.json", function(data) {
             if (!d.requires && !d.optional) {
                 return 0;
             } 
-            return -(arcBase + (arcWidth * d.spokeRank));
+            return -(arcBase + (arcSpace * d.spokeRank));
         })
         .attr("x2", 0)
         .attr("y2", -(width / 2))
@@ -172,6 +173,20 @@ d3.json("technologies.json", function(data) {
         })
         .attr("d", arc);
         
+    var reqPin = spokes.append("line")
+        .attr("x1", 0)
+        .attr("y1", function(d) {
+            return -(arcBase + 10 + (arcSpace * d.arcRank));
+        })
+        .attr("x2", 0)
+        .attr("y2", function(d) {
+            return -(arcBase - 5 + (arcSpace * d.arcRank));
+        })
+        .attr("stroke-width", arcWidth)
+        .attr("stroke", function(d) {
+           return color(d.pos); 
+        });
+        
     var reqSquares = spokes.selectAll(".reqSquare")
        .data(function(d) {
            return d.lreq;
@@ -179,7 +194,7 @@ d3.json("technologies.json", function(data) {
        .enter().append("g")
        .attr("transform", function(d) {
            var ang = d.dist * (360 / data.technologies.length);
-           return "rotate(" + ang + ") translate(0, " + (-arcBase - 2.5 - (arcWidth * d.arcRank)) + ")";
+           return "rotate(" + ang + ") translate(0, " + (-arcBase - 2.5 - (arcSpace * d.arcRank)) + ")";
        })
        .attr("class", "reqSquare");
        
@@ -198,9 +213,8 @@ d3.json("technologies.json", function(data) {
        })
        .enter().append("g")
        .attr("transform", function(d) {
-           console.log(d);
            var ang = d.dist * (360 / data.technologies.length);
-           return "rotate(" + ang + ") translate(0, " + (-arcBase - 2.5 - (arcWidth * d.arcRank)) + ")";
+           return "rotate(" + ang + ") translate(0, " + (-arcBase - 2.5 - (arcSpace * d.arcRank)) + ")";
        })
        .attr("class", "optCircle");
        
