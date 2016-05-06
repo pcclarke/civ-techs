@@ -201,7 +201,7 @@
             "requires": [ "masonry", "polytheism" ]
         },
         {
-            "name": "metal casing",
+            "name": "metal casting",
             "cost": 450,
             "unlocks": [
                 {
@@ -344,7 +344,7 @@
                     "type": "improvement"
                 }
             ],
-            "requires": [ "metal casing" ]
+            "requires": [ "metal casting" ]
         },
         {
             "name": "drama",
@@ -367,6 +367,22 @@
                 }
             ],
             "requires": [ "machinery", "construction" ]
+        },
+        {
+            "name": "music",
+            "cost": 600,
+            "unlocks": [
+                {
+                    "name": "first to discover receives a great artist",
+                    "type": "bonus"
+                },
+                {
+                    "name": "build culture",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "mathematics" ],
+            "optional": [ "literature", "drama" ]
         },
         {
             "name": "code of laws",
@@ -400,20 +416,20 @@
             "requires": [ "writing", "monarchy" ]
         },
         {
-            "name": "music",
-            "cost": 600,
+            "name": "civil service",
+            "cost": 800,
             "unlocks": [
                 {
-                    "name": "first to discover receives a great artist",
+                    "name": "farms spread irrigation",
                     "type": "bonus"
                 },
                 {
-                    "name": "build culture",
-                    "type": "bonus"
+                    "name": "bureaucracy",
+                    "type": "civic"
                 }
             ],
             "requires": [ "mathematics" ],
-            "optional": [ "literature", "drama" ]
+            "optional": [ "code of laws", "feudalism" ]
         },
         {
             "name": "philosophy",
@@ -430,22 +446,6 @@
             ],
             "requires": [ "meditation" ],
             "optional": [ "drama", "code of laws" ]
-        },
-        {
-            "name": "civil service",
-            "cost": 800,
-            "unlocks": [
-                {
-                    "name": "farms spread irrigation",
-                    "type": "bonus"
-                },
-                {
-                    "name": "bureaucracy",
-                    "type": "civic"
-                }
-            ],
-            "requires": [ "mathematics" ],
-            "optional": [ "code of laws", "feudalism" ]
         },
         {
             "name": "theology",

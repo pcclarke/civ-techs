@@ -1,10 +1,12 @@
-var margin = {top: 10, right: 10, bottom: 10, left: 10},
-    width = 1200 - margin.left - margin.right,
-    height = 1200 - margin.top - margin.bottom;
-    
+var folder = "../civ4_bts/";
+
 var arcBase = 130;
 var arcWidth = 2;
 var arcSpace = 15;
+
+var margin = {top: 10, right: 10, bottom: 10, left: 10},
+    width = 1200 - margin.left - margin.right,
+    height = 1200 - margin.top - margin.bottom;
     
 var arc = d3.svg.arc()
     .innerRadius(function(d) {
@@ -26,7 +28,7 @@ var svg = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("../civ4_bts/technologies.json", function(data) {
+d3.json(folder + "technologies.json", function(data) {
     
     // First, arrange the technologies
     // TODO: check pos for prerequisites
@@ -158,6 +160,16 @@ d3.json("../civ4_bts/technologies.json", function(data) {
         })
         .attr("x2", 0)
         .attr("y2", -(width / 2));
+        
+    spokes.append("image") // Technology icons
+        .attr("class", "techImg")
+        .attr("transform", "translate(-10, " + (-(width / 2) + 205) + ") rotate(270)")
+        .attr("height", 20)
+        .attr("width", 20)
+        .attr("xlink:href", function(d) {
+            var link = folder + "img/techtree/" + d.name + ".png";
+            return link;
+        });
         
     spokes.append("text") // Technology text
         .attr("class", "spokeText")
