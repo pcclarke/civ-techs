@@ -201,7 +201,7 @@
             "requires": [ "masonry", "polytheism" ]
         },
         {
-            "name": "metal casing",
+            "name": "metal casting",
             "cost": 450,
             "unlocks": [
                 {
@@ -344,7 +344,7 @@
                     "type": "improvement"
                 }
             ],
-            "requires": [ "metal casing" ]
+            "requires": [ "metal casting" ]
         },
         {
             "name": "drama",
@@ -367,6 +367,22 @@
                 }
             ],
             "requires": [ "machinery", "construction" ]
+        },
+        {
+            "name": "music",
+            "cost": 600,
+            "unlocks": [
+                {
+                    "name": "first to discover receives a great artist",
+                    "type": "bonus"
+                },
+                {
+                    "name": "build culture",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "mathematics" ],
+            "optional": [ "literature", "drama" ]
         },
         {
             "name": "code of laws",
@@ -400,35 +416,20 @@
             "requires": [ "writing", "monarchy" ]
         },
         {
-            "name": "optics",
-            "cost": 600,
+            "name": "civil service",
+            "cost": 800,
             "unlocks": [
                 {
-                    "name": "+1 sight across water",
+                    "name": "farms spread irrigation",
                     "type": "bonus"
                 },
                 {
-                    "name": "whaling boats",
-                    "type": "improvement"
-                }
-            ],
-            "requires": [ "compass", "machinery" ]
-        },
-        {
-            "name": "music",
-            "cost": 600,
-            "unlocks": [
-                {
-                    "name": "first to discover receives a great artist",
-                    "type": "bonus"
-                },
-                {
-                    "name": "build culture",
-                    "type": "bonus"
+                    "name": "bureaucracy",
+                    "type": "civic"
                 }
             ],
             "requires": [ "mathematics" ],
-            "optional": [ "literature", "drama" ]
+            "optional": [ "code of laws", "feudalism" ]
         },
         {
             "name": "philosophy",
@@ -445,22 +446,6 @@
             ],
             "requires": [ "meditation" ],
             "optional": [ "drama", "code of laws" ]
-        },
-        {
-            "name": "civil service",
-            "cost": 800,
-            "unlocks": [
-                {
-                    "name": "farms spread irrigation",
-                    "type": "bonus"
-                },
-                {
-                    "name": "bureaucracy",
-                    "type": "civic"
-                }
-            ],
-            "requires": [ "mathematics" ],
-            "optional": [ "code of laws", "feudalism" ]
         },
         {
             "name": "theology",
@@ -509,6 +494,21 @@
                 }
             ],
             "requires": [ "feudalism", "machinery" ]
+        },
+        {
+            "name": "optics",
+            "cost": 600,
+            "unlocks": [
+                {
+                    "name": "+1 sight across water",
+                    "type": "bonus"
+                },
+                {
+                    "name": "whaling boats",
+                    "type": "improvement"
+                }
+            ],
+            "requires": [ "compass", "machinery" ]
         },
         {
             "name": "nationalism",
@@ -580,7 +580,11 @@
                     "type": "improvement"
                 },
                 {
-                    "name": "windmills & watermills +1 hammer",
+                    "name": " +1 windmill hammer",
+                    "type": "bonus"
+                },
+                {
+                    "name": "+1 watermill hammer",
                     "type": "bonus"
                 }
             ],
@@ -869,6 +873,168 @@
             "name": "flight",
             "cost": 5000,
             "requires": [ "physics", "combustion" ]
+        },
+        {
+            "name": "rocketry",
+            "cost": 5000,
+            "requires": [ "rifling" ],
+            "optional": [ "flight", "artillery" ]
+        },
+        {
+            "name": "industrialism",
+            "cost": 6500,
+            "unlocks": [
+                {
+                    "name": "aluminum",
+                    "type": "resource"
+                },
+                {
+                    "name": "ivory",
+                    "type": "obsolete"
+                }
+            ],
+            "requires": [ "electricity", "assembly line" ]
+        },
+        {
+            "name": "fission",
+            "cost": 5500,
+            "requires": [ "electricity" ]
+        },
+        {
+            "name": "radio",
+            "cost": 6000,
+            "requires": [ "electricity" ]
+        },
+        {
+            "name": "refrigeration",
+            "cost": 4000,
+            "unlocks": [
+                {
+                    "name": "+1 movement for water units",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "biology", "electricity"]
+        },
+        {
+            "name": "satellites",
+            "cost": 6000,
+            "unlocks": [
+                {
+                    "name": "reveals world map",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "radio", "rocketry" ]
+        },
+        {
+            "name": "plastics",
+            "cost": 7000,
+            "unlocks": [
+                {
+                    "name": "fur",
+                    "type": "obsolete"
+                },
+                {
+                    "name": "offshore platforms",
+                    "type": "improvement"
+                }
+            ],
+            "requires": [ "combustion", "industrialism" ]
+        },
+        {
+            "name": "mass media",
+            "cost": 3600,
+            "requires": [ "radio" ]
+        },
+        {
+            "name": "computers",
+            "cost": 6500,
+            "requires": [ "radio", "plastics" ]
+        },
+        {
+            "name": "advanced flight",
+            "cost": 5000,
+            "requires": [ "satellites", "flight" ]
+        },
+        {
+            "name": "laser",
+            "cost": 7000,
+            "requires": [ "plastics", "satellites" ]
+        },
+        {
+            "name": "composites",
+            "cost": 7500,
+            "requires": [ "plastics", "satellites" ]
+        },
+        {
+            "name": "ecology",
+            "cost": 5500,
+            "unlocks": [
+                {
+                    "name": "can scrub fallout",
+                    "type": "improvement"
+                }
+            ],
+            "requires": [ "biology" ],
+            "optional": [ "plastics", "fission" ]
+        },
+        {
+            "name": "superconductors",
+            "cost": 6500,
+            "optional": [ "refrigeration", "computers" ]
+        },
+        {
+            "name": "stealth",
+            "cost": 8000,
+            "requires": [ "composites", "advanced flight" ]
+        },
+        {
+            "name": "fiber optics",
+            "cost": 7500,
+            "optional": [ "computers", "laser" ]
+        },
+        {
+            "name": "robotics",
+            "cost": 8000,
+            "requires": [ "computers" ]
+        },
+        {
+            "name": "genetics",
+            "cost": 7000,
+            "unlocks": [
+                {
+                    "name": "+3 health in all cities",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "medicine", "superconductors" ]
+        },
+        {
+            "name": "fusion",
+            "cost": 8000,
+            "unlocks": [
+                {
+                    "name": "first to discover receives a great engineer",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "fission", "fiber optics" ]
+        },
+        {
+            "name": "future tech",
+            "cost": 10000,
+            "unlocks": [
+                {
+                    "name": "+1 health in all cities",
+                    "type": "bonus"
+                },
+                {
+                    "name": "+1 happy face in all cities",
+                    "type": "bonus"
+                }
+            ],
+            "requires": [ "composites", "genetics" ]
         }
     ]
 }

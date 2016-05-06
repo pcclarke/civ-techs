@@ -1,0 +1,47 @@
+@font-face {
+    font-family: 'Goudy Trajan Regular';
+    src: url('../font/goudytrajan-regular-trial.eot');
+    src: url('../font/goudytrajan-regular-trial.eot?#iefix') format('embedded-opentype'),
+         url('../font/goudytrajan-regular-trial.woff2') format('woff2'),
+         url('../font/goudytrajan-regular-trial.woff') format('woff'),
+         url('../font/goudytrajan-regular-trial.ttf') format('truetype'),
+         url('../font/goudytrajan-regular-trial.svg#goudy_trajan_regularregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    background: #fff9e7;
+}
+
+h1 {
+    font-size: 4em;
+    text-align: center;
+}
+
+#container {
+    margin: 0 auto;
+    width: 1200px;
+}
+
+.title {
+    font-family: "Goudy Trajan Regular";
+    font-weight: normal;
+}
+
+.spokeLine {
+    stroke: #bcbec0;
+    stroke-width: 1px;
+}
+
+.spokeText {
+    font-family: "Gill Sans", "Gill Sans Nova", "helvetica neue", "helvetica", "arial", "sans-serif";
+    font-size: 14px;
+    font-weight: normal;
+    text-transform: capitalize;
+}
+
+.spokeTextBox {
+    stroke: #bcbec0;
+    fill: #fff;
+}
