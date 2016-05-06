@@ -2,8 +2,8 @@ var margin = {top: 10, right: 10, bottom: 10, left: 10},
     width = 1200 - margin.left - margin.right,
     height = 1200 - margin.top - margin.bottom;
     
-var arcBase = 150;
-var arcWidth = 3;
+var arcBase = 130;
+var arcWidth = 2;
 var arcSpace = 15;
     
 var arc = d3.svg.arc()
@@ -26,7 +26,7 @@ var svg = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("civ4bts-technologies.json", function(data) {
+d3.json("../civ4_bts/technologies.json", function(data) {
     
     // First, arrange the technologies
     // TODO: check pos for prerequisites
@@ -161,7 +161,7 @@ d3.json("civ4bts-technologies.json", function(data) {
         
     spokes.append("text") // Technology text
         .attr("class", "spokeText")
-        .attr("transform", "translate(3, " + (-(width / 2) + 100) + ") rotate(270)")
+        .attr("transform", "translate(3, " + (-(width / 2) + 180) + ") rotate(270)")
         .text(function(d) {
             return d.name;
         })
@@ -171,7 +171,7 @@ d3.json("civ4bts-technologies.json", function(data) {
         
     spokes.insert("rect", "text") // Box behind technology text
             .attr("class", "spokeTextBox")
-            .attr("transform", "translate(-10, " + (-(width / 2) + 102) + ") rotate(270)")
+            .attr("transform", "translate(-10, " + (-(width / 2) + 182) + ") rotate(270)")
             .attr("rx", 3)
             .attr("ry", 3)
             .attr("width", function(d) {
@@ -190,7 +190,7 @@ d3.json("civ4bts-technologies.json", function(data) {
     var reqPin = spokes.append("line")
         .attr("x1", 0)
         .attr("y1", function(d) {
-            return -(arcBase + 10 + (arcSpace * d.arcRank));
+            return -(arcBase + 7 + (arcSpace * d.arcRank));
         })
         .attr("x2", 0)
         .attr("y2", function(d) {
@@ -213,10 +213,10 @@ d3.json("civ4bts-technologies.json", function(data) {
        .attr("class", "reqSquare");
        
      reqSquares.append("rect")
-        .attr("x", -5)
-        .attr("y", -3.5)
-        .attr("width", 9)
-        .attr("height", 9)
+        .attr("x", -3)
+        .attr("y", -2.5)
+        .attr("width", 7)
+        .attr("height", 7)
         .attr("fill", function(d) {
             return color(d.pos);
         });
@@ -234,9 +234,9 @@ d3.json("civ4bts-technologies.json", function(data) {
        
      optCircles.append("circle")
         .attr("cx", 0)
-        .attr("cy", 0)
-        .attr("r", 4)
-        .attr("stroke-width", 4)
+        .attr("cy", 1.5)
+        .attr("r", 3.5)
+        .attr("stroke-width", 2)
         .attr("stroke", function(d) {
             return color(d.pos);
         })
