@@ -1,4 +1,4 @@
-var folder = "../civ4_bts/";
+var folder = "civ4_bts/";
 
 var arcBase = 130;
 var arcWidth = 2;
