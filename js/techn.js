@@ -173,9 +173,20 @@ d3.json(folder + "technologies.json", function(data) {
         
     spokes.append("text") // Technology text
         .attr("class", "spokeText")
-        .attr("transform", "translate(3, " + (-(width / 2) + 180) + ") rotate(270)")
+        .attr("transform", function(d) {
+            if (d.pos > (data.technologies.length / 2)) {
+                return "translate(-4, " + (-(width / 2) + 180) + ") rotate(90)";
+            }
+            return "translate(3, " + (-(width / 2) + 180) + ") rotate(270)";
+        })
         .text(function(d) {
             return d.name;
+        })
+        .attr("text-anchor", function(d) {
+            if (d.pos > (data.technologies.length / 2)) {
+                return "end";
+            }
+            return "start";
         })
         .each(function(d) {
             d.bbox = this.getBBox();
