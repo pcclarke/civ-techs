@@ -212,7 +212,7 @@ d3.json(folder + "technologies.json", function(data) {
         .attr("height", 20)
         .attr("width", 20)
         .attr("xlink:href", function(d) {
-            var link = folder + "img/techtree/" + d.name + ".png";
+            var link = "img/techtree/" + d.name + ".png";
             return link;
         });
         
