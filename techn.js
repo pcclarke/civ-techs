@@ -31,7 +31,6 @@ var svg = d3.select("#chart").append("svg")
 d3.json(folder + "technologies.json", function(data) {
     
     // First, arrange the technologies
-    // TODO: check pos for prerequisites
     data.technologies.sort(function(a, b) {
         return a.cost - b.cost;
     });
