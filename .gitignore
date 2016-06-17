@@ -8,3 +8,6 @@ application.macosx
 civxml_to_json/*.json
 civxml_to_json/*.xml
 civxml_to_json/XML/*
+civxml_to_json/civ4/*
+civxml_to_json/war/*
+civxml_to_json/bts/*
