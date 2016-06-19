@@ -24,14 +24,16 @@ void setup() {
   
   getTechs("civ4/XML/Technologies/CIV4TechInfos.xml", civ4base, "base");
   getBuilds("civ4/XML/Units/CIV4BuildInfos.xml", civ4base);
-  // getImprovementInfos()
-  // Villages & towns produce +1 commerce (appears to be in CIV4ImprovementInfos.xml)
+  getImprovementInfos("civ4/XML/Terrain/CIV4ImprovementInfos.xml", civ4base);
+  // getPromotionInfos() (found in CIV4PromotionInfos.xml)
   
   getTechs("war/XML/Technologies/CIV4TechInfos.xml", civ4war, "war");
   getBuilds("war/XML/Units/CIV4BuildInfos.xml", civ4war);
+  getImprovementInfos("war/XML/Terrain/CIV4ImprovementInfos.xml", civ4war);
   
   getTechs("bts/XML/Technologies/CIV4TechInfos.xml", civ4bts, "bts");
   getBuilds("bts/XML/Units/CIV4BuildInfos.xml", civ4bts);
+  getImprovementInfos("bts/XML/Terrain/CIV4ImprovementInfos.xml", civ4bts);
   
   
   println(civ4bts);
@@ -106,16 +108,28 @@ void getTechs(String path, JSONObject dataObj, String ver) {
       specialList.append(special);
     }
     
+    // +1 Extra Moves for Water Units
+    if (techInfo[i].getChild("DomainExtraMoves").hasChildren()) {
+      String domainType = techInfo[i].getChild("DomainExtraMoves").getChild("DomainExtraMove").getChild("DomainType").getContent();
+      int extraMoves = Integer.parseInt(techInfo[i].getChild("DomainExtraMoves").getChild("DomainExtraMove").getChild("iExtraMoves").getContent());
+      JSONObject special = new JSONObject();
+      if (domainType.equals("DOMAIN_SEA")) {
+        special.setString("name", "+" + extraMoves + " Extra Moves for Water Units");
+        special.setString("id", "SPECIAL_MOVES_SEA");
+        specialList.append(special);
+      }
+    }
+    
     // Enables trade on coast/ocean
     if (techInfo[i].getChild("TerrainTrades").hasChildren()) {
       String terrainType = techInfo[i].getChild("TerrainTrades").getChild("TerrainTrade").getChild("TerrainType").getContent();
       JSONObject special = new JSONObject();
       if (terrainType.equals("TERRAIN_COAST")) {
-        special.setString("name", "Enables trade on coast");
+        special.setString("name", "Enables Trade on Coast");
         special.setString("id", "SPECIAL_TRADE_COAST");
         specialList.append(special);
       } else if (terrainType.equals("TERRAIN_OCEAN")) {
-        special.setString("name", "Enables trade on ocean");
+        special.setString("name", "Enables Trade on Ocean");
         special.setString("id", "SPECIAL_TRADE_OCEAN");
         specialList.append(special);
       } else {
@@ -130,7 +144,7 @@ void getTechs(String path, JSONObject dataObj, String ver) {
       int riverTrade = Integer.parseInt(techInfo[i].getChild("bRiverTrade").getContent());
       if (riverTrade == 1) {
         JSONObject special = new JSONObject();
-        special.setString("name", "Enables trade on rivers");
+        special.setString("name", "Enables Trade on Rivers");
         special.setString("id", "SPECIAL_TRADE_RIVERS");
         specialList.append(special);
       }
@@ -145,21 +159,21 @@ void getTechs(String path, JSONObject dataObj, String ver) {
       specialList.append(special);
     }
     
-    // Enables tech trading
-    int techTrading = Integer.parseInt(techInfo[i].getChild("bTechTrading").getContent());
-    if (techTrading == 1) {
-      JSONObject special = new JSONObject();
-      special.setString("name", "Enables Technology Trading");
-      special.setString("id", "SPECIAL_TECH_TRADING");
-      specialList.append(special);
-    }
-    
     // Center map
     int mapCentering = Integer.parseInt(techInfo[i].getChild("bMapCentering").getContent());
     if (mapCentering == 1) {
       JSONObject special = new JSONObject();
       special.setString("name", "Centers World Map");
       special.setString("id", "SPECIAL_CENTER_MAP");
+      specialList.append(special);
+    }
+    
+    // Reveals World Map
+    int revealMap = Integer.parseInt(techInfo[i].getChild("bMapVisible").getContent());
+    if (revealMap == 1) {
+      JSONObject special = new JSONObject();
+      special.setString("name", "Reveals World Map");
+      special.setString("id", "SPECIAL_REVEAL_MAP");
       specialList.append(special);
     }
     
@@ -181,11 +195,29 @@ void getTechs(String path, JSONObject dataObj, String ver) {
       specialList.append(special);
     }
     
-    // +1 Trade Routes per City
-    int iTradeRoutes = Integer.parseInt(techInfo[i].getChild("iTradeRoutes").getContent());
-    if (iTradeRoutes >= 1) {
+    // +1 Health in All Cities
+    int healthBonus = Integer.parseInt(techInfo[i].getChild("iHealth").getContent());
+    if (healthBonus > 0) {
       JSONObject special = new JSONObject();
-      special.setString("name", "+1 Trade Routes per City");
+      special.setString("name", "+" + healthBonus + " Health in All Cities");
+      special.setString("id", "SPECIAL_HEALTH_BONUS");
+      specialList.append(special);
+    }
+    
+    // +1 Happiness in All Cities
+    int happyBonus = Integer.parseInt(techInfo[i].getChild("iHappiness").getContent());
+    if (happyBonus > 0) {
+      JSONObject special = new JSONObject();
+      special.setString("name", "+" + healthBonus + " Happiness in All Cities");
+      special.setString("id", "SPECIAL_HAPPINESS_BONUS");
+      specialList.append(special);
+    }
+    
+    // +1 Trade Routes per City
+    int tradeRouteBonus = Integer.parseInt(techInfo[i].getChild("iTradeRoutes").getContent());
+    if (tradeRouteBonus > 0) {
+      JSONObject special = new JSONObject();
+      special.setString("name", "+" + tradeRouteBonus + " Trade Routes per City");
       special.setString("id", "SPECIAL_TRADE_ROUTES");
       specialList.append(special);
     }
@@ -215,6 +247,24 @@ void getTechs(String path, JSONObject dataObj, String ver) {
       specialList.append(special);
     }
     
+    // Can Build Farms without Irrigation
+    int ignoreIrr = Integer.parseInt(techInfo[i].getChild("bIgnoreIrrigation").getContent());
+    if (ignoreIrr == 1) {
+      JSONObject special = new JSONObject();
+      special.setString("name", "Can Build Farms without Irrigation");
+      special.setString("id", "SPECIAL_IGNORE_IRRIGATION");
+      specialList.append(special);
+    }
+    
+    // Enables tech trading
+    int techTrading = Integer.parseInt(techInfo[i].getChild("bTechTrading").getContent());
+    if (techTrading == 1) {
+      JSONObject special = new JSONObject();
+      special.setString("name", "Enables Technology Trading");
+      special.setString("id", "SPECIAL_TECH_TRADING");
+      specialList.append(special);
+    }
+    
     // Enables Map Trading
     int bMapTrading = Integer.parseInt(techInfo[i].getChild("bMapTrading").getContent());
     if (bMapTrading == 1) {
@@ -225,11 +275,20 @@ void getTechs(String path, JSONObject dataObj, String ver) {
     }
     
     // Enables Defensive Pacts
-    int bDefensivePactTrading = Integer.parseInt(techInfo[i].getChild("bDefensivePactTrading").getContent());
-    if (bDefensivePactTrading == 1) {
+    int defPact = Integer.parseInt(techInfo[i].getChild("bDefensivePactTrading").getContent());
+    if (defPact == 1) {
       JSONObject special = new JSONObject();
       special.setString("name", "Enables Defensive Pacts");
       special.setString("id", "SPECIAL_DEFENSIVE_PACTS");
+      specialList.append(special);
+    }
+    
+    // Enables Permanent Alliances
+    int bPermanentAllianceTrading = Integer.parseInt(techInfo[i].getChild("bPermanentAllianceTrading").getContent());
+    if (bPermanentAllianceTrading == 1) {
+      JSONObject special = new JSONObject();
+      special.setString("name", "Enables Permanent Alliances");
+      special.setString("id", "SPECIAL_PERMANENT_ALLIANCES");
       specialList.append(special);
     }
     
@@ -267,6 +326,14 @@ void getTechs(String path, JSONObject dataObj, String ver) {
       specialList.append(special);
     }
     
+    // Workers Build Improvements [value] Faster
+    int iWorkerSpeedModifier = Integer.parseInt(techInfo[i].getChild("iWorkerSpeedModifier").getContent());
+    if (iWorkerSpeedModifier > 0) {
+      JSONObject special = new JSONObject();
+      special.setString("name", "Workers Build Improvements +" + iWorkerSpeedModifier + "% Faster");
+      special.setString("id", "SPECIAL_WORKER_SPEED");
+      specialList.append(special);
+    }
     
     
     if (specialList.size() > 0) {
@@ -313,4 +380,82 @@ void getBuilds(String path, JSONObject dataObj) {
   }
   
   dataObj.setJSONArray("build", buildList);
+}
+
+void getImprovementInfos(String path, JSONObject dataObj) {
+  XML improveXML = loadXML(path);
+  XML improveInfos = improveXML.getChild("ImprovementInfos");
+  XML[] improveInfo = improveInfos.getChildren("ImprovementInfo");
+  
+  JSONArray improveList = new JSONArray();
+  
+  for (int i = 0; i < improveInfo.length; i++) {    
+    String id = improveInfo[i].getChild("Type").getContent();
+
+    if (improveInfo[i].getChild("TechYieldChanges").hasChildren()) {
+      XML[] techYieldChanges =  improveInfo[i].getChild("TechYieldChanges").getChildren("TechYieldChange");
+      
+      for (int j = 0; j < techYieldChanges.length; j++) {
+        JSONObject improveDetails = new JSONObject();
+        JSONObject improveSpecial = new JSONObject();
+        improveSpecial.setString("id", id);
+        improveDetails.setString("prereq", techYieldChanges[j].getChild("PrereqTech").getContent());
+        
+        XML[] techYield = techYieldChanges[j].getChild("TechYields").getChildren("iYield");
+        int food = Integer.parseInt(techYield[0].getContent());
+        int hammer = Integer.parseInt(techYield[1].getContent());
+        int trade = Integer.parseInt(techYield[2].getContent());
+        
+        improveSpecial.setInt("food", food);
+        improveSpecial.setInt("hammer", hammer);
+        improveSpecial.setInt("trade", trade);
+        
+        String foodBonus = (food > 0) ? "+" + food + " Food" : "";
+        String hammerBonus = (hammer > 0) ? "+" + hammer + " Hammers" : "";
+        String tradeBonus = (trade > 0) ? "+" + trade + " Trade" : "";
+        String improvement = "";
+        
+        if (id.equals("IMPROVEMENT_FARM")) {
+          improvement = "Farm";
+        } else if (id.equals("IMPROVEMENT_WORKSHOP")) {
+          improvement = "Workshop";
+        } else if (id.equals("IMPROVEMENT_WINDMILL")) {
+          improvement = "Windmill";
+        } else if (id.equals("IMPROVEMENT_WATERMILL")) {
+          improvement = "Watermill";
+        } else if (id.equals("IMPROVEMENT_VILLAGE")) {
+          improvement = "Village";
+        } else if (id.equals("IMPROVEMENT_TOWN")) {
+          improvement = "Town";
+        }
+        improveSpecial.setString("name", improvement + ": " + 
+          ((food > 0) ? foodBonus : "") + 
+          ((hammer > 0) ? ((food > 0) ? " " : "") + hammerBonus : "") +
+          ((trade > 0) ? ((food > 0 || hammer > 0) ? " " : "") + tradeBonus : ""));
+        
+        improveDetails.setJSONObject("special", improveSpecial);
+        improveList.append(improveDetails);
+      }
+    }
+  }
+  
+  JSONArray techs = dataObj.getJSONArray("technologies");
+  
+  for (int i = 0; i < techs.size(); i++) {
+    JSONObject checkTech = techs.getJSONObject(i);
+    for (int j = 0; j < improveList.size(); j++) {
+      JSONObject checkImprovement = improveList.getJSONObject(j);
+      
+      if(checkTech.getString("id").equals(checkImprovement.getString("prereq"))) {
+        if (checkTech.isNull("special") == true) {
+          JSONArray specials = new JSONArray();
+          specials.append(checkImprovement.getJSONObject("special"));
+          checkTech.setJSONArray("special", specials);
+        } else {
+          JSONArray specials = checkTech.getJSONArray("special");
+          specials.append(checkImprovement);
+        }
+      }
+    }
+  }
 }
