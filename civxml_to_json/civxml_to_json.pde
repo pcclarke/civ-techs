@@ -30,16 +30,19 @@ void setup() {
   getBuilds("civ4/XML/Units/CIV4BuildInfos.xml", civ4base);
   getImprovementInfos("civ4/XML/Terrain/CIV4ImprovementInfos.xml", civ4base);
   getPromotionInfos("civ4/XML/Units/CIV4PromotionInfos.xml", civ4base);
+  getReligionInfos("civ4/XML/GameInfo/CIV4ReligionInfo.xml", civ4base);
   
   getTechs("war/XML/Technologies/CIV4TechInfos.xml", civ4war, "war");
   getBuilds("war/XML/Units/CIV4BuildInfos.xml", civ4war);
   getImprovementInfos("war/XML/Terrain/CIV4ImprovementInfos.xml", civ4war);
   getPromotionInfos("war/XML/Units/CIV4PromotionInfos.xml", civ4war);
+  getReligionInfos("civ4/XML/GameInfo/CIV4ReligionInfo.xml", civ4war); // civ4 dir not a typo
   
   getTechs("bts/XML/Technologies/CIV4TechInfos.xml", civ4bts, "bts");
   getBuilds("bts/XML/Units/CIV4BuildInfos.xml", civ4bts);
   getImprovementInfos("bts/XML/Terrain/CIV4ImprovementInfos.xml", civ4bts);
   getPromotionInfos("bts/XML/Units/CIV4PromotionInfos.xml", civ4bts);
+  getReligionInfos("bts/XML/GameInfo/CIV4ReligionInfo.xml", civ4bts);
   
   
   println(civ4bts);
@@ -488,23 +491,49 @@ void getPromotionInfos(String path, JSONObject dataObj) {
     if (prereq.equals("NONE") == false) {
       JSONObject promotionDetails = new JSONObject();
       
-      String id = promotionInfo[i].getChild("Type").getContent();
-      promotionDetails.setString("id", id);
+      promotionDetails.setString("id", promotionInfo[i].getChild("Type").getContent());
       promotionDetails.setString("prereq", prereq);
       
       // Name
       for (int j = 0; j < textObjectsList.length; j++) {
         String tag = textObjectsList[j].getChild("Tag").getContent();
-        String idKey = "TXT_KEY_" + id;
-        if (tag.equals(idKey)) {
+        if (tag.equals(promotionInfo[i].getChild("Description").getContent())) {
           promotionDetails.setString("name", textObjectsList[j].getChild(language).getContent());
         }
       }
       
       promotionList.append(promotionDetails);
-    }
-    
+    }    
   }
   
   dataObj.setJSONArray("promotions", promotionList);
+}
+
+// COLLECT RELIGION INFO (name, prerequisite, id)
+void getReligionInfos(String path, JSONObject dataObj) {
+  XML religionXML = loadXML(path);
+  XML religionInfos = religionXML.getChild("ReligionInfos");
+  XML[] religionInfo = religionInfos.getChildren("ReligionInfo");
+  
+  JSONArray religionList = new JSONArray();
+  
+  for (int i = 0; i < religionInfo.length; i++) {
+    String prereq = religionInfo[i].getChild("TechPrereq").getContent();
+    JSONObject religionDetails = new JSONObject();
+    
+    religionDetails.setString("id", religionInfo[i].getChild("Type").getContent());
+    religionDetails.setString("prereq", prereq);
+    
+    // Name
+    for (int j = 0; j < textObjectsList.length; j++) {
+      String tag = textObjectsList[j].getChild("Tag").getContent();
+      if (tag.equals(religionInfo[i].getChild("Description").getContent())) {
+        religionDetails.setString("name", textObjectsList[j].getChild(language).getContent());
+      }
+    }
+    
+    religionList.append(religionDetails);
+  }
+  
+  dataObj.setJSONArray("religions", religionList);
 }
