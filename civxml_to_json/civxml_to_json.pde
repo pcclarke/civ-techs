@@ -63,12 +63,22 @@ void getTechs(String path, JSONObject dataObj, String ver) {
     techDetails.setString("id", techInfo[i].getChild("Type").getContent());
     
     // Name
+    String name = "";
     for (int j = 0; j < textObjectsList.length; j++) {
       String tag = textObjectsList[j].getChild("Tag").getContent();
       if (tag.equals(techInfo[i].getChild("Description").getContent())) {
-        techDetails.setString("name", textObjectsList[j].getChild(language).getContent());
+        name = textObjectsList[j].getChild(language).getContent();
       }
     }
+    if (name.length() == 0) {
+      for (int j = 0; j < textObjectsBTSList.length; j++) {
+        String tag = textObjectsBTSList[j].getChild("Tag").getContent();
+        if (tag.equals(techInfo[i].getChild("Description").getContent())) {
+          name = textObjectsBTSList[j].getChild(language).getContent();
+        }
+      }  
+    }
+    techDetails.setString("name", name);
     
     JSONArray optional = new JSONArray();
     JSONArray requires = new JSONArray();
