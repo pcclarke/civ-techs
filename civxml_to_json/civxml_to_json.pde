@@ -26,23 +26,29 @@ void setup() {
   
   // LOAD IN DATA
   
+  // Civilization 4 vanilla
   getTechs("civ4/XML/Technologies/CIV4TechInfos.xml", civ4base, "base");
   getBuilds("civ4/XML/Units/CIV4BuildInfos.xml", civ4base);
   getImprovementInfos("civ4/XML/Terrain/CIV4ImprovementInfos.xml", civ4base);
   getPromotionInfos("civ4/XML/Units/CIV4PromotionInfos.xml", civ4base);
   getReligionInfos("civ4/XML/GameInfo/CIV4ReligionInfo.xml", civ4base);
+  getResourceInfos("civ4/XML/Terrain/CIV4BonusInfos.xml", civ4base);
   
+  // Civilization 4: Warlords
   getTechs("war/XML/Technologies/CIV4TechInfos.xml", civ4war, "war");
   getBuilds("war/XML/Units/CIV4BuildInfos.xml", civ4war);
   getImprovementInfos("war/XML/Terrain/CIV4ImprovementInfos.xml", civ4war);
   getPromotionInfos("war/XML/Units/CIV4PromotionInfos.xml", civ4war);
   getReligionInfos("civ4/XML/GameInfo/CIV4ReligionInfo.xml", civ4war); // civ4 dir not a typo
+  getResourceInfos("war/XML/Terrain/CIV4BonusInfos.xml", civ4war);
   
+  // Civilization 4: Beyond the Sword
   getTechs("bts/XML/Technologies/CIV4TechInfos.xml", civ4bts, "bts");
   getBuilds("bts/XML/Units/CIV4BuildInfos.xml", civ4bts);
   getImprovementInfos("bts/XML/Terrain/CIV4ImprovementInfos.xml", civ4bts);
   getPromotionInfos("bts/XML/Units/CIV4PromotionInfos.xml", civ4bts);
   getReligionInfos("bts/XML/GameInfo/CIV4ReligionInfo.xml", civ4bts);
+  getResourceInfos("war/XML/Terrain/CIV4BonusInfos.xml", civ4bts); // war dir not a typo
   
   
   println(civ4bts);
@@ -536,4 +542,35 @@ void getReligionInfos(String path, JSONObject dataObj) {
   }
   
   dataObj.setJSONArray("religions", religionList);
+}
+
+// COLLECT RESOURCE INFO (name, id, prerequisite)
+void getResourceInfos(String path, JSONObject dataObj) {
+  XML resourceXML = loadXML(path);
+  XML resourceInfos = resourceXML.getChild("BonusInfos");
+  XML[] resourceInfo = resourceInfos.getChildren("BonusInfo");
+  
+  JSONArray resourceList = new JSONArray();
+  
+  for (int i = 0; i < resourceInfo.length; i++) {
+    String prereq = resourceInfo[i].getChild("TechReveal").getContent();
+    if (prereq.equals("NONE") == false) {
+      JSONObject religionDetails = new JSONObject();
+      
+      religionDetails.setString("id", resourceInfo[i].getChild("Type").getContent());
+      religionDetails.setString("prereq", prereq);
+      
+      // Name
+      for (int j = 0; j < textObjectsList.length; j++) {
+        String tag = textObjectsList[j].getChild("Tag").getContent();
+        if (tag.equals(resourceInfo[i].getChild("Description").getContent())) {
+          religionDetails.setString("name", textObjectsList[j].getChild(language).getContent());
+        }
+      }
+      
+      resourceList.append(religionDetails);
+    }
+  }
+  
+  dataObj.setJSONArray("resources", resourceList);
 }
