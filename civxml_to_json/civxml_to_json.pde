@@ -1,9 +1,10 @@
 JSONObject civ4base, civ4war, civ4bts;
 XML techsXML, buildXML;
-XML textXML, textObjectXML;
-XML[] textList, textObjectsList;
-String textObjectsXMLFilename = "civ4/XML/Text/CIV4GameTextInfos_Objects.xml";
+XML textXML, textObjectXML, textObjectBTSXML;
+XML[] textList, textObjectsList, textObjectsBTSList;
 String textXMLFilename = "civ4/XML/Text/CIV4GameTextInfos.xml";
+String textObjectsXMLFilename = "civ4/XML/Text/CIV4GameTextInfos_Objects.xml";
+String textObjectsBTSXMLFilename = "bts/XML/Text/CIV4GameText_Objects_BTS.xml";
 String language = "English";
 
 void setup() {
@@ -19,21 +20,26 @@ void setup() {
   textObjectXML = loadXML(textObjectsXMLFilename);
   textObjectsList = textObjectXML.getChildren("TEXT");
   
+  textObjectBTSXML = loadXML(textObjectsBTSXMLFilename);
+  textObjectsBTSList = textObjectBTSXML.getChildren("TEXT");
+  
   
   // LOAD IN DATA
   
   getTechs("civ4/XML/Technologies/CIV4TechInfos.xml", civ4base, "base");
   getBuilds("civ4/XML/Units/CIV4BuildInfos.xml", civ4base);
   getImprovementInfos("civ4/XML/Terrain/CIV4ImprovementInfos.xml", civ4base);
-  // getPromotionInfos() (found in CIV4PromotionInfos.xml)
+  getPromotionInfos("civ4/XML/Units/CIV4PromotionInfos.xml", civ4base);
   
   getTechs("war/XML/Technologies/CIV4TechInfos.xml", civ4war, "war");
   getBuilds("war/XML/Units/CIV4BuildInfos.xml", civ4war);
   getImprovementInfos("war/XML/Terrain/CIV4ImprovementInfos.xml", civ4war);
+  getPromotionInfos("war/XML/Units/CIV4PromotionInfos.xml", civ4war);
   
   getTechs("bts/XML/Technologies/CIV4TechInfos.xml", civ4bts, "bts");
   getBuilds("bts/XML/Units/CIV4BuildInfos.xml", civ4bts);
   getImprovementInfos("bts/XML/Terrain/CIV4ImprovementInfos.xml", civ4bts);
+  getPromotionInfos("bts/XML/Units/CIV4PromotionInfos.xml", civ4bts);
   
   
   println(civ4bts);
@@ -458,4 +464,37 @@ void getImprovementInfos(String path, JSONObject dataObj) {
       }
     }
   }
+}
+
+void getPromotionInfos(String path, JSONObject dataObj) {
+  XML promotionXML = loadXML(path);
+  XML promotionInfos = promotionXML.getChild("PromotionInfos");
+  XML[] promotionInfo = promotionInfos.getChildren("PromotionInfo");
+  
+  JSONArray promotionList = new JSONArray();
+  
+  for (int i = 0; i < promotionInfo.length; i++) {
+    String prereq = promotionInfo[i].getChild("TechPrereq").getContent();
+    if (prereq.equals("NONE") == false) {
+      JSONObject promotionDetails = new JSONObject();
+      
+      String id = promotionInfo[i].getChild("Type").getContent();
+      promotionDetails.setString("id", id);
+      promotionDetails.setString("prereq", prereq);
+      
+      // Name
+      for (int j = 0; j < textObjectsList.length; j++) {
+        String tag = textObjectsList[j].getChild("Tag").getContent();
+        String idKey = "TXT_KEY_" + id;
+        if (tag.equals(idKey)) {
+          promotionDetails.setString("name", textObjectsList[j].getChild(language).getContent());
+        }
+      }
+      
+      promotionList.append(promotionDetails);
+    }
+    
+  }
+  
+  dataObj.setJSONArray("promotions", promotionList);
 }
