@@ -56,6 +56,7 @@ void setup() {
   getBuildingInfos("civ4/XML/Buildings/CIV4BuildingInfos.xml", texts, civ4Civilizations, civ4base);
   getUnitInfos("civ4/XML/Units/CIV4UnitInfos.xml", texts, civ4Civilizations, civ4base);
   getCivicsInfos("civ4/XML/GameInfo/CIV4CivicInfos.xml", texts, civ4base);
+  getCivilizationInfos(civ4Civilizations, texts, civ4base);
   
   // Civilization 4: Warlords
   getTechs("war/XML/Technologies/CIV4TechInfos.xml", civ4war, "war");
@@ -68,7 +69,8 @@ void setup() {
   getBuildingInfos("war/XML/Buildings/CIV4BuildingInfos.xml", texts, warCivilizations, civ4war);
   getUnitInfos("war/XML/Units/CIV4UnitInfos.xml", texts, warCivilizations, civ4war);
   getCivicsInfos("war/XML/GameInfo/CIV4CivicInfos.xml", texts, civ4war);
-  
+  getCivilizationInfos(warCivilizations, texts, civ4war);
+
   // Civilization 4: Beyond the Sword
   getTechs("bts/XML/Technologies/CIV4TechInfos.xml", civ4bts, "bts");
   getBuilds("bts/XML/Units/CIV4BuildInfos.xml", civ4bts);
@@ -80,6 +82,7 @@ void setup() {
   getBuildingInfos("bts/XML/Buildings/CIV4BuildingInfos.xml", texts, btsCivilizations, civ4bts);
   getUnitInfos("bts/XML/Units/CIV4UnitInfos.xml", texts, btsCivilizations, civ4bts);
   getCivicsInfos("bts/XML/GameInfo/CIV4CivicInfos.xml", texts, civ4bts);
+  getCivilizationInfos(btsCivilizations, texts, civ4bts);
   
   
   //println(civ4bts);
@@ -606,6 +609,7 @@ void getResourceInfos(String path, JSONObject dataObj) {
   dataObj.setJSONArray("resources", resourceList);
 }
 
+
 // COLLECT CIVICS INFO
 void getCivicsInfos(String path, XML[][] texts, JSONObject dataObj) {
   XML civicXML = loadXML(path);
@@ -642,6 +646,47 @@ void getCivicsInfos(String path, XML[][] texts, JSONObject dataObj) {
   }
   
   dataObj.setJSONArray("civics", civicList);
+}
+
+
+// COLLECT CIVILIZATION INFO
+void getCivilizationInfos(String path, XML[][] texts, JSONObject dataObj) {
+  XML civilizationXML = loadXML(path);
+  XML[] civilizationInfo = civilizationXML.getChild("CivilizationInfos").getChildren("CivilizationInfo");
+  
+  JSONArray civilizationList = new JSONArray();
+  
+  for (int i = 0; i < civilizationInfo.length; i++) {
+    String type = civilizationInfo[i].getChild("Type").getContent();
+    if (type.equals("CIVILIZATION_MINOR") == false && type.equals("CIVILIZATION_BARBARIAN") == false) {
+      JSONObject civilizationDetails = new JSONObject();
+      civilizationDetails.setString("id", civilizationInfo[i].getChild("Type").getContent());
+      
+      // Name
+      String name = "";
+      
+      for (int k = 0; k < texts.length; k++) {
+        for (int l = 0; l < texts[k].length; l++) {
+          String tag = texts[k][l].getChild("Tag").getContent();
+          if (tag.equals(civilizationInfo[i].getChild("Description").getContent())) {
+            if (texts[k][l].getChild(language).getChild("Text") != null) {
+              name = texts[k][l].getChild(language).getChild("Text").getContent();
+            } else {
+              name = texts[k][l].getChild(language).getContent();  
+            }
+          }
+        }
+        if (name.length() > 0) {
+          break; 
+        }
+      }
+      civilizationDetails.setString("name", name);
+      
+      civilizationList.append(civilizationDetails);
+    }
+  }
+  
+  dataObj.setJSONArray("civilizations", civilizationList);
 }
 
 // COLLECT BUILDING INFO (name, id, prerequisite)
