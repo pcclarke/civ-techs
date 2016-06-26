@@ -31,12 +31,12 @@ h1 {
 
 .spokeLine {
     stroke: #bcbec0;
-    stroke-width: 1px;
+    stroke-width: 0.5px;
 }
 
 .spokeText {
     font-family: "Gill Sans", "Gill Sans Nova", "helvetica neue", "helvetica", "arial", "sans-serif";
-    font-size: 14px;
+    font-size: 12px;
     font-weight: normal;
     text-transform: capitalize;
 }

@@ -1,7 +1,7 @@
-var folder = "civ4_bts/";
+var folder = "civ4/";
 
-var arcBase = 130;
-var arcWidth = 2;
+var arcBase = 100;
+var arcWidth = 1;
 var arcSpace = 15;
 
 var margin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -31,9 +31,53 @@ var svg = d3.select("#chart").append("svg")
 d3.json(folder + "technologies.json", function(data) {
     
     // First, arrange the technologies
-    // TODO: check pos for prerequisites
+    data.technologies.sort(function(a, b) {
+        return a.cost - b.cost;
+    });
+    
     for (var i = 0; i < data.technologies.length; i++) {
         data.technologies[i].pos = i;
+    }
+    
+    // Go through each technology and find the prequisite with highest position, then swap
+    var iter  = 0;
+    while (iter < data.technologies.length) {
+        var pos = data.technologies[iter].pos;
+        var elem = iter;
+        for (var j = 0; j < data.technologies.length; j++) {
+            if (data.technologies[iter].requires) {
+                for (var k = 0; k < data.technologies[iter].requires.length; k++) {                    
+                    if (data.technologies[iter].requires[k] === data.technologies[j].id) {
+                        if (data.technologies[j].pos > pos) {
+                            pos = data.technologies[j].pos;
+                            elem = j;
+                        }
+                    }
+                }
+            }
+            if (data.technologies[iter].optional) {
+                for (var k = 0; k < data.technologies[iter].optional.length; k++) {
+                    if (data.technologies[iter].optional[k] === data.technologies[j].id) {
+                        if (data.technologies[j].pos > pos) {
+                            pos = data.technologies[j].pos;
+                            elem = j;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (iter != elem) {
+            console.log(data.technologies[iter].name + " at " + data.technologies[iter].pos + " requires " + data.technologies[elem].name + " at " + data.technologies[elem].pos);
+            data.technologies[elem].pos = data.technologies[iter].pos;
+            var techSwap = data.technologies[elem];
+            data.technologies[iter].pos = pos;
+            data.technologies[elem] = data.technologies[iter];
+            data.technologies[iter] = techSwap;
+            iter = 0;
+        } else {
+            iter++;
+        }
     }
     
     var arcDists = []; // list of recent arcRanks
@@ -47,18 +91,18 @@ d3.json(folder + "technologies.json", function(data) {
         for (var j = 0; j < data.technologies.length; j++) {
             if (data.technologies[j].requires) {
                 for (var k = 0; k < data.technologies[j].requires.length; k++) {                    
-                    if (data.technologies[j].requires[k] === data.technologies[i].name) {
+                    if (data.technologies[j].requires[k] === data.technologies[i].id) {
                         arcDist = data.technologies[j].pos - data.technologies[i].pos;
-                        var req = {"name": data.technologies[j].name, "dist": arcDist, "pos": data.technologies[i].pos};
+                        var req = {"id": data.technologies[j].id, "dist": arcDist, "pos": data.technologies[i].pos};
                         rekked.push(req);
                     }
                 }
             }
             if (data.technologies[j].optional) {
                 for (var k = 0; k < data.technologies[j].optional.length; k++) {
-                    if (data.technologies[j].optional[k] === data.technologies[i].name) {
+                    if (data.technologies[j].optional[k] === data.technologies[i].id) {
                         arcDist = data.technologies[j].pos - data.technologies[i].pos;
-                        var opt = {"name": data.technologies[j].name, "dist": arcDist, "pos": data.technologies[i].pos};
+                        var opt = {"id": data.technologies[j].id, "dist": arcDist, "pos": data.technologies[i].pos};
                         opted.push(opt);
                     }
                 }
@@ -105,7 +149,7 @@ d3.json(folder + "technologies.json", function(data) {
             if (data.technologies[i].requires) {
                 for (var j = 0; j < data.technologies[i].requires.length; j++) {
                     for (var k = 0; k < data.technologies.length; k++) {
-                        if (data.technologies[i].requires[j] === data.technologies[k].name) {
+                        if (data.technologies[i].requires[j] === data.technologies[k].id) {
                             if (data.technologies[k].arcRank < spokeRank) {
                                 spokeRank = data.technologies[k].arcRank;
                             }
@@ -116,7 +160,7 @@ d3.json(folder + "technologies.json", function(data) {
             if (data.technologies[i].optional) {
                 for (var j = 0; j < data.technologies[i].optional.length; j++) {
                     for (var k = 0; k < data.technologies.length; k++) {
-                        if (data.technologies[i].optional[j] === data.technologies[k].name) {
+                        if (data.technologies[i].optional[j] === data.technologies[k].id) {
                             if (data.technologies[k].arcRank < spokeRank) {
                                 spokeRank = data.technologies[k].arcRank;
                             }
@@ -163,11 +207,11 @@ d3.json(folder + "technologies.json", function(data) {
         
     spokes.append("image") // Technology icons
         .attr("class", "techImg")
-        .attr("transform", "translate(-10, " + (-(width / 2) + 205) + ") rotate(270)")
+        .attr("transform", "translate(-10, " + (-(width / 2) + 235) + ") rotate(270)")
         .attr("height", 20)
         .attr("width", 20)
         .attr("xlink:href", function(d) {
-            var link = folder + "img/techtree/" + d.name + ".png";
+            var link = "img/techtree/" + d.name + ".png";
             return link;
         });
         
@@ -175,9 +219,9 @@ d3.json(folder + "technologies.json", function(data) {
         .attr("class", "spokeText")
         .attr("transform", function(d) {
             if (d.pos > (data.technologies.length / 2)) {
-                return "translate(-4, " + (-(width / 2) + 180) + ") rotate(90)";
+                return "translate(-4, " + (-(width / 2) + 210) + ") rotate(90)";
             }
-            return "translate(3, " + (-(width / 2) + 180) + ") rotate(270)";
+            return "translate(3, " + (-(width / 2) + 210) + ") rotate(270)";
         })
         .text(function(d) {
             return d.name;
@@ -194,7 +238,7 @@ d3.json(folder + "technologies.json", function(data) {
         
     spokes.insert("rect", "text") // Box behind technology text
             .attr("class", "spokeTextBox")
-            .attr("transform", "translate(-10, " + (-(width / 2) + 182) + ") rotate(270)")
+            .attr("transform", "translate(-10, " + (-(width / 2) + 212) + ") rotate(270)")
             .attr("rx", 3)
             .attr("ry", 3)
             .attr("width", function(d) {
@@ -237,9 +281,9 @@ d3.json(folder + "technologies.json", function(data) {
        
      reqSquares.append("rect")
         .attr("x", -3)
-        .attr("y", -2.5)
-        .attr("width", 7)
-        .attr("height", 7)
+        .attr("y", -.5)
+        .attr("width", 5)
+        .attr("height", 5)
         .attr("fill", function(d) {
             return color(d.pos);
         });
@@ -257,9 +301,9 @@ d3.json(folder + "technologies.json", function(data) {
        
      optCircles.append("circle")
         .attr("cx", 0)
-        .attr("cy", 1.5)
-        .attr("r", 3.5)
-        .attr("stroke-width", 2)
+        .attr("cy", 2)
+        .attr("r", 2.5)
+        .attr("stroke-width", 1.5)
         .attr("stroke", function(d) {
             return color(d.pos);
         })

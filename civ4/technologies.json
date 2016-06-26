@@ -1,0 +1,706 @@
+{"technologies": [
+  {
+    "cost": 50,
+    "name": "Mysticism",
+    "id": "TECH_MYSTICISM"
+  },
+  {
+    "cost": 80,
+    "name": "Meditation",
+    "id": "TECH_MEDITATION",
+    "requires": ["TECH_MYSTICISM"]
+  },
+  {
+    "cost": 100,
+    "name": "Polytheism",
+    "id": "TECH_POLYTHEISM",
+    "requires": ["TECH_MYSTICISM"]
+  },
+  {
+    "cost": 60,
+    "name": "Priesthood",
+    "optional": [
+      "TECH_MEDITATION",
+      "TECH_POLYTHEISM"
+    ],
+    "id": "TECH_PRIESTHOOD"
+  },
+  {
+    "cost": 120,
+    "name": "Monotheism",
+    "id": "TECH_MONOTHEISM",
+    "requires": [
+      "TECH_POLYTHEISM",
+      "TECH_MASONRY"
+    ]
+  },
+  {
+    "cost": 300,
+    "name": "Monarchy",
+    "optional": [
+      "TECH_PRIESTHOOD",
+      "TECH_MONOTHEISM"
+    ],
+    "id": "TECH_MONARCHY"
+  },
+  {
+    "cost": 200,
+    "name": "Literature",
+    "id": "TECH_LITERATURE",
+    "requires": [
+      "TECH_ALPHABET",
+      "TECH_POLYTHEISM"
+    ]
+  },
+  {
+    "cost": 350,
+    "name": "Code of Laws",
+    "optional": [
+      "TECH_PRIESTHOOD",
+      "TECH_CURRENCY"
+    ],
+    "id": "TECH_CODE_OF_LAWS",
+    "requires": ["TECH_WRITING"]
+  },
+  {
+    "cost": 300,
+    "name": "Drama",
+    "id": "TECH_DRAMA",
+    "requires": ["TECH_ALPHABET"]
+  },
+  {
+    "cost": 700,
+    "name": "Feudalism",
+    "id": "TECH_FEUDALISM",
+    "requires": [
+      "TECH_MONARCHY",
+      "TECH_WRITING"
+    ]
+  },
+  {
+    "cost": 500,
+    "name": "Theology",
+    "id": "TECH_THEOLOGY",
+    "requires": [
+      "TECH_MONOTHEISM",
+      "TECH_WRITING"
+    ]
+  },
+  {
+    "cost": 600,
+    "name": "Music",
+    "optional": [
+      "TECH_LITERATURE",
+      "TECH_DRAMA"
+    ],
+    "id": "TECH_MUSIC",
+    "requires": ["TECH_MATHEMATICS"]
+  },
+  {
+    "cost": 800,
+    "name": "Civil Service",
+    "optional": [
+      "TECH_CODE_OF_LAWS",
+      "TECH_FEUDALISM"
+    ],
+    "id": "TECH_CIVIL_SERVICE"
+  },
+  {
+    "cost": 1000,
+    "name": "Guilds",
+    "id": "TECH_GUILDS",
+    "requires": [
+      "TECH_MACHINERY",
+      "TECH_FEUDALISM"
+    ]
+  },
+  {
+    "cost": 1200,
+    "name": "Divine Right",
+    "id": "TECH_DIVINE_RIGHT",
+    "requires": [
+      "TECH_THEOLOGY",
+      "TECH_MONARCHY"
+    ]
+  },
+  {
+    "cost": 1800,
+    "name": "Nationalism",
+    "optional": [
+      "TECH_DIVINE_RIGHT",
+      "TECH_PHILOSOPHY"
+    ],
+    "id": "TECH_NATIONALISM",
+    "requires": ["TECH_CIVIL_SERVICE"]
+  },
+  {
+    "cost": 2000,
+    "name": "Military Tradition",
+    "id": "TECH_MILITARY_TRADITION",
+    "requires": [
+      "TECH_NATIONALISM",
+      "TECH_MUSIC"
+    ]
+  },
+  {
+    "cost": 2000,
+    "name": "Constitution",
+    "id": "TECH_CONSTITUTION",
+    "requires": [
+      "TECH_NATIONALISM",
+      "TECH_CODE_OF_LAWS"
+    ]
+  },
+  {
+    "cost": 1400,
+    "name": "Liberalism",
+    "id": "TECH_LIBERALISM",
+    "requires": [
+      "TECH_EDUCATION",
+      "TECH_PHILOSOPHY"
+    ]
+  },
+  {
+    "cost": 2800,
+    "name": "Democracy",
+    "id": "TECH_DEMOCRACY",
+    "requires": [
+      "TECH_CONSTITUTION",
+      "TECH_PRINTING_PRESS"
+    ]
+  },
+  {
+    "cost": 1600,
+    "name": "Corporation",
+    "id": "TECH_CORPORATION",
+    "requires": [
+      "TECH_ECONOMICS",
+      "TECH_CONSTITUTION"
+    ]
+  },
+  {
+    "cost": 2400,
+    "name": "Fascism",
+    "id": "TECH_FASCISM",
+    "requires": [
+      "TECH_ASSEMBLY_LINE",
+      "TECH_NATIONALISM"
+    ]
+  },
+  {
+    "cost": 2800,
+    "name": "Communism",
+    "id": "TECH_UTOPIA",
+    "requires": [
+      "TECH_SCIENTIFIC_METHOD",
+      "TECH_LIBERALISM"
+    ]
+  },
+  {
+    "cost": 3600,
+    "name": "Mass Media",
+    "id": "TECH_MASS_MEDIA",
+    "requires": ["TECH_RADIO"]
+  },
+  {
+    "cost": 5500,
+    "name": "Ecology",
+    "optional": [
+      "TECH_PLASTICS",
+      "TECH_FISSION"
+    ],
+    "id": "TECH_ECOLOGY",
+    "requires": ["TECH_BIOLOGY"]
+  },
+  {
+    "cost": 40,
+    "name": "Fishing",
+    "id": "TECH_FISHING"
+  },
+  {
+    "cost": 60,
+    "name": "The Wheel",
+    "id": "TECH_THE_WHEEL"
+  },
+  {
+    "cost": 60,
+    "name": "Agriculture",
+    "id": "TECH_AGRICULTURE"
+  },
+  {
+    "cost": 80,
+    "name": "Pottery",
+    "optional": [
+      "TECH_AGRICULTURE",
+      "TECH_FISHING"
+    ],
+    "id": "TECH_POTTERY",
+    "requires": ["TECH_THE_WHEEL"]
+  },
+  {
+    "cost": 100,
+    "name": "Sailing",
+    "id": "TECH_SAILING",
+    "requires": ["TECH_FISHING"]
+  },
+  {
+    "cost": 120,
+    "name": "Writing",
+    "optional": [
+      "TECH_PRIESTHOOD",
+      "TECH_ANIMAL_HUSBANDRY",
+      "TECH_POTTERY"
+    ],
+    "id": "TECH_WRITING"
+  },
+  {
+    "cost": 250,
+    "name": "Mathematics",
+    "id": "TECH_MATHEMATICS",
+    "requires": ["TECH_WRITING"]
+  },
+  {
+    "cost": 300,
+    "name": "Alphabet",
+    "id": "TECH_ALPHABET",
+    "requires": ["TECH_WRITING"]
+  },
+  {
+    "cost": 350,
+    "name": "Calendar",
+    "id": "TECH_CALENDAR",
+    "requires": [
+      "TECH_MATHEMATICS",
+      "TECH_SAILING"
+    ]
+  },
+  {
+    "cost": 400,
+    "name": "Currency",
+    "id": "TECH_CURRENCY",
+    "requires": ["TECH_MATHEMATICS"]
+  },
+  {
+    "cost": 800,
+    "name": "Philosophy",
+    "optional": [
+      "TECH_CODE_OF_LAWS",
+      "TECH_DRAMA"
+    ],
+    "id": "TECH_PHILOSOPHY",
+    "requires": ["TECH_MEDITATION"]
+  },
+  {
+    "cost": 600,
+    "name": "Paper",
+    "optional": [
+      "TECH_THEOLOGY",
+      "TECH_CIVIL_SERVICE"
+    ],
+    "id": "TECH_PAPER"
+  },
+  {
+    "cost": 700,
+    "name": "Banking",
+    "id": "TECH_BANKING",
+    "requires": [
+      "TECH_GUILDS",
+      "TECH_CURRENCY"
+    ]
+  },
+  {
+    "cost": 1800,
+    "name": "Education",
+    "id": "TECH_EDUCATION",
+    "requires": ["TECH_PAPER"]
+  },
+  {
+    "cost": 1600,
+    "name": "Printing Press",
+    "id": "TECH_PRINTING_PRESS",
+    "requires": [
+      "TECH_PAPER",
+      "TECH_MACHINERY"
+    ]
+  },
+  {
+    "cost": 1400,
+    "name": "Economics",
+    "id": "TECH_ECONOMICS",
+    "requires": [
+      "TECH_EDUCATION",
+      "TECH_BANKING"
+    ]
+  },
+  {
+    "cost": 2000,
+    "name": "Astronomy",
+    "id": "TECH_ASTRONOMY",
+    "requires": [
+      "TECH_CALENDAR",
+      "TECH_OPTICS"
+    ]
+  },
+  {
+    "cost": 1800,
+    "name": "Chemistry",
+    "id": "TECH_CHEMISTRY",
+    "requires": [
+      "TECH_GUNPOWDER",
+      "TECH_ENGINEERING"
+    ]
+  },
+  {
+    "cost": 2400,
+    "name": "Scientific Method",
+    "optional": [
+      "TECH_CHEMISTRY",
+      "TECH_ASTRONOMY"
+    ],
+    "id": "TECH_SCIENTIFIC_METHOD",
+    "requires": ["TECH_PRINTING_PRESS"]
+  },
+  {
+    "cost": 4000,
+    "name": "Physics",
+    "id": "TECH_PHYSICS",
+    "requires": [
+      "TECH_SCIENTIFIC_METHOD",
+      "TECH_ASTRONOMY"
+    ]
+  },
+  {
+    "cost": 3600,
+    "name": "Biology",
+    "id": "TECH_BIOLOGY",
+    "requires": [
+      "TECH_SCIENTIFIC_METHOD",
+      "TECH_CHEMISTRY"
+    ]
+  },
+  {
+    "cost": 4500,
+    "name": "Medicine",
+    "id": "TECH_MEDICINE",
+    "requires": [
+      "TECH_BIOLOGY",
+      "TECH_OPTICS"
+    ]
+  },
+  {
+    "cost": 4500,
+    "name": "Electricity",
+    "id": "TECH_ELECTRICITY",
+    "requires": ["TECH_PHYSICS"]
+  },
+  {
+    "cost": 3600,
+    "name": "Combustion",
+    "id": "TECH_COMBUSTION",
+    "requires": ["TECH_RAILROAD"]
+  },
+  {
+    "cost": 5500,
+    "name": "Fission",
+    "id": "TECH_FISSION",
+    "requires": ["TECH_ELECTRICITY"]
+  },
+  {
+    "cost": 5000,
+    "name": "Flight",
+    "id": "TECH_FLIGHT",
+    "requires": [
+      "TECH_PHYSICS",
+      "TECH_COMBUSTION"
+    ]
+  },
+  {
+    "cost": 7000,
+    "name": "Plastics",
+    "id": "TECH_PLASTICS",
+    "requires": [
+      "TECH_INDUSTRIALISM",
+      "TECH_COMBUSTION"
+    ]
+  },
+  {
+    "cost": 7500,
+    "name": "Composites",
+    "id": "TECH_COMPOSITES",
+    "requires": [
+      "TECH_SATELLITES",
+      "TECH_PLASTICS"
+    ]
+  },
+  {
+    "cost": 7000,
+    "name": "Genetics",
+    "id": "TECH_GENETICS",
+    "requires": [
+      "TECH_COMPUTERS",
+      "TECH_REFRIGERATION"
+    ]
+  },
+  {
+    "cost": 7500,
+    "name": "Fiber Optics",
+    "optional": [
+      "TECH_PLASTICS",
+      "TECH_SATELLITES"
+    ],
+    "id": "TECH_FIBER_OPTICS",
+    "requires": ["TECH_COMPUTERS"]
+  },
+  {
+    "cost": 8000,
+    "name": "Fusion",
+    "id": "TECH_FUSION",
+    "requires": [
+      "TECH_FIBER_OPTICS",
+      "TECH_FISSION"
+    ]
+  },
+  {
+    "cost": 40,
+    "name": "Hunting",
+    "id": "TECH_HUNTING"
+  },
+  {
+    "cost": 50,
+    "name": "Mining",
+    "id": "TECH_MINING"
+  },
+  {
+    "cost": 60,
+    "name": "Archery",
+    "id": "TECH_ARCHERY",
+    "requires": ["TECH_HUNTING"]
+  },
+  {
+    "cost": 80,
+    "name": "Masonry",
+    "optional": [
+      "TECH_MINING",
+      "TECH_MYSTICISM"
+    ],
+    "id": "TECH_MASONRY"
+  },
+  {
+    "cost": 100,
+    "name": "Animal Husbandry",
+    "optional": [
+      "TECH_HUNTING",
+      "TECH_AGRICULTURE"
+    ],
+    "id": "TECH_ANIMAL_HUSBANDRY"
+  },
+  {
+    "cost": 120,
+    "name": "Bronze Working",
+    "id": "TECH_BRONZE_WORKING",
+    "requires": ["TECH_MINING"]
+  },
+  {
+    "cost": 250,
+    "name": "Horseback Riding",
+    "id": "TECH_HORSEBACK_RIDING",
+    "requires": ["TECH_ANIMAL_HUSBANDRY"]
+  },
+  {
+    "cost": 200,
+    "name": "Iron Working",
+    "id": "TECH_IRON_WORKING",
+    "requires": ["TECH_BRONZE_WORKING"]
+  },
+  {
+    "cost": 450,
+    "name": "Metal Casting",
+    "id": "TECH_METAL_CASTING",
+    "requires": [
+      "TECH_BRONZE_WORKING",
+      "TECH_POTTERY"
+    ]
+  },
+  {
+    "cost": 400,
+    "name": "Compass",
+    "id": "TECH_COMPASS",
+    "requires": [
+      "TECH_IRON_WORKING",
+      "TECH_SAILING"
+    ]
+  },
+  {
+    "cost": 350,
+    "name": "Construction",
+    "id": "TECH_CONSTRUCTION",
+    "requires": [
+      "TECH_MATHEMATICS",
+      "TECH_MASONRY"
+    ]
+  },
+  {
+    "cost": 700,
+    "name": "Machinery",
+    "id": "TECH_MACHINERY",
+    "requires": ["TECH_METAL_CASTING"]
+  },
+  {
+    "cost": 1000,
+    "name": "Engineering",
+    "id": "TECH_ENGINEERING",
+    "requires": [
+      "TECH_CONSTRUCTION",
+      "TECH_MACHINERY"
+    ]
+  },
+  {
+    "cost": 600,
+    "name": "Optics",
+    "id": "TECH_OPTICS",
+    "requires": [
+      "TECH_MACHINERY",
+      "TECH_COMPASS"
+    ]
+  },
+  {
+    "cost": 1200,
+    "name": "Gunpowder",
+    "optional": [
+      "TECH_GUILDS",
+      "TECH_EDUCATION"
+    ],
+    "id": "TECH_GUNPOWDER"
+  },
+  {
+    "cost": 1800,
+    "name": "Replaceable Parts",
+    "id": "TECH_REPLACEABLE_PARTS",
+    "requires": [
+      "TECH_PRINTING_PRESS",
+      "TECH_BANKING"
+    ]
+  },
+  {
+    "cost": 2400,
+    "name": "Rifling",
+    "id": "TECH_RIFLING",
+    "requires": [
+      "TECH_REPLACEABLE_PARTS",
+      "TECH_GUNPOWDER"
+    ]
+  },
+  {
+    "cost": 3200,
+    "name": "Steam Power",
+    "id": "TECH_STEAM_POWER",
+    "requires": [
+      "TECH_REPLACEABLE_PARTS",
+      "TECH_CHEMISTRY"
+    ]
+  },
+  {
+    "cost": 2800,
+    "name": "Steel",
+    "id": "TECH_STEEL",
+    "requires": [
+      "TECH_CHEMISTRY",
+      "TECH_IRON_WORKING"
+    ]
+  },
+  {
+    "cost": 5000,
+    "name": "Assembly Line",
+    "id": "TECH_ASSEMBLY_LINE",
+    "requires": [
+      "TECH_STEAM_POWER",
+      "TECH_CORPORATION"
+    ]
+  },
+  {
+    "cost": 4500,
+    "name": "Railroad",
+    "id": "TECH_RAILROAD",
+    "requires": [
+      "TECH_STEEL",
+      "TECH_STEAM_POWER"
+    ]
+  },
+  {
+    "cost": 4000,
+    "name": "Artillery",
+    "id": "TECH_ARTILLERY",
+    "requires": [
+      "TECH_RIFLING",
+      "TECH_PHYSICS",
+      "TECH_STEEL"
+    ]
+  },
+  {
+    "cost": 6500,
+    "name": "Industrialism",
+    "id": "TECH_INDUSTRIALISM",
+    "requires": [
+      "TECH_ASSEMBLY_LINE",
+      "TECH_ELECTRICITY"
+    ]
+  },
+  {
+    "cost": 6000,
+    "name": "Radio",
+    "id": "TECH_RADIO",
+    "requires": ["TECH_ELECTRICITY"]
+  },
+  {
+    "cost": 4000,
+    "name": "Refrigeration",
+    "id": "TECH_REFRIGERATION",
+    "requires": [
+      "TECH_ELECTRICITY",
+      "TECH_BIOLOGY"
+    ]
+  },
+  {
+    "cost": 6500,
+    "name": "Computers",
+    "id": "TECH_COMPUTERS",
+    "requires": ["TECH_RADIO"]
+  },
+  {
+    "cost": 5000,
+    "name": "Rocketry",
+    "optional": [
+      "TECH_FLIGHT",
+      "TECH_ARTILLERY"
+    ],
+    "id": "TECH_ROCKETRY",
+    "requires": ["TECH_RIFLING"]
+  },
+  {
+    "cost": 6000,
+    "name": "Satellites",
+    "id": "TECH_SATELLITES",
+    "requires": [
+      "TECH_ROCKETRY",
+      "TECH_RADIO"
+    ]
+  },
+  {
+    "cost": 8000,
+    "name": "Robotics",
+    "id": "TECH_ROBOTICS",
+    "requires": [
+      "TECH_COMPUTERS",
+      "TECH_PLASTICS"
+    ]
+  },
+  {
+    "cost": 10000,
+    "name": "Future Tech",
+    "id": "TECH_FUTURE_TECH",
+    "requires": [
+      "TECH_GENETICS",
+      "TECH_COMPOSITES"
+    ]
+  }
+]}
