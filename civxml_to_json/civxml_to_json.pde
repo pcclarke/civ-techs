@@ -33,21 +33,28 @@ void setup() {
   gameTextWarXML = loadXML(gameTextWarFilename);
   gameTextWarList = gameTextWarXML.getChildren("TEXT");
   
+  XML gameTextBTSXML = loadXML("bts/XML/Text/CIV4GameText_BTS.xml");
+  XML[] gameTextBTSList = gameTextBTSXML.getChildren("TEXT");
+  
   XML gameTextBTS_FixedXML = loadXML("bts/XML/Text/CIV4GameText_BTS_Fixed.xml");
   XML[] gameTextBTS_FixedList = gameTextBTS_FixedXML.getChildren("TEXT");
   
+  XML[][] civ4baseTexts = { textList, textObjectsList };
+  
   XML[][] texts ={ 
+    textList,
     textObjectsList, 
     gameTextWarList, 
     textObjectsWarList, 
     textObjectsBTSList,
+    gameTextBTSList,
     gameTextBTS_FixedList };
   
   // LOAD IN DATA
   
   // Civilization 4 vanilla
   getTechs("civ4/XML/Technologies/CIV4TechInfos.xml", civ4base, "base");
-  getBuilds("civ4/XML/Units/CIV4BuildInfos.xml", civ4base);
+  getBuilds("civ4/XML/Units/CIV4BuildInfos.xml", civ4baseTexts, civ4base);
   getImprovementInfos("civ4/XML/Terrain/CIV4ImprovementInfos.xml", civ4base);
   getPromotionInfos("civ4/XML/Units/CIV4PromotionInfos.xml", civ4base);
   getReligionInfos("civ4/XML/GameInfo/CIV4ReligionInfo.xml", civ4base);
@@ -60,7 +67,7 @@ void setup() {
   
   // Civilization 4: Warlords
   getTechs("war/XML/Technologies/CIV4TechInfos.xml", civ4war, "war");
-  getBuilds("war/XML/Units/CIV4BuildInfos.xml", civ4war);
+  getBuilds("war/XML/Units/CIV4BuildInfos.xml", texts, civ4war);
   getImprovementInfos("war/XML/Terrain/CIV4ImprovementInfos.xml", civ4war);
   getPromotionInfos("war/XML/Units/CIV4PromotionInfos.xml", civ4war);
   getReligionInfos("civ4/XML/GameInfo/CIV4ReligionInfo.xml", civ4war); // civ4 dir not a typo
@@ -73,7 +80,7 @@ void setup() {
 
   // Civilization 4: Beyond the Sword
   getTechs("bts/XML/Technologies/CIV4TechInfos.xml", civ4bts, "bts");
-  getBuilds("bts/XML/Units/CIV4BuildInfos.xml", civ4bts);
+  getBuilds("bts/XML/Units/CIV4BuildInfos.xml", texts, civ4bts);
   getImprovementInfos("bts/XML/Terrain/CIV4ImprovementInfos.xml", civ4bts);
   getPromotionInfos("bts/XML/Units/CIV4PromotionInfos.xml", civ4bts);
   getReligionInfos("bts/XML/GameInfo/CIV4ReligionInfo.xml", civ4bts);
@@ -406,11 +413,10 @@ void getTechs(String path, JSONObject dataObj, String ver) {
 }
 
 
-// GET BUILD DATA
-void getBuilds(String path, JSONObject dataObj) {
+// GET BUILD DATA (id, prerequisite, name)
+void getBuilds(String path, XML[][] texts, JSONObject dataObj) {
   buildXML = loadXML(path);
-  XML buildInfos = buildXML.getChild("BuildInfos");
-  XML[] buildInfo = buildInfos.getChildren("BuildInfo");
+  XML[] buildInfo = buildXML.getChild("BuildInfos").getChildren("BuildInfo");
   
   JSONArray buildList = new JSONArray();
   
@@ -421,9 +427,35 @@ void getBuilds(String path, JSONObject dataObj) {
     buildDetails.setString("id", buildInfo[i].getChild("Type").getContent());
     
     // prereq tech
-    buildDetails.setString("prereq", buildInfo[i].getChild("PrereqTech").getContent());
+    String prereq = buildInfo[i].getChild("PrereqTech").getContent();
+    if (prereq.equals("NONE")) {
+      String featurePrereq = buildInfo[i].getChild("FeatureStructs").getChild("FeatureStruct").getChild("PrereqTech").getContent();
+      buildDetails.setString("prereq", featurePrereq);
+    } else {
+      buildDetails.setString("prereq", prereq);
+    }
     
     // Name
+    String name = "";
+    
+    for (int k = 0; k < texts.length; k++) {
+      for (int l = 0; l < texts[k].length; l++) {
+        String tag = texts[k][l].getChild("Tag").getContent();
+        if (tag.equals(buildInfo[i].getChild("Description").getContent())) {
+          name = texts[k][l].getChild(language).getContent();
+        }
+      }
+      if (name.length() > 0) {
+        String[] split = splitTokens(name, "[]");
+        String[] trimmed = new String[2];
+        trimmed[0] = trim(split[0]);
+        trimmed[1] = trim(split[2]);
+        buildDetails.setString("name", join(trimmed, ' '));
+        break; 
+      }
+    }
+    println(name);
+    /*
     for (int j = 0; j < textObjectsList.length; j++) {
       String tag = textList[j].getChild("Tag").getContent();
       if (tag.equals(buildInfo[i].getChild("Description").getContent())) {
@@ -433,7 +465,7 @@ void getBuilds(String path, JSONObject dataObj) {
         trimmed[1] = trim(split[2]);
         buildDetails.setString("name", join(trimmed, ' '));
       }
-    }
+    }*/
     
     buildList.append(buildDetails);
   }
@@ -441,6 +473,8 @@ void getBuilds(String path, JSONObject dataObj) {
   dataObj.setJSONArray("build", buildList);
 }
 
+
+// COLLECT TERRAIN IMPROVEMENT BONUSES
 void getImprovementInfos(String path, JSONObject dataObj) {
   XML improveXML = loadXML(path);
   XML improveInfos = improveXML.getChild("ImprovementInfos");
@@ -519,6 +553,8 @@ void getImprovementInfos(String path, JSONObject dataObj) {
   }
 }
 
+
+// COLLECT PROMOTION INFO
 void getPromotionInfos(String path, JSONObject dataObj) {
   XML promotionXML = loadXML(path);
   XML promotionInfos = promotionXML.getChild("PromotionInfos");
@@ -581,28 +617,35 @@ void getReligionInfos(String path, JSONObject dataObj) {
 // COLLECT RESOURCE INFO (name, id, prerequisite)
 void getResourceInfos(String path, JSONObject dataObj) {
   XML resourceXML = loadXML(path);
-  XML resourceInfos = resourceXML.getChild("BonusInfos");
-  XML[] resourceInfo = resourceInfos.getChildren("BonusInfo");
+  XML[] resourceInfo = resourceXML.getChild("BonusInfos").getChildren("BonusInfo");
   
   JSONArray resourceList = new JSONArray();
   
   for (int i = 0; i < resourceInfo.length; i++) {
     String prereq = resourceInfo[i].getChild("TechReveal").getContent();
-    if (prereq.equals("NONE") == false) {
-      JSONObject religionDetails = new JSONObject();
+    String obsoleteTech = resourceInfo[i].getChild("TechObsolete").getContent();
+    if (prereq.equals("NONE") == false || obsoleteTech.equals("NONE") == false) {
+      JSONObject resourceDetails = new JSONObject();
       
-      religionDetails.setString("id", resourceInfo[i].getChild("Type").getContent());
-      religionDetails.setString("prereq", prereq);
+      resourceDetails.setString("id", resourceInfo[i].getChild("Type").getContent());
+      if (prereq.equals("NONE") == false) {
+        resourceDetails.setString("prereq", prereq);
+      }
+      
+      // Set the technology that makes this resource obsolete
+      if (obsoleteTech.equals("NONE") == false) {
+        resourceDetails.setString("obsolete", obsoleteTech);
+      }
       
       // Name
       for (int j = 0; j < textObjectsList.length; j++) {
         String tag = textObjectsList[j].getChild("Tag").getContent();
         if (tag.equals(resourceInfo[i].getChild("Description").getContent())) {
-          religionDetails.setString("name", textObjectsList[j].getChild(language).getContent());
+          resourceDetails.setString("name", textObjectsList[j].getChild(language).getContent());
         }
       }
       
-      resourceList.append(religionDetails);
+      resourceList.append(resourceDetails);
     }
   }
   
@@ -733,6 +776,11 @@ void getBuildingInfos(String path, XML[][] texts, String civPath, JSONObject dat
       
       buildingDetails.setJSONArray("prereq", preReqs);
       
+      // Set the technology that makes this building obsolete
+      String obsoleteTech = buildingInfo[i].getChild("ObsoleteTech").getContent();
+      if (obsoleteTech.equals("NONE") == false) {
+        buildingDetails.setString("obsolete", obsoleteTech);
+      }
       
       // JSON Array of building types for this class (standard + civilization specific)
       JSONArray buildingTypes = new JSONArray();
