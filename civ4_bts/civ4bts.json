@@ -1,0 +1,4064 @@
+{
+  "technologies": [
+    {
+      "cost": 50,
+      "name": "Mysticism",
+      "id": "TECH_MYSTICISM"
+    },
+    {
+      "cost": 80,
+      "name": "Meditation",
+      "id": "TECH_MEDITATION",
+      "requires": ["TECH_MYSTICISM"]
+    },
+    {
+      "cost": 100,
+      "name": "Polytheism",
+      "id": "TECH_POLYTHEISM",
+      "requires": ["TECH_MYSTICISM"]
+    },
+    {
+      "cost": 60,
+      "name": "Priesthood",
+      "optional": [
+        "TECH_MEDITATION",
+        "TECH_POLYTHEISM"
+      ],
+      "id": "TECH_PRIESTHOOD"
+    },
+    {
+      "cost": 120,
+      "name": "Monotheism",
+      "id": "TECH_MONOTHEISM",
+      "requires": [
+        "TECH_POLYTHEISM",
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "cost": 300,
+      "name": "Monarchy",
+      "optional": [
+        "TECH_PRIESTHOOD",
+        "TECH_MONOTHEISM"
+      ],
+      "id": "TECH_MONARCHY"
+    },
+    {
+      "cost": 200,
+      "name": "Literature",
+      "id": "TECH_LITERATURE",
+      "requires": [
+        "TECH_AESTHETICS",
+        "TECH_POLYTHEISM"
+      ]
+    },
+    {
+      "cost": 350,
+      "name": "Code of Laws",
+      "optional": [
+        "TECH_PRIESTHOOD",
+        "TECH_CURRENCY"
+      ],
+      "id": "TECH_CODE_OF_LAWS",
+      "requires": ["TECH_WRITING"]
+    },
+    {
+      "cost": 300,
+      "name": "Drama",
+      "id": "TECH_DRAMA",
+      "requires": ["TECH_AESTHETICS"]
+    },
+    {
+      "cost": 700,
+      "name": "Feudalism",
+      "id": "TECH_FEUDALISM",
+      "requires": [
+        "TECH_MONARCHY",
+        "TECH_WRITING"
+      ]
+    },
+    {
+      "cost": 500,
+      "name": "Theology",
+      "id": "TECH_THEOLOGY",
+      "requires": [
+        "TECH_MONOTHEISM",
+        "TECH_WRITING"
+      ]
+    },
+    {
+      "special": [{
+        "name": "First to Discover Receives a Great Artist",
+        "id": "SPECIAL_GREAT_ARTIST"
+      }],
+      "cost": 600,
+      "name": "Music",
+      "optional": [
+        "TECH_LITERATURE",
+        "TECH_DRAMA"
+      ],
+      "id": "TECH_MUSIC",
+      "requires": ["TECH_MATHEMATICS"]
+    },
+    {
+      "special": [{
+        "name": "Farms Spread Irrigation",
+        "id": "SPECIAL_SPREAD_IRRIGATION"
+      }],
+      "cost": 800,
+      "name": "Civil Service",
+      "optional": [
+        "TECH_CODE_OF_LAWS",
+        "TECH_FEUDALISM"
+      ],
+      "id": "TECH_CIVIL_SERVICE",
+      "requires": ["TECH_MATHEMATICS"]
+    },
+    {
+      "special": [{
+        "trade": 0,
+        "hammer": 1,
+        "name": "Workshop: +1 Hammers",
+        "id": "IMPROVEMENT_WORKSHOP",
+        "food": 0
+      }],
+      "cost": 1000,
+      "name": "Guilds",
+      "id": "TECH_GUILDS",
+      "requires": [
+        "TECH_MACHINERY",
+        "TECH_FEUDALISM"
+      ]
+    },
+    {
+      "cost": 1200,
+      "name": "Divine Right",
+      "id": "TECH_DIVINE_RIGHT",
+      "requires": [
+        "TECH_THEOLOGY",
+        "TECH_MONARCHY"
+      ]
+    },
+    {
+      "cost": 1800,
+      "name": "Nationalism",
+      "optional": [
+        "TECH_DIVINE_RIGHT",
+        "TECH_PHILOSOPHY"
+      ],
+      "id": "TECH_NATIONALISM",
+      "requires": ["TECH_CIVIL_SERVICE"]
+    },
+    {
+      "special": [{
+        "name": "Enables Defensive Pacts",
+        "id": "SPECIAL_DEFENSIVE_PACTS"
+      }],
+      "cost": 2000,
+      "name": "Military Tradition",
+      "id": "TECH_MILITARY_TRADITION",
+      "requires": [
+        "TECH_NATIONALISM",
+        "TECH_MUSIC"
+      ]
+    },
+    {
+      "cost": 2000,
+      "name": "Constitution",
+      "id": "TECH_CONSTITUTION",
+      "requires": [
+        "TECH_NATIONALISM",
+        "TECH_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "cost": 1400,
+      "name": "Liberalism",
+      "id": "TECH_LIBERALISM",
+      "requires": [
+        "TECH_EDUCATION",
+        "TECH_PHILOSOPHY"
+      ]
+    },
+    {
+      "cost": 2800,
+      "name": "Democracy",
+      "id": "TECH_DEMOCRACY",
+      "requires": [
+        "TECH_CONSTITUTION",
+        "TECH_PRINTING_PRESS"
+      ]
+    },
+    {
+      "special": [{
+        "name": "+1 Trade Routes per City",
+        "id": "SPECIAL_TRADE_ROUTES"
+      }],
+      "cost": 1600,
+      "name": "Corporation",
+      "id": "TECH_CORPORATION",
+      "requires": [
+        "TECH_ECONOMICS",
+        "TECH_CONSTITUTION"
+      ]
+    },
+    {
+      "special": [
+        {
+          "name": "Enables Permanent Alliances",
+          "id": "SPECIAL_PERMANENT_ALLIANCES"
+        },
+        {
+          "name": "First to Discover Receives a Great General",
+          "id": "SPECIAL_GREAT_GENERAL"
+        }
+      ],
+      "cost": 2400,
+      "name": "Fascism",
+      "id": "TECH_FASCISM",
+      "requires": [
+        "TECH_ASSEMBLY_LINE",
+        "TECH_NATIONALISM"
+      ]
+    },
+    {
+      "special": [
+        {
+          "name": "Enables Permanent Alliances",
+          "id": "SPECIAL_PERMANENT_ALLIANCES"
+        },
+        {
+          "name": "First to Discover Receives a Great Spy",
+          "id": "SPECIAL_GREAT_SPY"
+        }
+      ],
+      "cost": 2800,
+      "name": "Communism",
+      "id": "TECH_UTOPIA",
+      "requires": [
+        "TECH_SCIENTIFIC_METHOD",
+        "TECH_LIBERALISM"
+      ]
+    },
+    {
+      "cost": 3600,
+      "name": "Mass Media",
+      "id": "TECH_MASS_MEDIA",
+      "requires": ["TECH_RADIO"]
+    },
+    {
+      "cost": 5500,
+      "name": "Ecology",
+      "optional": [
+        "TECH_PLASTICS",
+        "TECH_FISSION"
+      ],
+      "id": "TECH_ECOLOGY",
+      "requires": ["TECH_BIOLOGY"]
+    },
+    {
+      "special": [{
+        "name": "Can work water tiles",
+        "id": "SPECIAL_WATER_WORK"
+      }],
+      "cost": 40,
+      "name": "Fishing",
+      "id": "TECH_FISHING"
+    },
+    {
+      "cost": 60,
+      "name": "The Wheel",
+      "id": "TECH_THE_WHEEL"
+    },
+    {
+      "cost": 60,
+      "name": "Agriculture",
+      "id": "TECH_AGRICULTURE"
+    },
+    {
+      "cost": 80,
+      "name": "Pottery",
+      "optional": [
+        "TECH_AGRICULTURE",
+        "TECH_FISHING"
+      ],
+      "id": "TECH_POTTERY",
+      "requires": ["TECH_THE_WHEEL"]
+    },
+    {
+      "cost": 300,
+      "name": "Aesthetics",
+      "id": "TECH_AESTHETICS",
+      "requires": ["TECH_WRITING"]
+    },
+    {
+      "special": [
+        {
+          "name": "Enables Trade on Coast",
+          "id": "SPECIAL_TRADE_COAST"
+        },
+        {
+          "name": "Enables Trade on Rivers",
+          "id": "SPECIAL_TRADE_RIVERS"
+        }
+      ],
+      "cost": 100,
+      "name": "Sailing",
+      "id": "TECH_SAILING",
+      "requires": ["TECH_FISHING"]
+    },
+    {
+      "special": [{
+        "name": "Enables open borders",
+        "id": "SPECIAL_OPEN_BORDERS"
+      }],
+      "cost": 120,
+      "name": "Writing",
+      "optional": [
+        "TECH_PRIESTHOOD",
+        "TECH_ANIMAL_HUSBANDRY",
+        "TECH_POTTERY"
+      ],
+      "id": "TECH_WRITING"
+    },
+    {
+      "cost": 250,
+      "name": "Mathematics",
+      "id": "TECH_MATHEMATICS",
+      "requires": ["TECH_WRITING"]
+    },
+    {
+      "special": [{
+        "name": "Enables Technology Trading",
+        "id": "SPECIAL_TECH_TRADING"
+      }],
+      "cost": 300,
+      "name": "Alphabet",
+      "id": "TECH_ALPHABET",
+      "requires": ["TECH_WRITING"]
+    },
+    {
+      "special": [{
+        "name": "Centers World Map",
+        "id": "SPECIAL_CENTER_MAP"
+      }],
+      "cost": 350,
+      "name": "Calendar",
+      "id": "TECH_CALENDAR",
+      "requires": [
+        "TECH_MATHEMATICS",
+        "TECH_SAILING"
+      ]
+    },
+    {
+      "special": [
+        {
+          "name": "Enables Gold Trading via Diplomacy",
+          "id": "SPECIAL_GOLD_TRADING"
+        },
+        {
+          "name": "+1 Trade Routes per City",
+          "id": "SPECIAL_TRADE_ROUTES"
+        }
+      ],
+      "cost": 400,
+      "name": "Currency",
+      "optional": [
+        "TECH_MATHEMATICS",
+        "TECH_ALPHABET"
+      ],
+      "id": "TECH_CURRENCY"
+    },
+    {
+      "cost": 800,
+      "name": "Philosophy",
+      "optional": [
+        "TECH_CODE_OF_LAWS",
+        "TECH_DRAMA"
+      ],
+      "id": "TECH_PHILOSOPHY",
+      "requires": ["TECH_MEDITATION"]
+    },
+    {
+      "special": [{
+        "name": "Enables Map Trading",
+        "id": "SPECIAL_MAP_TRADING"
+      }],
+      "cost": 600,
+      "name": "Paper",
+      "optional": [
+        "TECH_THEOLOGY",
+        "TECH_CIVIL_SERVICE"
+      ],
+      "id": "TECH_PAPER"
+    },
+    {
+      "cost": 700,
+      "name": "Banking",
+      "id": "TECH_BANKING",
+      "requires": [
+        "TECH_GUILDS",
+        "TECH_CURRENCY"
+      ]
+    },
+    {
+      "cost": 1800,
+      "name": "Education",
+      "id": "TECH_EDUCATION",
+      "requires": ["TECH_PAPER"]
+    },
+    {
+      "special": [
+        {
+          "trade": 1,
+          "hammer": 0,
+          "name": "Village: +1 Trade",
+          "id": "IMPROVEMENT_VILLAGE",
+          "food": 0
+        },
+        {
+          "special": {
+            "trade": 1,
+            "hammer": 0,
+            "name": "Town: +1 Trade",
+            "id": "IMPROVEMENT_TOWN",
+            "food": 0
+          },
+          "prereq": "TECH_PRINTING_PRESS"
+        }
+      ],
+      "cost": 1600,
+      "name": "Printing Press",
+      "id": "TECH_PRINTING_PRESS",
+      "requires": [
+        "TECH_PAPER",
+        "TECH_MACHINERY",
+        "TECH_ALPHABET"
+      ]
+    },
+    {
+      "special": [{
+        "name": "First to Discover Receives a Great Merchant",
+        "id": "SPECIAL_GREAT_MERCHANT"
+      }],
+      "cost": 1400,
+      "name": "Economics",
+      "id": "TECH_ECONOMICS",
+      "requires": [
+        "TECH_EDUCATION",
+        "TECH_BANKING"
+      ]
+    },
+    {
+      "special": [{
+        "name": "Enables Trade on Ocean",
+        "id": "SPECIAL_TRADE_OCEAN"
+      }],
+      "cost": 2000,
+      "name": "Astronomy",
+      "id": "TECH_ASTRONOMY",
+      "requires": [
+        "TECH_CALENDAR",
+        "TECH_OPTICS"
+      ]
+    },
+    {
+      "special": [{
+        "trade": 0,
+        "hammer": 1,
+        "name": "Workshop: +1 Hammers",
+        "id": "IMPROVEMENT_WORKSHOP",
+        "food": 0
+      }],
+      "cost": 1800,
+      "name": "Chemistry",
+      "id": "TECH_CHEMISTRY",
+      "requires": [
+        "TECH_GUNPOWDER",
+        "TECH_ENGINEERING"
+      ]
+    },
+    {
+      "cost": 2400,
+      "name": "Scientific Method",
+      "optional": [
+        "TECH_CHEMISTRY",
+        "TECH_ASTRONOMY"
+      ],
+      "id": "TECH_SCIENTIFIC_METHOD",
+      "requires": ["TECH_PRINTING_PRESS"]
+    },
+    {
+      "special": [{
+        "name": "First to Discover Receives a Great Scientist",
+        "id": "SPECIAL_GREAT_SCIENTIST"
+      }],
+      "cost": 4000,
+      "name": "Physics",
+      "id": "TECH_PHYSICS",
+      "requires": [
+        "TECH_SCIENTIFIC_METHOD",
+        "TECH_ASTRONOMY"
+      ]
+    },
+    {
+      "special": [
+        {
+          "name": "Can Build Farms without Irrigation",
+          "id": "SPECIAL_IGNORE_IRRIGATION"
+        },
+        {
+          "special": {
+            "trade": 0,
+            "hammer": 0,
+            "name": "Farm: +1 Food",
+            "id": "IMPROVEMENT_FARM",
+            "food": 1
+          },
+          "prereq": "TECH_BIOLOGY"
+        }
+      ],
+      "cost": 3600,
+      "name": "Biology",
+      "id": "TECH_BIOLOGY",
+      "requires": [
+        "TECH_SCIENTIFIC_METHOD",
+        "TECH_CHEMISTRY"
+      ]
+    },
+    {
+      "cost": 4500,
+      "name": "Medicine",
+      "id": "TECH_MEDICINE",
+      "requires": [
+        "TECH_BIOLOGY",
+        "TECH_OPTICS"
+      ]
+    },
+    {
+      "special": [
+        {
+          "trade": 1,
+          "hammer": 0,
+          "name": "Windmill: +1 Trade",
+          "id": "IMPROVEMENT_WINDMILL",
+          "food": 0
+        },
+        {
+          "special": {
+            "trade": 2,
+            "hammer": 0,
+            "name": "Watermill: +2 Trade",
+            "id": "IMPROVEMENT_WATERMILL",
+            "food": 0
+          },
+          "prereq": "TECH_ELECTRICITY"
+        }
+      ],
+      "cost": 4500,
+      "name": "Electricity",
+      "id": "TECH_ELECTRICITY",
+      "requires": ["TECH_PHYSICS"]
+    },
+    {
+      "cost": 3600,
+      "name": "Combustion",
+      "id": "TECH_COMBUSTION",
+      "requires": ["TECH_RAILROAD"]
+    },
+    {
+      "cost": 5500,
+      "name": "Fission",
+      "id": "TECH_FISSION",
+      "requires": ["TECH_ELECTRICITY"]
+    },
+    {
+      "cost": 5000,
+      "name": "Flight",
+      "id": "TECH_FLIGHT",
+      "requires": [
+        "TECH_PHYSICS",
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "cost": 5000,
+      "name": "Advanced Flight",
+      "id": "TECH_ADVANCED_FLIGHT",
+      "requires": [
+        "TECH_FLIGHT",
+        "TECH_SATELLITES"
+      ]
+    },
+    {
+      "cost": 7000,
+      "name": "Plastics",
+      "id": "TECH_PLASTICS",
+      "requires": [
+        "TECH_INDUSTRIALISM",
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "cost": 7500,
+      "name": "Composites",
+      "id": "TECH_COMPOSITES",
+      "requires": [
+        "TECH_PLASTICS",
+        "TECH_SATELLITES"
+      ]
+    },
+    {
+      "cost": 8000,
+      "name": "Stealth",
+      "id": "TECH_STEALTH",
+      "requires": [
+        "TECH_ADVANCED_FLIGHT",
+        "TECH_COMPOSITES"
+      ]
+    },
+    {
+      "special": [{
+        "name": "+3 Health in All Cities",
+        "id": "SPECIAL_HEALTH_BONUS"
+      }],
+      "cost": 7000,
+      "name": "Genetics",
+      "id": "TECH_GENETICS",
+      "requires": [
+        "TECH_SUPERCONDUCTORS",
+        "TECH_MEDICINE"
+      ]
+    },
+    {
+      "cost": 7500,
+      "name": "Fiber Optics",
+      "optional": [
+        "TECH_COMPUTERS",
+        "TECH_LASER"
+      ],
+      "id": "TECH_FIBER_OPTICS"
+    },
+    {
+      "special": [{
+        "name": "First to Discover Receives a Great Engineer",
+        "id": "SPECIAL_GREAT_ENGINEER"
+      }],
+      "cost": 8000,
+      "name": "Fusion",
+      "id": "TECH_FUSION",
+      "requires": [
+        "TECH_FIBER_OPTICS",
+        "TECH_FISSION"
+      ]
+    },
+    {
+      "cost": 40,
+      "name": "Hunting",
+      "id": "TECH_HUNTING"
+    },
+    {
+      "cost": 50,
+      "name": "Mining",
+      "id": "TECH_MINING"
+    },
+    {
+      "cost": 60,
+      "name": "Archery",
+      "id": "TECH_ARCHERY",
+      "requires": ["TECH_HUNTING"]
+    },
+    {
+      "cost": 80,
+      "name": "Masonry",
+      "optional": [
+        "TECH_MINING",
+        "TECH_MYSTICISM"
+      ],
+      "id": "TECH_MASONRY"
+    },
+    {
+      "cost": 100,
+      "name": "Animal Husbandry",
+      "optional": [
+        "TECH_HUNTING",
+        "TECH_AGRICULTURE"
+      ],
+      "id": "TECH_ANIMAL_HUSBANDRY"
+    },
+    {
+      "cost": 120,
+      "name": "Bronze Working",
+      "id": "TECH_BRONZE_WORKING",
+      "requires": ["TECH_MINING"]
+    },
+    {
+      "cost": 250,
+      "name": "Horseback Riding",
+      "id": "TECH_HORSEBACK_RIDING",
+      "requires": ["TECH_ANIMAL_HUSBANDRY"]
+    },
+    {
+      "cost": 200,
+      "name": "Iron Working",
+      "id": "TECH_IRON_WORKING",
+      "requires": ["TECH_BRONZE_WORKING"]
+    },
+    {
+      "cost": 450,
+      "name": "Metal Casting",
+      "id": "TECH_METAL_CASTING",
+      "requires": [
+        "TECH_BRONZE_WORKING",
+        "TECH_POTTERY"
+      ]
+    },
+    {
+      "cost": 400,
+      "name": "Compass",
+      "id": "TECH_COMPASS",
+      "requires": [
+        "TECH_IRON_WORKING",
+        "TECH_SAILING"
+      ]
+    },
+    {
+      "special": [{
+        "name": "Enables Bridge Building",
+        "id": "SPECIAL_BRIDGE_BUILDING"
+      }],
+      "cost": 350,
+      "name": "Construction",
+      "id": "TECH_CONSTRUCTION",
+      "requires": [
+        "TECH_MATHEMATICS",
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "cost": 700,
+      "name": "Machinery",
+      "id": "TECH_MACHINERY",
+      "requires": ["TECH_METAL_CASTING"]
+    },
+    {
+      "cost": 1000,
+      "name": "Engineering",
+      "id": "TECH_ENGINEERING",
+      "requires": [
+        "TECH_CONSTRUCTION",
+        "TECH_MACHINERY"
+      ]
+    },
+    {
+      "special": [{
+        "name": "+1 Sight Across Water",
+        "id": "SPECIAL_WATER_SIGHT"
+      }],
+      "cost": 600,
+      "name": "Optics",
+      "id": "TECH_OPTICS",
+      "requires": [
+        "TECH_COMPASS",
+        "TECH_MACHINERY"
+      ]
+    },
+    {
+      "cost": 1200,
+      "name": "Gunpowder",
+      "optional": [
+        "TECH_GUILDS",
+        "TECH_EDUCATION"
+      ],
+      "id": "TECH_GUNPOWDER"
+    },
+    {
+      "special": [
+        {
+          "trade": 0,
+          "hammer": 1,
+          "name": "Windmill: +1 Hammers",
+          "id": "IMPROVEMENT_WINDMILL",
+          "food": 0
+        },
+        {
+          "special": {
+            "trade": 0,
+            "hammer": 1,
+            "name": "Watermill: +1 Hammers",
+            "id": "IMPROVEMENT_WATERMILL",
+            "food": 0
+          },
+          "prereq": "TECH_REPLACEABLE_PARTS"
+        }
+      ],
+      "cost": 1800,
+      "name": "Replaceable Parts",
+      "id": "TECH_REPLACEABLE_PARTS",
+      "requires": [
+        "TECH_PRINTING_PRESS",
+        "TECH_BANKING"
+      ]
+    },
+    {
+      "cost": 2000,
+      "name": "Military Science",
+      "id": "TECH_MILITARY_SCIENCE",
+      "requires": ["TECH_CHEMISTRY"]
+    },
+    {
+      "cost": 2400,
+      "name": "Rifling",
+      "id": "TECH_RIFLING",
+      "requires": [
+        "TECH_REPLACEABLE_PARTS",
+        "TECH_GUNPOWDER"
+      ]
+    },
+    {
+      "special": [{
+        "name": "Workers Build Improvements +50% Faster",
+        "id": "SPECIAL_WORKER_SPEED"
+      }],
+      "cost": 3200,
+      "name": "Steam Power",
+      "id": "TECH_STEAM_POWER",
+      "requires": [
+        "TECH_REPLACEABLE_PARTS",
+        "TECH_CHEMISTRY"
+      ]
+    },
+    {
+      "cost": 2800,
+      "name": "Steel",
+      "id": "TECH_STEEL",
+      "requires": [
+        "TECH_CHEMISTRY",
+        "TECH_IRON_WORKING"
+      ]
+    },
+    {
+      "cost": 5000,
+      "name": "Assembly Line",
+      "id": "TECH_ASSEMBLY_LINE",
+      "requires": [
+        "TECH_STEAM_POWER",
+        "TECH_CORPORATION"
+      ]
+    },
+    {
+      "cost": 4500,
+      "name": "Railroad",
+      "id": "TECH_RAILROAD",
+      "requires": [
+        "TECH_STEEL",
+        "TECH_STEAM_POWER"
+      ]
+    },
+    {
+      "cost": 4000,
+      "name": "Artillery",
+      "id": "TECH_ARTILLERY",
+      "requires": [
+        "TECH_RIFLING",
+        "TECH_PHYSICS",
+        "TECH_STEEL"
+      ]
+    },
+    {
+      "cost": 6500,
+      "name": "Industrialism",
+      "id": "TECH_INDUSTRIALISM",
+      "requires": [
+        "TECH_ASSEMBLY_LINE",
+        "TECH_ELECTRICITY"
+      ]
+    },
+    {
+      "cost": 6000,
+      "name": "Radio",
+      "id": "TECH_RADIO",
+      "requires": ["TECH_ELECTRICITY"]
+    },
+    {
+      "special": [{
+        "name": "+1 Extra Moves for Water Units",
+        "id": "SPECIAL_MOVES_SEA"
+      }],
+      "cost": 4000,
+      "name": "Refrigeration",
+      "id": "TECH_REFRIGERATION",
+      "requires": [
+        "TECH_ELECTRICITY",
+        "TECH_BIOLOGY"
+      ]
+    },
+    {
+      "cost": 6500,
+      "name": "Superconductors",
+      "optional": [
+        "TECH_REFRIGERATION",
+        "TECH_COMPUTERS"
+      ],
+      "id": "TECH_SUPERCONDUCTORS"
+    },
+    {
+      "cost": 6500,
+      "name": "Computers",
+      "id": "TECH_COMPUTERS",
+      "requires": [
+        "TECH_RADIO",
+        "TECH_PLASTICS"
+      ]
+    },
+    {
+      "cost": 7000,
+      "name": "Laser",
+      "id": "TECH_LASER",
+      "requires": [
+        "TECH_SATELLITES",
+        "TECH_PLASTICS"
+      ]
+    },
+    {
+      "cost": 5000,
+      "name": "Rocketry",
+      "optional": [
+        "TECH_FLIGHT",
+        "TECH_ARTILLERY"
+      ],
+      "id": "TECH_ROCKETRY",
+      "requires": ["TECH_RIFLING"]
+    },
+    {
+      "special": [{
+        "name": "Reveals World Map",
+        "id": "SPECIAL_REVEAL_MAP"
+      }],
+      "cost": 6000,
+      "name": "Satellites",
+      "id": "TECH_SATELLITES",
+      "requires": [
+        "TECH_ROCKETRY",
+        "TECH_RADIO"
+      ]
+    },
+    {
+      "cost": 8000,
+      "name": "Robotics",
+      "id": "TECH_ROBOTICS",
+      "requires": ["TECH_COMPUTERS"]
+    },
+    {
+      "special": [
+        {
+          "name": "+1 Health in All Cities",
+          "id": "SPECIAL_HEALTH_BONUS"
+        },
+        {
+          "name": "+1 Happiness in All Cities",
+          "id": "SPECIAL_HAPPINESS_BONUS"
+        }
+      ],
+      "cost": 10000,
+      "name": "Future Tech",
+      "id": "TECH_FUTURE_TECH",
+      "requires": [
+        "TECH_GENETICS",
+        "TECH_STEALTH"
+      ]
+    }
+  ],
+  "promotions": [
+    {
+      "name": "Pinch",
+      "id": "PROMOTION_PINCH",
+      "prereq": "TECH_GUNPOWDER"
+    },
+    {
+      "name": "Blitz",
+      "id": "PROMOTION_BLITZ",
+      "prereq": "TECH_MILITARY_SCIENCE"
+    },
+    {
+      "name": "Commando",
+      "id": "PROMOTION_COMMANDO",
+      "prereq": "TECH_MILITARY_SCIENCE"
+    }
+  ],
+  "build": [
+    {
+      "name": "Build a Road",
+      "id": "BUILD_ROAD",
+      "prereq": "TECH_THE_WHEEL"
+    },
+    {
+      "name": "Build a Railroad",
+      "id": "BUILD_RAILROAD",
+      "prereq": "TECH_RAILROAD"
+    },
+    {
+      "name": "Build a Farm",
+      "id": "BUILD_FARM",
+      "prereq": "TECH_AGRICULTURE"
+    },
+    {
+      "name": "Create Fishing Boats",
+      "id": "BUILD_FISHING_BOATS",
+      "prereq": "TECH_FISHING"
+    },
+    {
+      "name": "Create Whaling Boats",
+      "id": "BUILD_WHALING_BOATS",
+      "prereq": "TECH_OPTICS"
+    },
+    {
+      "name": "Build a Mine",
+      "id": "BUILD_MINE",
+      "prereq": "TECH_MINING"
+    },
+    {
+      "name": "Build a Workshop",
+      "id": "BUILD_WORKSHOP",
+      "prereq": "TECH_METAL_CASTING"
+    },
+    {
+      "name": "Build a Lumbermill",
+      "id": "BUILD_LUMBERMILL",
+      "prereq": "TECH_REPLACEABLE_PARTS"
+    },
+    {
+      "name": "Build a Windmill",
+      "id": "BUILD_WINDMILL",
+      "prereq": "TECH_MACHINERY"
+    },
+    {
+      "name": "Build a Watermill",
+      "id": "BUILD_WATERMILL",
+      "prereq": "TECH_MACHINERY"
+    },
+    {
+      "name": "Build a Plantation",
+      "id": "BUILD_PLANTATION",
+      "prereq": "TECH_CALENDAR"
+    },
+    {
+      "name": "Build a Quarry",
+      "id": "BUILD_QUARRY",
+      "prereq": "TECH_MASONRY"
+    },
+    {
+      "name": "Build a Pasture",
+      "id": "BUILD_PASTURE",
+      "prereq": "TECH_ANIMAL_HUSBANDRY"
+    },
+    {
+      "name": "Build a Camp",
+      "id": "BUILD_CAMP",
+      "prereq": "TECH_HUNTING"
+    },
+    {
+      "name": "Build a Well",
+      "id": "BUILD_WELL",
+      "prereq": "TECH_COMBUSTION"
+    },
+    {
+      "name": "Create Offshore Platform",
+      "id": "BUILD_OFFSHORE_PLATFORM",
+      "prereq": "TECH_PLASTICS"
+    },
+    {
+      "name": "Build a Winery",
+      "id": "BUILD_WINERY",
+      "prereq": "TECH_MONARCHY"
+    },
+    {
+      "name": "Build a Cottage",
+      "id": "BUILD_COTTAGE",
+      "prereq": "TECH_POTTERY"
+    },
+    {
+      "name": "Build a Fort",
+      "id": "BUILD_FORT",
+      "prereq": "TECH_MATHEMATICS"
+    },
+    {
+      "name": "Remove Jungle",
+      "id": "BUILD_REMOVE_JUNGLE",
+      "prereq": "TECH_IRON_WORKING"
+    },
+    {
+      "name": "Chop Down a Forest",
+      "id": "BUILD_REMOVE_FOREST",
+      "prereq": "TECH_BRONZE_WORKING"
+    },
+    {
+      "name": "Scrub Fallout",
+      "id": "BUILD_SCRUB_FALLOUT",
+      "prereq": "TECH_ECOLOGY"
+    },
+    {
+      "name": "Preserve Forest",
+      "id": "BUILD_FOREST_PRESERVE",
+      "prereq": "TECH_SCIENTIFIC_METHOD"
+    }
+  ],
+  "buildings": [
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Versailles",
+        "id": "BUILDING_VERSAILLES"
+      }],
+      "class": "BUILDINGCLASS_VERSAILLES",
+      "prereq": ["TECH_DIVINE_RIGHT"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Walls",
+          "id": "BUILDING_WALLS"
+        },
+        {
+          "civilization": {
+            "name": "Celtic Empire",
+            "id": "CIVILIZATION_CELT"
+          },
+          "name": "Dun",
+          "id": "BUILDING_CELTIC_DUN"
+        }
+      ],
+      "obsolete": "TECH_RIFLING",
+      "class": "BUILDINGCLASS_WALLS",
+      "prereq": ["TECH_MASONRY"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Castle",
+          "id": "BUILDING_CASTLE"
+        },
+        {
+          "civilization": {
+            "name": "Spanish Empire",
+            "id": "CIVILIZATION_SPAIN"
+          },
+          "name": "Citadel",
+          "id": "BUILDING_SPANISH_CITADEL"
+        }
+      ],
+      "obsolete": "TECH_ECONOMICS",
+      "class": "BUILDINGCLASS_CASTLE",
+      "prereq": ["TECH_ENGINEERING"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Stable",
+          "id": "BUILDING_STABLE"
+        },
+        {
+          "civilization": {
+            "name": "Mongolian Empire",
+            "id": "CIVILIZATION_MONGOL"
+          },
+          "name": "Ger",
+          "id": "BUILDING_MONGOL_GER"
+        }
+      ],
+      "obsolete": "TECH_ADVANCED_FLIGHT",
+      "class": "BUILDINGCLASS_STABLE",
+      "prereq": ["TECH_HORSEBACK_RIDING"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Bunker",
+        "id": "BUILDING_BUNKER"
+      }],
+      "class": "BUILDINGCLASS_BUNKER",
+      "prereq": ["TECH_ELECTRICITY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Bomb Shelters",
+        "id": "BUILDING_BOMB_SHELTER"
+      }],
+      "class": "BUILDINGCLASS_BOMB_SHELTER",
+      "prereq": ["TECH_ELECTRICITY"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Granary",
+          "id": "BUILDING_GRANARY"
+        },
+        {
+          "civilization": {
+            "name": "Incan Empire",
+            "id": "CIVILIZATION_INCA"
+          },
+          "name": "Terrace",
+          "id": "BUILDING_INCAN_TERRACE"
+        }
+      ],
+      "class": "BUILDINGCLASS_GRANARY",
+      "prereq": ["TECH_POTTERY"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Aqueduct",
+          "id": "BUILDING_AQUEDUCT"
+        },
+        {
+          "civilization": {
+            "name": "Ottoman Empire",
+            "id": "CIVILIZATION_OTTOMAN"
+          },
+          "name": "Hammam",
+          "id": "BUILDING_OTTOMAN_HAMMAM"
+        },
+        {
+          "civilization": {
+            "name": "Khmer Empire",
+            "id": "CIVILIZATION_KHMER"
+          },
+          "name": "Baray",
+          "id": "BUILDING_KHMER_BARAY"
+        }
+      ],
+      "class": "BUILDINGCLASS_AQUEDUCT",
+      "prereq": [
+        "TECH_MATHEMATICS",
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Hospital",
+        "id": "BUILDING_HOSPITAL"
+      }],
+      "class": "BUILDINGCLASS_HOSPITAL",
+      "prereq": ["TECH_MEDICINE"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Recycling Center",
+        "id": "BUILDING_RECYCLING_CENTER"
+      }],
+      "class": "BUILDINGCLASS_RECYCLING_CENTER",
+      "prereq": ["TECH_ECOLOGY"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Lighthouse",
+          "id": "BUILDING_LIGHTHOUSE"
+        },
+        {
+          "civilization": {
+            "name": "Viking Empire",
+            "id": "CIVILIZATION_VIKING"
+          },
+          "name": "Trading Post",
+          "id": "BUILDING_VIKING_TRADING_POST"
+        }
+      ],
+      "class": "BUILDINGCLASS_LIGHTHOUSE",
+      "prereq": ["TECH_SAILING"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Harbor",
+          "id": "BUILDING_HARBOR"
+        },
+        {
+          "civilization": {
+            "name": "Carthaginian Empire",
+            "id": "CIVILIZATION_CARTHAGE"
+          },
+          "name": "Cothon",
+          "id": "BUILDING_CARTHAGE_COTHON"
+        }
+      ],
+      "class": "BUILDINGCLASS_HARBOR",
+      "prereq": ["TECH_COMPASS"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Customs House",
+          "id": "BUILDING_CUSTOM_HOUSE"
+        },
+        {
+          "civilization": {
+            "name": "Portuguese Empire",
+            "id": "CIVILIZATION_PORTUGAL"
+          },
+          "name": "Feitoria",
+          "id": "BUILDING_PORTUGAL_FEITORIA"
+        }
+      ],
+      "class": "BUILDINGCLASS_CUSTOM_HOUSE",
+      "prereq": ["TECH_ECONOMICS"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Drydock",
+        "id": "BUILDING_DRYDOCK"
+      }],
+      "class": "BUILDINGCLASS_DRYDOCK",
+      "prereq": ["TECH_STEEL"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Airport",
+        "id": "BUILDING_AIRPORT"
+      }],
+      "class": "BUILDINGCLASS_AIRPORT",
+      "prereq": ["TECH_FLIGHT"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Forge",
+          "id": "BUILDING_FORGE"
+        },
+        {
+          "civilization": {
+            "name": "Malinese Empire",
+            "id": "CIVILIZATION_MALI"
+          },
+          "name": "Mint",
+          "id": "BUILDING_MALI_MINT"
+        }
+      ],
+      "class": "BUILDINGCLASS_FORGE",
+      "prereq": ["TECH_METAL_CASTING"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Factory",
+          "id": "BUILDING_FACTORY"
+        },
+        {
+          "civilization": {
+            "name": "German Empire",
+            "id": "CIVILIZATION_GERMANY"
+          },
+          "name": "Assembly Plant",
+          "id": "BUILDING_GERMAN_ASSEMBLY_PLANT"
+        }
+      ],
+      "class": "BUILDINGCLASS_FACTORY",
+      "prereq": ["TECH_ASSEMBLY_LINE"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Coal Plant",
+          "id": "BUILDING_COAL_PLANT"
+        },
+        {
+          "civilization": {
+            "name": "Japanese Empire",
+            "id": "CIVILIZATION_JAPAN"
+          },
+          "name": "Shale Plant",
+          "id": "BUILDING_JAPANESE_SHALE_PLANT"
+        }
+      ],
+      "class": "BUILDINGCLASS_COAL_PLANT",
+      "prereq": ["TECH_ASSEMBLY_LINE"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Hydro Plant",
+        "id": "BUILDING_HYDRO_PLANT"
+      }],
+      "class": "BUILDINGCLASS_HYDRO_PLANT",
+      "prereq": ["TECH_PLASTICS"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Nuclear Plant",
+        "id": "BUILDING_NUCLEAR_PLANT"
+      }],
+      "class": "BUILDINGCLASS_NUCLEAR_PLANT",
+      "prereq": ["TECH_FISSION"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Industrial Park",
+        "id": "BUILDING_INDUSTRIAL_PARK"
+      }],
+      "class": "BUILDINGCLASS_INDUSTRIAL_PARK",
+      "prereq": ["TECH_INDUSTRIALISM"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Monument",
+          "id": "BUILDING_OBELISK"
+        },
+        {
+          "civilization": {
+            "name": "Egyptian Empire",
+            "id": "CIVILIZATION_EGYPT"
+          },
+          "name": "Obelisk",
+          "id": "BUILDING_EGYPTIAN_OBELISK"
+        },
+        {
+          "civilization": {
+            "name": "Ethiopian Empire",
+            "id": "CIVILIZATION_ETHIOPIA"
+          },
+          "name": "Stele",
+          "id": "BUILDING_ETHIOPIAN_STELE"
+        },
+        {
+          "civilization": {
+            "name": "Native American Empire",
+            "id": "CIVILIZATION_NATIVE_AMERICA"
+          },
+          "name": "Totem Pole",
+          "id": "BUILDING_NATIVE_AMERICA_TOTEM"
+        }
+      ],
+      "obsolete": "TECH_ASTRONOMY",
+      "class": "BUILDINGCLASS_OBELISK",
+      "prereq": ["TECH_MYSTICISM"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Public Transportation",
+        "id": "BUILDING_PUBLIC_TRANSPORTATION"
+      }],
+      "class": "BUILDINGCLASS_PUBLIC_TRANSPORTATION",
+      "prereq": ["TECH_COMBUSTION"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Library",
+          "id": "BUILDING_LIBRARY"
+        },
+        {
+          "civilization": {
+            "name": "Arabian Empire",
+            "id": "CIVILIZATION_ARABIA"
+          },
+          "name": "Madrassa",
+          "id": "BUILDING_ARABIAN_MADRASSA"
+        }
+      ],
+      "class": "BUILDINGCLASS_LIBRARY",
+      "prereq": ["TECH_WRITING"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "University",
+          "id": "BUILDING_UNIVERSITY"
+        },
+        {
+          "civilization": {
+            "name": "Korean Empire",
+            "id": "CIVILIZATION_KOREA"
+          },
+          "name": "Seowon",
+          "id": "BUILDING_KOREAN_SEOWON"
+        }
+      ],
+      "class": "BUILDINGCLASS_UNIVERSITY",
+      "prereq": ["TECH_EDUCATION"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Observatory",
+          "id": "BUILDING_OBSERVATORY"
+        },
+        {
+          "civilization": {
+            "name": "French Empire",
+            "id": "CIVILIZATION_FRANCE"
+          },
+          "name": "Salon",
+          "id": "BUILDING_FRENCH_SALON"
+        }
+      ],
+      "class": "BUILDINGCLASS_OBSERVATORY",
+      "prereq": ["TECH_ASTRONOMY"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Laboratory",
+          "id": "BUILDING_LABORATORY"
+        },
+        {
+          "civilization": {
+            "name": "Russian Empire",
+            "id": "CIVILIZATION_RUSSIA"
+          },
+          "name": "Research Institute",
+          "id": "BUILDING_RUSSIAN_RESEARCH_INSTITUTE"
+        }
+      ],
+      "class": "BUILDINGCLASS_LABORATORY",
+      "prereq": ["TECH_SUPERCONDUCTORS"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Theatre",
+          "id": "BUILDING_THEATRE"
+        },
+        {
+          "civilization": {
+            "name": "Chinese Empire",
+            "id": "CIVILIZATION_CHINA"
+          },
+          "name": "Pavilion",
+          "id": "BUILDING_CHINESE_PAVILLION"
+        },
+        {
+          "civilization": {
+            "name": "Byzantine Empire",
+            "id": "CIVILIZATION_BYZANTIUM"
+          },
+          "name": "Hippodrome",
+          "id": "BUILDING_BYZANTINE_HIPPODROME"
+        }
+      ],
+      "class": "BUILDINGCLASS_THEATRE",
+      "prereq": ["TECH_DRAMA"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Colosseum",
+          "id": "BUILDING_COLOSSEUM"
+        },
+        {
+          "civilization": {
+            "name": "Greek Empire",
+            "id": "CIVILIZATION_GREECE"
+          },
+          "name": "Odeon",
+          "id": "BUILDING_GREEK_ODEON"
+        },
+        {
+          "civilization": {
+            "name": "Maya Empire",
+            "id": "CIVILIZATION_MAYA"
+          },
+          "name": "Ball Court",
+          "id": "BUILDING_MAYA_BALL_COURT"
+        },
+        {
+          "civilization": {
+            "name": "Babylonian Empire",
+            "id": "CIVILIZATION_BABYLON"
+          },
+          "name": "Garden",
+          "id": "BUILDING_BABYLON_GARDEN"
+        }
+      ],
+      "class": "BUILDINGCLASS_COLOSSEUM",
+      "prereq": ["TECH_CONSTRUCTION"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Broadcast Tower",
+        "id": "BUILDING_BROADCAST_TOWER"
+      }],
+      "class": "BUILDINGCLASS_BROADCAST_TOWER",
+      "prereq": ["TECH_MASS_MEDIA"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Market",
+          "id": "BUILDING_MARKET"
+        },
+        {
+          "civilization": {
+            "name": "Roman Empire",
+            "id": "CIVILIZATION_ROME"
+          },
+          "name": "Forum",
+          "id": "BUILDING_ROMAN_FORUM"
+        }
+      ],
+      "class": "BUILDINGCLASS_MARKET",
+      "prereq": ["TECH_CURRENCY"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Grocer",
+          "id": "BUILDING_GROCER"
+        },
+        {
+          "civilization": {
+            "name": "Persian Empire",
+            "id": "CIVILIZATION_PERSIA"
+          },
+          "name": "Apothecary",
+          "id": "BUILDING_PERSIAN_APOTHECARY"
+        }
+      ],
+      "class": "BUILDINGCLASS_GROCER",
+      "prereq": [
+        "TECH_GUILDS",
+        "TECH_CURRENCY"
+      ]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Bank",
+          "id": "BUILDING_BANK"
+        },
+        {
+          "civilization": {
+            "name": "English Empire",
+            "id": "CIVILIZATION_ENGLAND"
+          },
+          "name": "Stock Exchange",
+          "id": "BUILDING_ENGLISH_STOCK_EXCHANGE"
+        }
+      ],
+      "class": "BUILDINGCLASS_BANK",
+      "prereq": ["TECH_BANKING"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Supermarket",
+          "id": "BUILDING_SUPERMARKET"
+        },
+        {
+          "civilization": {
+            "name": "American Empire",
+            "id": "CIVILIZATION_AMERICA"
+          },
+          "name": "Mall",
+          "id": "BUILDING_AMERICAN_MALL"
+        }
+      ],
+      "class": "BUILDINGCLASS_SUPERMARKET",
+      "prereq": ["TECH_REFRIGERATION"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Courthouse",
+          "id": "BUILDING_COURTHOUSE"
+        },
+        {
+          "civilization": {
+            "name": "Aztec Empire",
+            "id": "CIVILIZATION_AZTEC"
+          },
+          "name": "Sacrificial Altar",
+          "id": "BUILDING_AZTEC_SACRIFICIAL_ALTAR"
+        },
+        {
+          "civilization": {
+            "name": "Holy Roman Empire",
+            "id": "CIVILIZATION_HOLY_ROMAN"
+          },
+          "name": "Rathaus",
+          "id": "BUILDING_HOLY_ROMAN_RATHAUS"
+        },
+        {
+          "civilization": {
+            "name": "Sumerian Empire",
+            "id": "CIVILIZATION_SUMERIA"
+          },
+          "name": "Ziggurat",
+          "id": "BUILDING_SUMERIAN_ZIGGURAT"
+        }
+      ],
+      "class": "BUILDINGCLASS_COURTHOUSE",
+      "prereq": ["TECH_CODE_OF_LAWS"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Jail",
+          "id": "BUILDING_JAIL"
+        },
+        {
+          "civilization": {
+            "name": "Indian Empire",
+            "id": "CIVILIZATION_INDIA"
+          },
+          "name": "Mausoleum",
+          "id": "BUILDING_INDIAN_MAUSOLEUM"
+        }
+      ],
+      "class": "BUILDINGCLASS_JAIL",
+      "prereq": ["TECH_CONSTITUTION"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Levee",
+          "id": "BUILDING_LEVEE"
+        },
+        {
+          "civilization": {
+            "name": "Dutch Empire",
+            "id": "CIVILIZATION_NETHERLANDS"
+          },
+          "name": "Dike",
+          "id": "BUILDING_NETHERLANDS_DIKE"
+        }
+      ],
+      "class": "BUILDINGCLASS_LEVEE",
+      "prereq": ["TECH_STEAM_POWER"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Intelligence Agency",
+        "id": "BUILDING_INTELLIGENCE_AGENCY"
+      }],
+      "class": "BUILDINGCLASS_INTELLIGENCE_AGENCY",
+      "prereq": ["TECH_UTOPIA"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Security Bureau",
+        "id": "BUILDING_NATIONAL_SECURITY"
+      }],
+      "class": "BUILDINGCLASS_NATIONAL_SECURITY",
+      "prereq": ["TECH_DEMOCRACY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Heroic Epic",
+        "id": "BUILDING_HEROIC_EPIC"
+      }],
+      "class": "BUILDINGCLASS_HEROIC_EPIC",
+      "prereq": ["TECH_LITERATURE"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "National Epic",
+        "id": "BUILDING_NATIONAL_EPIC"
+      }],
+      "class": "BUILDINGCLASS_NATIONAL_EPIC",
+      "prereq": ["TECH_LITERATURE"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Globe Theatre",
+        "id": "BUILDING_GLOBE_THEATRE"
+      }],
+      "class": "BUILDINGCLASS_GLOBE_THEATRE",
+      "prereq": ["TECH_DRAMA"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "National Park",
+        "id": "BUILDING_NATIONAL_PARK"
+      }],
+      "class": "BUILDINGCLASS_NATIONAL_PARK",
+      "prereq": ["TECH_BIOLOGY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Hermitage",
+        "id": "BUILDING_HERMITAGE"
+      }],
+      "class": "BUILDINGCLASS_HERMITAGE",
+      "prereq": ["TECH_NATIONALISM"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Oxford University",
+        "id": "BUILDING_OXFORD_UNIVERSITY"
+      }],
+      "class": "BUILDINGCLASS_OXFORD_UNIVERSITY",
+      "prereq": ["TECH_EDUCATION"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Wall Street",
+        "id": "BUILDING_WALL_STREET"
+      }],
+      "class": "BUILDINGCLASS_WALL_STREET",
+      "prereq": ["TECH_CORPORATION"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Ironworks",
+        "id": "BUILDING_IRON_WORKS"
+      }],
+      "class": "BUILDINGCLASS_IRON_WORKS",
+      "prereq": ["TECH_STEEL"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "West Point",
+        "id": "BUILDING_WEST_POINT"
+      }],
+      "class": "BUILDINGCLASS_WEST_POINT",
+      "prereq": ["TECH_MILITARY_TRADITION"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Mt. Rushmore",
+        "id": "BUILDING_MT_RUSHMORE"
+      }],
+      "class": "BUILDINGCLASS_MT_RUSHMORE",
+      "prereq": ["TECH_FASCISM"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Red Cross",
+        "id": "BUILDING_RED_CROSS"
+      }],
+      "class": "BUILDINGCLASS_RED_CROSS",
+      "prereq": ["TECH_MEDICINE"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Pyramids",
+        "id": "BUILDING_PYRAMID"
+      }],
+      "class": "BUILDINGCLASS_PYRAMID",
+      "prereq": ["TECH_MASONRY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Stonehenge",
+        "id": "BUILDING_STONEHENGE"
+      }],
+      "obsolete": "TECH_ASTRONOMY",
+      "class": "BUILDINGCLASS_STONEHENGE",
+      "prereq": ["TECH_MYSTICISM"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Great Library",
+        "id": "BUILDING_GREAT_LIBRARY"
+      }],
+      "obsolete": "TECH_SCIENTIFIC_METHOD",
+      "class": "BUILDINGCLASS_GREAT_LIBRARY",
+      "prereq": ["TECH_LITERATURE"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Great Lighthouse",
+        "id": "BUILDING_GREAT_LIGHTHOUSE"
+      }],
+      "obsolete": "TECH_CORPORATION",
+      "class": "BUILDINGCLASS_GREAT_LIGHTHOUSE",
+      "prereq": [
+        "TECH_SAILING",
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Hanging Gardens",
+        "id": "BUILDING_HANGING_GARDEN"
+      }],
+      "class": "BUILDINGCLASS_HANGING_GARDEN",
+      "prereq": ["TECH_MATHEMATICS"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Colossus",
+        "id": "BUILDING_COLOSSUS"
+      }],
+      "obsolete": "TECH_ASTRONOMY",
+      "class": "BUILDINGCLASS_COLOSSUS",
+      "prereq": ["TECH_METAL_CASTING"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Oracle",
+        "id": "BUILDING_ORACLE"
+      }],
+      "class": "BUILDINGCLASS_ORACLE",
+      "prereq": ["TECH_PRIESTHOOD"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Parthenon",
+        "id": "BUILDING_PARTHENON"
+      }],
+      "obsolete": "TECH_SCIENTIFIC_METHOD",
+      "class": "BUILDINGCLASS_PARTHENON",
+      "prereq": [
+        "TECH_AESTHETICS",
+        "TECH_POLYTHEISM"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Angkor Wat",
+        "id": "BUILDING_ANGKOR_WAT"
+      }],
+      "obsolete": "TECH_COMPUTERS",
+      "class": "BUILDINGCLASS_ANGKOR_WAT",
+      "prereq": ["TECH_PHILOSOPHY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Hagia Sophia",
+        "id": "BUILDING_HAGIA_SOPHIA"
+      }],
+      "obsolete": "TECH_STEAM_POWER",
+      "class": "BUILDINGCLASS_HAGIA_SOPHIA",
+      "prereq": ["TECH_THEOLOGY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Chichen Itza",
+        "id": "BUILDING_CHICHEN_ITZA"
+      }],
+      "obsolete": "TECH_RIFLING",
+      "class": "BUILDINGCLASS_CHICHEN_ITZA",
+      "prereq": ["TECH_CODE_OF_LAWS"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Sistine Chapel",
+        "id": "BUILDING_SISTINE_CHAPEL"
+      }],
+      "class": "BUILDINGCLASS_SISTINE_CHAPEL",
+      "prereq": ["TECH_MUSIC"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Spiral Minaret",
+        "id": "BUILDING_SPIRAL_MINARET"
+      }],
+      "obsolete": "TECH_COMPUTERS",
+      "class": "BUILDINGCLASS_SPIRAL_MINARET",
+      "prereq": ["TECH_DIVINE_RIGHT"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Notre Dame",
+        "id": "BUILDING_NOTRE_DAME"
+      }],
+      "class": "BUILDINGCLASS_NOTRE_DAME",
+      "prereq": ["TECH_ENGINEERING"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Taj Mahal",
+        "id": "BUILDING_TAJ_MAHAL"
+      }],
+      "class": "BUILDINGCLASS_TAJ_MAHAL",
+      "prereq": ["TECH_NATIONALISM"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Kremlin",
+        "id": "BUILDING_KREMLIN"
+      }],
+      "obsolete": "TECH_FIBER_OPTICS",
+      "class": "BUILDINGCLASS_KREMLIN",
+      "prereq": ["TECH_UTOPIA"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Eiffel Tower",
+        "id": "BUILDING_EIFFEL_TOWER"
+      }],
+      "class": "BUILDINGCLASS_EIFFEL_TOWER",
+      "prereq": ["TECH_RADIO"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Statue of Liberty",
+        "id": "BUILDING_STATUE_OF_LIBERTY"
+      }],
+      "class": "BUILDINGCLASS_STATUE_OF_LIBERTY",
+      "prereq": ["TECH_DEMOCRACY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Broadway",
+        "id": "BUILDING_BROADWAY"
+      }],
+      "class": "BUILDINGCLASS_BROADWAY",
+      "prereq": ["TECH_ELECTRICITY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Rock N Roll",
+        "id": "BUILDING_ROCKNROLL"
+      }],
+      "class": "BUILDINGCLASS_ROCKNROLL",
+      "prereq": ["TECH_RADIO"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Hollywood",
+        "id": "BUILDING_HOLLYWOOD"
+      }],
+      "class": "BUILDINGCLASS_HOLLYWOOD",
+      "prereq": ["TECH_MASS_MEDIA"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Three Gorges Dam",
+        "id": "BUILDING_GREAT_DAM"
+      }],
+      "class": "BUILDINGCLASS_GREAT_DAM",
+      "prereq": ["TECH_PLASTICS"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Pentagon",
+        "id": "BUILDING_PENTAGON"
+      }],
+      "class": "BUILDINGCLASS_PENTAGON",
+      "prereq": ["TECH_ASSEMBLY_LINE"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The United Nations",
+        "id": "BUILDING_UNITED_NATIONS"
+      }],
+      "class": "BUILDINGCLASS_UNITED_NATIONS",
+      "prereq": ["TECH_MASS_MEDIA"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Space Elevator",
+        "id": "BUILDING_SPACE_ELEVATOR"
+      }],
+      "class": "BUILDINGCLASS_SPACE_ELEVATOR",
+      "prereq": [
+        "TECH_ROBOTICS",
+        "TECH_SATELLITES"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Military Academy",
+        "id": "BUILDING_MILITARY_ACADEMY"
+      }],
+      "class": "BUILDINGCLASS_MILITARY_ACADEMY",
+      "prereq": ["TECH_MILITARY_SCIENCE"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Temple of Artemis",
+        "id": "BUILDING_ARTEMIS"
+      }],
+      "obsolete": "TECH_SCIENTIFIC_METHOD",
+      "class": "BUILDINGCLASS_ARTEMIS",
+      "prereq": ["TECH_POLYTHEISM"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "University of Sankore",
+        "id": "BUILDING_SANKORE"
+      }],
+      "obsolete": "TECH_COMPUTERS",
+      "class": "BUILDINGCLASS_SANKORE",
+      "prereq": ["TECH_PAPER"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Great Wall",
+        "id": "BUILDING_GREAT_WALL"
+      }],
+      "class": "BUILDINGCLASS_GREAT_WALL",
+      "prereq": ["TECH_MASONRY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Statue of Zeus",
+        "id": "BUILDING_STATUE_OF_ZEUS"
+      }],
+      "class": "BUILDINGCLASS_STATUE_OF_ZEUS",
+      "prereq": ["TECH_AESTHETICS"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Mausoleum of Maussollos",
+        "id": "BUILDING_MAUSOLEUM_OF_MAUSSOLLOS"
+      }],
+      "class": "BUILDINGCLASS_MAUSOLEUM_OF_MAUSSOLLOS",
+      "prereq": ["TECH_CALENDAR"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Cristo Redentor",
+        "id": "BUILDING_CRISTO_REDENTOR"
+      }],
+      "class": "BUILDINGCLASS_CRISTO_REDENTOR",
+      "prereq": ["TECH_RADIO"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Shwedagon Paya",
+        "id": "BUILDING_SHWEDAGON_PAYA"
+      }],
+      "class": "BUILDINGCLASS_SHWEDAGON_PAYA",
+      "prereq": [
+        "TECH_AESTHETICS",
+        "TECH_MEDITATION"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Moai Statues",
+        "id": "BUILDING_MOAI_STATUES"
+      }],
+      "class": "BUILDINGCLASS_MOAI_STATUES",
+      "prereq": ["TECH_SAILING"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Cereal Mills",
+        "id": "BUILDING_CORPORATION_1"
+      }],
+      "class": "BUILDINGCLASS_CORPORATION_1",
+      "prereq": [
+        "TECH_REFRIGERATION",
+        "TECH_CORPORATION"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Sid's Sushi Co",
+        "id": "BUILDING_CORPORATION_2"
+      }],
+      "class": "BUILDINGCLASS_CORPORATION_2",
+      "prereq": [
+        "TECH_MEDICINE",
+        "TECH_CORPORATION"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Standard Ethanol",
+        "id": "BUILDING_CORPORATION_3"
+      }],
+      "class": "BUILDINGCLASS_CORPORATION_3",
+      "prereq": [
+        "TECH_PLASTICS",
+        "TECH_CORPORATION"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Creative Constructions",
+        "id": "BUILDING_CORPORATION_4"
+      }],
+      "class": "BUILDINGCLASS_CORPORATION_4",
+      "prereq": [
+        "TECH_COMBUSTION",
+        "TECH_CORPORATION"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Mining Inc",
+        "id": "BUILDING_CORPORATION_5"
+      }],
+      "class": "BUILDINGCLASS_CORPORATION_5",
+      "prereq": [
+        "TECH_RAILROAD",
+        "TECH_CORPORATION"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Aluminum Co",
+        "id": "BUILDING_CORPORATION_6"
+      }],
+      "class": "BUILDINGCLASS_CORPORATION_6",
+      "prereq": [
+        "TECH_ROCKETRY",
+        "TECH_CORPORATION"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Civilized Jewelers Inc",
+        "id": "BUILDING_CORPORATION_7"
+      }],
+      "class": "BUILDINGCLASS_CORPORATION_7",
+      "prereq": [
+        "TECH_MASS_MEDIA",
+        "TECH_CORPORATION"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "The Apostolic Palace",
+        "id": "BUILDING_APOSTOLIC_PALACE"
+      }],
+      "obsolete": "TECH_MASS_MEDIA",
+      "class": "BUILDINGCLASS_APOSTOLIC_PALACE",
+      "prereq": ["TECH_THEOLOGY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Temple",
+        "id": "SPECIALBUILDING_TEMPLE"
+      }],
+      "class": "BUILDINGCLASS_TEMPLE",
+      "prereq": "TECH_PRIESTHOOD"
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Cathedral",
+        "id": "SPECIALBUILDING_CATHEDRAL"
+      }],
+      "class": "BUILDINGCLASS_CATHEDRAL",
+      "prereq": "TECH_MUSIC"
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Monastery",
+        "id": "SPECIALBUILDING_MONASTERY"
+      }],
+      "obsolete": "TECH_SCIENTIFIC_METHOD",
+      "class": "BUILDINGCLASS_MONASTERY",
+      "prereq": "TECH_MEDITATION"
+    }
+  ],
+  "civics": [
+    {
+      "name": "Hereditary Rule",
+      "id": "CIVIC_HEREDITARY_RULE",
+      "prereq": "TECH_MONARCHY"
+    },
+    {
+      "name": "Representation",
+      "id": "CIVIC_REPRESENTATION",
+      "prereq": "TECH_CONSTITUTION"
+    },
+    {
+      "name": "Police State",
+      "id": "CIVIC_POLICE_STATE",
+      "prereq": "TECH_FASCISM"
+    },
+    {
+      "name": "Universal Suffrage",
+      "id": "CIVIC_UNIVERSAL_SUFFRAGE",
+      "prereq": "TECH_DEMOCRACY"
+    },
+    {
+      "name": "Vassalage",
+      "id": "CIVIC_VASSALAGE",
+      "prereq": "TECH_FEUDALISM"
+    },
+    {
+      "name": "Bureaucracy",
+      "id": "CIVIC_BUREAUCRACY",
+      "prereq": "TECH_CIVIL_SERVICE"
+    },
+    {
+      "name": "Nationhood",
+      "id": "CIVIC_NATIONHOOD",
+      "prereq": "TECH_NATIONALISM"
+    },
+    {
+      "name": "Free Speech",
+      "id": "CIVIC_FREE_SPEECH",
+      "prereq": "TECH_LIBERALISM"
+    },
+    {
+      "name": "Slavery",
+      "id": "CIVIC_SLAVERY",
+      "prereq": "TECH_BRONZE_WORKING"
+    },
+    {
+      "name": "Serfdom",
+      "id": "CIVIC_SERFDOM",
+      "prereq": "TECH_FEUDALISM"
+    },
+    {
+      "name": "Caste System",
+      "id": "CIVIC_CASTE_SYSTEM",
+      "prereq": "TECH_CODE_OF_LAWS"
+    },
+    {
+      "name": "Emancipation",
+      "id": "CIVIC_EMANCIPATION",
+      "prereq": "TECH_DEMOCRACY"
+    },
+    {
+      "name": "Mercantilism",
+      "id": "CIVIC_MERCANTILISM",
+      "prereq": "TECH_BANKING"
+    },
+    {
+      "name": "Free Market",
+      "id": "CIVIC_FREE_MARKET",
+      "prereq": "TECH_ECONOMICS"
+    },
+    {
+      "name": "State Property",
+      "id": "CIVIC_STATE_PROPERTY",
+      "prereq": "TECH_UTOPIA"
+    },
+    {
+      "name": "Environmentalism",
+      "id": "CIVIC_ENVIRONMENTALISM",
+      "prereq": "TECH_MEDICINE"
+    },
+    {
+      "name": "Organized Religion",
+      "id": "CIVIC_ORGANIZED_RELIGION",
+      "prereq": "TECH_MONOTHEISM"
+    },
+    {
+      "name": "Theocracy",
+      "id": "CIVIC_THEOCRACY",
+      "prereq": "TECH_THEOLOGY"
+    },
+    {
+      "name": "Pacifism",
+      "id": "CIVIC_PACIFISM",
+      "prereq": "TECH_PHILOSOPHY"
+    },
+    {
+      "name": "Free Religion",
+      "id": "CIVIC_FREE_RELIGION",
+      "prereq": "TECH_LIBERALISM"
+    }
+  ],
+  "religions": [
+    {
+      "name": "Judaism",
+      "id": "RELIGION_JUDAISM",
+      "prereq": "TECH_MONOTHEISM"
+    },
+    {
+      "name": "Christianity",
+      "id": "RELIGION_CHRISTIANITY",
+      "prereq": "TECH_THEOLOGY"
+    },
+    {
+      "name": "Islam",
+      "id": "RELIGION_ISLAM",
+      "prereq": "TECH_DIVINE_RIGHT"
+    },
+    {
+      "name": "Hinduism",
+      "id": "RELIGION_HINDUISM",
+      "prereq": "TECH_POLYTHEISM"
+    },
+    {
+      "name": "Buddhism",
+      "id": "RELIGION_BUDDHISM",
+      "prereq": "TECH_MEDITATION"
+    },
+    {
+      "name": "Confucianism",
+      "id": "RELIGION_CONFUCIANISM",
+      "prereq": "TECH_CODE_OF_LAWS"
+    },
+    {
+      "name": "Taoism",
+      "id": "RELIGION_TAOISM",
+      "prereq": "TECH_PHILOSOPHY"
+    }
+  ],
+  "resources": [
+    {
+      "name": "Aluminum",
+      "id": "BONUS_ALUMINUM",
+      "prereq": "TECH_INDUSTRIALISM"
+    },
+    {
+      "name": "Coal",
+      "id": "BONUS_COAL",
+      "prereq": "TECH_STEAM_POWER"
+    },
+    {
+      "name": "Copper",
+      "id": "BONUS_COPPER",
+      "prereq": "TECH_BRONZE_WORKING"
+    },
+    {
+      "name": "Horse",
+      "id": "BONUS_HORSE",
+      "prereq": "TECH_ANIMAL_HUSBANDRY"
+    },
+    {
+      "name": "Iron",
+      "id": "BONUS_IRON",
+      "prereq": "TECH_IRON_WORKING"
+    },
+    {
+      "name": "Oil",
+      "id": "BONUS_OIL",
+      "prereq": "TECH_SCIENTIFIC_METHOD"
+    },
+    {
+      "name": "Uranium",
+      "id": "BONUS_URANIUM",
+      "prereq": "TECH_PHYSICS"
+    },
+    {
+      "obsolete": "TECH_PLASTICS",
+      "name": "Fur",
+      "id": "BONUS_FUR"
+    },
+    {
+      "obsolete": "TECH_INDUSTRIALISM",
+      "name": "Ivory",
+      "id": "BONUS_IVORY"
+    },
+    {
+      "obsolete": "TECH_COMBUSTION",
+      "name": "Whale",
+      "id": "BONUS_WHALE"
+    }
+  ],
+  "units": [
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Scout",
+        "id": "UNIT_SCOUT"
+      }],
+      "class": "UNITCLASS_SCOUT",
+      "prereq": ["TECH_HUNTING"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Explorer",
+        "id": "UNIT_EXPLORER"
+      }],
+      "class": "UNITCLASS_EXPLORER",
+      "prereq": ["TECH_COMPASS"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Spy",
+        "id": "UNIT_SPY"
+      }],
+      "class": "UNITCLASS_SPY",
+      "prereq": ["TECH_ALPHABET"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Swordsman",
+          "id": "UNIT_SWORDSMAN"
+        },
+        {
+          "civilization": {
+            "name": "Aztec Empire",
+            "id": "CIVILIZATION_AZTEC"
+          },
+          "name": "Jaguar",
+          "id": "UNIT_AZTEC_JAGUAR"
+        },
+        {
+          "civilization": {
+            "name": "Celtic Empire",
+            "id": "CIVILIZATION_CELT"
+          },
+          "name": "Gallic Warrior",
+          "id": "UNIT_CELTIC_GALLIC_WARRIOR"
+        },
+        {
+          "civilization": {
+            "name": "Roman Empire",
+            "id": "CIVILIZATION_ROME"
+          },
+          "name": "Praetorian",
+          "id": "UNIT_ROME_PRAETORIAN"
+        }
+      ],
+      "class": "UNITCLASS_SWORDSMAN",
+      "prereq": ["TECH_IRON_WORKING"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Axeman",
+          "id": "UNIT_AXEMAN"
+        },
+        {
+          "civilization": {
+            "name": "Greek Empire",
+            "id": "CIVILIZATION_GREECE"
+          },
+          "name": "Phalanx",
+          "id": "UNIT_GREEK_PHALANX"
+        },
+        {
+          "civilization": {
+            "name": "Sumerian Empire",
+            "id": "CIVILIZATION_SUMERIA"
+          },
+          "name": "Vulture",
+          "id": "UNIT_SUMERIAN_VULTURE"
+        },
+        {
+          "civilization": {
+            "name": "Native American Empire",
+            "id": "CIVILIZATION_NATIVE_AMERICA"
+          },
+          "name": "Dog Soldier",
+          "id": "UNIT_NATIVE_AMERICA_DOG_SOLDIER"
+        }
+      ],
+      "class": "UNITCLASS_AXEMAN",
+      "prereq": ["TECH_BRONZE_WORKING"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Maceman",
+          "id": "UNIT_MACEMAN"
+        },
+        {
+          "civilization": {
+            "name": "Japanese Empire",
+            "id": "CIVILIZATION_JAPAN"
+          },
+          "name": "Samurai",
+          "id": "UNIT_JAPAN_SAMURAI"
+        },
+        {
+          "civilization": {
+            "name": "Viking Empire",
+            "id": "CIVILIZATION_VIKING"
+          },
+          "name": "Berserker",
+          "id": "UNIT_VIKING_BESERKER"
+        }
+      ],
+      "class": "UNITCLASS_MACEMAN",
+      "prereq": [
+        "TECH_CIVIL_SERVICE",
+        "TECH_MACHINERY"
+      ]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Spearman",
+          "id": "UNIT_SPEARMAN"
+        },
+        {
+          "civilization": {
+            "name": "Zulu Empire",
+            "id": "CIVILIZATION_ZULU"
+          },
+          "name": "Impi",
+          "id": "UNIT_ZULU_IMPI"
+        },
+        {
+          "civilization": {
+            "name": "Maya Empire",
+            "id": "CIVILIZATION_MAYA"
+          },
+          "name": "Holkan",
+          "id": "UNIT_MAYA_HOLKAN"
+        }
+      ],
+      "class": "UNITCLASS_SPEARMAN",
+      "prereq": ["TECH_HUNTING"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Pikeman",
+          "id": "UNIT_PIKEMAN"
+        },
+        {
+          "civilization": {
+            "name": "Holy Roman Empire",
+            "id": "CIVILIZATION_HOLY_ROMAN"
+          },
+          "name": "Landsknecht",
+          "id": "UNIT_HOLY_ROMAN_LANDSKNECHT"
+        }
+      ],
+      "class": "UNITCLASS_PIKEMAN",
+      "prereq": ["TECH_ENGINEERING"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Musketman",
+          "id": "UNIT_MUSKETMAN"
+        },
+        {
+          "civilization": {
+            "name": "French Empire",
+            "id": "CIVILIZATION_FRANCE"
+          },
+          "name": "Musketeer",
+          "id": "UNIT_FRENCH_MUSKETEER"
+        },
+        {
+          "civilization": {
+            "name": "Ottoman Empire",
+            "id": "CIVILIZATION_OTTOMAN"
+          },
+          "name": "Janissary",
+          "id": "UNIT_OTTOMAN_JANISSARY"
+        },
+        {
+          "civilization": {
+            "name": "Ethiopian Empire",
+            "id": "CIVILIZATION_ETHIOPIA"
+          },
+          "name": "Oromo Warrior",
+          "id": "UNIT_ETHIOPIAN_OROMO_WARRIOR"
+        }
+      ],
+      "class": "UNITCLASS_MUSKETMAN",
+      "prereq": ["TECH_GUNPOWDER"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Rifleman",
+          "id": "UNIT_RIFLEMAN"
+        },
+        {
+          "civilization": {
+            "name": "English Empire",
+            "id": "CIVILIZATION_ENGLAND"
+          },
+          "name": "Redcoat",
+          "id": "UNIT_ENGLISH_REDCOAT"
+        }
+      ],
+      "class": "UNITCLASS_RIFLEMAN",
+      "prereq": ["TECH_RIFLING"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Grenadier",
+        "id": "UNIT_GRENADIER"
+      }],
+      "class": "UNITCLASS_GRENADIER",
+      "prereq": ["TECH_MILITARY_SCIENCE"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Anti-Tank",
+        "id": "UNIT_AT_INFANTRY"
+      }],
+      "class": "UNITCLASS_AT_INFANTRY",
+      "prereq": ["TECH_ARTILLERY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Infantry",
+        "id": "UNIT_INFANTRY"
+      }],
+      "class": "UNITCLASS_INFANTRY",
+      "prereq": [
+        "TECH_ASSEMBLY_LINE",
+        "TECH_RIFLING"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "SAM Infantry",
+        "id": "UNIT_SAM_INFANTRY"
+      }],
+      "class": "UNITCLASS_SAM_INFANTRY",
+      "prereq": ["TECH_ROCKETRY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Mobile SAM",
+        "id": "UNIT_MOBILE_SAM"
+      }],
+      "class": "UNITCLASS_MOBILE_SAM",
+      "prereq": ["TECH_LASER"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Marine",
+          "id": "UNIT_MARINE"
+        },
+        {
+          "civilization": {
+            "name": "American Empire",
+            "id": "CIVILIZATION_AMERICA"
+          },
+          "name": "Navy SEAL",
+          "id": "UNIT_AMERICAN_NAVY_SEAL"
+        }
+      ],
+      "class": "UNITCLASS_MARINE",
+      "prereq": [
+        "TECH_INDUSTRIALISM",
+        "TECH_RIFLING"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Paratrooper",
+        "id": "UNIT_PARATROOPER"
+      }],
+      "class": "UNITCLASS_PARATROOPER",
+      "prereq": [
+        "TECH_FASCISM",
+        "TECH_RIFLING",
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Mechanized Infantry",
+        "id": "UNIT_MECHANIZED_INFANTRY"
+      }],
+      "class": "UNITCLASS_MECHANIZED_INFANTRY",
+      "prereq": [
+        "TECH_ROBOTICS",
+        "TECH_RIFLING"
+      ]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Archer",
+          "id": "UNIT_ARCHER"
+        },
+        {
+          "civilization": {
+            "name": "Malinese Empire",
+            "id": "CIVILIZATION_MALI"
+          },
+          "name": "Skirmisher",
+          "id": "UNIT_MALI_SKIRMISHER"
+        },
+        {
+          "civilization": {
+            "name": "Babylonian Empire",
+            "id": "CIVILIZATION_BABYLON"
+          },
+          "name": "Bowman",
+          "id": "UNIT_BABYLON_BOWMAN"
+        }
+      ],
+      "class": "UNITCLASS_ARCHER",
+      "prereq": ["TECH_ARCHERY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Longbowman",
+        "id": "UNIT_LONGBOWMAN"
+      }],
+      "class": "UNITCLASS_LONGBOWMAN",
+      "prereq": [
+        "TECH_FEUDALISM",
+        "TECH_ARCHERY"
+      ]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Crossbowman",
+          "id": "UNIT_CROSSBOWMAN"
+        },
+        {
+          "civilization": {
+            "name": "Chinese Empire",
+            "id": "CIVILIZATION_CHINA"
+          },
+          "name": "Cho-Ko-Nu",
+          "id": "UNIT_CHINA_CHOKONU"
+        }
+      ],
+      "class": "UNITCLASS_CROSSBOWMAN",
+      "prereq": [
+        "TECH_MACHINERY",
+        "TECH_ARCHERY"
+      ]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Chariot",
+          "id": "UNIT_CHARIOT"
+        },
+        {
+          "civilization": {
+            "name": "Egyptian Empire",
+            "id": "CIVILIZATION_EGYPT"
+          },
+          "name": "War Chariot",
+          "id": "UNIT_EGYPT_WARCHARIOT"
+        },
+        {
+          "civilization": {
+            "name": "Persian Empire",
+            "id": "CIVILIZATION_PERSIA"
+          },
+          "name": "Immortal",
+          "id": "UNIT_PERSIA_IMMORTAL"
+        }
+      ],
+      "class": "UNITCLASS_CHARIOT",
+      "prereq": ["TECH_THE_WHEEL"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Horse Archer",
+          "id": "UNIT_HORSE_ARCHER"
+        },
+        {
+          "civilization": {
+            "name": "Carthaginian Empire",
+            "id": "CIVILIZATION_CARTHAGE"
+          },
+          "name": "Numidian Cavalry",
+          "id": "UNIT_CARTHAGE_NUMIDIAN_CAVALRY"
+        },
+        {
+          "civilization": {
+            "name": "Mongolian Empire",
+            "id": "CIVILIZATION_MONGOL"
+          },
+          "name": "Keshik",
+          "id": "UNIT_MONGOL_KESHIK"
+        }
+      ],
+      "class": "UNITCLASS_HORSE_ARCHER",
+      "prereq": [
+        "TECH_HORSEBACK_RIDING",
+        "TECH_ARCHERY"
+      ]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Knight",
+          "id": "UNIT_KNIGHT"
+        },
+        {
+          "civilization": {
+            "name": "Arabian Empire",
+            "id": "CIVILIZATION_ARABIA"
+          },
+          "name": "Camel Archer",
+          "id": "UNIT_ARABIA_CAMELARCHER"
+        },
+        {
+          "civilization": {
+            "name": "Byzantine Empire",
+            "id": "CIVILIZATION_BYZANTIUM"
+          },
+          "name": "Cataphract",
+          "id": "UNIT_BYZANTINE_CATAPHRACT"
+        }
+      ],
+      "class": "UNITCLASS_KNIGHT",
+      "prereq": [
+        "TECH_GUILDS",
+        "TECH_HORSEBACK_RIDING"
+      ]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "Spanish Empire",
+            "id": "CIVILIZATION_SPAIN"
+          },
+          "name": "Conquistador",
+          "id": "UNIT_SPANISH_CONQUISTADOR"
+        },
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Cuirassier",
+          "id": "UNIT_CUIRASSIER"
+        }
+      ],
+      "class": "UNITCLASS_CUIRASSIER",
+      "prereq": [
+        "TECH_MILITARY_TRADITION",
+        "TECH_GUNPOWDER",
+        "TECH_HORSEBACK_RIDING"
+      ]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Cavalry",
+          "id": "UNIT_CAVALRY"
+        },
+        {
+          "civilization": {
+            "name": "Russian Empire",
+            "id": "CIVILIZATION_RUSSIA"
+          },
+          "name": "Cossack",
+          "id": "UNIT_RUSSIA_COSSACK"
+        }
+      ],
+      "class": "UNITCLASS_CAVALRY",
+      "prereq": [
+        "TECH_MILITARY_TRADITION",
+        "TECH_RIFLING",
+        "TECH_HORSEBACK_RIDING"
+      ]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "War Elephant",
+          "id": "UNIT_WAR_ELEPHANT"
+        },
+        {
+          "civilization": {
+            "name": "Khmer Empire",
+            "id": "CIVILIZATION_KHMER"
+          },
+          "name": "Ballista Elephant",
+          "id": "UNIT_KHMER_BALLISTA_ELEPHANT"
+        }
+      ],
+      "class": "UNITCLASS_WAR_ELEPHANT",
+      "prereq": [
+        "TECH_CONSTRUCTION",
+        "TECH_HORSEBACK_RIDING"
+      ]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Tank",
+          "id": "UNIT_TANK"
+        },
+        {
+          "civilization": {
+            "name": "German Empire",
+            "id": "CIVILIZATION_GERMANY"
+          },
+          "name": "Panzer",
+          "id": "UNIT_GERMAN_PANZER"
+        }
+      ],
+      "class": "UNITCLASS_TANK",
+      "prereq": [
+        "TECH_INDUSTRIALISM",
+        "TECH_RIFLING"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Modern Armor",
+        "id": "UNIT_MODERN_ARMOR"
+      }],
+      "class": "UNITCLASS_MODERN_ARMOR",
+      "prereq": [
+        "TECH_COMPOSITES",
+        "TECH_COMPUTERS"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Gunship",
+        "id": "UNIT_GUNSHIP"
+      }],
+      "class": "UNITCLASS_GUNSHIP",
+      "prereq": ["TECH_ADVANCED_FLIGHT"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Catapult",
+          "id": "UNIT_CATAPULT"
+        },
+        {
+          "civilization": {
+            "name": "Korean Empire",
+            "id": "CIVILIZATION_KOREA"
+          },
+          "name": "Hwacha",
+          "id": "UNIT_KOREAN_HWACHA"
+        }
+      ],
+      "class": "UNITCLASS_CATAPULT",
+      "prereq": ["TECH_CONSTRUCTION"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Trebuchet",
+        "id": "UNIT_TREBUCHET"
+      }],
+      "class": "UNITCLASS_TREBUCHET",
+      "prereq": ["TECH_ENGINEERING"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Cannon",
+        "id": "UNIT_CANNON"
+      }],
+      "class": "UNITCLASS_CANNON",
+      "prereq": ["TECH_STEEL"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Machine Gun",
+        "id": "UNIT_MACHINE_GUN"
+      }],
+      "class": "UNITCLASS_MACHINE_GUN",
+      "prereq": ["TECH_RAILROAD"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Artillery",
+        "id": "UNIT_ARTILLERY"
+      }],
+      "class": "UNITCLASS_ARTILLERY",
+      "prereq": ["TECH_ARTILLERY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Mobile Artillery",
+        "id": "UNIT_MOBILE_ARTILLERY"
+      }],
+      "class": "UNITCLASS_MOBILE_ARTILLERY",
+      "prereq": [
+        "TECH_LASER",
+        "TECH_ARTILLERY"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Work Boat",
+        "id": "UNIT_WORKBOAT"
+      }],
+      "class": "UNITCLASS_WORKBOAT",
+      "prereq": ["TECH_FISHING"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Galley",
+        "id": "UNIT_GALLEY"
+      }],
+      "class": "UNITCLASS_GALLEY",
+      "prereq": ["TECH_SAILING"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Trireme",
+        "id": "UNIT_TRIREME"
+      }],
+      "class": "UNITCLASS_TRIREME",
+      "prereq": [
+        "TECH_METAL_CASTING",
+        "TECH_SAILING"
+      ]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Caravel",
+          "id": "UNIT_CARAVEL"
+        },
+        {
+          "civilization": {
+            "name": "Portuguese Empire",
+            "id": "CIVILIZATION_PORTUGAL"
+          },
+          "name": "Carrack",
+          "id": "UNIT_PORTUGAL_CARRACK"
+        }
+      ],
+      "class": "UNITCLASS_CARAVEL",
+      "prereq": ["TECH_OPTICS"]
+    },
+    {
+      "types": [
+        {
+          "civilization": {
+            "name": "All",
+            "id": "CIVILIZATION_ALL"
+          },
+          "name": "Galleon",
+          "id": "UNIT_GALLEON"
+        },
+        {
+          "civilization": {
+            "name": "Dutch Empire",
+            "id": "CIVILIZATION_NETHERLANDS"
+          },
+          "name": "East Indiaman",
+          "id": "UNIT_NETHERLANDS_OOSTINDIEVAARDER"
+        }
+      ],
+      "class": "UNITCLASS_GALLEON",
+      "prereq": ["TECH_ASTRONOMY"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Privateer",
+        "id": "UNIT_PRIVATEER"
+      }],
+      "class": "UNITCLASS_PRIVATEER",
+      "prereq": [
+        "TECH_CHEMISTRY",
+        "TECH_ASTRONOMY"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Frigate",
+        "id": "UNIT_FRIGATE"
+      }],
+      "class": "UNITCLASS_FRIGATE",
+      "prereq": [
+        "TECH_CHEMISTRY",
+        "TECH_ASTRONOMY"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Ship of the Line",
+        "id": "UNIT_SHIP_OF_THE_LINE"
+      }],
+      "class": "UNITCLASS_SHIP_OF_THE_LINE",
+      "prereq": [
+        "TECH_MILITARY_SCIENCE",
+        "TECH_ASTRONOMY"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Ironclad",
+        "id": "UNIT_IRONCLAD"
+      }],
+      "class": "UNITCLASS_IRONCLAD",
+      "prereq": [
+        "TECH_STEEL",
+        "TECH_STEAM_POWER"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Transport",
+        "id": "UNIT_TRANSPORT"
+      }],
+      "class": "UNITCLASS_TRANSPORT",
+      "prereq": ["TECH_COMBUSTION"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Destroyer",
+        "id": "UNIT_DESTROYER"
+      }],
+      "class": "UNITCLASS_DESTROYER",
+      "prereq": ["TECH_COMBUSTION"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Battleship",
+        "id": "UNIT_BATTLESHIP"
+      }],
+      "class": "UNITCLASS_BATTLESHIP",
+      "prereq": ["TECH_INDUSTRIALISM"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Missile Cruiser",
+        "id": "UNIT_MISSILE_CRUISER"
+      }],
+      "class": "UNITCLASS_MISSILE_CRUISER",
+      "prereq": ["TECH_ROBOTICS"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Stealth Destroyer",
+        "id": "UNIT_STEALTH_DESTROYER"
+      }],
+      "class": "UNITCLASS_STEALTH_DESTROYER",
+      "prereq": [
+        "TECH_STEALTH",
+        "TECH_ROBOTICS"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Submarine",
+        "id": "UNIT_SUBMARINE"
+      }],
+      "class": "UNITCLASS_SUBMARINE",
+      "prereq": ["TECH_RADIO"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Attack Submarine",
+        "id": "UNIT_ATTACK_SUBMARINE"
+      }],
+      "class": "UNITCLASS_ATTACK_SUBMARINE",
+      "prereq": [
+        "TECH_ROCKETRY",
+        "TECH_RADIO",
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Carrier",
+        "id": "UNIT_CARRIER"
+      }],
+      "class": "UNITCLASS_CARRIER",
+      "prereq": ["TECH_FLIGHT"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Airship",
+        "id": "UNIT_AIRSHIP"
+      }],
+      "class": "UNITCLASS_AIRSHIP",
+      "prereq": ["TECH_PHYSICS"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Fighter",
+        "id": "UNIT_FIGHTER"
+      }],
+      "class": "UNITCLASS_FIGHTER",
+      "prereq": ["TECH_FLIGHT"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Jet Fighter",
+        "id": "UNIT_JET_FIGHTER"
+      }],
+      "class": "UNITCLASS_JET_FIGHTER",
+      "prereq": ["TECH_ADVANCED_FLIGHT"]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Bomber",
+        "id": "UNIT_BOMBER"
+      }],
+      "class": "UNITCLASS_BOMBER",
+      "prereq": [
+        "TECH_RADIO",
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Stealth Bomber",
+        "id": "UNIT_STEALTH_BOMBER"
+      }],
+      "class": "UNITCLASS_STEALTH_BOMBER",
+      "prereq": [
+        "TECH_STEALTH",
+        "TECH_ROBOTICS"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Guided Missile",
+        "id": "UNIT_GUIDED_MISSILE"
+      }],
+      "class": "UNITCLASS_GUIDED_MISSILE",
+      "prereq": [
+        "TECH_ROCKETRY",
+        "TECH_RADIO"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "Tactical Nuke",
+        "id": "UNIT_TACTICAL_NUKE"
+      }],
+      "class": "UNITCLASS_TACTICAL_NUKE",
+      "prereq": [
+        "TECH_FISSION",
+        "TECH_ROCKETRY"
+      ]
+    },
+    {
+      "types": [{
+        "civilization": {
+          "name": "All",
+          "id": "CIVILIZATION_ALL"
+        },
+        "name": "ICBM",
+        "id": "UNIT_ICBM"
+      }],
+      "class": "UNITCLASS_ICBM",
+      "prereq": [
+        "TECH_FISSION",
+        "TECH_ROCKETRY"
+      ]
+    }
+  ],
+  "civilizations": [
+    {
+      "name": "American Empire",
+      "id": "CIVILIZATION_AMERICA"
+    },
+    {
+      "name": "Arabian Empire",
+      "id": "CIVILIZATION_ARABIA"
+    },
+    {
+      "name": "Aztec Empire",
+      "id": "CIVILIZATION_AZTEC"
+    },
+    {
+      "name": "Babylonian Empire",
+      "id": "CIVILIZATION_BABYLON"
+    },
+    {
+      "name": "Byzantine Empire",
+      "id": "CIVILIZATION_BYZANTIUM"
+    },
+    {
+      "name": "Carthaginian Empire",
+      "id": "CIVILIZATION_CARTHAGE"
+    },
+    {
+      "name": "Celtic Empire",
+      "id": "CIVILIZATION_CELT"
+    },
+    {
+      "name": "Chinese Empire",
+      "id": "CIVILIZATION_CHINA"
+    },
+    {
+      "name": "Egyptian Empire",
+      "id": "CIVILIZATION_EGYPT"
+    },
+    {
+      "name": "English Empire",
+      "id": "CIVILIZATION_ENGLAND"
+    },
+    {
+      "name": "Ethiopian Empire",
+      "id": "CIVILIZATION_ETHIOPIA"
+    },
+    {
+      "name": "French Empire",
+      "id": "CIVILIZATION_FRANCE"
+    },
+    {
+      "name": "German Empire",
+      "id": "CIVILIZATION_GERMANY"
+    },
+    {
+      "name": "Greek Empire",
+      "id": "CIVILIZATION_GREECE"
+    },
+    {
+      "name": "Holy Roman Empire",
+      "id": "CIVILIZATION_HOLY_ROMAN"
+    },
+    {
+      "name": "Incan Empire",
+      "id": "CIVILIZATION_INCA"
+    },
+    {
+      "name": "Indian Empire",
+      "id": "CIVILIZATION_INDIA"
+    },
+    {
+      "name": "Japanese Empire",
+      "id": "CIVILIZATION_JAPAN"
+    },
+    {
+      "name": "Khmer Empire",
+      "id": "CIVILIZATION_KHMER"
+    },
+    {
+      "name": "Korean Empire",
+      "id": "CIVILIZATION_KOREA"
+    },
+    {
+      "name": "Malinese Empire",
+      "id": "CIVILIZATION_MALI"
+    },
+    {
+      "name": "Maya Empire",
+      "id": "CIVILIZATION_MAYA"
+    },
+    {
+      "name": "Mongolian Empire",
+      "id": "CIVILIZATION_MONGOL"
+    },
+    {
+      "name": "Native American Empire",
+      "id": "CIVILIZATION_NATIVE_AMERICA"
+    },
+    {
+      "name": "Dutch Empire",
+      "id": "CIVILIZATION_NETHERLANDS"
+    },
+    {
+      "name": "Ottoman Empire",
+      "id": "CIVILIZATION_OTTOMAN"
+    },
+    {
+      "name": "Persian Empire",
+      "id": "CIVILIZATION_PERSIA"
+    },
+    {
+      "name": "Portuguese Empire",
+      "id": "CIVILIZATION_PORTUGAL"
+    },
+    {
+      "name": "Roman Empire",
+      "id": "CIVILIZATION_ROME"
+    },
+    {
+      "name": "Russian Empire",
+      "id": "CIVILIZATION_RUSSIA"
+    },
+    {
+      "name": "Spanish Empire",
+      "id": "CIVILIZATION_SPAIN"
+    },
+    {
+      "name": "Sumerian Empire",
+      "id": "CIVILIZATION_SUMERIA"
+    },
+    {
+      "name": "Viking Empire",
+      "id": "CIVILIZATION_VIKING"
+    },
+    {
+      "name": "Zulu Empire",
+      "id": "CIVILIZATION_ZULU"
+    }
+  ]
+}

@@ -1,4 +1,19 @@
-var folder = "civ4/";
+/*
+
+Some defintions:
+
+__Position (pos)__: the position of an icon from 0 degrees with equal angle sections.
+So if there are 15 technologies, the 0th position is at 0 degrees, the 1st at 24, 2nd at 48, nth at (360/15*n)...
+
+__Rank__: The distance from the center of an icon.
+The 1st rank is closest to the center, 2nd farther, and so on. 
+Each rank represents an invisible circle that it sits on. 
+So you could call the ranks the 1st circle, 2nd circle, and up.
+The distance between ranks is arbitrary, and is set by the variable arcSpace (originally just referred to arcs, yeah, yeah...).
+*/
+
+//var path = "civ4/civ4base.json";
+var path = "civ4_bts/civ4bts.json";
 
 var arcBase = 100;
 var arcWidth = 1;
@@ -28,18 +43,21 @@ var svg = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json(folder + "technologies.json", function(data) {
+d3.json(path, function(data) {
     
-    // First, arrange the technologies
+    // First, arrange the technologies by cost
     data.technologies.sort(function(a, b) {
         return a.cost - b.cost;
     });
     
+    // Give each technology an arbitrary position value
+    // And an unlocks array for units, resources, buildings, etc...
     for (var i = 0; i < data.technologies.length; i++) {
         data.technologies[i].pos = i;
+        data.technologies[i].unlocks = [];
     }
     
-    // Go through each technology and find the prequisite with highest position, then swap
+    // Go through each technology and find the prequisite with highest position, then swap positions
     var iter  = 0;
     while (iter < data.technologies.length) {
         var pos = data.technologies[iter].pos;
@@ -68,7 +86,7 @@ d3.json(folder + "technologies.json", function(data) {
         }
         
         if (iter != elem) {
-            console.log(data.technologies[iter].name + " at " + data.technologies[iter].pos + " requires " + data.technologies[elem].name + " at " + data.technologies[elem].pos);
+            // console.log(data.technologies[iter].name + " at " + data.technologies[iter].pos + " requires " + data.technologies[elem].name + " at " + data.technologies[elem].pos);
             data.technologies[elem].pos = data.technologies[iter].pos;
             var techSwap = data.technologies[elem];
             data.technologies[iter].pos = pos;
@@ -179,7 +197,81 @@ d3.json(folder + "technologies.json", function(data) {
         return b.pos - a.pos;
     });
     
+    
+    
+    
+    
+    // Determine the position where the unit icon belongs
+    // -> Always place the icon at the higher technology position
+    // TODO: Write this into a function for others - e.g. buildings
+    for (var i = 0; i < data.units.length; i++) {
+        var maxPos = 0;
+        var minPos = 0;
+        for (var j = 0; j < data.technologies.length; j++) {
+            for (var k = 0; k < data.units[i].prereq.length; k++) {
+                if (data.units[i].prereq[k] === data.technologies[j].id && maxPos < data.technologies[j].pos) {
+                    maxPos = data.technologies[j].pos;
+                }
+                if (data.units[i].prereq.length == 1) {
+                    minPos = maxPos;
+                } else {
+                    // determine arc start
+                }
+            }
+        }
+        data.units[i].pos = maxPos;
+    }
+    
+    for (var i = 0; i < data.units.length; i++) { // loop through all units
+        var max = 5000;
+        for (var j = 0; j < data.technologies.length; j++) { // loop through all techs
+            for (var k = 0; k < data.units[i].prereq.length; k++) { // loop through all prereqs for a unit
+                if (data.units[i].prereq[k] === data.technologies[j].id && max > j) { // ids match & max is greater than position of tech (because they're in reverse order)
+                    max = j;
+                }
+            }
+        }
+        //data.units[i].pos = maxPos;
+        /*if (data.technologies[minTech].unlocks) {
+            data.technologies[minTech].unlocks.push(data.units[i]);
+        } else {*/
+        //data.technologies[minTech].unlocks = [];
+        data.technologies[max].unlocks.push(data.units[i]);
+        //}
+    }
+    
+    // Determine the rank
+    // 1. Search through other units to see if there are any other icons at this pos, and set the rank to highest++
+    // 2. If there are no other units at this position, set rank to 0
+    for (var i = 0; i < data.units.length; i++) {
+        var iconRank = 0;
+        for (var j = 0; j < data.units.length; j++) {
+            if (data.units[j].iconRank >= 0) {
+                if (data.units[i].pos == data.units[j].pos && data.units[j].iconRank >= iconRank) {
+                    iconRank = data.units[j].iconRank + 1;
+                }
+            }
+        }
+        data.units[i].iconRank = iconRank;
+    }
+    
+    /* 
+    
+    Should assign rank by working backwards for multiple prerequisites. With start and end variables,
+    you can "reserve" a rank for a range of positions
+    -> On second thought, why is that not true for working forwards too? Important point is having
+    a start and end, not the direction you check in. Right?
+    
+    Final goal here should be to create a new JSON array for each technology (call it something like unlocks)
+    Each icon gets appended to this array. Solves two problems:
+    1. How to access the different data types (buildings, units, bonuses, religions, etc...)
+    2. How to draw; by adding to the technologies data it's super simple 
+    ==> Which means, you don't need to calculate position per se, you need to determine which technology a unit belongs in!
+    
+    */
+    
     console.log(data.technologies);
+    console.log(data.units);
     
     var wheel = svg.append("g")
         .attr("transform", "translate(" + (width / 2) + " " + (height / 2) +")");
@@ -214,6 +306,34 @@ d3.json(folder + "technologies.json", function(data) {
             var link = "img/techtree/" + d.name + ".png";
             return link;
         });
+        
+    var unlockIcons = spokes.selectAll(".unlocks")
+        .data(function(d) {
+            return d.unlocks;
+        })
+        .enter().append("g")
+        .attr("class", "unlocks");
+        
+    unlockIcons.append("image") // Unlock icons
+        .attr("class", "unlockImg")
+        .attr("transform", function(d) {
+            return "translate(-10, " + (-(width / 2) + 100 - (d.iconRank * 25)) + ") rotate(270)";
+        })
+        .attr("height", 20)
+        .attr("width", 20)
+        .attr("xlink:href", function(d) {
+            console.log(d);
+            var link = "img/units/archer.png";
+            for (var i = 0; i < d.types.length; i++) {
+                if (d.types[i].civilization.name === "All") {
+                    link = "img/units/" + d.types[i].name + ".png";
+                }
+            }
+            
+            return link;
+        });
+        
+
         
     spokes.append("text") // Technology text
         .attr("class", "spokeText")
