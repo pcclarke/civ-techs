@@ -12,8 +12,8 @@ So you could call the ranks the 1st circle, 2nd circle, and up.
 The distance between ranks is arbitrary, and is set by the variable arcSpace (originally just referred to arcs, yeah, yeah...).
 */
 
-//var path = "civ4/civ4base.json";
-var path = "civ4_bts/civ4bts.json";
+var path = "civ4/civ4base.json";
+//var path = "civ4_bts/civ4bts.json";
 
 var arcBase = 100;
 var arcWidth = 1;
@@ -191,53 +191,30 @@ d3.json(path, function(data) {
             data.technologies[i].spokeRank = 0;
         }
     }
-
-    // Reverse order of data so that arcs are drawn over spokes
-    data.technologies.sort(function(a, b) {
-        return b.pos - a.pos;
-    });
     
-    
-    
-    
-    
-    // Determine the position where the unit icon belongs
-    // -> Always place the icon at the higher technology position
-    // TODO: Write this into a function for others - e.g. buildings
-    for (var i = 0; i < data.units.length; i++) {
-        var maxPos = 0;
-        var minPos = 0;
-        for (var j = 0; j < data.technologies.length; j++) {
-            for (var k = 0; k < data.units[i].prereq.length; k++) {
-                if (data.units[i].prereq[k] === data.technologies[j].id && maxPos < data.technologies[j].pos) {
-                    maxPos = data.technologies[j].pos;
-                }
-                if (data.units[i].prereq.length == 1) {
-                    minPos = maxPos;
-                } else {
-                    // determine arc start
-                }
-            }
-        }
-        data.units[i].pos = maxPos;
-    }
-    
+    // Put units into unlocks array into technologies
     for (var i = 0; i < data.units.length; i++) { // loop through all units
-        var max = 5000;
+        var techItem = 0;
+        var minPos = 5000;
+        var maxPos = 0;
         for (var j = 0; j < data.technologies.length; j++) { // loop through all techs
             for (var k = 0; k < data.units[i].prereq.length; k++) { // loop through all prereqs for a unit
-                if (data.units[i].prereq[k] === data.technologies[j].id && max > j) { // ids match & max is greater than position of tech (because they're in reverse order)
-                    max = j;
+                if (data.units[i].prereq[k] === data.technologies[j].id) {  // ids match
+                    if (techItem < j) {
+                        techItem = j;
+                    }
+                    if (minPos > data.technologies[j].pos) {
+                        minPos = data.technologies[j].pos;
+                    }
+                    if (maxPos < data.technologies[j].pos) {
+                        maxPos = data.technologies[j].pos;
+                    }
                 }
             }
         }
-        //data.units[i].pos = maxPos;
-        /*if (data.technologies[minTech].unlocks) {
-            data.technologies[minTech].unlocks.push(data.units[i]);
-        } else {*/
-        //data.technologies[minTech].unlocks = [];
-        data.technologies[max].unlocks.push(data.units[i]);
-        //}
+        data.units[i].prereqPos = minPos;
+        data.units[i].pos = maxPos;
+        data.technologies[techItem].unlocks.push(data.units[i]);
     }
     
     // Determine the rank
@@ -255,6 +232,36 @@ d3.json(path, function(data) {
         data.units[i].iconRank = iconRank;
     }
     
+    // Determine the rank
+    // 1. Go through each technology, then its unlocks
+    // 2. If there are any unlocks occupying the same rank between prereqPos and pos
+    for (var i = 0; i < data.technologies.length; i++) { // loop through every technology
+        for (var j = 0; j < data.technologies[i].unlocks.length; j++) { // loop through every unlock
+            if (data.technologies[i].unlocks[j].prereqPos < data.technologies[i].unlocks[j].pos) { // if there is potential for overlap
+                var maxRank = 0;
+                var hasConflict = 0;
+                for (var k = 0; k < data.technologies.length; k++) {
+                    var checkPos = data.technologies[k].pos;
+                    if (data.technologies[i].unlocks[j].prereqPos <= checkPos && data.technologies[i].unlocks[j].pos >= checkPos) { // if the 1st technology's unlock has a prerequisite at an earlier position
+                        for (var l = 0; l < data.technologies[k].unlocks.length; l++) {
+                            if (l == j && data.technologies[i].unlocks[j].pos > checkPos) {
+                                hasConflict = 1;
+                            }
+                            if (data.technologies[k].unlocks[l].iconRank > maxRank) {
+                                maxRank = data.technologies[k].unlocks[l].iconRank;
+                            }
+                        }
+                    }
+                }
+                if (hasConflict == 1) {
+                    console.log(data.technologies[i].unlocks[j]);
+                    console.log(maxRank);
+                    data.technologies[i].unlocks[j].iconRank = maxRank + 1;
+                }
+            }
+        }
+    }
+    
     /* 
     
     Should assign rank by working backwards for multiple prerequisites. With start and end variables,
@@ -269,6 +276,11 @@ d3.json(path, function(data) {
     ==> Which means, you don't need to calculate position per se, you need to determine which technology a unit belongs in!
     
     */
+    
+    // Reverse order of data so that arcs are drawn over spokes
+    data.technologies.sort(function(a, b) {
+        return b.pos - a.pos;
+    });
     
     console.log(data.technologies);
     console.log(data.units);
@@ -317,19 +329,17 @@ d3.json(path, function(data) {
     unlockIcons.append("image") // Unlock icons
         .attr("class", "unlockImg")
         .attr("transform", function(d) {
-            return "translate(-10, " + (-(width / 2) + 100 - (d.iconRank * 25)) + ") rotate(270)";
+            return "translate(-10, " + (-(width / 2) + 125 - (d.iconRank * 25)) + ") rotate(270)";
         })
         .attr("height", 20)
         .attr("width", 20)
         .attr("xlink:href", function(d) {
-            console.log(d);
             var link = "img/units/archer.png";
             for (var i = 0; i < d.types.length; i++) {
                 if (d.types[i].civilization.name === "All") {
                     link = "img/units/" + d.types[i].name + ".png";
                 }
             }
-            
             return link;
         });
         
