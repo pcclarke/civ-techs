@@ -36,6 +36,12 @@ h1 {
 
 .spokeLine:hover {
     stroke: red;
+    stroke-width: 2px;
+}
+
+.spoke path:hover {
+    stroke: red;
+    stroke-width: 2px;
 }
 
 .spokeText {

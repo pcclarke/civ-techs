@@ -12,12 +12,14 @@ So you could call the ranks the 1st circle, 2nd circle, and up.
 The distance between ranks is arbitrary, and is set by the variable arcSpace (originally just referred to arcs, yeah, yeah...).
 */
 
-var path = "civ4/civ4base.json";
-//var path = "civ4_bts/civ4bts.json";
+var game = "civ4bts";
 
-var arcBase = 100;
+//var path = "civ4/civ4base.json";
+var path = game + "/civ4bts.json";
+
+var arcBase = 150;
 var arcWidth = 1;
-var arcSpace = 15;
+var arcSpace = 10;
 
 var margin = {top: 10, right: 10, bottom: 10, left: 10},
     width = 1200 - margin.left - margin.right,
@@ -50,6 +52,10 @@ d3.json(path, function(data) {
         return a.cost - b.cost;
     });
     
+    for (var i = 0; i < data.technologies.length; i++) {
+        data.technologies[i].cat = "technology";
+    }
+    
     // Append units to technologies
     for (var i = 0; i < data.units.length; i++) {
         data.units[i].cat = "unit";
@@ -64,14 +70,20 @@ d3.json(path, function(data) {
     
     // Append religions to technologies
     for (var i = 0; i < data.religions.length; i++) {
-        //data.buildings[i].cat = "building";
+        data.religions[i].cat = "religion";
         data.technologies.push(data.religions[i]);
     }
     
     // Append terrain improvements to technologies
     for (var i = 0; i < data.build.length; i++) {
-        //data.buildings[i].cat = "building";
+        data.build[i].cat = "improvement";
         data.technologies.push(data.build[i]);
+    }
+    
+    // Append resources to technologies
+    for (var i = 0; i < data.resources.length; i++) {
+        data.resources[i].cat = "resource";
+        data.technologies.push(data.resources[i]);
     }
     
     // Give each technology an arbitrary position value
@@ -278,14 +290,31 @@ d3.json(path, function(data) {
         
     spokes.append("image") // Technology icons
         .attr("class", "techImg")
-        .attr("transform", "translate(-10, " + (-(width / 2) + 235) + ") rotate(270)")
+        .attr("transform", function(d) {
+            if (d.cat === "technology") {
+                return "translate(-10, " + (-(width / 2) + 235) + ") rotate(270)";
+            } else {
+                return "translate(-10, " + (-(width / 2) + 125) + ") rotate(270)";
+            }
+        })
         .attr("height", 20)
         .attr("width", 20)
         .attr("xlink:href", function(d) {
-            if (d.cat) {
-                var link = "img/units/archer.png";
+            var link;
+            if (d.cat === "unit") {
+                link = "img/units/" + d.CIVILIZATION_ALL.name + ".png";
+            } else if (d.cat === "building") {
+                link = "img/buildings/" + d.CIVILIZATION_ALL.name + ".png";
+            } else if (d.cat === "religion") {
+                link = "img/religions/" + d.name + ".png";
+            } else if (d.cat === "technology") {
+                link = "img/technologies/" + d.name + ".png";
+            } else if (d.cat === "improvement") {
+                link = "img/builds/" + d.id + ".png";
+            } else if (d.cat === "resource") {
+                link = "img/resources/" + d.name + ".png";
             } else {
-                var link = "img/techtree/" + d.name + ".png";
+                link = "img/technologies/fishing.png";
             }
             return link;
         });
@@ -294,15 +323,22 @@ d3.json(path, function(data) {
     spokes.append("text") // Technology text
         .attr("class", "spokeText")
         .attr("transform", function(d) {
-            if (d.pos > (data.technologies.length / 2)) {
-                return "translate(-4, " + (-(width / 2) + 210) + ") rotate(90)";
+            if (d.cat === "technology") {
+                if (d.pos > (data.technologies.length / 2)) {
+                    return "translate(-4, " + (-(width / 2) + 210) + ") rotate(90)";
+                }
+                return "translate(3, " + (-(width / 2) + 210) + ") rotate(270)";
+            } else {
+                if (d.pos > (data.technologies.length / 2)) {
+                    return "translate(-4, " + (-(width / 2) + 100) + ") rotate(90)";
+                }
+                return "translate(3, " + (-(width / 2) + 100) + ") rotate(270)";
             }
-            return "translate(3, " + (-(width / 2) + 210) + ") rotate(270)";
         })
         .text(function(d) {
             var name;
-            if (d.cat) {
-                name = d.id;
+            if (d.cat === "unit" || d.cat === "building") {
+                name = d.CIVILIZATION_ALL.name;
             } else {
                 name = d.name;
             }
@@ -320,7 +356,13 @@ d3.json(path, function(data) {
         
     spokes.insert("rect", "text") // Box behind technology text
             .attr("class", "spokeTextBox")
-            .attr("transform", "translate(-10, " + (-(width / 2) + 212) + ") rotate(270)")
+            .attr("transform", function(d) {
+                if (d.cat === "technology") {
+                    return "translate(-10, " + (-(width / 2) + 212) + ") rotate(270)";
+                } else {
+                    return "translate(-10, " + (-(width / 2) + 102) + ") rotate(270)";
+                }
+            })
             .attr("rx", 3)
             .attr("ry", 3)
             .attr("width", function(d) {
