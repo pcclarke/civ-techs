@@ -905,112 +905,112 @@
     {
       "name": "Build a Road",
       "id": "BUILD_ROAD",
-      "prereq": "TECH_THE_WHEEL"
+      "requires": ["TECH_THE_WHEEL"]
     },
     {
       "name": "Build a Railroad",
       "id": "BUILD_RAILROAD",
-      "prereq": "TECH_RAILROAD"
+      "requires": ["TECH_RAILROAD"]
     },
     {
       "name": "Build a Farm",
       "id": "BUILD_FARM",
-      "prereq": "TECH_AGRICULTURE"
+      "requires": ["TECH_AGRICULTURE"]
     },
     {
       "name": "Create Fishing Boats",
       "id": "BUILD_FISHING_BOATS",
-      "prereq": "TECH_FISHING"
+      "requires": ["TECH_FISHING"]
     },
     {
       "name": "Create Whaling Boats",
       "id": "BUILD_WHALING_BOATS",
-      "prereq": "TECH_OPTICS"
+      "requires": ["TECH_OPTICS"]
     },
     {
       "name": "Build a Mine",
       "id": "BUILD_MINE",
-      "prereq": "TECH_MINING"
+      "requires": ["TECH_MINING"]
     },
     {
       "name": "Build a Workshop",
       "id": "BUILD_WORKSHOP",
-      "prereq": "TECH_METAL_CASTING"
+      "requires": ["TECH_METAL_CASTING"]
     },
     {
       "name": "Build a Lumbermill",
       "id": "BUILD_LUMBERMILL",
-      "prereq": "TECH_REPLACEABLE_PARTS"
+      "requires": ["TECH_REPLACEABLE_PARTS"]
     },
     {
       "name": "Build a Windmill",
       "id": "BUILD_WINDMILL",
-      "prereq": "TECH_MACHINERY"
+      "requires": ["TECH_MACHINERY"]
     },
     {
       "name": "Build a Watermill",
       "id": "BUILD_WATERMILL",
-      "prereq": "TECH_MACHINERY"
+      "requires": ["TECH_MACHINERY"]
     },
     {
       "name": "Build a Plantation",
       "id": "BUILD_PLANTATION",
-      "prereq": "TECH_CALENDAR"
+      "requires": ["TECH_CALENDAR"]
     },
     {
       "name": "Build a Quarry",
       "id": "BUILD_QUARRY",
-      "prereq": "TECH_MASONRY"
+      "requires": ["TECH_MASONRY"]
     },
     {
       "name": "Build a Pasture",
       "id": "BUILD_PASTURE",
-      "prereq": "TECH_ANIMAL_HUSBANDRY"
+      "requires": ["TECH_ANIMAL_HUSBANDRY"]
     },
     {
       "name": "Build a Camp",
       "id": "BUILD_CAMP",
-      "prereq": "TECH_HUNTING"
+      "requires": ["TECH_HUNTING"]
     },
     {
       "name": "Build a Well",
       "id": "BUILD_WELL",
-      "prereq": "TECH_COMBUSTION"
+      "requires": ["TECH_COMBUSTION"]
     },
     {
       "name": "Create Offshore Platform",
       "id": "BUILD_OFFSHORE_PLATFORM",
-      "prereq": "TECH_PLASTICS"
+      "requires": ["TECH_PLASTICS"]
     },
     {
       "name": "Build a Winery",
       "id": "BUILD_WINERY",
-      "prereq": "TECH_MONARCHY"
+      "requires": ["TECH_MONARCHY"]
     },
     {
       "name": "Build a Cottage",
       "id": "BUILD_COTTAGE",
-      "prereq": "TECH_POTTERY"
+      "requires": ["TECH_POTTERY"]
     },
     {
       "name": "Build a Fort",
       "id": "BUILD_FORT",
-      "prereq": "TECH_MATHEMATICS"
+      "requires": ["TECH_MATHEMATICS"]
     },
     {
       "name": "Remove Jungle",
       "id": "BUILD_REMOVE_JUNGLE",
-      "prereq": "TECH_IRON_WORKING"
+      "requires": ["TECH_IRON_WORKING"]
     },
     {
       "name": "Chop Down a Forest",
       "id": "BUILD_REMOVE_FOREST",
-      "prereq": "TECH_BRONZE_WORKING"
+      "requires": ["TECH_BRONZE_WORKING"]
     },
     {
       "name": "Scrub Fallout",
       "id": "BUILD_SCRUB_FALLOUT",
-      "prereq": "TECH_ECOLOGY"
+      "requires": ["TECH_ECOLOGY"]
     }
   ],
   "buildings": [
@@ -1023,8 +1023,8 @@
         "name": "Versailles",
         "id": "BUILDING_VERSAILLES"
       }],
-      "class": "BUILDINGCLASS_VERSAILLES",
-      "prereq": ["TECH_DIVINE_RIGHT"]
+      "id": "BUILDINGCLASS_VERSAILLES",
+      "requires": ["TECH_DIVINE_RIGHT"]
     },
     {
       "types": [{
@@ -1035,8 +1035,8 @@
         "name": "Walls",
         "id": "BUILDING_WALLS"
       }],
-      "class": "BUILDINGCLASS_WALLS",
-      "prereq": ["TECH_MASONRY"]
+      "id": "BUILDINGCLASS_WALLS",
+      "requires": ["TECH_MASONRY"]
     },
     {
       "types": [{
@@ -1047,8 +1047,8 @@
         "name": "Castle",
         "id": "BUILDING_CASTLE"
       }],
-      "class": "BUILDINGCLASS_CASTLE",
-      "prereq": ["TECH_ENGINEERING"]
+      "id": "BUILDINGCLASS_CASTLE",
+      "requires": ["TECH_ENGINEERING"]
     },
     {
       "types": [{
@@ -1059,8 +1059,8 @@
         "name": "Bunker",
         "id": "BUILDING_BUNKER"
       }],
-      "class": "BUILDINGCLASS_BUNKER",
-      "prereq": ["TECH_ELECTRICITY"]
+      "id": "BUILDINGCLASS_BUNKER",
+      "requires": ["TECH_ELECTRICITY"]
     },
     {
       "types": [{
@@ -1071,8 +1071,8 @@
         "name": "Bomb Shelters",
         "id": "BUILDING_BOMB_SHELTER"
       }],
-      "class": "BUILDINGCLASS_BOMB_SHELTER",
-      "prereq": ["TECH_ELECTRICITY"]
+      "id": "BUILDINGCLASS_BOMB_SHELTER",
+      "requires": ["TECH_ELECTRICITY"]
     },
     {
       "types": [{
@@ -1083,8 +1083,8 @@
         "name": "Granary",
         "id": "BUILDING_GRANARY"
       }],
-      "class": "BUILDINGCLASS_GRANARY",
-      "prereq": ["TECH_POTTERY"]
+      "id": "BUILDINGCLASS_GRANARY",
+      "requires": ["TECH_POTTERY"]
     },
     {
       "types": [{
@@ -1095,8 +1095,8 @@
         "name": "Aqueduct",
         "id": "BUILDING_AQUEDUCT"
       }],
-      "class": "BUILDINGCLASS_AQUEDUCT",
-      "prereq": [
+      "id": "BUILDINGCLASS_AQUEDUCT",
+      "requires": [
         "TECH_MATHEMATICS",
         "TECH_MASONRY"
       ]
@@ -1110,8 +1110,8 @@
         "name": "Hospital",
         "id": "BUILDING_HOSPITAL"
       }],
-      "class": "BUILDINGCLASS_HOSPITAL",
-      "prereq": ["TECH_MEDICINE"]
+      "id": "BUILDINGCLASS_HOSPITAL",
+      "requires": ["TECH_MEDICINE"]
     },
     {
       "types": [{
@@ -1122,8 +1122,8 @@
         "name": "Recycling Center",
         "id": "BUILDING_RECYCLING_CENTER"
       }],
-      "class": "BUILDINGCLASS_RECYCLING_CENTER",
-      "prereq": ["TECH_ECOLOGY"]
+      "id": "BUILDINGCLASS_RECYCLING_CENTER",
+      "requires": ["TECH_ECOLOGY"]
     },
     {
       "types": [{
@@ -1134,8 +1134,8 @@
         "name": "Lighthouse",
         "id": "BUILDING_LIGHTHOUSE"
       }],
-      "class": "BUILDINGCLASS_LIGHTHOUSE",
-      "prereq": ["TECH_SAILING"]
+      "id": "BUILDINGCLASS_LIGHTHOUSE",
+      "requires": ["TECH_SAILING"]
     },
     {
       "types": [{
@@ -1146,8 +1146,8 @@
         "name": "Harbor",
         "id": "BUILDING_HARBOR"
       }],
-      "class": "BUILDINGCLASS_HARBOR",
-      "prereq": ["TECH_COMPASS"]
+      "id": "BUILDINGCLASS_HARBOR",
+      "requires": ["TECH_COMPASS"]
     },
     {
       "types": [{
@@ -1158,8 +1158,8 @@
         "name": "Drydock",
         "id": "BUILDING_DRYDOCK"
       }],
-      "class": "BUILDINGCLASS_DRYDOCK",
-      "prereq": ["TECH_STEEL"]
+      "id": "BUILDINGCLASS_DRYDOCK",
+      "requires": ["TECH_STEEL"]
     },
     {
       "types": [{
@@ -1170,8 +1170,8 @@
         "name": "Airport",
         "id": "BUILDING_AIRPORT"
       }],
-      "class": "BUILDINGCLASS_AIRPORT",
-      "prereq": ["TECH_FLIGHT"]
+      "id": "BUILDINGCLASS_AIRPORT",
+      "requires": ["TECH_FLIGHT"]
     },
     {
       "types": [{
@@ -1182,8 +1182,8 @@
         "name": "Forge",
         "id": "BUILDING_FORGE"
       }],
-      "class": "BUILDINGCLASS_FORGE",
-      "prereq": ["TECH_METAL_CASTING"]
+      "id": "BUILDINGCLASS_FORGE",
+      "requires": ["TECH_METAL_CASTING"]
     },
     {
       "types": [{
@@ -1194,8 +1194,8 @@
         "name": "Factory",
         "id": "BUILDING_FACTORY"
       }],
-      "class": "BUILDINGCLASS_FACTORY",
-      "prereq": ["TECH_ASSEMBLY_LINE"]
+      "id": "BUILDINGCLASS_FACTORY",
+      "requires": ["TECH_ASSEMBLY_LINE"]
     },
     {
       "types": [{
@@ -1206,8 +1206,8 @@
         "name": "Coal Plant",
         "id": "BUILDING_COAL_PLANT"
       }],
-      "class": "BUILDINGCLASS_COAL_PLANT",
-      "prereq": ["TECH_ASSEMBLY_LINE"]
+      "id": "BUILDINGCLASS_COAL_PLANT",
+      "requires": ["TECH_ASSEMBLY_LINE"]
     },
     {
       "types": [{
@@ -1218,8 +1218,8 @@
         "name": "Hydro Plant",
         "id": "BUILDING_HYDRO_PLANT"
       }],
-      "class": "BUILDINGCLASS_HYDRO_PLANT",
-      "prereq": ["TECH_PLASTICS"]
+      "id": "BUILDINGCLASS_HYDRO_PLANT",
+      "requires": ["TECH_PLASTICS"]
     },
     {
       "types": [{
@@ -1230,8 +1230,8 @@
         "name": "Nuclear Plant",
         "id": "BUILDING_NUCLEAR_PLANT"
       }],
-      "class": "BUILDINGCLASS_NUCLEAR_PLANT",
-      "prereq": ["TECH_FISSION"]
+      "id": "BUILDINGCLASS_NUCLEAR_PLANT",
+      "requires": ["TECH_FISSION"]
     },
     {
       "types": [{
@@ -1243,8 +1243,8 @@
         "id": "BUILDING_OBELISK"
       }],
       "obsolete": "TECH_CALENDAR",
-      "class": "BUILDINGCLASS_OBELISK",
-      "prereq": ["TECH_MYSTICISM"]
+      "id": "BUILDINGCLASS_OBELISK",
+      "requires": ["TECH_MYSTICISM"]
     },
     {
       "types": [{
@@ -1255,8 +1255,8 @@
         "name": "Library",
         "id": "BUILDING_LIBRARY"
       }],
-      "class": "BUILDINGCLASS_LIBRARY",
-      "prereq": ["TECH_WRITING"]
+      "id": "BUILDINGCLASS_LIBRARY",
+      "requires": ["TECH_WRITING"]
     },
     {
       "types": [{
@@ -1267,8 +1267,8 @@
         "name": "University",
         "id": "BUILDING_UNIVERSITY"
       }],
-      "class": "BUILDINGCLASS_UNIVERSITY",
-      "prereq": ["TECH_EDUCATION"]
+      "id": "BUILDINGCLASS_UNIVERSITY",
+      "requires": ["TECH_EDUCATION"]
     },
     {
       "types": [{
@@ -1279,8 +1279,8 @@
         "name": "Observatory",
         "id": "BUILDING_OBSERVATORY"
       }],
-      "class": "BUILDINGCLASS_OBSERVATORY",
-      "prereq": ["TECH_ASTRONOMY"]
+      "id": "BUILDINGCLASS_OBSERVATORY",
+      "requires": ["TECH_ASTRONOMY"]
     },
     {
       "types": [{
@@ -1291,8 +1291,8 @@
         "name": "Laboratory",
         "id": "BUILDING_LABORATORY"
       }],
-      "class": "BUILDINGCLASS_LABORATORY",
-      "prereq": ["TECH_COMPUTERS"]
+      "id": "BUILDINGCLASS_LABORATORY",
+      "requires": ["TECH_COMPUTERS"]
     },
     {
       "types": [{
@@ -1303,8 +1303,8 @@
         "name": "Theatre",
         "id": "BUILDING_THEATRE"
       }],
-      "class": "BUILDINGCLASS_THEATRE",
-      "prereq": ["TECH_DRAMA"]
+      "id": "BUILDINGCLASS_THEATRE",
+      "requires": ["TECH_DRAMA"]
     },
     {
       "types": [{
@@ -1315,8 +1315,8 @@
         "name": "Colosseum",
         "id": "BUILDING_COLOSSEUM"
       }],
-      "class": "BUILDINGCLASS_COLOSSEUM",
-      "prereq": ["TECH_CONSTRUCTION"]
+      "id": "BUILDINGCLASS_COLOSSEUM",
+      "requires": ["TECH_CONSTRUCTION"]
     },
     {
       "types": [{
@@ -1327,8 +1327,8 @@
         "name": "Broadcast Tower",
         "id": "BUILDING_BROADCAST_TOWER"
       }],
-      "class": "BUILDINGCLASS_BROADCAST_TOWER",
-      "prereq": ["TECH_MASS_MEDIA"]
+      "id": "BUILDINGCLASS_BROADCAST_TOWER",
+      "requires": ["TECH_MASS_MEDIA"]
     },
     {
       "types": [{
@@ -1339,8 +1339,8 @@
         "name": "Market",
         "id": "BUILDING_MARKET"
       }],
-      "class": "BUILDINGCLASS_MARKET",
-      "prereq": ["TECH_CURRENCY"]
+      "id": "BUILDINGCLASS_MARKET",
+      "requires": ["TECH_CURRENCY"]
     },
     {
       "types": [{
@@ -1351,8 +1351,8 @@
         "name": "Grocer",
         "id": "BUILDING_GROCER"
       }],
-      "class": "BUILDINGCLASS_GROCER",
-      "prereq": [
+      "id": "BUILDINGCLASS_GROCER",
+      "requires": [
         "TECH_GUILDS",
         "TECH_CURRENCY"
       ]
@@ -1366,8 +1366,8 @@
         "name": "Bank",
         "id": "BUILDING_BANK"
       }],
-      "class": "BUILDINGCLASS_BANK",
-      "prereq": ["TECH_BANKING"]
+      "id": "BUILDINGCLASS_BANK",
+      "requires": ["TECH_BANKING"]
     },
     {
       "types": [{
@@ -1378,8 +1378,8 @@
         "name": "Supermarket",
         "id": "BUILDING_SUPERMARKET"
       }],
-      "class": "BUILDINGCLASS_SUPERMARKET",
-      "prereq": ["TECH_REFRIGERATION"]
+      "id": "BUILDINGCLASS_SUPERMARKET",
+      "requires": ["TECH_REFRIGERATION"]
     },
     {
       "types": [{
@@ -1390,8 +1390,8 @@
         "name": "Courthouse",
         "id": "BUILDING_COURTHOUSE"
       }],
-      "class": "BUILDINGCLASS_COURTHOUSE",
-      "prereq": ["TECH_CODE_OF_LAWS"]
+      "id": "BUILDINGCLASS_COURTHOUSE",
+      "requires": ["TECH_CODE_OF_LAWS"]
     },
     {
       "types": [{
@@ -1402,8 +1402,8 @@
         "name": "Jail",
         "id": "BUILDING_JAIL"
       }],
-      "class": "BUILDINGCLASS_JAIL",
-      "prereq": ["TECH_CONSTITUTION"]
+      "id": "BUILDINGCLASS_JAIL",
+      "requires": ["TECH_CONSTITUTION"]
     },
     {
       "types": [{
@@ -1414,8 +1414,8 @@
         "name": "Heroic Epic",
         "id": "BUILDING_HEROIC_EPIC"
       }],
-      "class": "BUILDINGCLASS_HEROIC_EPIC",
-      "prereq": ["TECH_LITERATURE"]
+      "id": "BUILDINGCLASS_HEROIC_EPIC",
+      "requires": ["TECH_LITERATURE"]
     },
     {
       "types": [{
@@ -1426,8 +1426,8 @@
         "name": "National Epic",
         "id": "BUILDING_NATIONAL_EPIC"
       }],
-      "class": "BUILDINGCLASS_NATIONAL_EPIC",
-      "prereq": ["TECH_LITERATURE"]
+      "id": "BUILDINGCLASS_NATIONAL_EPIC",
+      "requires": ["TECH_LITERATURE"]
     },
     {
       "types": [{
@@ -1438,8 +1438,8 @@
         "name": "Globe Theatre",
         "id": "BUILDING_GLOBE_THEATRE"
       }],
-      "class": "BUILDINGCLASS_GLOBE_THEATRE",
-      "prereq": ["TECH_DRAMA"]
+      "id": "BUILDINGCLASS_GLOBE_THEATRE",
+      "requires": ["TECH_DRAMA"]
     },
     {
       "types": [{
@@ -1450,8 +1450,8 @@
         "name": "Hermitage",
         "id": "BUILDING_HERMITAGE"
       }],
-      "class": "BUILDINGCLASS_HERMITAGE",
-      "prereq": ["TECH_NATIONALISM"]
+      "id": "BUILDINGCLASS_HERMITAGE",
+      "requires": ["TECH_NATIONALISM"]
     },
     {
       "types": [{
@@ -1462,8 +1462,8 @@
         "name": "Oxford University",
         "id": "BUILDING_OXFORD_UNIVERSITY"
       }],
-      "class": "BUILDINGCLASS_OXFORD_UNIVERSITY",
-      "prereq": ["TECH_EDUCATION"]
+      "id": "BUILDINGCLASS_OXFORD_UNIVERSITY",
+      "requires": ["TECH_EDUCATION"]
     },
     {
       "types": [{
@@ -1474,8 +1474,8 @@
         "name": "Wall Street",
         "id": "BUILDING_WALL_STREET"
       }],
-      "class": "BUILDINGCLASS_WALL_STREET",
-      "prereq": ["TECH_CORPORATION"]
+      "id": "BUILDINGCLASS_WALL_STREET",
+      "requires": ["TECH_CORPORATION"]
     },
     {
       "types": [{
@@ -1486,8 +1486,8 @@
         "name": "Ironworks",
         "id": "BUILDING_IRON_WORKS"
       }],
-      "class": "BUILDINGCLASS_IRON_WORKS",
-      "prereq": ["TECH_STEEL"]
+      "id": "BUILDINGCLASS_IRON_WORKS",
+      "requires": ["TECH_STEEL"]
     },
     {
       "types": [{
@@ -1498,8 +1498,8 @@
         "name": "West Point",
         "id": "BUILDING_WEST_POINT"
       }],
-      "class": "BUILDINGCLASS_WEST_POINT",
-      "prereq": ["TECH_MILITARY_TRADITION"]
+      "id": "BUILDINGCLASS_WEST_POINT",
+      "requires": ["TECH_MILITARY_TRADITION"]
     },
     {
       "types": [{
@@ -1510,8 +1510,8 @@
         "name": "Mt. Rushmore",
         "id": "BUILDING_MT_RUSHMORE"
       }],
-      "class": "BUILDINGCLASS_MT_RUSHMORE",
-      "prereq": ["TECH_FASCISM"]
+      "id": "BUILDINGCLASS_MT_RUSHMORE",
+      "requires": ["TECH_FASCISM"]
     },
     {
       "types": [{
@@ -1522,8 +1522,8 @@
         "name": "Red Cross",
         "id": "BUILDING_RED_CROSS"
       }],
-      "class": "BUILDINGCLASS_RED_CROSS",
-      "prereq": ["TECH_MEDICINE"]
+      "id": "BUILDINGCLASS_RED_CROSS",
+      "requires": ["TECH_MEDICINE"]
     },
     {
       "types": [{
@@ -1534,8 +1534,8 @@
         "name": "Scotland Yard",
         "id": "BUILDING_SCOTLAND_YARD"
       }],
-      "class": "BUILDINGCLASS_SCOTLAND_YARD",
-      "prereq": ["TECH_UTOPIA"]
+      "id": "BUILDINGCLASS_SCOTLAND_YARD",
+      "requires": ["TECH_UTOPIA"]
     },
     {
       "types": [{
@@ -1546,8 +1546,8 @@
         "name": "The Pyramids",
         "id": "BUILDING_PYRAMID"
       }],
-      "class": "BUILDINGCLASS_PYRAMID",
-      "prereq": ["TECH_MASONRY"]
+      "id": "BUILDINGCLASS_PYRAMID",
+      "requires": ["TECH_MASONRY"]
     },
     {
       "types": [{
@@ -1559,8 +1559,8 @@
         "id": "BUILDING_STONEHENGE"
       }],
       "obsolete": "TECH_CALENDAR",
-      "class": "BUILDINGCLASS_STONEHENGE",
-      "prereq": ["TECH_MYSTICISM"]
+      "id": "BUILDINGCLASS_STONEHENGE",
+      "requires": ["TECH_MYSTICISM"]
     },
     {
       "types": [{
@@ -1572,8 +1572,8 @@
         "id": "BUILDING_GREAT_LIBRARY"
       }],
       "obsolete": "TECH_SCIENTIFIC_METHOD",
-      "class": "BUILDINGCLASS_GREAT_LIBRARY",
-      "prereq": ["TECH_LITERATURE"]
+      "id": "BUILDINGCLASS_GREAT_LIBRARY",
+      "requires": ["TECH_LITERATURE"]
     },
     {
       "types": [{
@@ -1585,8 +1585,8 @@
         "id": "BUILDING_GREAT_LIGHTHOUSE"
       }],
       "obsolete": "TECH_CORPORATION",
-      "class": "BUILDINGCLASS_GREAT_LIGHTHOUSE",
-      "prereq": ["TECH_MASONRY"]
+      "id": "BUILDINGCLASS_GREAT_LIGHTHOUSE",
+      "requires": ["TECH_MASONRY"]
     },
     {
       "types": [{
@@ -1597,8 +1597,8 @@
         "name": "The Hanging Gardens",
         "id": "BUILDING_HANGING_GARDEN"
       }],
-      "class": "BUILDINGCLASS_HANGING_GARDEN",
-      "prereq": ["TECH_MATHEMATICS"]
+      "id": "BUILDINGCLASS_HANGING_GARDEN",
+      "requires": ["TECH_MATHEMATICS"]
     },
     {
       "types": [{
@@ -1610,8 +1610,8 @@
         "id": "BUILDING_COLOSSUS"
       }],
       "obsolete": "TECH_ASTRONOMY",
-      "class": "BUILDINGCLASS_COLOSSUS",
-      "prereq": ["TECH_METAL_CASTING"]
+      "id": "BUILDINGCLASS_COLOSSUS",
+      "requires": ["TECH_METAL_CASTING"]
     },
     {
       "types": [{
@@ -1622,8 +1622,8 @@
         "name": "The Oracle",
         "id": "BUILDING_ORACLE"
       }],
-      "class": "BUILDINGCLASS_ORACLE",
-      "prereq": ["TECH_PRIESTHOOD"]
+      "id": "BUILDINGCLASS_ORACLE",
+      "requires": ["TECH_PRIESTHOOD"]
     },
     {
       "types": [{
@@ -1635,8 +1635,8 @@
         "id": "BUILDING_PARTHENON"
       }],
       "obsolete": "TECH_CHEMISTRY",
-      "class": "BUILDINGCLASS_PARTHENON",
-      "prereq": ["TECH_POLYTHEISM"]
+      "id": "BUILDINGCLASS_PARTHENON",
+      "requires": ["TECH_POLYTHEISM"]
     },
     {
       "types": [{
@@ -1648,8 +1648,8 @@
         "id": "BUILDING_ANGKOR_WAT"
       }],
       "obsolete": "TECH_COMPUTERS",
-      "class": "BUILDINGCLASS_ANGKOR_WAT",
-      "prereq": ["TECH_PHILOSOPHY"]
+      "id": "BUILDINGCLASS_ANGKOR_WAT",
+      "requires": ["TECH_PHILOSOPHY"]
     },
     {
       "types": [{
@@ -1661,8 +1661,8 @@
         "id": "BUILDING_HAGIA_SOPHIA"
       }],
       "obsolete": "TECH_STEAM_POWER",
-      "class": "BUILDINGCLASS_HAGIA_SOPHIA",
-      "prereq": ["TECH_ENGINEERING"]
+      "id": "BUILDINGCLASS_HAGIA_SOPHIA",
+      "requires": ["TECH_ENGINEERING"]
     },
     {
       "types": [{
@@ -1674,8 +1674,8 @@
         "id": "BUILDING_CHICHEN_ITZA"
       }],
       "obsolete": "TECH_RIFLING",
-      "class": "BUILDINGCLASS_CHICHEN_ITZA",
-      "prereq": ["TECH_CODE_OF_LAWS"]
+      "id": "BUILDINGCLASS_CHICHEN_ITZA",
+      "requires": ["TECH_CODE_OF_LAWS"]
     },
     {
       "types": [{
@@ -1686,8 +1686,8 @@
         "name": "The Sistine Chapel",
         "id": "BUILDING_SISTINE_CHAPEL"
       }],
-      "class": "BUILDINGCLASS_SISTINE_CHAPEL",
-      "prereq": ["TECH_THEOLOGY"]
+      "id": "BUILDINGCLASS_SISTINE_CHAPEL",
+      "requires": ["TECH_THEOLOGY"]
     },
     {
       "types": [{
@@ -1699,8 +1699,8 @@
         "id": "BUILDING_SPIRAL_MINARET"
       }],
       "obsolete": "TECH_COMPUTERS",
-      "class": "BUILDINGCLASS_SPIRAL_MINARET",
-      "prereq": ["TECH_DIVINE_RIGHT"]
+      "id": "BUILDINGCLASS_SPIRAL_MINARET",
+      "requires": ["TECH_DIVINE_RIGHT"]
     },
     {
       "types": [{
@@ -1711,8 +1711,8 @@
         "name": "Notre Dame",
         "id": "BUILDING_NOTRE_DAME"
       }],
-      "class": "BUILDINGCLASS_NOTRE_DAME",
-      "prereq": ["TECH_MUSIC"]
+      "id": "BUILDINGCLASS_NOTRE_DAME",
+      "requires": ["TECH_MUSIC"]
     },
     {
       "types": [{
@@ -1723,8 +1723,8 @@
         "name": "The Taj Mahal",
         "id": "BUILDING_TAJ_MAHAL"
       }],
-      "class": "BUILDINGCLASS_TAJ_MAHAL",
-      "prereq": ["TECH_NATIONALISM"]
+      "id": "BUILDINGCLASS_TAJ_MAHAL",
+      "requires": ["TECH_NATIONALISM"]
     },
     {
       "types": [{
@@ -1736,8 +1736,8 @@
         "id": "BUILDING_KREMLIN"
       }],
       "obsolete": "TECH_FIBER_OPTICS",
-      "class": "BUILDINGCLASS_KREMLIN",
-      "prereq": ["TECH_UTOPIA"]
+      "id": "BUILDINGCLASS_KREMLIN",
+      "requires": ["TECH_UTOPIA"]
     },
     {
       "types": [{
@@ -1748,8 +1748,8 @@
         "name": "The Eiffel Tower",
         "id": "BUILDING_EIFFEL_TOWER"
       }],
-      "class": "BUILDINGCLASS_EIFFEL_TOWER",
-      "prereq": ["TECH_RADIO"]
+      "id": "BUILDINGCLASS_EIFFEL_TOWER",
+      "requires": ["TECH_RADIO"]
     },
     {
       "types": [{
@@ -1760,8 +1760,8 @@
         "name": "The Statue of Liberty",
         "id": "BUILDING_STATUE_OF_LIBERTY"
       }],
-      "class": "BUILDINGCLASS_STATUE_OF_LIBERTY",
-      "prereq": ["TECH_DEMOCRACY"]
+      "id": "BUILDINGCLASS_STATUE_OF_LIBERTY",
+      "requires": ["TECH_DEMOCRACY"]
     },
     {
       "types": [{
@@ -1772,8 +1772,8 @@
         "name": "Broadway",
         "id": "BUILDING_BROADWAY"
       }],
-      "class": "BUILDINGCLASS_BROADWAY",
-      "prereq": ["TECH_ELECTRICITY"]
+      "id": "BUILDINGCLASS_BROADWAY",
+      "requires": ["TECH_ELECTRICITY"]
     },
     {
       "types": [{
@@ -1784,8 +1784,8 @@
         "name": "Rock N Roll",
         "id": "BUILDING_ROCKNROLL"
       }],
-      "class": "BUILDINGCLASS_ROCKNROLL",
-      "prereq": ["TECH_RADIO"]
+      "id": "BUILDINGCLASS_ROCKNROLL",
+      "requires": ["TECH_RADIO"]
     },
     {
       "types": [{
@@ -1796,8 +1796,8 @@
         "name": "Hollywood",
         "id": "BUILDING_HOLLYWOOD"
       }],
-      "class": "BUILDINGCLASS_HOLLYWOOD",
-      "prereq": ["TECH_MASS_MEDIA"]
+      "id": "BUILDINGCLASS_HOLLYWOOD",
+      "requires": ["TECH_MASS_MEDIA"]
     },
     {
       "types": [{
@@ -1808,8 +1808,8 @@
         "name": "The Three Gorges Dam",
         "id": "BUILDING_GREAT_DAM"
       }],
-      "class": "BUILDINGCLASS_GREAT_DAM",
-      "prereq": ["TECH_PLASTICS"]
+      "id": "BUILDINGCLASS_GREAT_DAM",
+      "requires": ["TECH_PLASTICS"]
     },
     {
       "types": [{
@@ -1820,8 +1820,8 @@
         "name": "The Pentagon",
         "id": "BUILDING_PENTAGON"
       }],
-      "class": "BUILDINGCLASS_PENTAGON",
-      "prereq": ["TECH_ASSEMBLY_LINE"]
+      "id": "BUILDINGCLASS_PENTAGON",
+      "requires": ["TECH_ASSEMBLY_LINE"]
     },
     {
       "types": [{
@@ -1832,8 +1832,8 @@
         "name": "The United Nations",
         "id": "BUILDING_UNITED_NATIONS"
       }],
-      "class": "BUILDINGCLASS_UNITED_NATIONS",
-      "prereq": ["TECH_MASS_MEDIA"]
+      "id": "BUILDINGCLASS_UNITED_NATIONS",
+      "requires": ["TECH_MASS_MEDIA"]
     },
     {
       "types": [{
@@ -1844,8 +1844,8 @@
         "name": "The Space Elevator",
         "id": "BUILDING_SPACE_ELEVATOR"
       }],
-      "class": "BUILDINGCLASS_SPACE_ELEVATOR",
-      "prereq": ["TECH_ROBOTICS"]
+      "id": "BUILDINGCLASS_SPACE_ELEVATOR",
+      "requires": ["TECH_ROBOTICS"]
     },
     {
       "types": [{
@@ -1856,8 +1856,8 @@
         "name": "Temple",
         "id": "SPECIALBUILDING_TEMPLE"
       }],
-      "class": "BUILDINGCLASS_TEMPLE",
-      "prereq": "TECH_PRIESTHOOD"
+      "id": "BUILDINGCLASS_TEMPLE",
+      "requires": ["TECH_PRIESTHOOD"]
     },
     {
       "types": [{
@@ -1868,8 +1868,8 @@
         "name": "Cathedral",
         "id": "SPECIALBUILDING_CATHEDRAL"
       }],
-      "class": "BUILDINGCLASS_CATHEDRAL",
-      "prereq": "TECH_MUSIC"
+      "id": "BUILDINGCLASS_CATHEDRAL",
+      "requires": ["TECH_MUSIC"]
     },
     {
       "types": [{
@@ -1881,184 +1881,184 @@
         "id": "SPECIALBUILDING_MONASTERY"
       }],
       "obsolete": "TECH_SCIENTIFIC_METHOD",
-      "class": "BUILDINGCLASS_MONASTERY",
-      "prereq": "TECH_MEDITATION"
+      "id": "BUILDINGCLASS_MONASTERY",
+      "requires": ["TECH_MEDITATION"]
     }
   ],
   "civics": [
     {
       "name": "Hereditary Rule",
       "id": "CIVIC_HEREDITARY_RULE",
-      "prereq": "TECH_MONARCHY"
+      "requires": ["TECH_MONARCHY"]
     },
     {
       "name": "Representation",
       "id": "CIVIC_REPRESENTATION",
-      "prereq": "TECH_CONSTITUTION"
+      "requires": ["TECH_CONSTITUTION"]
     },
     {
       "name": "Police State",
       "id": "CIVIC_POLICE_STATE",
-      "prereq": "TECH_FASCISM"
+      "requires": ["TECH_FASCISM"]
     },
     {
       "name": "Universal Suffrage",
       "id": "CIVIC_UNIVERSAL_SUFFRAGE",
-      "prereq": "TECH_DEMOCRACY"
+      "requires": ["TECH_DEMOCRACY"]
     },
     {
       "name": "Vassalage",
       "id": "CIVIC_VASSALAGE",
-      "prereq": "TECH_FEUDALISM"
+      "requires": ["TECH_FEUDALISM"]
     },
     {
       "name": "Bureaucracy",
       "id": "CIVIC_BUREAUCRACY",
-      "prereq": "TECH_CIVIL_SERVICE"
+      "requires": ["TECH_CIVIL_SERVICE"]
     },
     {
       "name": "Nationhood",
       "id": "CIVIC_NATIONHOOD",
-      "prereq": "TECH_NATIONALISM"
+      "requires": ["TECH_NATIONALISM"]
     },
     {
       "name": "Free Speech",
       "id": "CIVIC_FREE_SPEECH",
-      "prereq": "TECH_LIBERALISM"
+      "requires": ["TECH_LIBERALISM"]
     },
     {
       "name": "Slavery",
       "id": "CIVIC_SLAVERY",
-      "prereq": "TECH_BRONZE_WORKING"
+      "requires": ["TECH_BRONZE_WORKING"]
     },
     {
       "name": "Serfdom",
       "id": "CIVIC_SERFDOM",
-      "prereq": "TECH_FEUDALISM"
+      "requires": ["TECH_FEUDALISM"]
     },
     {
       "name": "Caste System",
       "id": "CIVIC_CASTE_SYSTEM",
-      "prereq": "TECH_CODE_OF_LAWS"
+      "requires": ["TECH_CODE_OF_LAWS"]
     },
     {
       "name": "Emancipation",
       "id": "CIVIC_EMANCIPATION",
-      "prereq": "TECH_DEMOCRACY"
+      "requires": ["TECH_DEMOCRACY"]
     },
     {
       "name": "Mercantilism",
       "id": "CIVIC_MERCANTILISM",
-      "prereq": "TECH_BANKING"
+      "requires": ["TECH_BANKING"]
     },
     {
       "name": "Free Market",
       "id": "CIVIC_FREE_MARKET",
-      "prereq": "TECH_ECONOMICS"
+      "requires": ["TECH_ECONOMICS"]
     },
     {
       "name": "State Property",
       "id": "CIVIC_STATE_PROPERTY",
-      "prereq": "TECH_UTOPIA"
+      "requires": ["TECH_UTOPIA"]
     },
     {
       "name": "Environmentalism",
       "id": "CIVIC_ENVIRONMENTALISM",
-      "prereq": "TECH_MEDICINE"
+      "requires": ["TECH_MEDICINE"]
     },
     {
       "name": "Organized Religion",
       "id": "CIVIC_ORGANIZED_RELIGION",
-      "prereq": "TECH_MONOTHEISM"
+      "requires": ["TECH_MONOTHEISM"]
     },
     {
       "name": "Theocracy",
       "id": "CIVIC_THEOCRACY",
-      "prereq": "TECH_THEOLOGY"
+      "requires": ["TECH_THEOLOGY"]
     },
     {
       "name": "Pacifism",
       "id": "CIVIC_PACIFISM",
-      "prereq": "TECH_PHILOSOPHY"
+      "requires": ["TECH_PHILOSOPHY"]
     },
     {
       "name": "Free Religion",
       "id": "CIVIC_FREE_RELIGION",
-      "prereq": "TECH_LIBERALISM"
+      "requires": ["TECH_LIBERALISM"]
     }
   ],
   "religions": [
     {
       "name": "Judaism",
       "id": "RELIGION_JUDAISM",
-      "prereq": "TECH_MONOTHEISM"
+      "requires": ["TECH_MONOTHEISM"]
     },
     {
       "name": "Christianity",
       "id": "RELIGION_CHRISTIANITY",
-      "prereq": "TECH_THEOLOGY"
+      "requires": ["TECH_THEOLOGY"]
     },
     {
       "name": "Islam",
       "id": "RELIGION_ISLAM",
-      "prereq": "TECH_DIVINE_RIGHT"
+      "requires": ["TECH_DIVINE_RIGHT"]
     },
     {
       "name": "Hinduism",
       "id": "RELIGION_HINDUISM",
-      "prereq": "TECH_POLYTHEISM"
+      "requires": ["TECH_POLYTHEISM"]
     },
     {
       "name": "Buddhism",
       "id": "RELIGION_BUDDHISM",
-      "prereq": "TECH_MEDITATION"
+      "requires": ["TECH_MEDITATION"]
     },
     {
       "name": "Confucianism",
       "id": "RELIGION_CONFUCIANISM",
-      "prereq": "TECH_CODE_OF_LAWS"
+      "requires": ["TECH_CODE_OF_LAWS"]
     },
     {
       "name": "Taoism",
       "id": "RELIGION_TAOISM",
-      "prereq": "TECH_PHILOSOPHY"
+      "requires": ["TECH_PHILOSOPHY"]
     }
   ],
   "resources": [
     {
       "name": "Aluminum",
       "id": "BONUS_ALUMINUM",
-      "prereq": "TECH_INDUSTRIALISM"
+      "requires": ["TECH_INDUSTRIALISM"]
     },
     {
       "name": "Coal",
       "id": "BONUS_COAL",
-      "prereq": "TECH_STEAM_POWER"
+      "requires": ["TECH_STEAM_POWER"]
     },
     {
       "name": "Copper",
       "id": "BONUS_COPPER",
-      "prereq": "TECH_BRONZE_WORKING"
+      "requires": ["TECH_BRONZE_WORKING"]
     },
     {
       "name": "Horse",
       "id": "BONUS_HORSE",
-      "prereq": "TECH_ANIMAL_HUSBANDRY"
+      "requires": ["TECH_ANIMAL_HUSBANDRY"]
     },
     {
       "name": "Iron",
       "id": "BONUS_IRON",
-      "prereq": "TECH_IRON_WORKING"
+      "requires": ["TECH_IRON_WORKING"]
     },
     {
       "name": "Oil",
       "id": "BONUS_OIL",
-      "prereq": "TECH_SCIENTIFIC_METHOD"
+      "requires": ["TECH_SCIENTIFIC_METHOD"]
     },
     {
       "name": "Uranium",
       "id": "BONUS_URANIUM",
-      "prereq": "TECH_PHYSICS"
+      "requires": ["TECH_PHYSICS"]
     },
     {
       "obsolete": "TECH_PLASTICS",
@@ -2086,8 +2086,8 @@
         "name": "Scout",
         "id": "UNIT_SCOUT"
       }],
-      "class": "UNITCLASS_SCOUT",
-      "prereq": ["TECH_HUNTING"]
+      "id": "UNITCLASS_SCOUT",
+      "requires": ["TECH_HUNTING"]
     },
     {
       "types": [{
@@ -2098,8 +2098,8 @@
         "name": "Explorer",
         "id": "UNIT_EXPLORER"
       }],
-      "class": "UNITCLASS_EXPLORER",
-      "prereq": ["TECH_COMPASS"]
+      "id": "UNITCLASS_EXPLORER",
+      "requires": ["TECH_COMPASS"]
     },
     {
       "types": [{
@@ -2110,8 +2110,8 @@
         "name": "Spy",
         "id": "UNIT_SPY"
       }],
-      "class": "UNITCLASS_SPY",
-      "prereq": ["TECH_UTOPIA"]
+      "id": "UNITCLASS_SPY",
+      "requires": ["TECH_UTOPIA"]
     },
     {
       "types": [
@@ -2140,8 +2140,8 @@
           "id": "UNIT_ROME_PRAETORIAN"
         }
       ],
-      "class": "UNITCLASS_SWORDSMAN",
-      "prereq": ["TECH_IRON_WORKING"]
+      "id": "UNITCLASS_SWORDSMAN",
+      "requires": ["TECH_IRON_WORKING"]
     },
     {
       "types": [{
@@ -2152,8 +2152,8 @@
         "name": "Axeman",
         "id": "UNIT_AXEMAN"
       }],
-      "class": "UNITCLASS_AXEMAN",
-      "prereq": ["TECH_BRONZE_WORKING"]
+      "id": "UNITCLASS_AXEMAN",
+      "requires": ["TECH_BRONZE_WORKING"]
     },
     {
       "types": [
@@ -2174,8 +2174,8 @@
           "id": "UNIT_JAPAN_SAMURAI"
         }
       ],
-      "class": "UNITCLASS_MACEMAN",
-      "prereq": [
+      "id": "UNITCLASS_MACEMAN",
+      "requires": [
         "TECH_CIVIL_SERVICE",
         "TECH_MACHINERY"
       ]
@@ -2199,8 +2199,8 @@
           "id": "UNIT_GREEK_PHALANX"
         }
       ],
-      "class": "UNITCLASS_SPEARMAN",
-      "prereq": ["TECH_HUNTING"]
+      "id": "UNITCLASS_SPEARMAN",
+      "requires": ["TECH_HUNTING"]
     },
     {
       "types": [{
@@ -2211,8 +2211,8 @@
         "name": "Pikeman",
         "id": "UNIT_PIKEMAN"
       }],
-      "class": "UNITCLASS_PIKEMAN",
-      "prereq": ["TECH_ENGINEERING"]
+      "id": "UNITCLASS_PIKEMAN",
+      "requires": ["TECH_ENGINEERING"]
     },
     {
       "types": [
@@ -2233,8 +2233,8 @@
           "id": "UNIT_FRENCH_MUSKETEER"
         }
       ],
-      "class": "UNITCLASS_MUSKETMAN",
-      "prereq": ["TECH_GUNPOWDER"]
+      "id": "UNITCLASS_MUSKETMAN",
+      "requires": ["TECH_GUNPOWDER"]
     },
     {
       "types": [
@@ -2255,8 +2255,8 @@
           "id": "UNIT_ENGLISH_REDCOAT"
         }
       ],
-      "class": "UNITCLASS_RIFLEMAN",
-      "prereq": ["TECH_RIFLING"]
+      "id": "UNITCLASS_RIFLEMAN",
+      "requires": ["TECH_RIFLING"]
     },
     {
       "types": [{
@@ -2267,8 +2267,8 @@
         "name": "Grenadier",
         "id": "UNIT_GRENADIER"
       }],
-      "class": "UNITCLASS_GRENADIER",
-      "prereq": ["TECH_CHEMISTRY"]
+      "id": "UNITCLASS_GRENADIER",
+      "requires": ["TECH_CHEMISTRY"]
     },
     {
       "types": [{
@@ -2279,8 +2279,8 @@
         "name": "Infantry",
         "id": "UNIT_INFANTRY"
       }],
-      "class": "UNITCLASS_INFANTRY",
-      "prereq": [
+      "id": "UNITCLASS_INFANTRY",
+      "requires": [
         "TECH_ASSEMBLY_LINE",
         "TECH_RIFLING"
       ]
@@ -2294,8 +2294,8 @@
         "name": "SAM Infantry",
         "id": "UNIT_SAM_INFANTRY"
       }],
-      "class": "UNITCLASS_SAM_INFANTRY",
-      "prereq": ["TECH_ROCKETRY"]
+      "id": "UNITCLASS_SAM_INFANTRY",
+      "requires": ["TECH_ROCKETRY"]
     },
     {
       "types": [
@@ -2316,8 +2316,8 @@
           "id": "UNIT_AMERICAN_NAVY_SEAL"
         }
       ],
-      "class": "UNITCLASS_MARINE",
-      "prereq": [
+      "id": "UNITCLASS_MARINE",
+      "requires": [
         "TECH_INDUSTRIALISM",
         "TECH_RIFLING"
       ]
@@ -2331,8 +2331,8 @@
         "name": "Mechanized Infantry",
         "id": "UNIT_MECHANIZED_INFANTRY"
       }],
-      "class": "UNITCLASS_MECHANIZED_INFANTRY",
-      "prereq": [
+      "id": "UNITCLASS_MECHANIZED_INFANTRY",
+      "requires": [
         "TECH_ROBOTICS",
         "TECH_RIFLING"
       ]
@@ -2356,8 +2356,8 @@
           "id": "UNIT_MALI_SKIRMISHER"
         }
       ],
-      "class": "UNITCLASS_ARCHER",
-      "prereq": ["TECH_ARCHERY"]
+      "id": "UNITCLASS_ARCHER",
+      "requires": ["TECH_ARCHERY"]
     },
     {
       "types": [{
@@ -2368,8 +2368,8 @@
         "name": "Longbowman",
         "id": "UNIT_LONGBOWMAN"
       }],
-      "class": "UNITCLASS_LONGBOWMAN",
-      "prereq": [
+      "id": "UNITCLASS_LONGBOWMAN",
+      "requires": [
         "TECH_FEUDALISM",
         "TECH_ARCHERY"
       ]
@@ -2393,8 +2393,8 @@
           "id": "UNIT_CHINA_CHOKONU"
         }
       ],
-      "class": "UNITCLASS_CROSSBOWMAN",
-      "prereq": [
+      "id": "UNITCLASS_CROSSBOWMAN",
+      "requires": [
         "TECH_MACHINERY",
         "TECH_ARCHERY"
       ]
@@ -2426,8 +2426,8 @@
           "id": "UNIT_PERSIA_IMMORTAL"
         }
       ],
-      "class": "UNITCLASS_CHARIOT",
-      "prereq": ["TECH_THE_WHEEL"]
+      "id": "UNITCLASS_CHARIOT",
+      "requires": ["TECH_THE_WHEEL"]
     },
     {
       "types": [
@@ -2448,8 +2448,8 @@
           "id": "UNIT_MONGOL_KESHIK"
         }
       ],
-      "class": "UNITCLASS_HORSE_ARCHER",
-      "prereq": [
+      "id": "UNITCLASS_HORSE_ARCHER",
+      "requires": [
         "TECH_HORSEBACK_RIDING",
         "TECH_ARCHERY"
       ]
@@ -2481,8 +2481,8 @@
           "id": "UNIT_SPANISH_CONQUISTADOR"
         }
       ],
-      "class": "UNITCLASS_KNIGHT",
-      "prereq": [
+      "id": "UNITCLASS_KNIGHT",
+      "requires": [
         "TECH_GUILDS",
         "TECH_HORSEBACK_RIDING"
       ]
@@ -2506,8 +2506,8 @@
           "id": "UNIT_RUSSIA_COSSACK"
         }
       ],
-      "class": "UNITCLASS_CAVALRY",
-      "prereq": [
+      "id": "UNITCLASS_CAVALRY",
+      "requires": [
         "TECH_MILITARY_TRADITION",
         "TECH_GUNPOWDER",
         "TECH_HORSEBACK_RIDING"
@@ -2522,8 +2522,8 @@
         "name": "War Elephant",
         "id": "UNIT_WAR_ELEPHANT"
       }],
-      "class": "UNITCLASS_WAR_ELEPHANT",
-      "prereq": ["TECH_CONSTRUCTION"]
+      "id": "UNITCLASS_WAR_ELEPHANT",
+      "requires": ["TECH_CONSTRUCTION"]
     },
     {
       "types": [
@@ -2544,8 +2544,8 @@
           "id": "UNIT_GERMAN_PANZER"
         }
       ],
-      "class": "UNITCLASS_TANK",
-      "prereq": [
+      "id": "UNITCLASS_TANK",
+      "requires": [
         "TECH_INDUSTRIALISM",
         "TECH_RIFLING"
       ]
@@ -2559,8 +2559,8 @@
         "name": "Modern Armor",
         "id": "UNIT_MODERN_ARMOR"
       }],
-      "class": "UNITCLASS_MODERN_ARMOR",
-      "prereq": [
+      "id": "UNITCLASS_MODERN_ARMOR",
+      "requires": [
         "TECH_COMPOSITES",
         "TECH_COMPUTERS"
       ]
@@ -2574,8 +2574,8 @@
         "name": "Gunship",
         "id": "UNIT_GUNSHIP"
       }],
-      "class": "UNITCLASS_GUNSHIP",
-      "prereq": [
+      "id": "UNITCLASS_GUNSHIP",
+      "requires": [
         "TECH_ROCKETRY",
         "TECH_FLIGHT"
       ]
@@ -2589,8 +2589,8 @@
         "name": "Catapult",
         "id": "UNIT_CATAPULT"
       }],
-      "class": "UNITCLASS_CATAPULT",
-      "prereq": ["TECH_CONSTRUCTION"]
+      "id": "UNITCLASS_CATAPULT",
+      "requires": ["TECH_CONSTRUCTION"]
     },
     {
       "types": [{
@@ -2601,8 +2601,8 @@
         "name": "Cannon",
         "id": "UNIT_CANNON"
       }],
-      "class": "UNITCLASS_CANNON",
-      "prereq": ["TECH_STEEL"]
+      "id": "UNITCLASS_CANNON",
+      "requires": ["TECH_STEEL"]
     },
     {
       "types": [{
@@ -2613,8 +2613,8 @@
         "name": "Machine Gun",
         "id": "UNIT_MACHINE_GUN"
       }],
-      "class": "UNITCLASS_MACHINE_GUN",
-      "prereq": ["TECH_RAILROAD"]
+      "id": "UNITCLASS_MACHINE_GUN",
+      "requires": ["TECH_RAILROAD"]
     },
     {
       "types": [{
@@ -2625,8 +2625,8 @@
         "name": "Artillery",
         "id": "UNIT_ARTILLERY"
       }],
-      "class": "UNITCLASS_ARTILLERY",
-      "prereq": ["TECH_ARTILLERY"]
+      "id": "UNITCLASS_ARTILLERY",
+      "requires": ["TECH_ARTILLERY"]
     },
     {
       "types": [{
@@ -2637,8 +2637,8 @@
         "name": "Work Boat",
         "id": "UNIT_WORKBOAT"
       }],
-      "class": "UNITCLASS_WORKBOAT",
-      "prereq": ["TECH_FISHING"]
+      "id": "UNITCLASS_WORKBOAT",
+      "requires": ["TECH_FISHING"]
     },
     {
       "types": [{
@@ -2649,8 +2649,8 @@
         "name": "Galley",
         "id": "UNIT_GALLEY"
       }],
-      "class": "UNITCLASS_GALLEY",
-      "prereq": ["TECH_SAILING"]
+      "id": "UNITCLASS_GALLEY",
+      "requires": ["TECH_SAILING"]
     },
     {
       "types": [{
@@ -2661,8 +2661,8 @@
         "name": "Caravel",
         "id": "UNIT_CARAVEL"
       }],
-      "class": "UNITCLASS_CARAVEL",
-      "prereq": ["TECH_OPTICS"]
+      "id": "UNITCLASS_CARAVEL",
+      "requires": ["TECH_OPTICS"]
     },
     {
       "types": [{
@@ -2673,8 +2673,8 @@
         "name": "Galleon",
         "id": "UNIT_GALLEON"
       }],
-      "class": "UNITCLASS_GALLEON",
-      "prereq": ["TECH_ASTRONOMY"]
+      "id": "UNITCLASS_GALLEON",
+      "requires": ["TECH_ASTRONOMY"]
     },
     {
       "types": [{
@@ -2685,8 +2685,8 @@
         "name": "Frigate",
         "id": "UNIT_FRIGATE"
       }],
-      "class": "UNITCLASS_FRIGATE",
-      "prereq": [
+      "id": "UNITCLASS_FRIGATE",
+      "requires": [
         "TECH_CHEMISTRY",
         "TECH_ASTRONOMY"
       ]
@@ -2700,8 +2700,8 @@
         "name": "Ironclad",
         "id": "UNIT_IRONCLAD"
       }],
-      "class": "UNITCLASS_IRONCLAD",
-      "prereq": [
+      "id": "UNITCLASS_IRONCLAD",
+      "requires": [
         "TECH_STEEL",
         "TECH_STEAM_POWER"
       ]
@@ -2715,8 +2715,8 @@
         "name": "Transport",
         "id": "UNIT_TRANSPORT"
       }],
-      "class": "UNITCLASS_TRANSPORT",
-      "prereq": ["TECH_COMBUSTION"]
+      "id": "UNITCLASS_TRANSPORT",
+      "requires": ["TECH_COMBUSTION"]
     },
     {
       "types": [{
@@ -2727,8 +2727,8 @@
         "name": "Destroyer",
         "id": "UNIT_DESTROYER"
       }],
-      "class": "UNITCLASS_DESTROYER",
-      "prereq": ["TECH_COMBUSTION"]
+      "id": "UNITCLASS_DESTROYER",
+      "requires": ["TECH_COMBUSTION"]
     },
     {
       "types": [{
@@ -2739,8 +2739,8 @@
         "name": "Battleship",
         "id": "UNIT_BATTLESHIP"
       }],
-      "class": "UNITCLASS_BATTLESHIP",
-      "prereq": ["TECH_INDUSTRIALISM"]
+      "id": "UNITCLASS_BATTLESHIP",
+      "requires": ["TECH_INDUSTRIALISM"]
     },
     {
       "types": [{
@@ -2751,8 +2751,8 @@
         "name": "Submarine",
         "id": "UNIT_SUBMARINE"
       }],
-      "class": "UNITCLASS_SUBMARINE",
-      "prereq": [
+      "id": "UNITCLASS_SUBMARINE",
+      "requires": [
         "TECH_RADIO",
         "TECH_COMBUSTION"
       ]
@@ -2766,8 +2766,8 @@
         "name": "Carrier",
         "id": "UNIT_CARRIER"
       }],
-      "class": "UNITCLASS_CARRIER",
-      "prereq": ["TECH_FLIGHT"]
+      "id": "UNITCLASS_CARRIER",
+      "requires": ["TECH_FLIGHT"]
     },
     {
       "types": [{
@@ -2778,8 +2778,8 @@
         "name": "Fighter",
         "id": "UNIT_FIGHTER"
       }],
-      "class": "UNITCLASS_FIGHTER",
-      "prereq": ["TECH_FLIGHT"]
+      "id": "UNITCLASS_FIGHTER",
+      "requires": ["TECH_FLIGHT"]
     },
     {
       "types": [{
@@ -2790,8 +2790,8 @@
         "name": "Jet Fighter",
         "id": "UNIT_JET_FIGHTER"
       }],
-      "class": "UNITCLASS_JET_FIGHTER",
-      "prereq": [
+      "id": "UNITCLASS_JET_FIGHTER",
+      "requires": [
         "TECH_COMPOSITES",
         "TECH_FLIGHT"
       ]
@@ -2805,8 +2805,8 @@
         "name": "Bomber",
         "id": "UNIT_BOMBER"
       }],
-      "class": "UNITCLASS_BOMBER",
-      "prereq": [
+      "id": "UNITCLASS_BOMBER",
+      "requires": [
         "TECH_RADIO",
         "TECH_FLIGHT"
       ]
@@ -2820,8 +2820,8 @@
         "name": "Stealth Bomber",
         "id": "UNIT_STEALTH_BOMBER"
       }],
-      "class": "UNITCLASS_STEALTH_BOMBER",
-      "prereq": [
+      "id": "UNITCLASS_STEALTH_BOMBER",
+      "requires": [
         "TECH_COMPOSITES",
         "TECH_FLIGHT",
         "TECH_ROBOTICS"
@@ -2836,8 +2836,8 @@
         "name": "ICBM",
         "id": "UNIT_ICBM"
       }],
-      "class": "UNITCLASS_ICBM",
-      "prereq": [
+      "id": "UNITCLASS_ICBM",
+      "requires": [
         "TECH_ROCKETRY",
         "TECH_FISSION"
       ]

@@ -50,6 +50,30 @@ d3.json(path, function(data) {
         return a.cost - b.cost;
     });
     
+    // Append units to technologies
+    for (var i = 0; i < data.units.length; i++) {
+        data.units[i].cat = "unit";
+        data.technologies.push(data.units[i]);
+    }
+    
+    // Append buildings to technologies
+    for (var i = 0; i < data.buildings.length; i++) {
+        data.buildings[i].cat = "building";
+        data.technologies.push(data.buildings[i]);
+    }
+    
+    // Append religions to technologies
+    for (var i = 0; i < data.religions.length; i++) {
+        //data.buildings[i].cat = "building";
+        data.technologies.push(data.religions[i]);
+    }
+    
+    // Append terrain improvements to technologies
+    for (var i = 0; i < data.build.length; i++) {
+        //data.buildings[i].cat = "building";
+        data.technologies.push(data.build[i]);
+    }
+    
     // Give each technology an arbitrary position value
     // And an unlocks array for units, resources, buildings, etc...
     for (var i = 0; i < data.technologies.length; i++) {
@@ -58,44 +82,121 @@ d3.json(path, function(data) {
     }
     
     // Go through each technology and find the prequisite with highest position, then swap positions
-    var iter  = 0;
-    while (iter < data.technologies.length) {
-        var pos = data.technologies[iter].pos;
-        var elem = iter;
+    
+    
+    // var iter  = 0;
+    // while (iter < data.technologies.length) {
+    //     var pos = data.technologies[iter].pos;
+    //     var elem = iter;
+    //     for (var j = 0; j < data.technologies.length; j++) {
+    //         if (data.technologies[iter].requires) {
+    //             for (var k = 0; k < data.technologies[iter].requires.length; k++) {                    
+    //                 if (data.technologies[iter].requires[k] === data.technologies[j].id) {
+    //                     if (data.technologies[j].pos > pos) {
+    //                         pos = data.technologies[j].pos;
+    //                         elem = j;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         if (data.technologies[iter].optional) {
+    //             for (var k = 0; k < data.technologies[iter].optional.length; k++) {
+    //                 if (data.technologies[iter].optional[k] === data.technologies[j].id) {
+    //                     if (data.technologies[j].pos > pos) {
+    //                         pos = data.technologies[j].pos;
+    //                         elem = j;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+        
+    //     if (iter != elem) {
+    //         // console.log(data.technologies[iter].name + " at " + data.technologies[iter].pos + " requires " + data.technologies[elem].name + " at " + data.technologies[elem].pos);
+    //         data.technologies[elem].pos = data.technologies[iter].pos;
+    //         var techSwap = data.technologies[elem];
+    //         data.technologies[iter].pos = pos;
+    //         data.technologies[elem] = data.technologies[iter];
+    //         data.technologies[iter] = techSwap;
+    //         var newPos = data.technologies[elem].pos + 1;
+    //         console.log(newPos);
+    //         /*data.technologies[iter].pos = newPos;
+    //         for (var i = iter; i < data.technologies.length; i++) {
+    //             data.technologies[i].pos++;
+    //         }*/
+    //         iter = 0;
+    //     } else {
+    //         iter++;
+    //     }
+    // }
+    
+    for (var i = 0; i < data.technologies.length; i++) {
+
+        
+    }
+    
+    
+    for (var i = 0; i < data.technologies.length; i++) {
+                if (data.technologies[i].id === "TECH_OPTICS") {
+            console.log(data.technologies[i]);
+        }
+        var maxPrereq = 0;
         for (var j = 0; j < data.technologies.length; j++) {
-            if (data.technologies[iter].requires) {
-                for (var k = 0; k < data.technologies[iter].requires.length; k++) {                    
-                    if (data.technologies[iter].requires[k] === data.technologies[j].id) {
-                        if (data.technologies[j].pos > pos) {
-                            pos = data.technologies[j].pos;
-                            elem = j;
+            if (data.technologies[i].requires) {
+                for (var k = 0; k < data.technologies[i].requires.length; k++) {
+                    if (data.technologies[i].requires[k] === data.technologies[j].id) {
+                        if (maxPrereq < data.technologies[j].pos) {
+                            maxPrereq = data.technologies[j].pos;
                         }
                     }
                 }
             }
-            if (data.technologies[iter].optional) {
-                for (var k = 0; k < data.technologies[iter].optional.length; k++) {
-                    if (data.technologies[iter].optional[k] === data.technologies[j].id) {
-                        if (data.technologies[j].pos > pos) {
-                            pos = data.technologies[j].pos;
-                            elem = j;
+            if (data.technologies[i].optional) {
+                for (var k = 0; k < data.technologies[i].optional.length; k++) {
+                    if (data.technologies[i].optional[k] === data.technologies[j].id) {
+                        if (maxPrereq < data.technologies[j].pos) {
+                            maxPrereq = data.technologies[j].pos;
                         }
                     }
                 }
             }
         }
         
-        if (iter != elem) {
-            // console.log(data.technologies[iter].name + " at " + data.technologies[iter].pos + " requires " + data.technologies[elem].name + " at " + data.technologies[elem].pos);
-            data.technologies[elem].pos = data.technologies[iter].pos;
-            var techSwap = data.technologies[elem];
-            data.technologies[iter].pos = pos;
-            data.technologies[elem] = data.technologies[iter];
-            data.technologies[iter] = techSwap;
-            iter = 0;
-        } else {
-            iter++;
+        for (var j = 0; j < data.technologies.length; j++) {
+            if (data.technologies[j].requires) {
+                for (var k = 0; k < data.technologies[j].requires.length; k++) {
+                    if (data.technologies[j].requires[k] === data.technologies[i].id && j != i) {
+                        if (data.technologies[j].pos < maxPrereq) {
+                            maxPrereq = data.technologies[j].pos - 2;
+                        }
+                    }
+                }
+            }
+            if (data.technologies[j].optional) {
+                for (var k = 0; k < data.technologies[j].optional.length; k++) {
+                    if (data.technologies[j].optional[k] === data.technologies[i].id && j != i) {
+                        if (data.technologies[j].pos < maxPrereq) {
+                            maxPrereq = data.technologies[j].pos - 2;
+                        }
+                    }
+                }
+            }
         }
+        
+        newPos = maxPrereq++;
+        data.technologies[i].pos = newPos;
+        for (var j = newPos; j < data.technologies.length; j++) {
+            data.technologies[j].pos++;
+        }
+        data.technologies.sort(function(a, b) {
+            return a.pos - b.pos;
+        });
+    }
+    
+
+    
+    for (var i = 0; i < data.technologies.length; i++) {
+        data.technologies[i].pos = i;
     }
     
     var arcDists = []; // list of recent arcRanks
@@ -192,90 +293,7 @@ d3.json(path, function(data) {
         }
     }
     
-    // Put units into unlocks array into technologies
-    for (var i = 0; i < data.units.length; i++) { // loop through all units
-        var techItem = 0;
-        var minPos = 5000;
-        var maxPos = 0;
-        for (var j = 0; j < data.technologies.length; j++) { // loop through all techs
-            for (var k = 0; k < data.units[i].prereq.length; k++) { // loop through all prereqs for a unit
-                if (data.units[i].prereq[k] === data.technologies[j].id) {  // ids match
-                    if (techItem < j) {
-                        techItem = j;
-                    }
-                    if (minPos > data.technologies[j].pos) {
-                        minPos = data.technologies[j].pos;
-                    }
-                    if (maxPos < data.technologies[j].pos) {
-                        maxPos = data.technologies[j].pos;
-                    }
-                }
-            }
-        }
-        data.units[i].prereqPos = minPos;
-        data.units[i].pos = maxPos;
-        data.technologies[techItem].unlocks.push(data.units[i]);
-    }
     
-    // Determine the rank
-    // 1. Search through other units to see if there are any other icons at this pos, and set the rank to highest++
-    // 2. If there are no other units at this position, set rank to 0
-    for (var i = 0; i < data.units.length; i++) {
-        var iconRank = 0;
-        for (var j = 0; j < data.units.length; j++) {
-            if (data.units[j].iconRank >= 0) {
-                if (data.units[i].pos == data.units[j].pos && data.units[j].iconRank >= iconRank) {
-                    iconRank = data.units[j].iconRank + 1;
-                }
-            }
-        }
-        data.units[i].iconRank = iconRank;
-    }
-    
-    // Determine the rank
-    // 1. Go through each technology, then its unlocks
-    // 2. If there are any unlocks occupying the same rank between prereqPos and pos
-    for (var i = 0; i < data.technologies.length; i++) { // loop through every technology
-        for (var j = 0; j < data.technologies[i].unlocks.length; j++) { // loop through every unlock
-            if (data.technologies[i].unlocks[j].prereqPos < data.technologies[i].unlocks[j].pos) { // if there is potential for overlap
-                var maxRank = 0;
-                var hasConflict = 0;
-                for (var k = 0; k < data.technologies.length; k++) {
-                    var checkPos = data.technologies[k].pos;
-                    if (data.technologies[i].unlocks[j].prereqPos <= checkPos && data.technologies[i].unlocks[j].pos >= checkPos) { // if the 1st technology's unlock has a prerequisite at an earlier position
-                        for (var l = 0; l < data.technologies[k].unlocks.length; l++) {
-                            if (l == j && data.technologies[i].unlocks[j].pos > checkPos) {
-                                hasConflict = 1;
-                            }
-                            if (data.technologies[k].unlocks[l].iconRank > maxRank) {
-                                maxRank = data.technologies[k].unlocks[l].iconRank;
-                            }
-                        }
-                    }
-                }
-                if (hasConflict == 1) {
-                    console.log(data.technologies[i].unlocks[j]);
-                    console.log(maxRank);
-                    data.technologies[i].unlocks[j].iconRank = maxRank + 1;
-                }
-            }
-        }
-    }
-    
-    /* 
-    
-    Should assign rank by working backwards for multiple prerequisites. With start and end variables,
-    you can "reserve" a rank for a range of positions
-    -> On second thought, why is that not true for working forwards too? Important point is having
-    a start and end, not the direction you check in. Right?
-    
-    Final goal here should be to create a new JSON array for each technology (call it something like unlocks)
-    Each icon gets appended to this array. Solves two problems:
-    1. How to access the different data types (buildings, units, bonuses, religions, etc...)
-    2. How to draw; by adding to the technologies data it's super simple 
-    ==> Which means, you don't need to calculate position per se, you need to determine which technology a unit belongs in!
-    
-    */
     
     // Reverse order of data so that arcs are drawn over spokes
     data.technologies.sort(function(a, b) {
@@ -315,34 +333,13 @@ d3.json(path, function(data) {
         .attr("height", 20)
         .attr("width", 20)
         .attr("xlink:href", function(d) {
-            var link = "img/techtree/" + d.name + ".png";
-            return link;
-        });
-        
-    var unlockIcons = spokes.selectAll(".unlocks")
-        .data(function(d) {
-            return d.unlocks;
-        })
-        .enter().append("g")
-        .attr("class", "unlocks");
-        
-    unlockIcons.append("image") // Unlock icons
-        .attr("class", "unlockImg")
-        .attr("transform", function(d) {
-            return "translate(-10, " + (-(width / 2) + 125 - (d.iconRank * 25)) + ") rotate(270)";
-        })
-        .attr("height", 20)
-        .attr("width", 20)
-        .attr("xlink:href", function(d) {
-            var link = "img/units/archer.png";
-            for (var i = 0; i < d.types.length; i++) {
-                if (d.types[i].civilization.name === "All") {
-                    link = "img/units/" + d.types[i].name + ".png";
-                }
+            if (d.cat) {
+                var link = "img/units/archer.png";
+            } else {
+                var link = "img/techtree/" + d.name + ".png";
             }
             return link;
         });
-        
 
         
     spokes.append("text") // Technology text
@@ -354,7 +351,13 @@ d3.json(path, function(data) {
             return "translate(3, " + (-(width / 2) + 210) + ") rotate(270)";
         })
         .text(function(d) {
-            return d.name;
+            var name;
+            if (d.cat) {
+                name = d.id;
+            } else {
+                name = d.name;
+            }
+            return name;
         })
         .attr("text-anchor", function(d) {
             if (d.pos > (data.technologies.length / 2)) {

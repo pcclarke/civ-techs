@@ -34,6 +34,10 @@ h1 {
     stroke-width: 0.5px;
 }
 
+.spokeLine:hover {
+    stroke: red;
+}
+
 .spokeText {
     font-family: "Gill Sans", "Gill Sans Nova", "helvetica neue", "helvetica", "arial", "sans-serif";
     font-size: 12px;
