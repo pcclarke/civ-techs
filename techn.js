@@ -81,65 +81,10 @@ d3.json(path, function(data) {
         data.technologies[i].unlocks = [];
     }
     
-    // Go through each technology and find the prequisite with highest position, then swap positions
-    
-    
-    // var iter  = 0;
-    // while (iter < data.technologies.length) {
-    //     var pos = data.technologies[iter].pos;
-    //     var elem = iter;
-    //     for (var j = 0; j < data.technologies.length; j++) {
-    //         if (data.technologies[iter].requires) {
-    //             for (var k = 0; k < data.technologies[iter].requires.length; k++) {                    
-    //                 if (data.technologies[iter].requires[k] === data.technologies[j].id) {
-    //                     if (data.technologies[j].pos > pos) {
-    //                         pos = data.technologies[j].pos;
-    //                         elem = j;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         if (data.technologies[iter].optional) {
-    //             for (var k = 0; k < data.technologies[iter].optional.length; k++) {
-    //                 if (data.technologies[iter].optional[k] === data.technologies[j].id) {
-    //                     if (data.technologies[j].pos > pos) {
-    //                         pos = data.technologies[j].pos;
-    //                         elem = j;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-        
-    //     if (iter != elem) {
-    //         // console.log(data.technologies[iter].name + " at " + data.technologies[iter].pos + " requires " + data.technologies[elem].name + " at " + data.technologies[elem].pos);
-    //         data.technologies[elem].pos = data.technologies[iter].pos;
-    //         var techSwap = data.technologies[elem];
-    //         data.technologies[iter].pos = pos;
-    //         data.technologies[elem] = data.technologies[iter];
-    //         data.technologies[iter] = techSwap;
-    //         var newPos = data.technologies[elem].pos + 1;
-    //         console.log(newPos);
-    //         /*data.technologies[iter].pos = newPos;
-    //         for (var i = iter; i < data.technologies.length; i++) {
-    //             data.technologies[i].pos++;
-    //         }*/
-    //         iter = 0;
-    //     } else {
-    //         iter++;
-    //     }
-    // }
-    
-    for (var i = 0; i < data.technologies.length; i++) {
-
-        
-    }
     
     
     for (var i = 0; i < data.technologies.length; i++) {
-                if (data.technologies[i].id === "TECH_OPTICS") {
-            console.log(data.technologies[i]);
-        }
+        // Find the highest position of this technology's [i] required & optional prerequisites
         var maxPrereq = 0;
         for (var j = 0; j < data.technologies.length; j++) {
             if (data.technologies[i].requires) {
@@ -162,7 +107,7 @@ d3.json(path, function(data) {
             }
         }
         
-        for (var j = 0; j < data.technologies.length; j++) {
+        /*for (var j = 0; j < data.technologies.length; j++) {
             if (data.technologies[j].requires) {
                 for (var k = 0; k < data.technologies[j].requires.length; k++) {
                     if (data.technologies[j].requires[k] === data.technologies[i].id && j != i) {
@@ -181,22 +126,26 @@ d3.json(path, function(data) {
                     }
                 }
             }
-        }
+        }*/
         
-        newPos = maxPrereq++;
-        data.technologies[i].pos = newPos;
-        for (var j = newPos; j < data.technologies.length; j++) {
-            data.technologies[j].pos++;
+        data.technologies[i].pos = -1;
+        // bump all positions up to accomodate moving position
+        for (var j = 0; j < data.technologies.length; j++) {
+            if (data.technologies[j].pos > maxPrereq) {
+                data.technologies[j].pos++;    
+            }
+            
         }
-        data.technologies.sort(function(a, b) {
-            return a.pos - b.pos;
-        });
+        data.technologies[i].pos = maxPrereq + 1;
     }
     
+    data.technologies.sort(function(a, b) {
+        return a.pos - b.pos;
+    });
 
     
     for (var i = 0; i < data.technologies.length; i++) {
-        data.technologies[i].pos = i;
+        data.technologies[i].pos = i;;
     }
     
     var arcDists = []; // list of recent arcRanks
