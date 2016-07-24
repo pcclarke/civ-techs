@@ -98,6 +98,8 @@ void setup() {
   saveJSONObject(civ4base, "civ4base.json");
   saveJSONObject(civ4war, "civ4war.json");
   saveJSONObject(civ4bts, "civ4bts.json");
+  
+  println("Done!");
 }
 
 // GET TECHNOLOGY DATA
@@ -429,13 +431,15 @@ void getBuilds(String path, XML[][] texts, JSONObject dataObj) {
     buildDetails.setString("id", buildInfo[i].getChild("Type").getContent());
     
     // prereq tech
+    JSONArray required = new JSONArray();
     String prereq = buildInfo[i].getChild("PrereqTech").getContent();
     if (prereq.equals("NONE")) {
       String featurePrereq = buildInfo[i].getChild("FeatureStructs").getChild("FeatureStruct").getChild("PrereqTech").getContent();
-      buildDetails.setString("prereq", featurePrereq);
+      required.append(featurePrereq);
     } else {
-      buildDetails.setString("prereq", prereq);
+      required.append(prereq);
     }
+    buildDetails.setJSONArray("requires", required);
     
     // Name
     String name = "";
@@ -464,7 +468,7 @@ void getBuilds(String path, XML[][] texts, JSONObject dataObj) {
 }
 
 
-// COLLECT TERRAIN IMPROVEMENT BONUSES
+// COLLECT TERRAIN IMPROVEMENT BONUSES (goes into technologies)
 void getImprovementInfos(String path, JSONObject dataObj) {
   XML improveXML = loadXML(path);
   XML improveInfos = improveXML.getChild("ImprovementInfos");
@@ -556,9 +560,11 @@ void getPromotionInfos(String path, JSONObject dataObj) {
     String prereq = promotionInfo[i].getChild("TechPrereq").getContent();
     if (prereq.equals("NONE") == false) {
       JSONObject promotionDetails = new JSONObject();
+      JSONArray required = new JSONArray();
       
       promotionDetails.setString("id", promotionInfo[i].getChild("Type").getContent());
-      promotionDetails.setString("prereq", prereq);
+      required.append(prereq);
+      promotionDetails.setJSONArray("requires", required);
       
       // Name
       for (int j = 0; j < textObjectsList.length; j++) {
@@ -586,9 +592,11 @@ void getReligionInfos(String path, JSONObject dataObj) {
   for (int i = 0; i < religionInfo.length; i++) {
     String prereq = religionInfo[i].getChild("TechPrereq").getContent();
     JSONObject religionDetails = new JSONObject();
+    JSONArray required = new JSONArray();
     
     religionDetails.setString("id", religionInfo[i].getChild("Type").getContent());
-    religionDetails.setString("prereq", prereq);
+    required.append(prereq);
+    religionDetails.setJSONArray("requires", required);
     
     // Name
     for (int j = 0; j < textObjectsList.length; j++) {
@@ -617,9 +625,14 @@ void getResourceInfos(String path, JSONObject dataObj) {
     if (prereq.equals("NONE") == false || obsoleteTech.equals("NONE") == false) {
       JSONObject resourceDetails = new JSONObject();
       
+      // Set id
       resourceDetails.setString("id", resourceInfo[i].getChild("Type").getContent());
+      
+      // Set technology prerequisite
       if (prereq.equals("NONE") == false) {
-        resourceDetails.setString("prereq", prereq);
+        JSONArray required = new JSONArray();
+        required.append(prereq);
+        resourceDetails.setJSONArray("requires", required);
       }
       
       // Set the technology that makes this resource obsolete
@@ -655,8 +668,13 @@ void getCivicsInfos(String path, XML[][] texts, JSONObject dataObj) {
     if (prereq.equals("NONE") == false) {
       JSONObject civicDetails = new JSONObject();
       
+      // Set id
       civicDetails.setString("id", civicInfo[i].getChild("Type").getContent());
-      civicDetails.setString("prereq", prereq);
+      
+      // Set technology prerequisites
+      JSONArray required = new JSONArray();
+      required.append(prereq);
+      civicDetails.setJSONArray("requires", required);
       
       // Name
       String name = "";
@@ -740,12 +758,12 @@ void getBuildingInfos(String path, String specialPath, XML[][] texts, String civ
       // Check to make sure this class isn't already in buildings JSON array
       boolean foundClass = false;
       for (int j = 0; j < buildingList.size(); j++) {
-        if (className.equals(buildingList.getJSONObject(j).getString("class"))) {
+        if (className.equals(buildingList.getJSONObject(j).getString("id"))) {
           foundClass = true;
         }
       }
       if (!foundClass) {
-        buildingDetails.setString("class", className);
+        buildingDetails.setString("id", className);
       } else {
         continue;
       }
@@ -763,7 +781,7 @@ void getBuildingInfos(String path, String specialPath, XML[][] texts, String civ
         }
       }
       
-      buildingDetails.setJSONArray("prereq", preReqs);
+      buildingDetails.setJSONArray("requires", preReqs);
       
       // Set the technology that makes this building obsolete
       String obsoleteTech = buildingInfo[i].getChild("ObsoleteTech").getContent();
@@ -771,8 +789,6 @@ void getBuildingInfos(String path, String specialPath, XML[][] texts, String civ
         buildingDetails.setString("obsolete", obsoleteTech);
       }
       
-      // JSON Array of building types for this class (standard + civilization specific)
-      JSONArray buildingTypes = new JSONArray();
       
       for (int j = 0; j < buildingInfo.length; j++) {
         if (className.equals(buildingInfo[j].getChild("BuildingClass").getContent())) {
@@ -807,58 +823,23 @@ void getBuildingInfos(String path, String specialPath, XML[][] texts, String civ
           XML civXML = loadXML(civPath);
           XML civilizationInfos = civXML.getChild("CivilizationInfos");
           XML[] civilizationInfo = civilizationInfos.getChildren("CivilizationInfo");
+          String civId = "CIVILIZATION_ALL";
           
-          JSONObject civ = new JSONObject();
-          boolean uniqueFound = false;
-          String civDescription = "";
           
           for (int k = 0; k < civilizationInfo.length; k++) {
             if (civilizationInfo[k].getChild("Buildings").hasChildren()) {
               String uniqueType = civilizationInfo[k].getChild("Buildings").getChild("Building").getChild("BuildingType").getContent();
               if (uniqueType.equals(buildingId)) {
-                uniqueFound = true;
-                civ.setString("id", civilizationInfo[k].getChild("Type").getContent());
-                civDescription = civilizationInfo[k].getChild("Description").getContent();
+                civId = civilizationInfo[k].getChild("Type").getContent();
               }
             }
           }
           
-          if (!uniqueFound) {
-            civ.setString("id", "CIVILIZATION_ALL");
-            civ.setString("name", "All");
-          } else {
-            String civName = "";
-            
-            for (int k = 0; k < texts.length; k++) {
-              for (int l = 0; l < texts[k].length; l++) {
-                String tag = texts[k][l].getChild("Tag").getContent();
-                if (tag.equals(civDescription)) {
-                  if (texts[k][l].getChild(language).getChild("Text") != null) {
-                    civName = texts[k][l].getChild(language).getChild("Text").getContent();
-                  } else {
-                    civName = texts[k][l].getChild(language).getContent();  
-                  }
-                }
-              }
-              if (civName.length() > 0) {
-                break; 
-              }
-            }
-            
-            if (civName.length() <= 0) {
-              println("No name found for: " + className);
-            } else {
-              civ.setString("name", civName);
-            }
-          }
-
-          buildingType.setJSONObject("civilization", civ);
-          
-          buildingTypes.append(buildingType);
+          buildingDetails.setJSONObject(civId, buildingType);
         }
       }
       
-      buildingDetails.setJSONArray("types", buildingTypes);
+      //buildingDetails.setJSONArray("types", buildingTypes);
       
       
       buildingList.append(buildingDetails);
@@ -875,8 +856,9 @@ void getBuildingInfos(String path, String specialPath, XML[][] texts, String civ
       JSONObject buildingDetails = new JSONObject();
       
       // Technology prerequisite
-      buildingDetails.setString("prereq", prereq);
-      
+      JSONArray required = new JSONArray();
+      required.append(prereq);
+      buildingDetails.setJSONArray("requires", required);
       
       
       // Technology that makes the building obsolete
@@ -885,7 +867,7 @@ void getBuildingInfos(String path, String specialPath, XML[][] texts, String civ
         buildingDetails.setString("obsolete", obsolete);
       }
       
-      JSONArray types = new JSONArray();
+      //JSONArray types = new JSONArray();
       JSONObject typeObj = new JSONObject();
       
       // Building id
@@ -908,17 +890,11 @@ void getBuildingInfos(String path, String specialPath, XML[][] texts, String civ
         }
       }
       
-      JSONObject civ = new JSONObject();
-      civ.setString("name", "All");
-      civ.setString("id", "CIVILIZATION_ALL");
-      typeObj.setJSONObject("civilization", civ);
-      
-      types.append(typeObj);
-      buildingDetails.setJSONArray("types", types);
+      buildingDetails.setJSONObject("CIVILIZATION_ALL", typeObj);
       
       // Class (invented)
       String specialClass = "BUILDINGCLASS" + type.substring(15);
-      buildingDetails.setString("class", specialClass);
+      buildingDetails.setString("id", specialClass);
       
       buildingList.append(buildingDetails);
     }
@@ -945,12 +921,12 @@ void getUnitInfos(String path, XML[][] texts, String civPath, JSONObject dataObj
       // Check to make sure this class isn't already in units JSON array
       boolean foundClass = false;
       for (int j = 0; j < unitList.size(); j++) {
-        if (className.equals(unitList.getJSONObject(j).getString("class"))) {
+        if (className.equals(unitList.getJSONObject(j).getString("id"))) {
           foundClass = true;
         }
       }
       if (!foundClass) {
-        unitDetails.setString("class", className);
+        unitDetails.setString("id", className);
       } else {
         continue;
       }
@@ -968,11 +944,7 @@ void getUnitInfos(String path, XML[][] texts, String civPath, JSONObject dataObj
         }
       }
       
-      unitDetails.setJSONArray("prereq", preReqs);
-      
-      
-      // JSON Array of unit types for this class (standard + civilization specific)
-      JSONArray unitTypes = new JSONArray();
+      unitDetails.setJSONArray("requires", preReqs);
       
       for (int j = 0; j < unitInfo.length; j++) {
         if (className.equals(unitInfo[j].getChild("Class").getContent())) {
@@ -1008,59 +980,21 @@ void getUnitInfos(String path, XML[][] texts, String civPath, JSONObject dataObj
           XML civilizationInfos = civXML.getChild("CivilizationInfos");
           XML[] civilizationInfo = civilizationInfos.getChildren("CivilizationInfo");
           
-          JSONObject civ = new JSONObject();
-          boolean uniqueFound = false;
-          String civDescription = "";
+          String civId = "CIVILIZATION_ALL";
           
           for (int k = 0; k < civilizationInfo.length; k++) {
             if (civilizationInfo[k].getChild("Units").hasChildren()) {
               String uniqueType = civilizationInfo[k].getChild("Units").getChild("Unit").getChild("UnitType").getContent();
               if (uniqueType.equals(unitId)) {
-                uniqueFound = true;
-                civ.setString("id", civilizationInfo[k].getChild("Type").getContent());
-                civDescription = civilizationInfo[k].getChild("Description").getContent();
+                civId = civilizationInfo[k].getChild("Type").getContent();
               }
             }
           }
           
-          if (!uniqueFound) {
-            civ.setString("id", "CIVILIZATION_ALL");
-            civ.setString("name", "All");
-          } else {
-            String civName = "";
-            
-            for (int k = 0; k < texts.length; k++) {
-              for (int l = 0; l < texts[k].length; l++) {
-                String tag = texts[k][l].getChild("Tag").getContent();
-                if (tag.equals(civDescription)) {
-                  if (texts[k][l].getChild(language).getChild("Text") != null) {
-                    civName = texts[k][l].getChild(language).getChild("Text").getContent();
-                  } else {
-                    civName = texts[k][l].getChild(language).getContent();  
-                  }
-                }
-              }
-              if (civName.length() > 0) {
-                break; 
-              }
-            }
-            
-            if (civName.length() <= 0) {
-              println("No name found for: " + className);
-            } else {
-              civ.setString("name", civName);
-            }
-          }
-
-          unitType.setJSONObject("civilization", civ);
-          
-          unitTypes.append(unitType);
+          unitDetails.setJSONObject(civId, unitType);
         }
       }
-      
-      unitDetails.setJSONArray("types", unitTypes);
-      
-      
+
       unitList.append(unitDetails);
     }
   }
