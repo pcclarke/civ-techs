@@ -65,6 +65,8 @@ void setup() {
   getUnitInfos("civ4/XML/Units/CIV4UnitInfos.xml", texts, civ4Civilizations, civ4base);
   getCivicsInfos("civ4/XML/GameInfo/CIV4CivicInfos.xml", texts, civ4base);
   getCivilizationInfos(civ4Civilizations, texts, civ4base);
+  String civ4Projects = "civ4/XML/GameInfo/CIV4ProjectInfo.xml";
+  getProjectInfo(civ4Projects, texts, civ4base);
   
   // Civilization 4: Warlords
   getTechs("war/XML/Technologies/CIV4TechInfos.xml", civ4war, "war");
@@ -78,6 +80,7 @@ void setup() {
   getUnitInfos("war/XML/Units/CIV4UnitInfos.xml", texts, warCivilizations, civ4war);
   getCivicsInfos("war/XML/GameInfo/CIV4CivicInfos.xml", texts, civ4war);
   getCivilizationInfos(warCivilizations, texts, civ4war);
+  getProjectInfo(civ4Projects, texts, civ4war);
 
   // Civilization 4: Beyond the Sword
   getTechs("bts/XML/Technologies/CIV4TechInfos.xml", civ4bts, "bts");
@@ -92,6 +95,7 @@ void setup() {
   getUnitInfos("bts/XML/Units/CIV4UnitInfos.xml", texts, btsCivilizations, civ4bts);
   getCivicsInfos("bts/XML/GameInfo/CIV4CivicInfos.xml", texts, civ4bts);
   getCivilizationInfos(btsCivilizations, texts, civ4bts);
+  getProjectInfo("bts/XML/GameInfo/CIV4ProjectInfo.xml", texts, civ4bts);
   
   
   //println(civ4bts);
@@ -732,6 +736,51 @@ void getCivilizationInfos(String path, XML[][] texts, JSONObject dataObj) {
   
   dataObj.setJSONArray("civilizations", civilizationList);
 }
+
+
+// COLLECT PROJECT INFO
+void getProjectInfo(String path, XML[][] texts, JSONObject dataObj) {
+  XML projectXML = loadXML(path);
+  XML[] projectInfo = projectXML.getChild("ProjectInfos").getChildren("ProjectInfo");
+  
+  JSONArray projectList = new JSONArray();
+  
+  for (int i = 0; i < projectInfo.length; i++) {
+    String prereq = projectInfo[i].getChild("TechPrereq").getContent();
+    if (prereq.equals("NONE") == false) {
+      JSONObject projectDetails = new JSONObject();
+      
+      // Set id
+      projectDetails.setString("id", projectInfo[i].getChild("Type").getContent());
+      
+      // Set technology prerequisites
+      JSONArray required = new JSONArray();
+      required.append(prereq);
+      projectDetails.setJSONArray("requires", required);
+      
+      // Name
+      String name = "";
+      
+      for (int k = 0; k < texts.length; k++) {
+        for (int l = 0; l < texts[k].length; l++) {
+          String tag = texts[k][l].getChild("Tag").getContent();
+          if (tag.equals(projectInfo[i].getChild("Description").getContent())) {
+            name = texts[k][l].getChild(language).getContent();
+          }
+        }
+        if (name.length() > 0) {
+          break; 
+        }
+      }
+      projectDetails.setString("name", name);
+      
+      projectList.append(projectDetails);
+    }
+  }
+  
+  dataObj.setJSONArray("projects", projectList);
+}
+
 
 // COLLECT BUILDING INFO (name, id, prerequisite)
 void getBuildingInfos(String path, String specialPath, XML[][] texts, String civPath, JSONObject dataObj) {
