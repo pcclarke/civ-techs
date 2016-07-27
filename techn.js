@@ -86,6 +86,12 @@ d3.json(path, function(data) {
         data.technologies.push(data.resources[i]);
     }
     
+    // Append resources to technologies
+    for (var i = 0; i < data.projects.length; i++) {
+        data.projects[i].cat = "project";
+        data.technologies.push(data.projects[i]);
+    }
+    
     // Give each technology an arbitrary position value
     // And an unlocks array for units, resources, buildings, etc...
     for (var i = 0; i < data.technologies.length; i++) {
@@ -313,6 +319,8 @@ d3.json(path, function(data) {
                 link = "img/builds/" + d.id + ".png";
             } else if (d.cat === "resource") {
                 link = "img/resources/" + d.name + ".png";
+            } else if (d.cat === "project") {
+                link = "img/projects/" + d.id + ".png";
             } else {
                 link = "img/technologies/fishing.png";
             }
