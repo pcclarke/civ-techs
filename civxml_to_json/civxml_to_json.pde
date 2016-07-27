@@ -474,8 +474,6 @@ void getImprovementInfos(String path, JSONObject dataObj) {
   XML improveInfos = improveXML.getChild("ImprovementInfos");
   XML[] improveInfo = improveInfos.getChildren("ImprovementInfo");
   
-  JSONArray improveList = new JSONArray();
-  
   for (int i = 0; i < improveInfo.length; i++) {    
     String id = improveInfo[i].getChild("Type").getContent();
 
@@ -483,10 +481,10 @@ void getImprovementInfos(String path, JSONObject dataObj) {
       XML[] techYieldChanges =  improveInfo[i].getChild("TechYieldChanges").getChildren("TechYieldChange");
       
       for (int j = 0; j < techYieldChanges.length; j++) {
-        JSONObject improveDetails = new JSONObject();
         JSONObject improveSpecial = new JSONObject();
+        
         improveSpecial.setString("id", id);
-        improveDetails.setString("prereq", techYieldChanges[j].getChild("PrereqTech").getContent());
+        String prereq = techYieldChanges[j].getChild("PrereqTech").getContent();
         
         XML[] techYield = techYieldChanges[j].getChild("TechYields").getChildren("iYield");
         int food = Integer.parseInt(techYield[0].getContent());
@@ -519,28 +517,23 @@ void getImprovementInfos(String path, JSONObject dataObj) {
           ((food > 0) ? foodBonus : "") + 
           ((hammer > 0) ? ((food > 0) ? " " : "") + hammerBonus : "") +
           ((trade > 0) ? ((food > 0 || hammer > 0) ? " " : "") + tradeBonus : ""));
+          
+        // Put bonus into special array
+        JSONArray techs = dataObj.getJSONArray("technologies");
         
-        improveDetails.setJSONObject("special", improveSpecial);
-        improveList.append(improveDetails);
-      }
-    }
-  }
-  
-  JSONArray techs = dataObj.getJSONArray("technologies");
-  
-  for (int i = 0; i < techs.size(); i++) {
-    JSONObject checkTech = techs.getJSONObject(i);
-    for (int j = 0; j < improveList.size(); j++) {
-      JSONObject checkImprovement = improveList.getJSONObject(j);
-      
-      if(checkTech.getString("id").equals(checkImprovement.getString("prereq"))) {
-        if (checkTech.isNull("special") == true) {
-          JSONArray specials = new JSONArray();
-          specials.append(checkImprovement.getJSONObject("special"));
-          checkTech.setJSONArray("special", specials);
-        } else {
-          JSONArray specials = checkTech.getJSONArray("special");
-          specials.append(checkImprovement);
+        for (int k = 0; k < techs.size(); k++) {
+          JSONObject checkTech = techs.getJSONObject(k);
+          
+          if(checkTech.getString("id").equals(prereq)) {
+            if (checkTech.isNull("special") == true) {
+              JSONArray specials = new JSONArray();
+              specials.append(improveSpecial);
+              checkTech.setJSONArray("special", specials);
+            } else {
+              JSONArray specials = checkTech.getJSONArray("special");
+              specials.append(improveSpecial);
+            }
+          }
         }
       }
     }
