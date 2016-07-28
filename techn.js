@@ -86,6 +86,12 @@ d3.json(path, function(data) {
         data.technologies.push(data.resources[i]);
     }
     
+    // Append resources to technologies
+    for (var i = 0; i < data.projects.length; i++) {
+        data.projects[i].cat = "project";
+        data.technologies.push(data.projects[i]);
+    }
+    
     // Give each technology an arbitrary position value
     // And an unlocks array for units, resources, buildings, etc...
     for (var i = 0; i < data.technologies.length; i++) {
@@ -294,7 +300,7 @@ d3.json(path, function(data) {
             if (d.cat === "technology") {
                 return "translate(-10, " + (-(width / 2) + 235) + ") rotate(270)";
             } else {
-                return "translate(-10, " + (-(width / 2) + 125) + ") rotate(270)";
+                return "translate(-10, " + (-(width / 2) + 75) + ") rotate(270)";
             }
         })
         .attr("height", 20)
@@ -302,17 +308,19 @@ d3.json(path, function(data) {
         .attr("xlink:href", function(d) {
             var link;
             if (d.cat === "unit") {
-                link = "img/units/" + d.CIVILIZATION_ALL.name + ".png";
+                link = "img/units/" + d.CIVILIZATION_ALL.id + ".png";
             } else if (d.cat === "building") {
-                link = "img/buildings/" + d.CIVILIZATION_ALL.name + ".png";
+                link = "img/buildings/" + d.CIVILIZATION_ALL.id + ".png";
             } else if (d.cat === "religion") {
                 link = "img/religions/" + d.name + ".png";
             } else if (d.cat === "technology") {
-                link = "img/technologies/" + d.name + ".png";
+                link = "img/technologies/" + d.id + ".png";
             } else if (d.cat === "improvement") {
                 link = "img/builds/" + d.id + ".png";
             } else if (d.cat === "resource") {
                 link = "img/resources/" + d.name + ".png";
+            } else if (d.cat === "project") {
+                link = "img/projects/" + d.id + ".png";
             } else {
                 link = "img/technologies/fishing.png";
             }
@@ -330,9 +338,9 @@ d3.json(path, function(data) {
                 return "translate(3, " + (-(width / 2) + 210) + ") rotate(270)";
             } else {
                 if (d.pos > (data.technologies.length / 2)) {
-                    return "translate(-4, " + (-(width / 2) + 100) + ") rotate(90)";
+                    return "translate(-4, " + (-(width / 2) + 50) + ") rotate(90)";
                 }
-                return "translate(3, " + (-(width / 2) + 100) + ") rotate(270)";
+                return "translate(3, " + (-(width / 2) + 50) + ") rotate(270)";
             }
         })
         .text(function(d) {
@@ -360,7 +368,7 @@ d3.json(path, function(data) {
                 if (d.cat === "technology") {
                     return "translate(-10, " + (-(width / 2) + 212) + ") rotate(270)";
                 } else {
-                    return "translate(-10, " + (-(width / 2) + 102) + ") rotate(270)";
+                    return "translate(-10, " + (-(width / 2) + 52) + ") rotate(270)";
                 }
             })
             .attr("rx", 3)

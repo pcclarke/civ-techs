@@ -418,14 +418,11 @@
           "food": 0
         },
         {
-          "special": {
-            "trade": 1,
-            "hammer": 0,
-            "name": "Town: +1 Trade",
-            "id": "IMPROVEMENT_TOWN",
-            "food": 0
-          },
-          "prereq": "TECH_PRINTING_PRESS"
+          "trade": 1,
+          "hammer": 0,
+          "name": "Town: +1 Trade",
+          "id": "IMPROVEMENT_TOWN",
+          "food": 0
         }
       ],
       "cost": 1600,
@@ -509,14 +506,11 @@
           "id": "SPECIAL_IGNORE_IRRIGATION"
         },
         {
-          "special": {
-            "trade": 0,
-            "hammer": 0,
-            "name": "Farm: +1 Food",
-            "id": "IMPROVEMENT_FARM",
-            "food": 1
-          },
-          "prereq": "TECH_BIOLOGY"
+          "trade": 0,
+          "hammer": 0,
+          "name": "Farm: +1 Food",
+          "id": "IMPROVEMENT_FARM",
+          "food": 1
         }
       ],
       "cost": 3600,
@@ -546,14 +540,11 @@
           "food": 0
         },
         {
-          "special": {
-            "trade": 2,
-            "hammer": 0,
-            "name": "Watermill: +2 Trade",
-            "id": "IMPROVEMENT_WATERMILL",
-            "food": 0
-          },
-          "prereq": "TECH_ELECTRICITY"
+          "trade": 2,
+          "hammer": 0,
+          "name": "Watermill: +2 Trade",
+          "id": "IMPROVEMENT_WATERMILL",
+          "food": 0
         }
       ],
       "cost": 4500,
@@ -783,14 +774,11 @@
           "food": 0
         },
         {
-          "special": {
-            "trade": 0,
-            "hammer": 1,
-            "name": "Watermill: +1 Hammers",
-            "id": "IMPROVEMENT_WATERMILL",
-            "food": 0
-          },
-          "prereq": "TECH_REPLACEABLE_PARTS"
+          "trade": 0,
+          "hammer": 1,
+          "name": "Watermill: +1 Hammers",
+          "id": "IMPROVEMENT_WATERMILL",
+          "food": 0
         }
       ],
       "cost": 1800,
@@ -985,6 +973,63 @@
       "name": "Commando",
       "id": "PROMOTION_COMMANDO",
       "requires": ["TECH_MILITARY_SCIENCE"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "The Manhattan Project",
+      "id": "PROJECT_MANHATTAN_PROJECT",
+      "requires": ["TECH_FISSION"]
+    },
+    {
+      "name": "The Internet",
+      "id": "PROJECT_THE_INTERNET",
+      "requires": ["TECH_COMPUTERS"]
+    },
+    {
+      "name": "SDI",
+      "id": "PROJECT_SDI",
+      "requires": ["TECH_LASER"]
+    },
+    {
+      "name": "Apollo Program",
+      "id": "PROJECT_APOLLO_PROGRAM",
+      "requires": ["TECH_ROCKETRY"]
+    },
+    {
+      "name": "SS Cockpit",
+      "id": "PROJECT_SS_COCKPIT",
+      "requires": ["TECH_FIBER_OPTICS"]
+    },
+    {
+      "name": "SS Life Support",
+      "id": "PROJECT_SS_LIFE_SUPPORT",
+      "requires": ["TECH_ECOLOGY"]
+    },
+    {
+      "name": "SS Stasis Chamber",
+      "id": "PROJECT_SS_STASIS_CHAMBER",
+      "requires": ["TECH_GENETICS"]
+    },
+    {
+      "name": "SS Docking Bay",
+      "id": "PROJECT_SS_DOCKING_BAY",
+      "requires": ["TECH_SATELLITES"]
+    },
+    {
+      "name": "SS Engine",
+      "id": "PROJECT_SS_ENGINE",
+      "requires": ["TECH_FUSION"]
+    },
+    {
+      "name": "SS Casing",
+      "id": "PROJECT_SS_CASING",
+      "requires": ["TECH_COMPOSITES"]
+    },
+    {
+      "name": "SS Thrusters",
+      "id": "PROJECT_SS_THRUSTERS",
+      "requires": ["TECH_SUPERCONDUCTORS"]
     }
   ],
   "build": [
