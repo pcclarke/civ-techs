@@ -99,9 +99,9 @@ void setup() {
   
   
   //println(civ4bts);
-  saveJSONObject(civ4base, "civ4base.json");
-  saveJSONObject(civ4war, "civ4war.json");
-  saveJSONObject(civ4bts, "civ4bts.json");
+  saveJSONObject(civ4base, "civ4/civdata.json");
+  saveJSONObject(civ4war, "war/civ4war.json");
+  saveJSONObject(civ4bts, "bts/civ4bts.json");
   
   println("Done!");
 }
