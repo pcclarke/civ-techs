@@ -154,6 +154,13 @@ d3.json(path, function(data) {
         var requiredPreReqs = getReqTechPreReqs(data.displayed[i]);
         var optionalPreReqs = getOptTechPreReqs(data.displayed[i]);
         
+        /*for (var j = 0; j < requiredPreReqs.length; j++) {
+            arcDist = data.displayed[j].pos - data.displayed[i].pos;
+            var req = {"id": data.displayed[j].id, "dist": arcDist, "pos": data.displayed[i].pos};
+            rekked.push(req);
+        }*/
+        
+        // Get other things this technology enables
         for (var j = 0; j < data.displayed.length; j++) {
             if (data.displayed[j].requires) {
                 for (var k = 0; k < data.displayed[j].requires.length; k++) {                    
@@ -264,6 +271,11 @@ d3.json(path, function(data) {
         return preReqs;
     }
     
+    // Get a list of the displayed things this technology leads to
+    function getReqLeadsTo(examine) {
+        
+    }
+    
     // Get a list of the optional technology prerequisites for a given thing
     function getOptTechPreReqs(examine) {
         var preReqs = [];
@@ -335,12 +347,15 @@ d3.json(path, function(data) {
             return -(arcBase + (arcSpace * d.spokeRank));
         })
         .attr("x2", 0)
-        .attr("y2", -(width / 2));
+        .attr("y2", -(width / 2) + 50);
         
     spokes.append("image") // Displayed item icons
         .attr("class", "techImg")
         .attr("transform", function(d) {
             if (d.cat === "technology") {
+                if (d.pos > (data.displayed.length / 2)) {
+                    return "translate(16, " + (-(width / 2) + 88) + ") rotate(90)";
+                }
                 return "translate(-16, " + (-(width / 2) + 120) + ") rotate(270)";
             } else {
                 return "translate(-16, " + (-(width / 2) + 75) + ") rotate(270)";
