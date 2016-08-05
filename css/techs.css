@@ -34,14 +34,12 @@ h1 {
     stroke-width: 0.5px;
 }
 
-.spokeLine:hover {
-    stroke: red;
-    stroke-width: 2px;
+.lineSelected {
+    stroke-width: 3px;
 }
 
-.spoke path:hover {
-    stroke: red;
-    stroke-width: 2px;
+.textSelected {
+    
 }
 
 .spokeText {

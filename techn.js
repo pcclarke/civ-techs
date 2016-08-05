@@ -95,164 +95,157 @@ d3.json(path, function(data) {
     //     data.displayed.push(data.projects[i]);
     // }
     
+    orderData();
     
-    // Give each technology an arbitrary position value
-    for (var i = 0; i < data.displayed.length; i++) {
-        data.displayed[i].pos = i;
-    }
-
-    // Generate an optimal position for list items
-    for (var i = 0; i < data.displayed.length; i++) {
-        var maxPrereq = 0;
-        
-        var preReqs = getTechPrereqs(data.displayed[i]);
-        
-        // Find the highest position of this technology's [i] prerequisites
-        for (var j = 0; j < preReqs.length; j++) {
-            if (maxPrereq < preReqs[j].pos) {
-                maxPrereq = preReqs[j].pos;
-            }
+    function orderData() {
+        // Give each technology an arbitrary position value
+        for (var i = 0; i < data.displayed.length; i++) {
+            data.displayed[i].pos = i;
         }
-        
-        // Find any other technology that requires this technology [i] and set maxPrereq to be below it
-        for (var j = 0; j < data.displayed.length; j++) {
-            var otherPreReqs = getTechPrereqs(data.displayed[j]);
+
+        // Generate an optimal position for list items
+        for (var i = 0; i < data.displayed.length; i++) {
+            var maxPrereq = 0;
             
-            for (var k = 0; k < otherPreReqs.length; k++) {
-                if (otherPreReqs[k].id === data.displayed[i].id && data.displayed[j].pos < maxPrereq) {
-                    maxPrereq = otherPreReqs[k].pos - 2; // -2 because it may be incremented later
+            var preReqs = getTechPrereqs(data.displayed[i]);
+            
+            // Find the highest position of this technology's [i] prerequisites
+            for (var j = 0; j < preReqs.length; j++) {
+                if (maxPrereq < preReqs[j].pos) {
+                    maxPrereq = preReqs[j].pos;
                 }
             }
-        }
-        
-        data.displayed[i].pos = -1; // make sure this technology doesn't get bumped
-        // bump all positions higher than the max prerequisites up to accomodate moving position
-        for (var j = 0; j < data.displayed.length; j++) {
-            if (data.displayed[j].pos > maxPrereq) {
-                data.displayed[j].pos++;
-            }
-        }
-        data.displayed[i].pos = maxPrereq + 1;
-    }
-    
-    data.displayed.sort(function(a, b) {
-        return a.pos - b.pos;
-    });
-
-    for (var i = 0; i < data.displayed.length; i++) {
-        data.displayed[i].pos = i;;
-    }
-    
-    
-    var arcDists = []; // list of recent arcRanks
-    // Then add in the displayed into their prerequisites so that the arcs can be set up
-    for (var i = 0; i < data.displayed.length; i++) {
-        var rekked = []; // copy leads to required displayed
-        var opted = []; // copy leads to optional displayed
-        var optedDist = [];
-        var arcDist = 0;
-        var requiredPreReqs = getReqTechPreReqs(data.displayed[i]);
-        var optionalPreReqs = getOptTechPreReqs(data.displayed[i]);
-        
-        /*for (var j = 0; j < requiredPreReqs.length; j++) {
-            arcDist = data.displayed[j].pos - data.displayed[i].pos;
-            var req = {"id": data.displayed[j].id, "dist": arcDist, "pos": data.displayed[i].pos};
-            rekked.push(req);
-        }*/
-        
-        // Get other things this technology enables
-        for (var j = 0; j < data.displayed.length; j++) {
-            if (data.displayed[j].requires) {
-                for (var k = 0; k < data.displayed[j].requires.length; k++) {                    
-                    if (data.displayed[j].requires[k] === data.displayed[i].id) {
-                        arcDist = data.displayed[j].pos - data.displayed[i].pos;
-                        var req = {"id": data.displayed[j].id, "dist": arcDist, "pos": data.displayed[i].pos};
-                        rekked.push(req);
+            
+            // Find any other technology that requires this technology [i] and set maxPrereq to be below it
+            for (var j = 0; j < data.displayed.length; j++) {
+                var otherPreReqs = getTechPrereqs(data.displayed[j]);
+                
+                for (var k = 0; k < otherPreReqs.length; k++) {
+                    if (otherPreReqs[k].id === data.displayed[i].id && data.displayed[j].pos < maxPrereq) {
+                        maxPrereq = otherPreReqs[k].pos - 2; // -2 because it may be incremented later
                     }
                 }
             }
-            if (data.displayed[j].optional) {
-                for (var k = 0; k < data.displayed[j].optional.length; k++) {
-                    if (data.displayed[j].optional[k] === data.displayed[i].id) {
-                        arcDist = data.displayed[j].pos - data.displayed[i].pos;
-                        var opt = {"id": data.displayed[j].id, "dist": arcDist, "pos": data.displayed[i].pos};
-                        opted.push(opt);
+            
+            data.displayed[i].pos = -1; // make sure this technology doesn't get bumped
+            // bump all positions higher than the max prerequisites up to accomodate moving position
+            for (var j = 0; j < data.displayed.length; j++) {
+                if (data.displayed[j].pos > maxPrereq) {
+                    data.displayed[j].pos++;
+                }
+            }
+            data.displayed[i].pos = maxPrereq + 1;
+        }
+        
+        data.displayed.sort(function(a, b) {
+            return a.pos - b.pos;
+        });
+
+        for (var i = 0; i < data.displayed.length; i++) {
+            data.displayed[i].pos = i;;
+        }
+        
+        
+        var arcDists = []; // list of recent arcRanks
+        // Add in the displayed into their prerequisites so that the arcs can be set up
+        for (var i = 0; i < data.displayed.length; i++) {
+            var rekked = []; // copy leads to required displayed
+            var opted = []; // copy leads to optional displayed
+            var optedDist = [];
+            var maxArcDist = 0;
+            var leadsReq = getLeadsToReq(data.displayed[i], data.displayed);
+            var leadsOpt = getLeadsToOpt(data.displayed[i], data.displayed);
+            
+            // Determine how long arc should be and what it leads to
+            for (var j = 0; j < leadsReq.length; j++) {
+                var arcDist = leadsReq[j].pos - data.displayed[i].pos;
+                if (arcDist > maxArcDist) {
+                    maxArcDist = arcDist;
+                }
+                var req = {"id": leadsReq[j].id, "dist": arcDist, "pos": data.displayed[i].pos};
+                rekked.push(req);
+            }
+            data.displayed[i].lreq = rekked;
+            
+            for (var j = 0; j < leadsOpt.length; j++) {
+                var arcDist = leadsOpt[j].pos - data.displayed[i].pos;
+                if (arcDist > maxArcDist) {
+                    maxArcDist = arcDist;
+                }
+                var opt = {"id": leadsOpt[j].id, "dist": arcDist, "pos": data.displayed[i].pos};
+                opted.push(opt);
+            }
+            data.displayed[i].lopt = opted;
+            
+            data.displayed[i].arcDist = ((2 * Math.PI) / data.displayed.length) * maxArcDist;
+            
+            // Set arc rank - distance of arc from centre
+            if (data.displayed[i].lreq.length > 0 || data.displayed[i].lopt.length > 0) {
+                var ranked = 0;
+                for (var j = 0; j < arcDists.length; j++) {
+                    if (arcDists[j] < i) {
+                        arcDists[j] = i + maxArcDist;
+                        data.displayed[i].arcRank = j;
+                        ranked = 1;
+                        break;
                     }
                 }
-            }
-        }
-        
-        data.displayed[i].lreq = rekked;
-        data.displayed[i].lopt = opted;
-        
-        data.displayed[i].arcDist = ((2 * Math.PI) / data.displayed.length) * arcDist;
-        
-        // Set arc rank - distance of arc from centre
-        if (data.displayed[i].lreq.length > 0 || data.displayed[i].lopt.length > 0) {
-            var ranked = 0;
-            for (var j = 0; j < arcDists.length; j++) {
-                if (arcDists[j] < i) {
-                    arcDists[j] = i + arcDist;
-                    data.displayed[i].arcRank = j;
-                    ranked = 1;
-                    break;
+                if (ranked == 0) {
+                    arcDists.push(i + maxArcDist);
+                    data.displayed[i].arcRank = (arcDists.length - 1);
                 }
+                
+                // Add the arc rank to leads to
+                for (var j = 0; j < data.displayed[i].lreq.length; j++) {
+                    data.displayed[i].lreq[j].arcRank = data.displayed[i].arcRank;
+                }
+                for (var j = 0; j < data.displayed[i].lopt.length; j++) {
+                    data.displayed[i].lopt[j].arcRank = data.displayed[i].arcRank;
+                }
+            } else {
+                data.displayed[i].arcRank = 500;
             }
-            if (ranked == 0) {
-                arcDists.push(i + arcDist);
-                data.displayed[i].arcRank = (arcDists.length - 1);
-            }
-            
-            // Add the arc rank to leads to
-            for (var j = 0; j < data.displayed[i].lreq.length; j++) {
-                data.displayed[i].lreq[j].arcRank = data.displayed[i].arcRank;
-            }
-            for (var j = 0; j < data.displayed[i].lopt.length; j++) {
-                data.displayed[i].lopt[j].arcRank = data.displayed[i].arcRank;
-            }
-        } else {
-            data.displayed[i].arcRank = 500;
         }
-    }
-    
-    // Set spoke rank - where to start drawing spoke
-    for (var i = data.displayed.length - 1; i >= 0; i--) {
-        if (data.displayed[i].arcRank > 0) {
-            var spokeRank = data.displayed[i].arcRank;
-            if (data.displayed[i].requires) {
-                for (var j = 0; j < data.displayed[i].requires.length; j++) {
-                    for (var k = 0; k < data.displayed.length; k++) {
-                        if (data.displayed[i].requires[j] === data.displayed[k].id) {
-                            if (data.displayed[k].arcRank < spokeRank) {
-                                spokeRank = data.displayed[k].arcRank;
+        
+        // Set spoke rank - where to start drawing spoke
+        for (var i = data.displayed.length - 1; i >= 0; i--) {
+            if (data.displayed[i].arcRank > 0) {
+                var spokeRank = data.displayed[i].arcRank;
+                if (data.displayed[i].requires) {
+                    for (var j = 0; j < data.displayed[i].requires.length; j++) {
+                        for (var k = 0; k < data.displayed.length; k++) {
+                            if (data.displayed[i].requires[j] === data.displayed[k].id) {
+                                if (data.displayed[k].arcRank < spokeRank) {
+                                    spokeRank = data.displayed[k].arcRank;
+                                }
                             }
                         }
                     }
                 }
-            }
-            if (data.displayed[i].optional) {
-                for (var j = 0; j < data.displayed[i].optional.length; j++) {
-                    for (var k = 0; k < data.displayed.length; k++) {
-                        if (data.displayed[i].optional[j] === data.displayed[k].id) {
-                            if (data.displayed[k].arcRank < spokeRank) {
-                                spokeRank = data.displayed[k].arcRank;
+                if (data.displayed[i].optional) {
+                    for (var j = 0; j < data.displayed[i].optional.length; j++) {
+                        for (var k = 0; k < data.displayed.length; k++) {
+                            if (data.displayed[i].optional[j] === data.displayed[k].id) {
+                                if (data.displayed[k].arcRank < spokeRank) {
+                                    spokeRank = data.displayed[k].arcRank;
+                                }
                             }
                         }
                     }
                 }
+                data.displayed[i].spokeRank = spokeRank;
+            } else {
+                data.displayed[i].spokeRank = 0;
             }
-            data.displayed[i].spokeRank = spokeRank;
-        } else {
-            data.displayed[i].spokeRank = 0;
         }
+        
+        
+        
+        // Reverse order of data so that arcs are drawn over spokes
+        data.displayed.sort(function(a, b) {
+            return b.pos - a.pos;
+        });
     }
-    
-    
-    
-    // Reverse order of data so that arcs are drawn over spokes
-    data.displayed.sort(function(a, b) {
-        return b.pos - a.pos;
-    });
     
     // Get a list of the required technology prerequisites for a given thing
     function getReqTechPreReqs(examine) {
@@ -271,9 +264,21 @@ d3.json(path, function(data) {
         return preReqs;
     }
     
-    // Get a list of the displayed things this technology leads to
-    function getReqLeadsTo(examine) {
+    // Get a list of the displayed things this technology leads to that require it
+    function getLeadsToReq(examine, compareData) {
+        var leads = [];
         
+        for (var i = 0; i < compareData.length; i++) {
+            if (compareData[i].requires) {
+                for (var j = 0; j < compareData[i].requires.length; j++) {
+                    if (compareData[i].requires[j] === examine.id) {
+                        leads.push(compareData[i]);
+                    }
+                }
+            }
+        }
+        
+        return leads;
     }
     
     // Get a list of the optional technology prerequisites for a given thing
@@ -291,6 +296,23 @@ d3.json(path, function(data) {
         }
         
         return preReqs;
+    }
+    
+    // Get a list of the displayed things this technology leads to that optionally require it
+    function getLeadsToOpt(examine, compareData) {
+        var leads = [];
+        
+        for (var i = 0; i < compareData.length; i++) {
+            if (compareData[i].optional) {
+                for (var j = 0; j < compareData[i].optional.length; j++) {
+                    if (compareData[i].optional[j] === examine.id) {
+                        leads.push(compareData[i]);
+                    }
+                }
+            }
+        }
+        
+        return leads;
     }
     
     // Get a list of the technology prerequsites (required and optional) for a given thing (techs, units, whatever)
@@ -324,7 +346,10 @@ d3.json(path, function(data) {
     
     
     // START DRAWING ----------------------
+    drawWheel();
     
+    
+    function drawWheel() {
     var wheel = svg.append("g")
         .attr("transform", "translate(" + (width / 2) + " " + (height / 2) +")");
         
@@ -335,6 +360,27 @@ d3.json(path, function(data) {
             .attr("transform", function(d) {
                 var ang = d.pos * (360 / data.displayed.length);
                 return "rotate(" + ang +")";
+            })
+            .on("mouseover", function(d) {
+                d3.select(this)
+                    .classed("textSelected", true)
+                .selectAll(".spokeLine")
+                    .classed("lineSelected", true);
+            })
+            .on("mouseout", function(d) {
+                d3.select(this)
+                    .classed("textSelected", false)
+                .selectAll(".spokeLine")
+                    .classed("lineSelected", false);
+            })
+            .on("click", function(d) {
+                // Append units to displayed
+                for (var i = 0; i < data.units.length; i++) {
+                    data.units[i].cat = "unit";
+                    data.displayed.push(data.units[i]);
+                }
+                
+                //console.log(data.displayed);
             });
             
     spokes.append("line") // Spoke lines from center
@@ -439,12 +485,14 @@ d3.json(path, function(data) {
             });
         
     var reqArc = spokes.append("path")
+        .attr("class", "spokeArc")
         .style("fill", function(d) {
             return color(d.pos);
         })
         .attr("d", arc);
         
     var reqPin = spokes.append("line")
+        .attr("class", "spokePin")
         .attr("x1", 0)
         .attr("y1", function(d) {
             return -(arcBase + 7 + (arcSpace * d.arcRank));
@@ -498,4 +546,5 @@ d3.json(path, function(data) {
             return color(d.pos);
         })
         .attr("fill", "white");
+    }
 });
