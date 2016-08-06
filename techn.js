@@ -211,26 +211,10 @@ d3.json(path, function(data) {
         for (var i = data.displayed.length - 1; i >= 0; i--) {
             if (data.displayed[i].arcRank > 0) {
                 var spokeRank = data.displayed[i].arcRank;
-                if (data.displayed[i].requires) {
-                    for (var j = 0; j < data.displayed[i].requires.length; j++) {
-                        for (var k = 0; k < data.displayed.length; k++) {
-                            if (data.displayed[i].requires[j] === data.displayed[k].id) {
-                                if (data.displayed[k].arcRank < spokeRank) {
-                                    spokeRank = data.displayed[k].arcRank;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (data.displayed[i].optional) {
-                    for (var j = 0; j < data.displayed[i].optional.length; j++) {
-                        for (var k = 0; k < data.displayed.length; k++) {
-                            if (data.displayed[i].optional[j] === data.displayed[k].id) {
-                                if (data.displayed[k].arcRank < spokeRank) {
-                                    spokeRank = data.displayed[k].arcRank;
-                                }
-                            }
-                        }
+                var preReqs = getTechPrereqs(data.displayed[i]);
+                for (var j = 0; j < preReqs.length; j++) {
+                    if (preReqs[j].arcRank < spokeRank) {
+                        spokeRank = preReqs[j].arcRank;
                     }
                 }
                 data.displayed[i].spokeRank = spokeRank;
@@ -238,7 +222,6 @@ d3.json(path, function(data) {
                 data.displayed[i].spokeRank = 0;
             }
         }
-        
         
         
         // Reverse order of data so that arcs are drawn over spokes
@@ -356,7 +339,10 @@ d3.json(path, function(data) {
     var spokes = wheel.selectAll(".spoke")
             .data(data.displayed)
         .enter().append("g")
-            .attr("class", "spoke")
+            .attr("class", function(d) {
+                var className = d.id + " spoke";
+                return className;
+            })
             .attr("transform", function(d) {
                 var ang = d.pos * (360 / data.displayed.length);
                 return "rotate(" + ang +")";
@@ -366,12 +352,76 @@ d3.json(path, function(data) {
                     .classed("textSelected", true)
                 .selectAll(".spokeLine")
                     .classed("lineSelected", true);
+                d3.select(this)
+                .selectAll(".spokeTextBox")
+                    .classed("spokeTextBoxSelected", true);
+                    
+                if (d.requires) {
+                    for (var i = 0; i < d.requires.length; i++) {
+                        d3.selectAll("." + d.requires[i])
+                        .selectAll(".spokeLine")
+                            .classed("lineRequired", true);
+                    }
+                }
+                if (d.optional) {
+                    for (var i = 0; i < d.optional.length; i++) {
+                        d3.selectAll("." + d.optional[i])
+                        .selectAll(".spokeLine")
+                            .classed("lineOptional", true);
+                    }
+                }
+                if (d.lreq) {
+                    for (var i = 0; i < d.lreq.length; i++) {
+                        d3.selectAll("." + d.lreq[i].id)
+                        .selectAll(".spokeLine")
+                            .classed("lineLeads", true);
+                    }
+                }
+                if (d.lopt) {
+                    for (var i = 0; i < d.lopt.length; i++) {
+                        d3.selectAll("." + d.lopt[i].id)
+                        .selectAll(".spokeLine")
+                            .classed("lineLeads", true);
+                    }
+                }
             })
             .on("mouseout", function(d) {
                 d3.select(this)
                     .classed("textSelected", false)
                 .selectAll(".spokeLine")
                     .classed("lineSelected", false);
+                d3.select(this)
+                .selectAll(".spokeTextBox")
+                    .classed("spokeTextBoxSelected", false);
+
+                if (d.requires) {
+                    for (var i = 0; i < d.requires.length; i++) {
+                        d3.selectAll("." + d.requires[i])
+                        .selectAll(".spokeLine")
+                            .classed("lineRequired", false);
+                    }
+                }
+                if (d.optional) {
+                    for (var i = 0; i < d.optional.length; i++) {
+                        d3.selectAll("." + d.optional[i])
+                        .selectAll(".spokeLine")
+                            .classed("lineOptional", false);
+                    }
+                }
+                if (d.lreq) {
+                    for (var i = 0; i < d.lreq.length; i++) {
+                        d3.selectAll("." + d.lreq[i].id)
+                        .selectAll(".spokeLine")
+                            .classed("lineLeads", false);
+                    }
+                }
+                if (d.lopt) {
+                    for (var i = 0; i < d.lopt.length; i++) {
+                        d3.selectAll("." + d.lopt[i].id)
+                        .selectAll(".spokeLine")
+                            .classed("lineLeads", false);
+                    }
+                }
             })
             .on("click", function(d) {
                 // Append units to displayed

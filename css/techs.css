@@ -29,27 +29,52 @@ h1 {
     font-weight: normal;
 }
 
+.techImg {
+    cursor: pointer;
+}
+
 .spokeLine {
+    cursor: pointer;
     stroke: #bcbec0;
     stroke-width: 0.5px;
 }
 
 .lineSelected {
-    stroke-width: 3px;
+    stroke: #1f1f1f;
+    stroke-width: 2px;
 }
 
-.textSelected {
-    
+.lineRequired {
+    stroke: #1f1f1f;
+}
+
+.lineOptional {
+    stroke: #1f1f1f;
+}
+
+.lineLeads {
+    stroke: #1f1f1f;
+    stroke-dasharray: 15px 5px;
 }
 
 .spokeText {
+    cursor: pointer;
     font-family: "Gill Sans", "Gill Sans Nova", "helvetica neue", "helvetica", "arial", "sans-serif";
     font-size: 12px;
     font-weight: normal;
     text-transform: capitalize;
 }
 
+.textSelected {
+    fill: #fff;   
+}
+
 .spokeTextBox {
+    cursor: pointer;
     stroke: #bcbec0;
     fill: #fff;
+}
+
+.spokeTextBoxSelected {
+    fill: #1f1f1f;   
 }
