@@ -99,9 +99,9 @@ void setup() {
   
   
   //println(civ4bts);
-  saveJSONObject(civ4base, "civ4base.json");
-  saveJSONObject(civ4war, "civ4war.json");
-  saveJSONObject(civ4bts, "civ4bts.json");
+  saveJSONObject(civ4base, "civ4/civdata.json");
+  saveJSONObject(civ4war, "war/civdata.json");
+  saveJSONObject(civ4bts, "bts/civdata.json");
   
   println("Done!");
 }
@@ -116,9 +116,10 @@ void getTechs(String path, JSONObject dataObj, String ver) {
   
   for (int i = 0; i < techInfo.length; i++) {
     JSONObject techDetails = new JSONObject();
+    String techType = techInfo[i].getChild("Type").getContent();
     
     // id
-    techDetails.setString("id", techInfo[i].getChild("Type").getContent());
+    techDetails.setString("id", techType);
     
     // Name
     String name = "";
@@ -297,10 +298,20 @@ void getTechs(String path, JSONObject dataObj, String ver) {
     }
     
     // +1 Road Movement (in CIV4RouteInfos.xml, waste of time to open file for just this)
-    if (techInfo[i].getChild("Type").getContent().equals("TECH_ENGINEERING")) {
+    if (techType.equals("TECH_ENGINEERING")) {
       JSONObject special = new JSONObject();
       special.setString("name", "+1 Road Movement");
       special.setString("id", "SPECIAL_ROAD_MOVE");
+      specialList.append(special);
+    }
+    
+    // Workers produce +50% Hammers from chopping
+    int chopBonus = Integer.parseInt(techInfo[i].getChild("iFeatureProductionModifier").getContent());
+    if (chopBonus > 0) {
+      JSONObject special = new JSONObject();
+      special.setString("name", "Workers produce +50% Hammers from chopping");
+      special.setString("id", "SPECIAL_CHOP_BONUS");
+      specialList.append(special);
     }
     
     // +1 Sight Across Water
