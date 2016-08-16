@@ -15,14 +15,14 @@ The distance between ranks is arbitrary, and is set by the variable arcSpace (or
 // Global variables
 var game = "civ4bts";
 var path = game + "/civdata.json";
-var arcBase = 150;
-var arcWidth = 3;
-var arcSpace = 17;
+var arcBase = 125;
+var arcWidth = 1.5;
+var arcSpace = 13;
 
 
 var margin = {top: 10, right: 10, bottom: 10, left: 10},
-    width = 1200 - margin.left - margin.right,
-    height = 1200 - margin.top - margin.bottom;
+    width = 1000 - margin.left - margin.right,
+    height = 1000 - margin.top - margin.bottom;
     
 var arc = d3.svg.arc()
     .innerRadius(function(d) {
@@ -450,15 +450,15 @@ d3.json(path, function(data) {
         .attr("transform", function(d) {
             if (d.cat === "technology") {
                 if (d.pos > (data.displayed.length / 2)) {
-                    return "translate(16, " + (-(width / 2) + 88) + ") rotate(90)";
+                    return "translate(12, " + (-(width / 2) + 88) + ") rotate(90)";
                 }
-                return "translate(-16, " + (-(width / 2) + 120) + ") rotate(270)";
+                return "translate(-12, " + (-(width / 2) + 112) + ") rotate(270)";
             } else {
-                return "translate(-16, " + (-(width / 2) + 75) + ") rotate(270)";
+                return "translate(-12, " + (-(width / 2) + 75) + ") rotate(270)";
             }
         })
-        .attr("height", 32)
-        .attr("width", 32)
+        .attr("height", 24)
+        .attr("width", 24)
         .attr("xlink:href", function(d) {
             var link;
             if (d.cat === "unit") {
@@ -568,10 +568,10 @@ d3.json(path, function(data) {
        .attr("class", "reqSquare");
        
      reqSquares.append("rect")
-        .attr("x", -4)
-        .attr("y", -3)
-        .attr("width", 8)
-        .attr("height", 8)
+        .attr("x", -2.5)
+        .attr("y", -0.75)
+        .attr("width", 5)
+        .attr("height", 5)
         .attr("fill", function(d) {
             return color(d.pos);
         });
@@ -589,9 +589,9 @@ d3.json(path, function(data) {
        
      optCircles.append("circle")
         .attr("cx", 0)
-        .attr("cy", 1)
-        .attr("r", 3.5)
-        .attr("stroke-width", 2)
+        .attr("cy", 2)
+        .attr("r", 2.5)
+        .attr("stroke-width", 1)
         .attr("stroke", function(d) {
             return color(d.pos);
         })
