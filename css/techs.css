@@ -15,13 +15,13 @@ html {
 }
 
 h1 {
-    font-size: 4em;
+    font-size: 3em;
     text-align: center;
 }
 
 #container {
     margin: 0 auto;
-    width: 1200px;
+    width: 1000px;
 }
 
 .title {
