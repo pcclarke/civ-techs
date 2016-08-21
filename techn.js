@@ -15,17 +15,10 @@ The distance between ranks is arbitrary, and is set by the variable arcSpace (or
 // Global variables
 var game = "civ4bts";
 var path = game + "/civdata.json";
-<<<<<<< HEAD
-var arcBase = 150;
-var arcWidth = 3;
-var arcSpace = 17;
-var zoomed = false;
-=======
 var arcBase = 125;
 var arcWidth = 1.5;
 var arcSpace = 13;
->>>>>>> refs/remotes/origin/gh-pages
-
+var zoomed = false;
 
 var margin = {top: 10, right: 10, bottom: 10, left: 10},
     width = 1000 - margin.left - margin.right,
@@ -456,6 +449,7 @@ d3.json(path, function(data) {
                 var nearby = findNearby(d);
                 d3.selectAll(".wheel")
                     .remove();
+                zoomed = true;
 
                 data.displayed = [];
                 data.displayed = nearby;
@@ -485,7 +479,6 @@ d3.json(path, function(data) {
         for (var i = 0; i < nearbyList.length; i++) {
             var otherReqs = getTechPrereqs(nearbyList[i]);
 
-            console.log(otherReqs);
             for (var j = 0; j < otherReqs.length; j++) {
                 if (otherReqs[j].id !== origin.id) {
                     fartherList.push(otherReqs[j]);
@@ -494,9 +487,6 @@ d3.json(path, function(data) {
         }
         nearbyList = nearbyList.concat(fartherList);
         nearbyList.push(origin);
-
-        console.log(origin.id);
-        console.log(nearbyList);
 
         return nearbyList;
     }
@@ -516,20 +506,10 @@ d3.json(path, function(data) {
     spokes.append("image") // Displayed item icons
         .attr("class", "techImg")
         .attr("transform", function(d) {
-<<<<<<< HEAD
             if (d.pos > (data.displayed.length / 2)) {
-                return "translate(16, " + (-(width / 2) + 88) + ") rotate(90)";
-=======
-            if (d.cat === "technology") {
-                if (d.pos > (data.displayed.length / 2)) {
-                    return "translate(12, " + (-(width / 2) + 88) + ") rotate(90)";
-                }
-                return "translate(-12, " + (-(width / 2) + 112) + ") rotate(270)";
-            } else {
-                return "translate(-12, " + (-(width / 2) + 75) + ") rotate(270)";
->>>>>>> refs/remotes/origin/gh-pages
+                return "translate(12, " + (-(width / 2) + 88) + ") rotate(90)";
             }
-            return "translate(-16, " + (-(width / 2) + 120) + ") rotate(270)";
+            return "translate(-12, " + (-(width / 2) + 112) + ") rotate(270)";
         })
         .attr("height", 24)
         .attr("width", 24)
@@ -653,6 +633,8 @@ d3.json(path, function(data) {
         .on("click", function(d) {
             d3.selectAll(".wheel")
                 .remove();
+
+            zoomed = false;
 
             data.displayed = [];
             data.displayed = data.technologies;
