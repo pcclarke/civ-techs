@@ -539,6 +539,10 @@ d3.json(path, function(data) {
             } else {
                 name = d.name;
             }
+
+            if (name.length > 15) {
+                name = name.substring(0, 12) + "\u2026";
+            }
             return name;
         })
         .attr("text-anchor", function(d) {
