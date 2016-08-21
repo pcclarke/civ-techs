@@ -59,7 +59,7 @@ h1 {
 
 .spokeText {
     cursor: pointer;
-    font-family: "Gill Sans", "Gill Sans Nova", "helvetica neue", "helvetica", "arial", "sans-serif";
+    font-family: "helvetica neue", Helvetica, Geneva, Tahoma, Arial, "sans-serif";
     font-size: 12px;
     font-weight: normal;
     text-transform: capitalize;
