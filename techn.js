@@ -77,40 +77,6 @@ d3.json(path, function(data) {
             data.displayed[i].pos = i;
         }
 
-        // *** Generate an optimal position for list items ***
-        // for (var i = 0; i < data.displayed.length; i++) {
-        //     var maxPrereq = 0;
-            
-        //     var preReqs = getTechPrereqs(data.displayed[i]);
-            
-        //     // Find the highest position of this technology's [i] prerequisites
-        //     for (var j = 0; j < preReqs.length; j++) {
-        //         if (maxPrereq < preReqs[j].pos) {
-        //             maxPrereq = preReqs[j].pos;
-        //         }
-        //     }
-            
-        //     // Find any other technology that requires this technology [i] and set maxPrereq to be below it
-        //     for (var j = 0; j < data.displayed.length; j++) {
-        //         var otherPreReqs = getTechPrereqs(data.displayed[j]);
-                
-        //         for (var k = 0; k < otherPreReqs.length; k++) {
-        //             if (otherPreReqs[k].id === data.displayed[i].id && data.displayed[j].pos < maxPrereq) {
-        //                 maxPrereq = otherPreReqs[k].pos - 2; // -2 because it may be incremented later
-        //             }
-        //         }
-        //     }
-            
-        //     data.displayed[i].pos = -1; // make sure this technology doesn't get bumped
-        //     // bump all positions higher than the max prerequisites up to accomodate moving position
-        //     for (var j = 0; j < data.displayed.length; j++) {
-        //         if (data.displayed[j].pos > maxPrereq) {
-        //             data.displayed[j].pos++;
-        //         }
-        //     }
-        //     data.displayed[i].pos = maxPrereq + 1;
-        // }
-
         for (var i = 0; i < data.displayed.length; i++) {
             var maxCost = 0;
             if (data.displayed[i].cost) {
@@ -161,12 +127,6 @@ d3.json(path, function(data) {
                 if (leadsReq[j].pos < minPos) {
                     minPos = leadsReq[j].pos;
                 }
-                /*var reqDist = 0;
-                if (leadsReq[j].pos > data.displayed[i].pos) {
-                    reqDist = leadsReq[j].pos - data.displayed[i].pos;
-                } else if (leadsReq[j].pos < data.displayed[i].pos) {
-                    reqDist = data.displayed[i].pos - leadsReq[j].pos ;
-                }*/
                 var req = {"id": leadsReq[j].id, "dist": arcDist, "pos": data.displayed[i].pos};
                 rekked.push(req);
             }
