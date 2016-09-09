@@ -31,7 +31,9 @@ var arc = d3.svg.arc()
     .outerRadius(function(d) {
         return (arcBase + arcWidth) + (arcSpace * d.arcRank);
     })
-    .startAngle(0)
+    .startAngle(function(d) {
+        return -1 * d.arcBack;
+    })
     .endAngle(function(d) {
         return d.arcDist;   
     });
@@ -75,38 +77,54 @@ d3.json(path, function(data) {
             data.displayed[i].pos = i;
         }
 
-        // Generate an optimal position for list items
-        for (var i = 0; i < data.displayed.length; i++) {
-            var maxPrereq = 0;
+        // *** Generate an optimal position for list items ***
+        // for (var i = 0; i < data.displayed.length; i++) {
+        //     var maxPrereq = 0;
             
-            var preReqs = getTechPrereqs(data.displayed[i]);
+        //     var preReqs = getTechPrereqs(data.displayed[i]);
             
-            // Find the highest position of this technology's [i] prerequisites
-            for (var j = 0; j < preReqs.length; j++) {
-                if (maxPrereq < preReqs[j].pos) {
-                    maxPrereq = preReqs[j].pos;
-                }
-            }
+        //     // Find the highest position of this technology's [i] prerequisites
+        //     for (var j = 0; j < preReqs.length; j++) {
+        //         if (maxPrereq < preReqs[j].pos) {
+        //             maxPrereq = preReqs[j].pos;
+        //         }
+        //     }
             
-            // Find any other technology that requires this technology [i] and set maxPrereq to be below it
-            for (var j = 0; j < data.displayed.length; j++) {
-                var otherPreReqs = getTechPrereqs(data.displayed[j]);
+        //     // Find any other technology that requires this technology [i] and set maxPrereq to be below it
+        //     for (var j = 0; j < data.displayed.length; j++) {
+        //         var otherPreReqs = getTechPrereqs(data.displayed[j]);
                 
-                for (var k = 0; k < otherPreReqs.length; k++) {
-                    if (otherPreReqs[k].id === data.displayed[i].id && data.displayed[j].pos < maxPrereq) {
-                        maxPrereq = otherPreReqs[k].pos - 2; // -2 because it may be incremented later
-                    }
-                }
-            }
+        //         for (var k = 0; k < otherPreReqs.length; k++) {
+        //             if (otherPreReqs[k].id === data.displayed[i].id && data.displayed[j].pos < maxPrereq) {
+        //                 maxPrereq = otherPreReqs[k].pos - 2; // -2 because it may be incremented later
+        //             }
+        //         }
+        //     }
             
-            data.displayed[i].pos = -1; // make sure this technology doesn't get bumped
-            // bump all positions higher than the max prerequisites up to accomodate moving position
-            for (var j = 0; j < data.displayed.length; j++) {
-                if (data.displayed[j].pos > maxPrereq) {
-                    data.displayed[j].pos++;
+        //     data.displayed[i].pos = -1; // make sure this technology doesn't get bumped
+        //     // bump all positions higher than the max prerequisites up to accomodate moving position
+        //     for (var j = 0; j < data.displayed.length; j++) {
+        //         if (data.displayed[j].pos > maxPrereq) {
+        //             data.displayed[j].pos++;
+        //         }
+        //     }
+        //     data.displayed[i].pos = maxPrereq + 1;
+        // }
+
+        for (var i = 0; i < data.displayed.length; i++) {
+            var maxCost = 0;
+            if (data.displayed[i].cost) {
+                maxCost = data.displayed[i].cost;
+            }
+            var preReqs = getTechPrereqs(data.displayed[i]);
+
+            for (var j = 0; j < preReqs.length; j++) {
+                if (preReqs[j].cost > maxCost) {
+                    maxCost = preReqs[j].cost;
                 }
             }
-            data.displayed[i].pos = maxPrereq + 1;
+
+            data.displayed[i].pos = maxCost;
         }
         
         data.displayed.sort(function(a, b) {
@@ -124,9 +142,12 @@ d3.json(path, function(data) {
             var rekked = []; // copy leads to required displayed
             var opted = []; // copy leads to optional displayed
             var optedDist = [];
+            var minArcDist = 0;
             var maxArcDist = 0;
             var leadsReq = getLeadsToReq(data.displayed[i], data.displayed);
             var leadsOpt = getLeadsToOpt(data.displayed[i], data.displayed);
+            var minPos = data.displayed[i].pos;
+            var maxPos = data.displayed[i].pos;
             
             // Determine how long arc should be and what it leads to
             for (var j = 0; j < leadsReq.length; j++) {
@@ -134,6 +155,18 @@ d3.json(path, function(data) {
                 if (arcDist > maxArcDist) {
                     maxArcDist = arcDist;
                 }
+                if (leadsReq[j].pos > maxPos) {
+                    maxPos = leadsReq[j].pos;
+                }
+                if (leadsReq[j].pos < minPos) {
+                    minPos = leadsReq[j].pos;
+                }
+                /*var reqDist = 0;
+                if (leadsReq[j].pos > data.displayed[i].pos) {
+                    reqDist = leadsReq[j].pos - data.displayed[i].pos;
+                } else if (leadsReq[j].pos < data.displayed[i].pos) {
+                    reqDist = data.displayed[i].pos - leadsReq[j].pos ;
+                }*/
                 var req = {"id": leadsReq[j].id, "dist": arcDist, "pos": data.displayed[i].pos};
                 rekked.push(req);
             }
@@ -144,18 +177,29 @@ d3.json(path, function(data) {
                 if (arcDist > maxArcDist) {
                     maxArcDist = arcDist;
                 }
+                if (leadsOpt[j].pos > maxPos) {
+                    maxPos = leadsOpt[j].pos;
+                }
+                if (leadsOpt[j].pos < minPos) {
+                    minPos = leadsOpt[j].pos;
+                }
                 var opt = {"id": leadsOpt[j].id, "dist": arcDist, "pos": data.displayed[i].pos};
                 opted.push(opt);
             }
             data.displayed[i].lopt = opted;
             
             data.displayed[i].arcDist = ((2 * Math.PI) / data.displayed.length) * maxArcDist;
+            var baseDist = 0;
+            if (minPos < data.displayed[i].pos) {
+                baseDist = data.displayed[i].pos - minPos;
+            }
+            data.displayed[i].arcBack = ((2 * Math.PI) / data.displayed.length) * baseDist;
             
             // Set arc rank - distance of arc from centre
             if (data.displayed[i].lreq.length > 0 || data.displayed[i].lopt.length > 0) {
                 var ranked = 0;
                 for (var j = 0; j < arcDists.length; j++) {
-                    if (arcDists[j] < i) {
+                    if (arcDists[j] < minPos) {
                         arcDists[j] = i + maxArcDist;
                         data.displayed[i].arcRank = j;
                         ranked = 1;
