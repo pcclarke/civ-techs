@@ -481,61 +481,8 @@ d3.json(path, function(data) {
                 }
             })
             .on("click", function(d) {
-                // Append units to displayed
-                // for (var i = 0; i < data.units.length; i++) {
-                //     data.units[i].cat = "unit";
-                //     data.displayed.push(data.units[i]);
-                // }
 
-                var nearby = findNearby(d);
-                d3.selectAll(".wheel")
-                    .remove();
-                zoomed = true;
-
-                data.displayed = [];
-                data.displayed = nearby;
-                orderDisplayed();
-                drawWheel(); 
             });
-
-    function findNearby(origin) {
-        // For a given technology, creates a list including:
-        // technologies that it requires (optional & mandatory)
-        // technologies it leads to
-        // anything else it leads to and the other technologies they require
-
-        var nearbyList = getTechPrereqs(origin);
-        nearbyList = nearbyList.concat(convertSpecial(origin));
-        nearbyList = nearbyList.concat(getLeadsTo(origin, data.technologies));
-        nearbyList = nearbyList.concat(getLeadsTo(origin, data.promotions));
-        nearbyList = nearbyList.concat(getLeadsTo(origin, data.projects));
-        nearbyList = nearbyList.concat(getLeadsTo(origin, data.build));
-        nearbyList = nearbyList.concat(getLeadsTo(origin, data.buildings));
-        nearbyList = nearbyList.concat(getLeadsTo(origin, data.civics));
-        nearbyList = nearbyList.concat(getLeadsTo(origin, data.religions));
-        nearbyList = nearbyList.concat(getLeadsTo(origin, data.resources));
-        nearbyList = nearbyList.concat(getLeadsTo(origin, data.units));
-
-        var fartherList = [];
-        for (var i = 0; i < nearbyList.length; i++) {
-            var otherReqs = getTechPrereqs(nearbyList[i]);
-
-            for (var j = 0; j < otherReqs.length; j++) {
-                if (otherReqs[j].id !== origin.id) {
-                    fartherList.push(otherReqs[j]);
-                }
-            }
-        }
-        nearbyList = nearbyList.concat(fartherList);
-        nearbyList.push(origin);
-
-        if (origin.obsolete) {
-            var obsoleteTech = getTechById(origin.obsolete);
-            nearbyList.push(obsoleteTech);
-        }
-
-        return nearbyList;
-    }
             
     spokes.append("line") // Spoke lines from center
         .attr("class", "spokeLine")
