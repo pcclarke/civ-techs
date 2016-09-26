@@ -524,15 +524,17 @@ d3.json(path, function(data) {
             return -(arcBase + (arcSpace * d.spokeRank));
         })
         .attr("x2", 0)
-        .attr("y2", -(width / 2) + 50);
+        .attr("y2", function(d) {
+            return -(width / 2) + 120 - (d.unlocks.length * 17);
+        });
         
     spokes.append("image") // Displayed item icons
         .attr("class", "techImg")
         .attr("transform", function(d) {
             if (d.pos > (data.displayed.length / 2)) {
-                return "translate(12, " + (-(width / 2) + 108) + ") rotate(90)";
+                return "translate(12, " + (-(width / 2) + 118) + ") rotate(90)";
             }
-            return "translate(-12, " + (-(width / 2) + 132) + ") rotate(270)";
+            return "translate(-12, " + (-(width / 2) + 142) + ") rotate(270)";
         })
         .attr("height", 24)
         .attr("width", 24)
@@ -554,12 +556,12 @@ d3.json(path, function(data) {
         .attr("class", "unlock")
         .attr("transform", function(d) {
             if (d.pos > (data.displayed.length / 2)) {
-                return "translate(9, " + (-(width / 2) + (80 - (28 * d.rank))) + ") rotate(90)";
+                return "translate(7.5, " + (-(width / 2) + (100 - (17 * d.rank))) + ") rotate(90)";
             }
-            return "translate(-9, " + (-(width / 2) + (98 - (28 * d.rank))) + ") rotate(270)";
+            return "translate(-7.5, " + (-(width / 2) + (115 - (17 * d.rank))) + ") rotate(270)";
         })
-        .attr("height", 18)
-        .attr("width", 18)
+        .attr("height", 15)
+        .attr("width", 15)
         .attr("xlink:href", function(d) {
             var link;
             if (d.ref.cat === "units" || d.ref.cat === "buildings") {
