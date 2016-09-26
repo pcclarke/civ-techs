@@ -55,10 +55,35 @@ d3.json(path, function(data) {
     
     data.displayed = [];
     
-    // Append technologies to displayed
+    // Append technologies to displayed & the things they unlock
     for (var i = 0; i < data.technologies.length; i++) {
         data.technologies[i].cat = "technologies";
         data.displayed.push(data.technologies[i]);
+
+        var unlocks = getLeadsTo(data.technologies[i], data.units);
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.buildings));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.projects));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.promotions));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.build));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.civics));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.religions));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.resources));
+
+        if (data.technologies[i].special) {
+            for (var j = 0; j < data.technologies[i].special.length; j++) {
+                data.technologies[i].special[j].cat = "specials";
+                unlocks.push(data.technologies[i].special[j]);
+            }
+        }
+
+        var unlocksHandler = [];
+        for (var j = 0; j < unlocks.length; j++) {
+            var unlocksItem = {};
+            unlocksItem.rank = j;
+            unlocksItem.ref = unlocks[j];
+            unlocksHandler.push(unlocksItem);
+        }
+        data.technologies[i].unlocks = unlocksHandler;
     }
     
     // Label data categories
@@ -70,6 +95,7 @@ d3.json(path, function(data) {
     }
     
     orderDisplayed();
+    setupArcs();
     
     function orderDisplayed() {
         // Give each technology an arbitrary position value
@@ -98,10 +124,14 @@ d3.json(path, function(data) {
         });
 
         for (var i = 0; i < data.displayed.length; i++) {
-            data.displayed[i].pos = i;;
+            data.displayed[i].pos = i;
+            for (var j = 0; j < data.displayed[i].unlocks.length; j++) {
+                data.displayed[i].unlocks[j].pos = i;
+            }            
         }
+    }
         
-        
+    function setupArcs() {   
         var arcDists = []; // list of recent arcRanks
         // Add in the displayed into their prerequisites so that the arcs can be set up
         for (var i = 0; i < data.displayed.length; i++) {
@@ -500,9 +530,9 @@ d3.json(path, function(data) {
         .attr("class", "techImg")
         .attr("transform", function(d) {
             if (d.pos > (data.displayed.length / 2)) {
-                return "translate(12, " + (-(width / 2) + 88) + ") rotate(90)";
+                return "translate(12, " + (-(width / 2) + 108) + ") rotate(90)";
             }
-            return "translate(-12, " + (-(width / 2) + 112) + ") rotate(270)";
+            return "translate(-12, " + (-(width / 2) + 132) + ") rotate(270)";
         })
         .attr("height", 24)
         .attr("width", 24)
@@ -516,51 +546,76 @@ d3.json(path, function(data) {
             return link;
         });
 
-        
-    spokes.append("text") // Technology text
-        .attr("class", "spokeText")
+    var unlockIcons = spokes.selectAll(".unlock")
+        .data(function(d) {
+            return d.unlocks;
+        })
+        .enter().append("image")
+        .attr("class", "unlock")
         .attr("transform", function(d) {
             if (d.pos > (data.displayed.length / 2)) {
-                return "translate(-6, " + (-(width / 2) + 80) + ") rotate(90)";
+                return "translate(9, " + (-(width / 2) + (80 - (28 * d.rank))) + ") rotate(90)";
             }
-            return "translate(3, " + (-(width / 2) + 80) + ") rotate(270)";
+            return "translate(-9, " + (-(width / 2) + (98 - (28 * d.rank))) + ") rotate(270)";
         })
-        .text(function(d) {
-            var name;
-            if (d.cat === "units" || d.cat === "buildings") {
-                name = d.CIVILIZATION_ALL.name;
+        .attr("height", 18)
+        .attr("width", 18)
+        .attr("xlink:href", function(d) {
+            var link;
+            if (d.ref.cat === "units" || d.ref.cat === "buildings") {
+                link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
             } else {
-                name = d.name;
+                link = game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png";
             }
+            return link;
+        })
 
-            if (name.length > 15) {
-                name = name.substring(0, 12) + "\u2026";
-            }
-            return name;
-        })
-        .attr("text-anchor", function(d) {
-            if (d.pos > (data.displayed.length / 2)) {
-                return "end";
-            }
-            return "start";
-        })
-        .each(function(d) {
-            d.bbox = this.getBBox();
-        });
+
         
-    spokes.insert("rect", "text") // Box behind technology text
-            .attr("class", "spokeTextBox")
-            .attr("transform", function(d) {
-                return "translate(-10, " + (-(width / 2) + 82) + ") rotate(270)";
-            })
-            .attr("rx", 3)
-            .attr("ry", 3)
-            .attr("width", function(d) {
-                return d.bbox.width + 5;
-            })
-            .attr("height", function(d) {
-                return d.bbox.height + 3;
-            });
+    // spokes.append("text") // Technology text
+    //     .attr("class", "spokeText")
+    //     .attr("transform", function(d) {
+    //         if (d.pos > (data.displayed.length / 2)) {
+    //             return "translate(-6, " + (-(width / 2) + 80) + ") rotate(90)";
+    //         }
+    //         return "translate(3, " + (-(width / 2) + 80) + ") rotate(270)";
+    //     })
+    //     .text(function(d) {
+    //         var name;
+    //         if (d.cat === "units" || d.cat === "buildings") {
+    //             name = d.CIVILIZATION_ALL.name;
+    //         } else {
+    //             name = d.name;
+    //         }
+
+    //         if (name.length > 15) {
+    //             name = name.substring(0, 12) + "\u2026";
+    //         }
+    //         return name;
+    //     })
+    //     .attr("text-anchor", function(d) {
+    //         if (d.pos > (data.displayed.length / 2)) {
+    //             return "end";
+    //         }
+    //         return "start";
+    //     })
+    //     .each(function(d) {
+    //         d.bbox = this.getBBox();
+    //     });
+        
+    // spokes.insert("rect", "text") // Box behind technology text
+    //         .attr("class", "spokeTextBox")
+    //         .attr("transform", function(d) {
+    //             return "translate(-10, " + (-(width / 2) + 82) + ") rotate(270)";
+    //         })
+    //         .attr("rx", 3)
+    //         .attr("ry", 3)
+    //         .attr("width", function(d) {
+    //             return d.bbox.width + 5;
+    //         })
+    //         .attr("height", function(d) {
+    //             return d.bbox.height + 3;
+    //         });
         
     var reqArc = spokes.append("path")
         .attr("class", "spokeArc")
@@ -624,28 +679,6 @@ d3.json(path, function(data) {
             return color(d.pos);
         })
         .attr("fill", "white");
-
-    var obsCrosses = spokes.selectAll(".obsCrosses")
-       .data(function(d) {
-           console.log(d.obs);
-           return d.obs;
-       })
-       .enter().append("g")
-       .attr("transform", function(d) {
-           var ang = d.dist * (360 / data.displayed.length);
-           return "rotate(" + ang + ") translate(0, " + (-arcBase - 2.5 - (arcSpace * d.arcRank)) + ")";
-       })
-       .attr("class", "optCircle");
-       
-     obsCrosses.append("circle")
-        .attr("cx", 0)
-        .attr("cy", 2)
-        .attr("r", 2.5)
-        .attr("stroke-width", 1)
-        .attr("stroke", function(d) {
-            return color(d.pos);
-        })
-        .attr("fill", "blue");
     }
 
     d3.select("#resetButton")
