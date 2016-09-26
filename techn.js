@@ -107,6 +107,7 @@ d3.json(path, function(data) {
         for (var i = 0; i < data.displayed.length; i++) {
             var rekked = []; // copy leads to required displayed
             var opted = []; // copy leads to optional displayed
+            var obsoleted = [];
             var optedDist = [];
             var minArcDist = 0;
             var maxArcDist = 0;
@@ -147,6 +148,27 @@ d3.json(path, function(data) {
                 opted.push(opt);
             }
             data.displayed[i].lopt = opted;
+
+            if (data.displayed[i].obsolete) {
+                
+                var obsTech;
+                for (var j = 0; j < data.technologies.length; j++) { // Find the obsolete tech from id
+                    if (data.displayed[i].obsolete === data.technologies[j].id) {
+                        obsTech = data.technologies[j];
+                    }
+                }
+                var arcDist = obsTech.pos - data.displayed[i].pos;
+                if (arcDist > maxArcDist) {
+                    maxArcDist = arcDist;
+                }
+                if (obsTech.pos < minPos) {
+                    minPos = obsTech.pos;
+                }
+                var obs = {"id": obsTech.id, "dist": arcDist, "pos": data.displayed[i].pos};
+                obsoleted.push(obs);
+                console.log(data.displayed[i]);
+            }
+            data.displayed[i].obs = obsoleted;
             
             data.displayed[i].arcDist = ((2 * Math.PI) / data.displayed.length) * maxArcDist;
             var baseDist = 0;
@@ -177,6 +199,9 @@ d3.json(path, function(data) {
                 }
                 for (var j = 0; j < data.displayed[i].lopt.length; j++) {
                     data.displayed[i].lopt[j].arcRank = data.displayed[i].arcRank;
+                }
+                for (var j = 0; j < data.displayed[i].obs.length; j++) {
+                    data.displayed[i].obs[j].arcRank = data.displayed[i].arcRank;
                 }
             } else {
                 data.displayed[i].arcRank = 500;
@@ -342,6 +367,18 @@ d3.json(path, function(data) {
 
         return specials;
     }
+
+    function getTechById(examineId) {
+        var tech = "BAD_ID";
+
+        for (var i = 0; i < data.technologies.length; i++) {
+            if (data.technologies[i].id === examineId) {
+                tech = data.technologies[i];
+            }
+        }
+
+        return tech;
+    }
     
      console.log(data.displayed);
     // console.log(data.units);
@@ -492,6 +529,11 @@ d3.json(path, function(data) {
         nearbyList = nearbyList.concat(fartherList);
         nearbyList.push(origin);
 
+        if (origin.obsolete) {
+            var obsoleteTech = getTechById(origin.obsolete);
+            nearbyList.push(obsoleteTech);
+        }
+
         return nearbyList;
     }
             
@@ -635,6 +677,28 @@ d3.json(path, function(data) {
             return color(d.pos);
         })
         .attr("fill", "white");
+
+    var obsCrosses = spokes.selectAll(".obsCrosses")
+       .data(function(d) {
+           console.log(d.obs);
+           return d.obs;
+       })
+       .enter().append("g")
+       .attr("transform", function(d) {
+           var ang = d.dist * (360 / data.displayed.length);
+           return "rotate(" + ang + ") translate(0, " + (-arcBase - 2.5 - (arcSpace * d.arcRank)) + ")";
+       })
+       .attr("class", "optCircle");
+       
+     obsCrosses.append("circle")
+        .attr("cx", 0)
+        .attr("cy", 2)
+        .attr("r", 2.5)
+        .attr("stroke-width", 1)
+        .attr("stroke", function(d) {
+            return color(d.pos);
+        })
+        .attr("fill", "blue");
     }
 
     d3.select("#resetButton")
