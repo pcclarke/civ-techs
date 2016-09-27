@@ -13,12 +13,22 @@ The distance between ranks is arbitrary, and is set by the variable arcSpace (or
 */
 
 // Global variables
-var game = "civ4";
+var game = "civ4bts";
 var path = game + "/civdata.json";
-var arcBase = 125;
+var arcBase = 100;
 var arcWidth = 1.5;
-var arcSpace = 13;
+var arcSpace = 14;
 var zoomed = false;
+
+var coordinates = [0, 0];
+
+var body = d3.select("body")
+	.on("mousemove", function() {
+		coordinates = d3.mouse(this);
+	})
+	.on("mousedown", function() {
+		coordinates = d3.mouse(this);
+	});
 
 var margin = {top: 10, right: 10, bottom: 10, left: 10},
     width = 1000 - margin.left - margin.right,
@@ -55,10 +65,35 @@ d3.json(path, function(data) {
     
     data.displayed = [];
     
-    // Append technologies to displayed
+    // Append technologies to displayed & the things they unlock
     for (var i = 0; i < data.technologies.length; i++) {
         data.technologies[i].cat = "technologies";
         data.displayed.push(data.technologies[i]);
+
+        var unlocks = getLeadsTo(data.technologies[i], data.units);
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.buildings));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.projects));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.promotions));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.build));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.civics));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.religions));
+        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.resources));
+
+        if (data.technologies[i].special) {
+            for (var j = 0; j < data.technologies[i].special.length; j++) {
+                data.technologies[i].special[j].cat = "specials";
+                unlocks.push(data.technologies[i].special[j]);
+            }
+        }
+
+        var unlocksHandler = [];
+        for (var j = 0; j < unlocks.length; j++) {
+            var unlocksItem = {};
+            unlocksItem.rank = j;
+            unlocksItem.ref = unlocks[j];
+            unlocksHandler.push(unlocksItem);
+        }
+        data.technologies[i].unlocks = unlocksHandler;
     }
     
     // Label data categories
@@ -70,6 +105,7 @@ d3.json(path, function(data) {
     }
     
     orderDisplayed();
+    setupArcs();
     
     function orderDisplayed() {
         // Give each technology an arbitrary position value
@@ -98,15 +134,20 @@ d3.json(path, function(data) {
         });
 
         for (var i = 0; i < data.displayed.length; i++) {
-            data.displayed[i].pos = i;;
+            data.displayed[i].pos = i;
+            for (var j = 0; j < data.displayed[i].unlocks.length; j++) {
+                data.displayed[i].unlocks[j].pos = i;
+            }            
         }
+    }
         
-        
+    function setupArcs() {   
         var arcDists = []; // list of recent arcRanks
         // Add in the displayed into their prerequisites so that the arcs can be set up
         for (var i = 0; i < data.displayed.length; i++) {
             var rekked = []; // copy leads to required displayed
             var opted = []; // copy leads to optional displayed
+            var obsoleted = [];
             var optedDist = [];
             var minArcDist = 0;
             var maxArcDist = 0;
@@ -147,6 +188,27 @@ d3.json(path, function(data) {
                 opted.push(opt);
             }
             data.displayed[i].lopt = opted;
+
+            if (data.displayed[i].obsolete) {
+                
+                var obsTech;
+                for (var j = 0; j < data.technologies.length; j++) { // Find the obsolete tech from id
+                    if (data.displayed[i].obsolete === data.technologies[j].id) {
+                        obsTech = data.technologies[j];
+                    }
+                }
+                var arcDist = obsTech.pos - data.displayed[i].pos;
+                if (arcDist > maxArcDist) {
+                    maxArcDist = arcDist;
+                }
+                if (obsTech.pos < minPos) {
+                    minPos = obsTech.pos;
+                }
+                var obs = {"id": obsTech.id, "dist": arcDist, "pos": data.displayed[i].pos};
+                obsoleted.push(obs);
+                console.log(data.displayed[i]);
+            }
+            data.displayed[i].obs = obsoleted;
             
             data.displayed[i].arcDist = ((2 * Math.PI) / data.displayed.length) * maxArcDist;
             var baseDist = 0;
@@ -177,6 +239,9 @@ d3.json(path, function(data) {
                 }
                 for (var j = 0; j < data.displayed[i].lopt.length; j++) {
                     data.displayed[i].lopt[j].arcRank = data.displayed[i].arcRank;
+                }
+                for (var j = 0; j < data.displayed[i].obs.length; j++) {
+                    data.displayed[i].obs[j].arcRank = data.displayed[i].arcRank;
                 }
             } else {
                 data.displayed[i].arcRank = 500;
@@ -342,6 +407,18 @@ d3.json(path, function(data) {
 
         return specials;
     }
+
+    function getTechById(examineId) {
+        var tech = "BAD_ID";
+
+        for (var i = 0; i < data.technologies.length; i++) {
+            if (data.technologies[i].id === examineId) {
+                tech = data.technologies[i];
+            }
+        }
+
+        return tech;
+    }
     
      console.log(data.displayed);
     // console.log(data.units);
@@ -444,22 +521,100 @@ d3.json(path, function(data) {
                 }
             })
             .on("click", function(d) {
-                // Append units to displayed
-                // for (var i = 0; i < data.units.length; i++) {
-                //     data.units[i].cat = "unit";
-                //     data.displayed.push(data.units[i]);
-                // }
 
-                var nearby = findNearby(d);
-                d3.selectAll(".wheel")
-                    .remove();
-                zoomed = true;
-
-                data.displayed = [];
-                data.displayed = nearby;
-                orderDisplayed();
-                drawWheel(); 
             });
+            
+    spokes.append("line") // Spoke lines from center
+        .attr("class", "spokeLine")
+        .attr("x1", 0)
+        .attr("y1", function(d) {
+            if (!d.requires && !d.optional) {
+                return 0;
+            } 
+            return -(arcBase + (arcSpace * d.spokeRank));
+        })
+        .attr("x2", 0)
+        .attr("y2", function(d) {
+            return -(width / 2) + 120 - (d.unlocks.length * 17);
+        });
+        
+    spokes.append("image") // Displayed item icons
+        .attr("class", "techImg")
+        .attr("transform", function(d) {
+            if (d.pos > (data.displayed.length / 2)) {
+                return "translate(10, " + (-(width / 2) + 122) + ") rotate(90)";
+            }
+            return "translate(-10, " + (-(width / 2) + 142) + ") rotate(270)";
+        })
+        .attr("height", 20)
+        .attr("width", 20)
+        .attr("xlink:href", function(d) {
+            var link;
+            if (d.cat === "units" || d.cat === "buildings") {
+                link = game + "/img/" + d.cat + "/" + d.CIVILIZATION_ALL.id + ".png";
+            } else {
+                link = game + "/img/" + d.cat + "/" + d.id + ".png";
+            }
+            return link;
+        })
+        .on("mouseover", function(d) {
+            var tipName = "";
+            if (d.cat === "units" || d.cat === "buildings") {
+                tipName = d.CIVILIZATION_ALL.name;
+            } else {
+                tipName = d.name;
+            }
+            displayTooltip(tipName);
+        })
+        .on("mouseout", function(d) {
+            d3.select("#tooltip").classed("hidden", true);
+        });
+
+    var unlockIcons = spokes.selectAll(".unlock")
+        .data(function(d) {
+            return d.unlocks;
+        })
+        .enter().append("image")
+        .attr("class", "unlock")
+        .attr("transform", function(d) {
+            if (d.pos > (data.displayed.length / 2)) {
+                return "translate(7.5, " + (-(width / 2) + (100 - (17 * d.rank))) + ") rotate(90)";
+            }
+            return "translate(-7.5, " + (-(width / 2) + (115 - (17 * d.rank))) + ") rotate(270)";
+        })
+        .attr("height", 15)
+        .attr("width", 15)
+        .attr("xlink:href", function(d) {
+            var link;
+            if (d.ref.cat === "units" || d.ref.cat === "buildings") {
+                link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
+            } else {
+                link = game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png";
+            }
+            return link;
+        })
+        .on("mouseover", function(d) {
+            var tipName = "";
+            if (d.ref.cat === "units" || d.ref.cat === "buildings") {
+                tipName = d.ref.CIVILIZATION_ALL.name;
+            } else {
+                tipName = d.ref.name;
+            }
+            displayTooltip(tipName);
+        })
+        .on("mouseout", function(d) {
+            d3.select("#tooltip").classed("hidden", true);
+        });
+
+    function displayTooltip(name) {
+        d3.select("#tooltip")
+            .style("left", coordinates[0] + "px")
+            .style("top", coordinates[1] + "px");
+
+        d3.select("#tipName").text(name);
+
+        d3.select("#tooltip").classed("hidden", false);
+    }
 
     function findNearby(origin) {
         // For a given technology, creates a list including:
@@ -492,87 +647,14 @@ d3.json(path, function(data) {
         nearbyList = nearbyList.concat(fartherList);
         nearbyList.push(origin);
 
+        if (origin.obsolete) {
+            var obsoleteTech = getTechById(origin.obsolete);
+            nearbyList.push(obsoleteTech);
+        }
+
         return nearbyList;
     }
-            
-    spokes.append("line") // Spoke lines from center
-        .attr("class", "spokeLine")
-        .attr("x1", 0)
-        .attr("y1", function(d) {
-            if (!d.requires && !d.optional) {
-                return 0;
-            } 
-            return -(arcBase + (arcSpace * d.spokeRank));
-        })
-        .attr("x2", 0)
-        .attr("y2", -(width / 2) + 50);
-        
-    spokes.append("image") // Displayed item icons
-        .attr("class", "techImg")
-        .attr("transform", function(d) {
-            if (d.pos > (data.displayed.length / 2)) {
-                return "translate(12, " + (-(width / 2) + 88) + ") rotate(90)";
-            }
-            return "translate(-12, " + (-(width / 2) + 112) + ") rotate(270)";
-        })
-        .attr("height", 24)
-        .attr("width", 24)
-        .attr("xlink:href", function(d) {
-            var link;
-            if (d.cat === "units" || d.cat === "buildings") {
-                link = game + "/img/" + d.cat + "/" + d.CIVILIZATION_ALL.id + ".png";
-            } else {
-                link = game + "/img/" + d.cat + "/" + d.id + ".png";
-            }
-            return link;
-        });
 
-        
-    spokes.append("text") // Technology text
-        .attr("class", "spokeText")
-        .attr("transform", function(d) {
-            if (d.pos > (data.displayed.length / 2)) {
-                return "translate(-6, " + (-(width / 2) + 80) + ") rotate(90)";
-            }
-            return "translate(3, " + (-(width / 2) + 80) + ") rotate(270)";
-        })
-        .text(function(d) {
-            var name;
-            if (d.cat === "units" || d.cat === "buildings") {
-                name = d.CIVILIZATION_ALL.name;
-            } else {
-                name = d.name;
-            }
-
-            if (name.length > 15) {
-                name = name.substring(0, 12) + "\u2026";
-            }
-            return name;
-        })
-        .attr("text-anchor", function(d) {
-            if (d.pos > (data.displayed.length / 2)) {
-                return "end";
-            }
-            return "start";
-        })
-        .each(function(d) {
-            d.bbox = this.getBBox();
-        });
-        
-    spokes.insert("rect", "text") // Box behind technology text
-            .attr("class", "spokeTextBox")
-            .attr("transform", function(d) {
-                return "translate(-10, " + (-(width / 2) + 82) + ") rotate(270)";
-            })
-            .attr("rx", 3)
-            .attr("ry", 3)
-            .attr("width", function(d) {
-                return d.bbox.width + 5;
-            })
-            .attr("height", function(d) {
-                return d.bbox.height + 3;
-            });
-        
     var reqArc = spokes.append("path")
         .attr("class", "spokeArc")
         .style("fill", function(d) {
