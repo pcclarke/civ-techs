@@ -568,6 +568,56 @@ d3.json(path, function(data) {
         })
         .on("mouseout", function(d) {
             d3.select("#tooltip").classed("hidden", true);
+        })
+        .on("click", function(d) {
+            if (d.cat === "units" || d.cat === "buildings") {
+                d3.select("#descTitle").text(d.CIVILIZATION_ALL.name);
+                d3.select("#descImg").attr("src", game + "/img/" + d.cat + "/" + d.CIVILIZATION_ALL.id + ".png");
+                var reqText = "bloop";
+                for (var i = 0; i < d.CIVILIZATION_ALL.requires.length; i++) {
+                    if (i == d.CIVILIZATION_ALL.requires.length - 1) {
+                        reqText = reqText + ", and " + d.CIVILIZATION_ALL.requires[i];    
+                    } else {
+                        reqText = reqText + ", " + d.CIVILIZATION_ALL.requires[i];
+                    }
+                }
+                d3.select("#descReqs").text(reqText);
+            } else {
+                d3.select("#descTitle").text(d.name);
+                d3.select("#descImg").attr("src", game + "/img/" + d.cat + "/" + d.id + ".png");
+                if (d.requires) {
+                    var reqText = "None";
+                    var reqs = getReqTechPreReqs(d);
+                    console.log(reqs);
+                    for (var i = 0; i < reqs.length; i++) {
+                        if (i == 0) {
+                            reqText = reqs[i].name;
+                        } else if (i == reqs.length - 1) {
+                            reqText = reqText + ", and " + reqs[i].name;    
+                        } else {
+                            reqText = reqText + ", " + reqs[i].name;
+                        }
+                    }
+                    d3.select("#descReqs").text(reqText);
+                } else {
+                    d3.select("#descReqs").text("None");
+                }
+                if (d.optional) {
+                    var optText = "None";
+                    for (var i = 0; i < d.optional.length; i++) {
+                        if (i == 0) {
+                            optText = d.optional[i];
+                        } else if (i == d.optional.length - 1) {
+                            optText = optText + ", or " + d.optional[i];    
+                        } else {
+                            optText = optText + ", " + d.optional[i];
+                        }
+                    }
+                    d3.select("#descOpt").text(optText);
+                } else {
+                    d3.select("#descOpt").text("None");
+                }
+            }
         });
 
     var unlockIcons = spokes.selectAll(".unlock")
@@ -604,6 +654,15 @@ d3.json(path, function(data) {
         })
         .on("mouseout", function(d) {
             d3.select("#tooltip").classed("hidden", true);
+        })
+        .on("click", function(d) {
+            if (d.ref.cat === "units" || d.ref.cat === "buildings") {
+                d3.select("#descTitle").text(d.ref.CIVILIZATION_ALL.name);
+                d3.select("#descImg").attr("src", game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png");
+            } else {
+                d3.select("#descTitle").text(d.ref.name);
+                d3.select("#descImg").attr("src", game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png")
+            }
         });
 
     function displayTooltip(name) {
