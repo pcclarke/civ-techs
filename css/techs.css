@@ -102,3 +102,23 @@ h1 {
 .hidden {
     display: none;
 }
+
+#description {
+    border: 1px solid rosybrown;
+}
+
+#descHead {
+
+}
+
+#descTitle {
+ 
+    font-family: "Goudy Trajan Regular";
+    font-size: 30px;
+    vertical-align: bottom;
+}
+
+#descImg {
+    float: left;
+    width: 45px;
+}
