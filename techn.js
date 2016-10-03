@@ -13,7 +13,7 @@ The distance between ranks is arbitrary, and is set by the variable arcSpace (or
 */
 
 // Global variables
-var game = "civ4bts";
+var game = "civ4";
 var path = game + "/civdata.json";
 var arcBase = 100;
 var arcWidth = 1.5;
