@@ -82,6 +82,8 @@ d3.json(path, function(data) {
         if (data.technologies[i].special) {
             for (var j = 0; j < data.technologies[i].special.length; j++) {
                 data.technologies[i].special[j].cat = "specials";
+                data.technologies[i].special[j].requires = [];
+                data.technologies[i].special[j].requires.push(data.technologies[i].id);
                 unlocks.push(data.technologies[i].special[j]);
             }
         }
@@ -588,10 +590,11 @@ d3.json(path, function(data) {
                 if (d.requires) {
                     var reqText = "None";
                     var reqs = getReqTechPreReqs(d);
-                    console.log(reqs);
                     for (var i = 0; i < reqs.length; i++) {
                         if (i == 0) {
                             reqText = reqs[i].name;
+                        } else if (i == reqs.length - 1 && reqs.length == 2) {
+                            reqText = reqText + " and " + reqs[i].name;
                         } else if (i == reqs.length - 1) {
                             reqText = reqText + ", and " + reqs[i].name;    
                         } else {
@@ -604,13 +607,16 @@ d3.json(path, function(data) {
                 }
                 if (d.optional) {
                     var optText = "None";
-                    for (var i = 0; i < d.optional.length; i++) {
+                    var opts = getOptTechPreReqs(d);
+                    for (var i = 0; i < opts.length; i++) {
                         if (i == 0) {
-                            optText = d.optional[i];
-                        } else if (i == d.optional.length - 1) {
-                            optText = optText + ", or " + d.optional[i];    
+                            optText = opts[i].name;
+                        } else if (i == opts.length - 1 && opts.length == 2) {
+                            optText = optText + " or " + opts[i].name;
+                        } else if (i == opts.length - 1) {
+                            optText = optText + ", or " + opts[i].name;    
                         } else {
-                            optText = optText + ", " + d.optional[i];
+                            optText = optText + ", " + opts[i].name;
                         }
                     }
                     d3.select("#descOpt").text(optText);
@@ -659,9 +665,82 @@ d3.json(path, function(data) {
             if (d.ref.cat === "units" || d.ref.cat === "buildings") {
                 d3.select("#descTitle").text(d.ref.CIVILIZATION_ALL.name);
                 d3.select("#descImg").attr("src", game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png");
+                if (d.ref.requires) {
+                    var reqText = "None";
+                    var reqs = getReqTechPreReqs(d.ref);
+                    for (var i = 0; i < reqs.length; i++) {
+                        if (i == 0) {
+                            reqText = reqs[i].name;
+                        } else if (i == reqs.length - 1 && reqs.length == 2) {
+                            reqText = reqText + " and " + reqs[i].name;
+                        } else if (i == reqs.length - 1) {
+                            reqText = reqText + ", and " + reqs[i].name;    
+                        } else {
+                            reqText = reqText + ", " + reqs[i].name;
+                        }
+                    }
+                    d3.select("#descReqs").text(reqText);
+                } else {
+                    d3.select("#descReqs").text("None");
+                }
+                if (d.ref.optional) {
+                    var optText = "None";
+                    var opts = getOptTechPreReqs(d.ref);
+                    for (var i = 0; i < opts.length; i++) {
+                        if (i == 0) {
+                            optText = opts[i].name;
+                        } else if (i == opts.length - 1 && opts.length == 2) {
+                            optText = optText + " or " + opts[i].name;
+                        } else if (i == opts.length - 1) {
+                            optText = optText + ", or " + opts[i].name;    
+                        } else {
+                            optText = optText + ", " + opts[i].name;
+                        }
+                    }
+                    d3.select("#descOpt").text(optText);
+                } else {
+                    d3.select("#descOpt").text("None");
+                }
             } else {
                 d3.select("#descTitle").text(d.ref.name);
                 d3.select("#descImg").attr("src", game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png")
+                console.log(d);
+                if (d.ref.requires) {
+                    var reqText = "None";
+                    var reqs = getReqTechPreReqs(d.ref);
+                    for (var i = 0; i < reqs.length; i++) {
+                        if (i == 0) {
+                            reqText = reqs[i].name;
+                        } else if (i == reqs.length - 1 && reqs.length == 2) {
+                            reqText = reqText + " and " + reqs[i].name;
+                        } else if (i == reqs.length - 1) {
+                            reqText = reqText + ", and " + reqs[i].name;    
+                        } else {
+                            reqText = reqText + ", " + reqs[i].name;
+                        }
+                    }
+                    d3.select("#descReqs").text(reqText);
+                } else {
+                    d3.select("#descReqs").text("None");
+                }
+                if (d.ref.optional) {
+                    var optText = "None";
+                    var opts = getOptTechPreReqs(d.ref);
+                    for (var i = 0; i < opts.length; i++) {
+                        if (i == 0) {
+                            optText = opts[i].name;
+                        } else if (i == opts.length - 1 && opts.length == 2) {
+                            optText = optText + " or " + opts[i].name;
+                        } else if (i == opts.length - 1) {
+                            optText = optText + ", or " + opts[i].name;    
+                        } else {
+                            optText = optText + ", " + opts[i].name;
+                        }
+                    }
+                    d3.select("#descOpt").text(optText);
+                } else {
+                    d3.select("#descOpt").text("None");
+                }
             }
         });
 
