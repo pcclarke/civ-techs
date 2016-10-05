@@ -15,14 +15,18 @@
             <button id="resetButton" name="reset">Reset</button>
             <div id="chart"></div>
 
-            <div id="description">
+            <div id="description" class="hidden">
                 <div id="descHead">
                     <img id="descImg"></img>
                     <p id="descTitle"></p>
+                    <div class="clear"></div>
                 </div>
-                <p>Requires</p>
-                <p>Mandatory: <span id="descReqs"></span></p>
-                <p>Optional: <span id="descOpt"></span></p>
+                <p class="descSubTitle">Requirements</p>
+                <div id="descReqs">
+                    <p id="descMandLine" class="hidden">You must have: <span id="descMand"></span></p>
+                    <p id="descPlusLine" class="hidden">plus</p>
+                    <p id="descOptLine" class="hidden">You need one of: <span id="descOpt"></span></p>
+                </div>
             </div>
         </div>
 
