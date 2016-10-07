@@ -12,7 +12,13 @@
 
         <div id="container">
             <h1 class="title">Civilization 4 Technologies</h1>
-            <button id="resetButton" name="reset">Reset</button>
+
+            <select id="selectGame">
+                <option value="civ4">Civilization 4</option>
+                <option value="civ4war">Civilization 4: Warlords</option>
+                <option value="civ4bts" selected="selected">Civilization 4: Beyond the Sword</option>
+            </select>
+
             <div id="chart"></div>
 
             <div id="description" class="hidden">
@@ -21,8 +27,10 @@
                     <p id="descTitle"></p>
                     <div class="clear"></div>
                 </div>
+                <button id="descCloseButton" name="reset">Close</button>
                 <p class="descSubTitle">Requirements</p>
                 <div id="descReqs">
+                    <p id="descNoLine" class="hidden">Available at game start</p>
                     <p id="descMandLine" class="hidden">You must have: <span id="descMand"></span></p>
                     <p id="descPlusLine" class="hidden">plus</p>
                     <p id="descOptLine" class="hidden">You need one of: <span id="descOpt"></span></p>

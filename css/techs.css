@@ -15,6 +15,10 @@ html {
     height: 1500px;
 }
 
+body {
+    font-family: "helvetica neue", Helvetica, Geneva, Tahoma, Arial, "sans-serif";
+}
+
 h1 {
     font-size: 3em;
     text-align: center;
@@ -60,7 +64,7 @@ h1 {
 
 .spokeText {
     cursor: pointer;
-    font-family: "helvetica neue", Helvetica, Geneva, Tahoma, Arial, "sans-serif";
+    
     font-size: 12px;
     font-weight: normal;
     text-transform: capitalize;

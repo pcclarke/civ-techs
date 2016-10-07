@@ -13,8 +13,6 @@ The distance between ranks is arbitrary, and is set by the variable arcSpace (or
 */
 
 // Global variables
-var game = "civ4";
-var path = game + "/civdata.json";
 var arcBase = 100;
 var arcWidth = 1.5;
 var arcSpace = 14;
@@ -50,11 +48,23 @@ var arc = d3.svg.arc()
     
 var color = d3.scale.category10();
 
-var svg = d3.select("#chart").append("svg")
+var svg;
+
+var sel = document.getElementById('selectGame');
+makeWheel(sel.options[sel.selectedIndex].value);
+
+
+function makeWheel(game) {
+
+var path = game + "/civdata.json";
+
+svg = d3.select("#chart").append("svg")
+    .attr("class", "civWheel")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 
 d3.json(path, function(data) {
     
@@ -654,9 +664,12 @@ d3.json(path, function(data) {
             }
             d3.select("#descMand").text(reqText);
             d3.select("#descMandLine").classed("hidden", false);
+            d3.select("#descNoLine").classed("hidden", true);
         } else {
             d3.select("#descMandLine").classed("hidden", true);
-            d3.select("#descMand").text("None");
+            if (!item.optional) {
+                d3.select("#descNoLine").classed("hidden", false);
+            }
         }
         if (item.optional) {
             var optText = "None";
@@ -679,6 +692,7 @@ d3.json(path, function(data) {
             }
             d3.select("#descOpt").text(optText);
             d3.select("#descOptLine").classed("hidden", false);
+            d3.select("#descNoLine").classed("hidden", true);
         } else {
             d3.select("#descPlusLine").classed("hidden", true);
             d3.select("#descOptLine").classed("hidden", true);
@@ -805,4 +819,15 @@ d3.json(path, function(data) {
             orderDisplayed();
             drawWheel();
         });
+
+    d3.select("#selectGame")
+        .on("change", selected);
+
+    function selected() {
+        d3.selectAll(".civWheel")
+            .remove();
+        makeWheel(this.options[this.selectedIndex].value);
+    }
 });
+
+}
