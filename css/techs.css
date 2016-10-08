@@ -12,6 +12,11 @@
 
 html {
     background: #fff9e7;
+    height: 1500px;
+}
+
+body {
+    font-family: "helvetica neue", Helvetica, Geneva, Tahoma, Arial, "sans-serif";
 }
 
 h1 {
@@ -59,7 +64,7 @@ h1 {
 
 .spokeText {
     cursor: pointer;
-    font-family: "helvetica neue", Helvetica, Geneva, Tahoma, Arial, "sans-serif";
+    
     font-size: 12px;
     font-weight: normal;
     text-transform: capitalize;
@@ -105,6 +110,9 @@ h1 {
 
 #description {
     border: 1px solid rosybrown;
+    margin: 0 auto;
+    padding: 15px;
+    width: 500px;
 }
 
 #descHead {
@@ -115,10 +123,26 @@ h1 {
  
     font-family: "Goudy Trajan Regular";
     font-size: 30px;
+    margin: 0;
+    padding-top: 15px;
     vertical-align: bottom;
 }
 
 #descImg {
     float: left;
+    padding-right: 10px;
     width: 45px;
+}
+
+#descPlusLine {
+    font-style: italic;
+    margin: 0;
+}
+
+.descSubTitle {
+    font-weight: bold;
+}
+
+.clear {
+    clear: both;
 }
