@@ -67,6 +67,7 @@ function selected() {
     makeWheel(this.options[this.selectedIndex].value);
 }
 
+// Close the details box
 d3.select("#descCloseButton")
     .on("click", function(d) {
         d3.select("#description").classed("hidden", true);

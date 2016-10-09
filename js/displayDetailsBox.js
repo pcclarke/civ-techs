@@ -62,5 +62,46 @@ function displayDetailsBox(item, game, data) {
         d3.select("#descOptLine").classed("hidden", true);
         d3.select("#descOpt").text("None");
     }
+
+    if (itemCat === "technologies") {
+        if (item.lopt.length > 0 || item.lreq.length > 0) {
+            d3.select("#descLeads").classed("hidden", false);
+            if (item.lreq.length > 0) {
+                var descMandatoryLeads = "";
+                for (var i = 0; i < item.lreq.length; i++) {
+                    var leadTech = getTechById(item.lreq[i].id, data);
+                    if (i == 0) {
+                        descMandatoryLeads = leadTech.name;
+                    } else {
+                        descMandatoryLeads = descMandatoryLeads + ", " + leadTech.name;
+                    }
+                }
+                d3.select("#descMld").text(descMandatoryLeads);
+                d3.select("#descMldLine").classed("hidden", false);
+            } else {
+                d3.select("#descMldLine").classed("hidden", true);
+            }
+            if (item.lopt.length > 0) {
+                var descOptionalLeads = "";
+                for (var i = 0; i < item.lopt.length; i++) {
+                    var leadTech = getTechById(item.lopt[i].id, data);
+                    if (i == 0) {
+                        descOptionalLeads = leadTech.name;
+                    } else {
+                        descOptionalLeads = descOptionalLeads + ", " + leadTech.name;
+                    }
+                }
+                d3.select("#descOld").text(descOptionalLeads);
+                d3.select("#descOldLine").classed("hidden", false);
+            } else {
+                d3.select("#descOldLine").classed("hidden", true);
+            }
+        } else {
+            d3.select("#descLeads").classed("hidden", true);
+        }
+    } else {
+        d3.select("#descLeads").classed("hidden", true);
+    }
+
     d3.select("#description").classed("hidden", false);
 }
