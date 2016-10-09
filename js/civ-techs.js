@@ -35,7 +35,7 @@ var margin = {top: 10, right: 10, bottom: 10, left: 10},
     height = 1000 - margin.top - margin.bottom;
     
 // Draw leads to arcs
-var arc = d3.svg.arc()
+var arc = d3.arc()
     .innerRadius(function(d) {
         return arcBase + (arcSpace * d.arcRank);
     })
@@ -50,7 +50,7 @@ var arc = d3.svg.arc()
     });
     
 // Colour scale for arcs
-var color = d3.scale.category10();
+var color = d3.scaleOrdinal(d3.schemeCategory10);
 
 // Set game wheel to what's currently in selection box
 var sel = document.getElementById('selectGame');
