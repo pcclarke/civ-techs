@@ -52,7 +52,7 @@ var arc = d3.svg.arc()
 // Colour scale for arcs
 var color = d3.scale.category10();
 
-// Set game to what's currently in selection box
+// Set game wheel to what's currently in selection box
 var sel = document.getElementById('selectGame');
 makeWheel(sel.options[sel.selectedIndex].value);
 
@@ -63,5 +63,11 @@ d3.select("#selectGame")
 function selected() {
     d3.selectAll(".civWheel")
         .remove();
+    d3.select("#description").classed("hidden", true);
     makeWheel(this.options[this.selectedIndex].value);
 }
+
+d3.select("#descCloseButton")
+    .on("click", function(d) {
+        d3.select("#description").classed("hidden", true);
+    });
