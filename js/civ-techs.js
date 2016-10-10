@@ -17,7 +17,7 @@ var arcBase = 100;
 var arcWidth = 1.5;
 var arcSpace = 14;
 var zoomed = false;
-
+var civilization = "CIVILIZATION_ALL";
 var coordinates = [0, 0];
 
 // Update mouse coordinates variable
@@ -35,7 +35,7 @@ var margin = {top: 10, right: 10, bottom: 10, left: 10},
     height = 1000 - margin.top - margin.bottom;
     
 // Draw leads to arcs
-var arc = d3.svg.arc()
+var arc = d3.arc()
     .innerRadius(function(d) {
         return arcBase + (arcSpace * d.arcRank);
     })
@@ -50,11 +50,12 @@ var arc = d3.svg.arc()
     });
     
 // Colour scale for arcs
-var color = d3.scale.category10();
+var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-// Set game to what's currently in selection box
+// Set game wheel to what's currently in selection box
 var sel = document.getElementById('selectGame');
-makeWheel(sel.options[sel.selectedIndex].value);
+var selCiv = document.getElementById("selectCiv");
+makeWheel(sel.options[sel.selectedIndex].value, civilization);
 
 // Game selection drop-down
 d3.select("#selectGame")
@@ -63,5 +64,16 @@ d3.select("#selectGame")
 function selected() {
     d3.selectAll(".civWheel")
         .remove();
+    d3.select("#description").classed("hidden", true);
+
+    civilization = "CIVILIZATION_ALL";
+    document.getElementById("selectCiv").value = civilization;
+
     makeWheel(this.options[this.selectedIndex].value);
 }
+
+// Close the details box
+d3.select("#descCloseButton")
+    .on("click", function(d) {
+        d3.select("#description").classed("hidden", true);
+    });

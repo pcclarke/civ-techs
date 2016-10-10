@@ -115,17 +115,21 @@ h1 {
     width: 500px;
 }
 
+.desc {
+    padding-left: 10px;
+}
+
 #descHead {
 
 }
 
 #descTitle {
- 
+    float: left;
     font-family: "Goudy Trajan Regular";
-    font-size: 30px;
+    font-size: 24px;
     margin: 0;
-    padding-top: 15px;
-    vertical-align: bottom;
+    padding: 0;
+    width: 400px;
 }
 
 #descImg {
@@ -134,13 +138,19 @@ h1 {
     width: 45px;
 }
 
+#descCloseButton {
+    float: right;
+}
+
 #descPlusLine {
     font-style: italic;
     margin: 0;
+    padding: 0;
 }
 
 .descSubTitle {
     font-weight: bold;
+    padding-bottom: 0;
 }
 
 .clear {

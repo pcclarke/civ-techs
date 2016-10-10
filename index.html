@@ -19,31 +19,46 @@
                 <option value="civ4bts" selected="selected">Civilization 4: Beyond the Sword</option>
             </select>
 
+            <select id="selectCiv">
+                <option value="CIVILIZATION_ALL" selected="selected">Standard Units & Buildings</option>
+            </select>
+
             <div id="chart"></div>
 
             <div id="description" class="hidden">
                 <div id="descHead">
                     <img id="descImg"></img>
                     <p id="descTitle"></p>
+                    <button id="descCloseButton" name="reset">X</button>
                     <div class="clear"></div>
                 </div>
-                <button id="descCloseButton" name="reset">Close</button>
-                <p class="descSubTitle">Requirements</p>
                 <div id="descReqs">
-                    <p id="descNoLine" class="hidden">Available at game start</p>
-                    <p id="descMandLine" class="hidden">You must have: <span id="descMand"></span></p>
-                    <p id="descPlusLine" class="hidden">plus</p>
-                    <p id="descOptLine" class="hidden">You need one of: <span id="descOpt"></span></p>
+                    <p class="descSubTitle">Requirements</p>
+                    <div class="desc">
+                        <p id="descNoLine" class="hidden">Available at game start</p>
+                        <p id="descMandLine" class="hidden">You must have: <span id="descMand"></span></p>
+                        <p id="descPlusLine" class="hidden">plus</p>
+                        <p id="descOptLine" class="hidden">You need one of: <span id="descOpt"></span></p>
+                    </div>
+                </div>
+                <div id="descLeads" class="hidden">
+                    <p class="descSubTitle">Leads to</p>
+                    <div class="desc">
+                        <p id="descMldLine" class="hidden">Must have for: <span id="descMld"></span></p>
+                        <p id="descOldLine" class="hidden">Optional for: <span id="descOld"></span></p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <script language="javascript" type="text/javascript" src="js/d3.min.js"></script>
+        <script language="javascript" type="text/javascript" src="js/d3.v4.min.js"></script>
         <script language="javascript" type="text/javascript" src="js/dataTools.js"></script>
+        <script language="javascript" type="text/javascript" src="js/wheelInteraction.js"></script>
+        <script language="javascript" type="text/javascript" src="js/displayDetailsBox.js"></script>
         <script language="javascript" type="text/javascript" src="js/setupArcs.js"></script>
         <script language="javascript" type="text/javascript" src="js/orderDisplayed.js"></script>
         <script language="javascript" type="text/javascript" src="js/setupData.js"></script>
         <script language="javascript" type="text/javascript" src="js/makeWheel.js"></script>
-        <script language="javascript" type="text/javascript" src="js/techn.js"></script>
+        <script language="javascript" type="text/javascript" src="js/civ-techs.js"></script>
     </body>
 </html>

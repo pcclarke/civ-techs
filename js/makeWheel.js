@@ -1,4 +1,4 @@
-function makeWheel(game) {
+function makeWheel(game, civilization) {
 
     var path = game + "/civdata.json";
 
@@ -20,6 +20,13 @@ function makeWheel(game) {
         // Debug processed data
         console.log(data.displayed);
 
+        for (var i = 0; i < data.civilizations.length; i++) {
+            d3.select("#selectCiv")
+                .append("option")
+                .attr("value", data.civilizations[i].id)
+                .text(data.civilizations[i].name);
+        }
+
         drawWheel();
         
         // Draw portions of the wheel
@@ -39,86 +46,10 @@ function makeWheel(game) {
                         var ang = d.pos * (360 / data.displayed.length);
                         return "rotate(" + ang +")";
                     })
-                    .on("mouseover", function(d) {
-                        d3.select(this)
-                            .classed("textSelected", true)
-                        .selectAll(".spokeLine")
-                            .classed("lineSelected", true);
-                        d3.select(this)
-                        .selectAll(".spokeTextBox")
-                            .classed("spokeTextBoxSelected", true);
-                            
-                        if (d.requires) {
-                            for (var i = 0; i < d.requires.length; i++) {
-                                d3.selectAll("." + d.requires[i])
-                                .selectAll(".spokeLine")
-                                    .classed("lineRequired", true);
-                            }
-                        }
-                        if (d.optional) {
-                            for (var i = 0; i < d.optional.length; i++) {
-                                d3.selectAll("." + d.optional[i])
-                                .selectAll(".spokeLine")
-                                    .classed("lineOptional", true);
-                            }
-                        }
-                        if (d.lreq) {
-                            for (var i = 0; i < d.lreq.length; i++) {
-                                d3.selectAll("." + d.lreq[i].id)
-                                .selectAll(".spokeLine")
-                                    .classed("lineLeads", true);
-                            }
-                        }
-                        if (d.lopt) {
-                            for (var i = 0; i < d.lopt.length; i++) {
-                                d3.selectAll("." + d.lopt[i].id)
-                                .selectAll(".spokeLine")
-                                    .classed("lineLeads", true);
-                            }
-                        }
-                    })
-                    .on("mouseout", function(d) {
-                        d3.select(this)
-                            .classed("textSelected", false)
-                        .selectAll(".spokeLine")
-                            .classed("lineSelected", false);
-                        d3.select(this)
-                        .selectAll(".spokeTextBox")
-                            .classed("spokeTextBoxSelected", false);
+                    .on("mouseover", spokeMouseOver)
+                    .on("mouseout", spokeMouseOut)
+                    .on("click", function(d) { });
 
-                        if (d.requires) {
-                            for (var i = 0; i < d.requires.length; i++) {
-                                d3.selectAll("." + d.requires[i])
-                                .selectAll(".spokeLine")
-                                    .classed("lineRequired", false);
-                            }
-                        }
-                        if (d.optional) {
-                            for (var i = 0; i < d.optional.length; i++) {
-                                d3.selectAll("." + d.optional[i])
-                                .selectAll(".spokeLine")
-                                    .classed("lineOptional", false);
-                            }
-                        }
-                        if (d.lreq) {
-                            for (var i = 0; i < d.lreq.length; i++) {
-                                d3.selectAll("." + d.lreq[i].id)
-                                .selectAll(".spokeLine")
-                                    .classed("lineLeads", false);
-                            }
-                        }
-                        if (d.lopt) {
-                            for (var i = 0; i < d.lopt.length; i++) {
-                                d3.selectAll("." + d.lopt[i].id)
-                                .selectAll(".spokeLine")
-                                    .classed("lineLeads", false);
-                            }
-                        }
-                    })
-                    .on("click", function(d) {
-
-                    });
-                    
             spokes.append("line") // Spoke lines from center
                 .attr("class", "spokeLine")
                 .attr("x1", 0)
@@ -133,7 +64,7 @@ function makeWheel(game) {
                     return -(width / 2) + 120 - (d.unlocks.length * 17);
                 });
                 
-            spokes.append("image") // Displayed item icons
+            var techIcons = spokes.append("image") // Displayed item icons
                 .attr("class", "techImg")
                 .attr("transform", function(d) {
                     if (d.pos > (data.displayed.length / 2)) {
@@ -146,7 +77,11 @@ function makeWheel(game) {
                 .attr("xlink:href", function(d) {
                     var link;
                     if (d.cat === "units" || d.cat === "buildings") {
-                        link = game + "/img/" + d.cat + "/" + d.CIVILIZATION_ALL.id + ".png";
+                        if (d[civilization]) {
+                            link = game + "/img/" + d.cat + "/" + d[civilization].id + ".png";
+                        } else {
+                            link = game + "/img/" + d.cat + "/" + d.CIVILIZATION_ALL.id + ".png";    
+                        }
                     } else {
                         link = game + "/img/" + d.cat + "/" + d.id + ".png";
                     }
@@ -155,7 +90,12 @@ function makeWheel(game) {
                 .on("mouseover", function(d) {
                     var tipName = "";
                     if (d.cat === "units" || d.cat === "buildings") {
-                        tipName = d.CIVILIZATION_ALL.name;
+                        if (d[civilization]) {
+                            tipName = d[civilization].name;
+                        } else {
+                            tipName = d.CIVILIZATION_ALL.name;
+                        }
+                        
                     } else {
                         tipName = d.name;
                     }
@@ -165,7 +105,7 @@ function makeWheel(game) {
                     d3.select("#tooltip").classed("hidden", true);
                 })
                 .on("click", function(d) {
-                    displayDetailsBox(d);
+                    displayDetailsBox(d, game, civilization, data);
                 });
 
             var unlockIcons = spokes.selectAll(".unlock")
@@ -185,7 +125,11 @@ function makeWheel(game) {
                 .attr("xlink:href", function(d) {
                     var link;
                     if (d.ref.cat === "units" || d.ref.cat === "buildings") {
-                        link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
+                        if (d.ref[civilization]) {
+                            link = game + "/img/" + d.ref.cat + "/" + d.ref[civilization].id + ".png";
+                        } else {
+                            link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
+                        }
                     } else {
                         link = game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png";
                     }
@@ -194,7 +138,11 @@ function makeWheel(game) {
                 .on("mouseover", function(d) {
                     var tipName = "";
                     if (d.ref.cat === "units" || d.ref.cat === "buildings") {
-                        tipName = d.ref.CIVILIZATION_ALL.name;
+                        if (d.ref[civilization]) {
+                            tipName = d.ref[civilization].name;
+                        } else {
+                            tipName = d.ref.CIVILIZATION_ALL.name;
+                        }
                     } else {
                         tipName = d.ref.name;
                     }
@@ -204,85 +152,29 @@ function makeWheel(game) {
                     d3.select("#tooltip").classed("hidden", true);
                 })
                 .on("click", function(d) {
-                    displayDetailsBox(d.ref);
+                    displayDetailsBox(d.ref, game, civilization, data);
                 });
 
-            function displayTooltip(name) {
-                d3.select("#tooltip")
-                    .style("left", coordinates[0] + "px")
-                    .style("top", coordinates[1] + "px");
+            // Update icons with unique civilization units
+            d3.select("#selectCiv")
+                .on("change", function(d) {
+                    civilization = this.options[this.selectedIndex].value;
+                    d3.select("#description").classed("hidden", true);
 
-                d3.select("#tipName").text(name);
-
-                d3.select("#tooltip").classed("hidden", false);
-            }
-
-            function displayDetailsBox(item) {
-                var itemCat = item.cat;
-                var itemName = "";
-                var itemId = "";
-                if (itemCat === "units" || itemCat === "buildings") {
-                    itemName = item.CIVILIZATION_ALL.name;
-                    itemId = item.CIVILIZATION_ALL.id;
-                } else {
-                    itemName = item.name;
-                    itemId = item.id;
-                }
-
-                d3.select("#descTitle").text(itemName);
-                d3.select("#descImg").attr("src", game + "/img/" + itemCat + "/" + itemId + ".png");
-                if (item.requires) {
-                    var reqText = "None";
-                    var reqs = getReqTechPreReqs(item, data);
-                    for (var i = 0; i < reqs.length; i++) {
-                        if (i == 0) {
-                            reqText = reqs[i].name;
-                        } else if (i == reqs.length - 1 && reqs.length == 2) {
-                            reqText = reqText + " and " + reqs[i].name;
-                        } else if (i == reqs.length - 1) {
-                            reqText = reqText + ", and " + reqs[i].name;    
+                    unlockIcons.attr("xlink:href", function(d) {
+                        var link;
+                        if (d.ref.cat === "units" || d.ref.cat === "buildings") {
+                            if (d.ref[civilization]) {
+                                link = game + "/img/" + d.ref.cat + "/" + d.ref[civilization].id + ".png";
+                            } else {
+                                link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
+                            }
                         } else {
-                            reqText = reqText + ", " + reqs[i].name;
+                            link = game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png";
                         }
-                    }
-                    d3.select("#descMand").text(reqText);
-                    d3.select("#descMandLine").classed("hidden", false);
-                    d3.select("#descNoLine").classed("hidden", true);
-                } else {
-                    d3.select("#descMandLine").classed("hidden", true);
-                    if (!item.optional) {
-                        d3.select("#descNoLine").classed("hidden", false);
-                    }
-                }
-                if (item.optional) {
-                    var optText = "None";
-                    var opts = getOptTechPreReqs(item, data);
-                    for (var i = 0; i < opts.length; i++) {
-                        if (i == 0) {
-                            optText = opts[i].name;
-                        } else if (i == opts.length - 1 && opts.length == 2) {
-                            optText = optText + " or " + opts[i].name;
-                        } else if (i == opts.length - 1) {
-                            optText = optText + ", or " + opts[i].name;    
-                        } else {
-                            optText = optText + ", " + opts[i].name;
-                        }
-                    }
-                    if (item.requires) {
-                        d3.select("#descPlusLine").classed("hidden", false);    
-                    } else {
-                        d3.select("#descPlusLine").classed("hidden", true);
-                    }
-                    d3.select("#descOpt").text(optText);
-                    d3.select("#descOptLine").classed("hidden", false);
-                    d3.select("#descNoLine").classed("hidden", true);
-                } else {
-                    d3.select("#descPlusLine").classed("hidden", true);
-                    d3.select("#descOptLine").classed("hidden", true);
-                    d3.select("#descOpt").text("None");
-                }
-                d3.select("#description").classed("hidden", false);
-            }
+                        return link;
+                    });
+                });
 
             var reqArc = spokes.append("path")
                 .attr("class", "spokeArc")
