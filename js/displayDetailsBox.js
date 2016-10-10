@@ -105,7 +105,11 @@ function displayDetailsBox(item, game, civilization, data) {
         } else {
             d3.select("#descLeads").classed("hidden", true);
         }
+
+        d3.select("#descCost").text(item.cost);
+        d3.select("#descCostLine").classed("hidden", false);
     } else {
+        d3.select("#descCostLine").classed("hidden", true);
         d3.select("#descLeads").classed("hidden", true);
     }
 
