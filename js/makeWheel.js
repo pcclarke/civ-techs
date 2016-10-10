@@ -1,4 +1,4 @@
-function makeWheel(game) {
+function makeWheel(game, civilization) {
 
     var path = game + "/civdata.json";
 
@@ -19,6 +19,13 @@ function makeWheel(game) {
         
         // Debug processed data
         console.log(data.displayed);
+
+        for (var i = 0; i < data.civilizations.length; i++) {
+            d3.select("#selectCiv")
+                .append("option")
+                .attr("value", data.civilizations[i].id)
+                .text(data.civilizations[i].name);
+        }
 
         drawWheel();
         
@@ -57,7 +64,7 @@ function makeWheel(game) {
                     return -(width / 2) + 120 - (d.unlocks.length * 17);
                 });
                 
-            spokes.append("image") // Displayed item icons
+            var techIcons = spokes.append("image") // Displayed item icons
                 .attr("class", "techImg")
                 .attr("transform", function(d) {
                     if (d.pos > (data.displayed.length / 2)) {
@@ -70,7 +77,11 @@ function makeWheel(game) {
                 .attr("xlink:href", function(d) {
                     var link;
                     if (d.cat === "units" || d.cat === "buildings") {
-                        link = game + "/img/" + d.cat + "/" + d.CIVILIZATION_ALL.id + ".png";
+                        if (d[civilization]) {
+                            link = game + "/img/" + d.cat + "/" + d[civilization].id + ".png";
+                        } else {
+                            link = game + "/img/" + d.cat + "/" + d.CIVILIZATION_ALL.id + ".png";    
+                        }
                     } else {
                         link = game + "/img/" + d.cat + "/" + d.id + ".png";
                     }
@@ -79,7 +90,12 @@ function makeWheel(game) {
                 .on("mouseover", function(d) {
                     var tipName = "";
                     if (d.cat === "units" || d.cat === "buildings") {
-                        tipName = d.CIVILIZATION_ALL.name;
+                        if (d[civilization]) {
+                            tipName = d[civilization].name;
+                        } else {
+                            tipName = d.CIVILIZATION_ALL.name;
+                        }
+                        
                     } else {
                         tipName = d.name;
                     }
@@ -89,7 +105,7 @@ function makeWheel(game) {
                     d3.select("#tooltip").classed("hidden", true);
                 })
                 .on("click", function(d) {
-                    displayDetailsBox(d, game, data);
+                    displayDetailsBox(d, game, civilization, data);
                 });
 
             var unlockIcons = spokes.selectAll(".unlock")
@@ -109,7 +125,11 @@ function makeWheel(game) {
                 .attr("xlink:href", function(d) {
                     var link;
                     if (d.ref.cat === "units" || d.ref.cat === "buildings") {
-                        link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
+                        if (d.ref[civilization]) {
+                            link = game + "/img/" + d.ref.cat + "/" + d.ref[civilization].id + ".png";
+                        } else {
+                            link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
+                        }
                     } else {
                         link = game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png";
                     }
@@ -118,7 +138,11 @@ function makeWheel(game) {
                 .on("mouseover", function(d) {
                     var tipName = "";
                     if (d.ref.cat === "units" || d.ref.cat === "buildings") {
-                        tipName = d.ref.CIVILIZATION_ALL.name;
+                        if (d.ref[civilization]) {
+                            tipName = d.ref[civilization].name;
+                        } else {
+                            tipName = d.ref.CIVILIZATION_ALL.name;
+                        }
                     } else {
                         tipName = d.ref.name;
                     }
@@ -128,7 +152,28 @@ function makeWheel(game) {
                     d3.select("#tooltip").classed("hidden", true);
                 })
                 .on("click", function(d) {
-                    displayDetailsBox(d.ref, game, data);
+                    displayDetailsBox(d.ref, game, civilization, data);
+                });
+
+            // Update icons with unique civilization units
+            d3.select("#selectCiv")
+                .on("change", function(d) {
+                    civilization = this.options[this.selectedIndex].value;
+                    d3.select("#description").classed("hidden", true);
+
+                    unlockIcons.attr("xlink:href", function(d) {
+                        var link;
+                        if (d.ref.cat === "units" || d.ref.cat === "buildings") {
+                            if (d.ref[civilization]) {
+                                link = game + "/img/" + d.ref.cat + "/" + d.ref[civilization].id + ".png";
+                            } else {
+                                link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
+                            }
+                        } else {
+                            link = game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png";
+                        }
+                        return link;
+                    });
                 });
 
             var reqArc = spokes.append("path")

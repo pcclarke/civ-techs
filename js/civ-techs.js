@@ -17,7 +17,7 @@ var arcBase = 100;
 var arcWidth = 1.5;
 var arcSpace = 14;
 var zoomed = false;
-
+var civilization = "CIVILIZATION_ALL";
 var coordinates = [0, 0];
 
 // Update mouse coordinates variable
@@ -54,7 +54,8 @@ var color = d3.scaleOrdinal(d3.schemeCategory10);
 
 // Set game wheel to what's currently in selection box
 var sel = document.getElementById('selectGame');
-makeWheel(sel.options[sel.selectedIndex].value);
+var selCiv = document.getElementById("selectCiv");
+makeWheel(sel.options[sel.selectedIndex].value, civilization);
 
 // Game selection drop-down
 d3.select("#selectGame")
@@ -64,6 +65,10 @@ function selected() {
     d3.selectAll(".civWheel")
         .remove();
     d3.select("#description").classed("hidden", true);
+
+    civilization = "CIVILIZATION_ALL";
+    document.getElementById("selectCiv").value = civilization;
+
     makeWheel(this.options[this.selectedIndex].value);
 }
 
