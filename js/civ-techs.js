@@ -69,6 +69,13 @@ function selected() {
     civilization = "CIVILIZATION_ALL";
     document.getElementById("selectCiv").value = civilization;
 
+    var selectCiv = document.getElementById("selectCiv");
+    for (var i = 0; i < selectCiv.length; i++) {
+        if (selectCiv.options[i].value !== "CIVILIZATION_ALL") {
+            selectCiv.remove(i);
+        }
+    }
+
     makeWheel(this.options[this.selectedIndex].value);
 }
 
