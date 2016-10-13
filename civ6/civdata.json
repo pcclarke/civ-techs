@@ -1,0 +1,541 @@
+{
+    "technologies": [
+        {
+            "name": "Pottery",
+            "era": "Ancient",
+            "id": "TECH_POTTERY",
+            "cost": 25
+        },
+        {
+            "name": "Animal Husbandry",
+            "era": "Ancient",
+            "id": "TECH_ANIMAL_HUSBANDRY",
+            "cost": 25
+        },
+        {
+            "name": "Mining",
+            "era": "Ancient",
+            "id": "TECH_MINING",
+            "cost": 25
+        },
+        {
+            "name": "Sailing",
+            "era": "Ancient",
+            "id": "TECH_SAILING",
+            "cost": 50
+        },
+        {
+            "name": "Astrology",
+            "era": "Ancient",
+            "id": "TECH_ASTROLOGY",
+            "cost": 50
+        },
+        {
+            "name": "Irrigation",
+            "era": "Ancient",
+            "id": "TECH_IRRIGATION",
+            "cost": 50,
+            "requires": [ "TECH_POTTERY" ]
+        },
+        {
+            "name": "Writing",
+            "era": "Ancient",
+            "id": "TECH_WRITING",
+            "cost": 50,
+            "requires": [ "TECH_POTTERY" ]
+        },
+        {
+            "name": "Archery",
+            "era": "Ancient",
+            "id": "TECH_ARCHERY",
+            "cost": 50,
+            "requires": [ "TECH_ANIMAL_HUSBANDRY" ]
+        },
+        {
+            "name": "Masonry",
+            "era": "Ancient",
+            "id": "TECH_MASONRY",
+            "cost": 80,
+            "requires": [ "TECH_MINING" ]
+        },
+        {
+            "name": "Bronze Working",
+            "era": "Ancient",
+            "id": "TECH_BRONZE_WORKING",
+            "cost": 80,
+            "requires": [ "TECH_MINING" ]
+        },
+        {
+            "name": "Wheel",
+            "era": "Ancient",
+            "id": "TECH_WHEEL",
+            "cost": 80,
+            "requires": [ "TECH_MINING" ]
+        },
+        {
+            "name": "Celestial Navigation",
+            "era": "Classical",
+            "id": "TECH_CELESTIAL_NAVIGATION",
+            "cost": 120,
+            "requires": [
+                "TECH_SAILING",
+                "TECH_ASTROLOGY"
+            ]
+        },
+        {
+            "name": "Currency",
+            "era": "Classical",
+            "id": "TECH_CURRENCY",
+            "cost": 120,
+            "requires": [ "TECH_WRITING" ]
+        },
+        {
+            "name": "Horseback Riding",
+            "era": "Classical",
+            "id": "TECH_HORSEBACK_RIDING",
+            "cost": 120,
+            "requires": [ "TECH_ANIMAL_HUSBANDRY" ]
+        },
+        {
+            "name": "Iron Working",
+            "era": "Classical",
+            "id": "TECH_IRON_WORKING",
+            "cost": 120,
+            "requires": [ "TECH_BRONZE_WORKING" ]
+        },
+        {
+            "name": "Shipbuilding",
+            "era": "Classical",
+            "id": "TECH_SHIPBUILDING",
+            "cost": 200,
+            "requires": [ "TECH_SAILING" ]
+        },
+        {
+            "name": "Mathematics",
+            "era": "Classical",
+            "id": "TECH_MATHEMATICS",
+            "cost": 200,
+            "requires": [ "TECH_CURRENCY" ]
+        },
+        {
+            "name": "Construction",
+            "era": "Classical",
+            "id": "TECH_CONSTRUCTION",
+            "cost": 200,
+            "requires": [
+                "TECH_HORSEBACK_RIDING",
+                "TECH_MASONRY"
+            ]
+        },
+        {
+            "name": "Engineering",
+            "era": "Classical",
+            "id": "TECH_ENGINEERING",
+            "cost": 200,
+            "requires": [ "TECH_WHEEL" ]
+        },
+        {
+            "name": "Military Tactics",
+            "era": "Medieval",
+            "id": "TECH_MILITARY_TACTICS",
+            "cost": 275,
+            "requires": [ "TECH_MATHEMATICS" ]
+        },
+        {
+            "name": "Apprenticeship",
+            "era": "Medieval",
+            "id": "TECH_APPRENTICESHIP",
+            "cost": 275,
+            "requires": [
+                "TECH_CURRENCY",
+                "TECH_HORSEBACK_RIDING"
+            ]
+        },
+        {
+            "name": "Stirrups",
+            "era": "Medieval",
+            "id": "TECH_STIRRUPS",
+            "cost": 275,
+            "requires": [ "TECH_HORSEBACK_RIDING" ]
+        },
+        {
+            "name": "Machinery",
+            "era": "Medieval",
+            "id": "TECH_MACHINERY",
+            "cost": 275,
+            "requires": [
+                "TECH_IRON_WORKING",
+                "TECH_ENGINEERING"
+            ]
+        },
+        {
+            "name": "Education",
+            "era": "Medieval",
+            "id": "TECH_EDUCATION",
+            "cost": 355,
+            "requires": [
+                "TECH_APPRENTICESHIP",
+                "TECH_MATHEMATICS"
+            ]
+        },
+        {
+            "name": "Military Engineering",
+            "era": "Medieval",
+            "id": "TECH_MILITARY_ENGINEERING",
+            "cost": 355,
+            "requires": [ "TECH_CONSTRUCTION" ]
+        },
+        {
+            "name": "Castles",
+            "era": "Medieval",
+            "id": "TECH_CASTLES",
+            "cost": 355,
+            "requires": [ "TECH_IRON_WORKING" ]
+        },
+        {
+            "name": "Cartography",
+            "era": "Renaissance",
+            "id": "TECH_CARTOGRAPHY",
+            "cost": 490,
+            "requires": [ "TECH_SHIPBUILDING" ]
+        },
+        {
+            "name": "Mass Production",
+            "era": "Renaissance",
+            "id": "TECH_MASS_PRODUCTION",
+            "cost": 490,
+            "requires": [
+                "TECH_EDUCATION",
+                "TECH_SHIPBUILDING"
+            ]
+        },
+        {
+            "name": "Banking",
+            "era": "Renaissance",
+            "id": "TECH_BANKING",
+            "cost": 490,
+            "requires": [
+                "TECH_EDUCATION",
+                "TECH_APPRENTICESHIP",
+                "TECH_STIRRUPS"
+            ]
+        },
+        {
+            "name": "Gunpowder",
+            "era": "Renaissance",
+            "id": "TECH_GUNPOWDER",
+            "cost": 490,
+            "requires": [
+                "TECH_MILITARY_ENGINEERING",
+                "TECH_STIRRUPS",
+                "TECH_APPRENTICESHIP"
+            ]
+        },
+        {
+            "name": "Printing",
+            "era": "Renaissance",
+            "id": "TECH_PRINTING",
+            "cost": 490,
+            "requires": [ "TECH_MACHINERY" ]
+        },
+        {
+            "name": "Square Rigging",
+            "era": "Renaissance",
+            "id": "TECH_SQUARE_RIGGING",
+            "cost": 600,
+            "requires": [ "TECH_CARTOGRAPHY" ]
+        },
+        {
+            "name": "Astronomy",
+            "era": "Renaissance",
+            "id": "TECH_ASTRONOMY",
+            "cost": 600,
+            "requires": [ "TECH_EDUCATION" ]
+        },
+        {
+            "name": "Metal Casting",
+            "era": "Renaissance",
+            "id": "TECH_METAL_CASTING",
+            "cost": 600,
+            "requires": [ "TECH_GUNPOWDER" ]
+        },
+        {
+            "name": "Siege Tactics",
+            "era": "Renaissance",
+            "id": "TECH_SIEGE_TACTICS",
+            "cost": 600,
+            "requires": [ "TECH_CASTLES" ]
+        },
+        {
+            "name": "Industrialization",
+            "era": "Industrial",
+            "id": "TECH_INDUSTRIALIZATION",
+            "cost": 700,
+            "requires": [ "TECH_MASS_PRODUCTION" ]
+        },
+        {
+            "name": "Scientific Theory",
+            "era": "Industrial",
+            "id": "TECH_SCIENTIFIC_THEORY",
+            "cost": 700,
+            "requires": [ "TECH_ASTRONOMY" ]
+        },
+        {
+            "name": "Ballistics",
+            "era": "Industrial",
+            "id": "TECH_BALLISTICS",
+            "cost": 700,
+            "requires": [ "TECH_METAL_CASTING" ]
+        },
+        {
+            "name": "Military Science",
+            "era": "Industrial",
+            "id": "TECH_MILITARY_SCIENCE",
+            "cost": 700,
+            "requires": [
+                "TECH_PRINTING",
+                "TECH_SIEGE_TACTICS"
+            ]
+        },
+        {
+            "name": "Steam Power",
+            "era": "Industrial",
+            "id": "TECH_STEAM_POWER",
+            "cost": 805,
+            "requires": [
+                "TECH_INDUSTRIALIZATION",
+                "TECH_SQUARE_RIGGING"
+            ]
+        },
+        {
+            "name": "Sanitation",
+            "era": "Industrial",
+            "id": "TECH_SANITATION",
+            "cost": 805,
+            "requires": [ "TECH_SCIENTIFIC_THEORY" ]
+        },
+        {
+            "name": "Economics",
+            "era": "Industrial",
+            "id": "TECH_ECONOMICS",
+            "cost": 805,
+            "requires": [
+                "TECH_SCIENTIFIC_THEORY",
+                "TECH_BANKING"
+            ]
+        },
+        {
+            "name": "Rifling",
+            "era": "Industrial",
+            "id": "TECH_RIFLING",
+            "cost": 805,
+            "requires": [
+                "TECH_BALLISTICS",
+                "TECH_MILITARY_SCIENCE"
+            ]
+        },
+        {
+            "name": "Flight",
+            "era": "Modern",
+            "id": "TECH_FLIGHT",
+            "cost": 900,
+            "requires": [
+                "TECH_INDUSTRIALIZATION",
+                "TECH_SCIENTIFIC_THEORY"
+            ]
+        },
+        {
+            "name": "Replaceable Parts",
+            "era": "Modern",
+            "id": "TECH_REPLACEABLE_PARTS",
+            "cost": 900,
+            "requires": [ "TECH_ECONOMICS" ]
+        },
+        {
+            "name": "Steel",
+            "era": "Modern",
+            "id": "TECH_STEEL",
+            "cost": 900,
+            "requires": [ "TECH_BALLISTICS" ]
+        },
+        {
+            "name": "Electricity",
+            "era": "Modern",
+            "id": "TECH_ELECTRICITY",
+            "cost": 985,
+            "requires": [ "TECH_STEAM_POWER" ]
+        },
+        {
+            "name": "Radio",
+            "era": "Modern",
+            "id": "TECH_RADIO",
+            "cost": 985,
+            "requires": [
+                "TECH_FLIGHT",
+                "TECH_STEAM_POWER"
+            ]
+        },
+        {
+            "name": "Chemistry",
+            "era": "Modern",
+            "id": "TECH_CHEMISTRY",
+            "cost": 985,
+            "requires": [ "TECH_SANITATION" ]
+        },
+        {
+            "name": "Combustion",
+            "era": "Modern",
+            "id": "TECH_COMBUSTION",
+            "cost": 985,
+            "requires": [
+                "TECH_STEEL",
+                "TECH_RIFLING"
+            ]
+        },
+        {
+            "name": "Advanced Flight",
+            "era": "Atomic",
+            "id": "TECH_ADVANCED_FLIGHT",
+            "cost": 1065,
+            "requires": [ "TECH_RADIO" ]
+        },
+        {
+            "name": "Rocketry",
+            "era": "Atomic",
+            "id": "TECH_ROCKETRY",
+            "cost": 1065,
+            "requires": [
+                "TECH_CHEMISTRY",
+                "TECH_RADIO"
+            ]
+        },
+        {
+            "name": "Advanced Ballistics",
+            "era": "Atomic",
+            "id": "TECH_ADVANCED_BALLISTICS",
+            "cost": 1065,
+            "requires": [
+                "TECH_REPLACEABLE_PARTS",
+                "TECH_STEEL"
+            ]
+        },
+        {
+            "name": "Combined Arms",
+            "era": "Atomic",
+            "id": "TECH_COMBINED_ARMS",
+            "cost": 1065,
+            "requires": [ "TECH_STEEL" ]
+        },
+        {
+            "name": "Plastics",
+            "era": "Atomic",
+            "id": "TECH_PLASTICS",
+            "cost": 1065,
+            "requires": [ "TECH_COMBUSTION" ]
+        },
+        {
+            "name": "Computers",
+            "era": "Atomic",
+            "id": "TECH_COMPUTERS",
+            "cost": 1195,
+            "requires": [ "TECH_ELECTRICITY" ]
+        },
+        {
+            "name": "Nuclear Fission",
+            "era": "Atomic",
+            "id": "TECH_NUCLEAR_FISSION",
+            "cost": 1195,
+            "requires": [
+                "TECH_COMBINED_ARMS",
+                "TECH_ADVANCED_BALLISTICS"
+            ]
+        },
+        {
+            "name": "Synthetic Materials",
+            "era": "Atomic",
+            "id": "TECH_SYNTHETIC_MATERIALS",
+            "cost": 1195,
+            "requires": [ "TECH_PLASTICS" ]
+        },
+        {
+            "name": "Telecommunications",
+            "era": "Information",
+            "id": "TECH_TELECOMMUNICATIONS",
+            "cost": 1340,
+            "requires": [ "TECH_COMPUTERS" ]
+        },
+        {
+            "name": "Satellites",
+            "era": "Information",
+            "id": "TECH_SATELLITES",
+            "cost": 1340,
+            "requires": [
+                "TECH_ADVANCED_FLIGHT",
+                "TECH_ROCKETRY"
+            ]
+        },
+        {
+            "name": "Guidance Systems",
+            "era": "Information",
+            "id": "TECH_GUIDANCE_SYSTEMS",
+            "cost": 1340,
+            "requires": [
+                "TECH_ROCKETRY",
+                "TECH_ADVANCED_BALLISTICS"
+            ]
+        },
+        {
+            "name": "Lasers",
+            "era": "Information",
+            "id": "TECH_LASERS",
+            "cost": 1340,
+            "requires": [ "TECH_NUCLEAR_FISSION" ]
+        },
+        {
+            "name": "Composites",
+            "era": "Information",
+            "id": "TECH_COMPOSITES",
+            "cost": 1340,
+            "requires": [ "TECH_SYNTHETIC_MATERIALS" ]
+        },
+        {
+            "name": "Stealth Technology",
+            "era": "Information",
+            "id": "TECH_STEALTH_TECHNOLOGY",
+            "cost": 1340,
+            "requires": [ "TECH_SYNTHETIC_MATERIALS" ]
+        },
+        {
+            "name": "Robotics",
+            "era": "Information",
+            "id": "TECH_ROBOTICS",
+            "cost": 1560,
+            "requires": [ "TECH_COMPUTERS" ]
+        },
+        {
+            "name": "Nuclear Fusion",
+            "era": "Information",
+            "id": "TECH_NUCLEAR_FUSION",
+            "cost": 1560,
+            "requires": [ "TECH_LASERS" ]
+        },
+        {
+            "name": "Nanotechnology",
+            "era": "Information",
+            "id": "TECH_NANOTECHNOLOGY",
+            "cost": 1560,
+            "requires": [ "TECH_COMPOSITES" ]
+        },
+        {
+            "name": "Future Tech",
+            "era": "Information",
+            "id": "TECH_FUTURE_TECH",
+            "cost": 1780,
+            "requires": [
+                "TECH_ROBOTICS",
+                "TECH_NUCLEAR_FUSION",
+                "TECH_NANOTECHNOLOGY"
+            ]
+        }
+    ]
+}
