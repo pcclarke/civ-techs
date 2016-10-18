@@ -62,19 +62,14 @@ d3.select("#selectGame")
         .on("change", selected);
 
 function selected() {
-    d3.selectAll(".civWheel")
-        .remove();
+    d3.selectAll(".civWheel").remove();
     d3.select("#description").classed("hidden", true);
 
     civilization = "CIVILIZATION_ALL";
     document.getElementById("selectCiv").value = civilization;
 
     var selectCiv = document.getElementById("selectCiv");
-    for (var i = 0; i < selectCiv.length; i++) {
-        if (selectCiv.options[i].value !== "CIVILIZATION_ALL") {
-            selectCiv.remove(i);
-        }
-    }
+    selectCiv.options.length = 1;
 
     makeWheel(this.options[this.selectedIndex].value);
 }
