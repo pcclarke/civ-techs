@@ -238,6 +238,14 @@ function makeWheel(game, civilization) {
                     return color(d.pos);
                 })
                 .attr("fill", "white");
+
+            // Add the center image
+            wheel.append("image")
+                .attr("x", -50)
+                .attr("y", -50)
+                .attr("width", 100)
+                .attr("height", 100)
+                .attr("xlink:href", game + "/img/" + game + "-center.png");
         }
 
     });
