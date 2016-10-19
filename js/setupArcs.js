@@ -13,7 +13,7 @@ function setupArcs(data) {
         var minPos = data.displayed[i].pos;
         var maxPos = data.displayed[i].pos;
         
-        // Determine how long arc should be and what it leads to
+        // Determine how many positions arc goes through and what it is mandatory for
         for (var j = 0; j < leadsReq.length; j++) {
             var arcDist = leadsReq[j].pos - data.displayed[i].pos;
             if (arcDist > maxArcDist) {
@@ -30,6 +30,7 @@ function setupArcs(data) {
         }
         data.displayed[i].lreq = rekked;
         
+        // Determine how many positions arc goes through and what it is optional for
         for (var j = 0; j < leadsOpt.length; j++) {
             var arcDist = leadsOpt[j].pos - data.displayed[i].pos;
             if (arcDist > maxArcDist) {
@@ -46,28 +47,30 @@ function setupArcs(data) {
         }
         data.displayed[i].lopt = opted;
 
-        if (data.displayed[i].obsolete) {
-            
-            var obsTech;
-            for (var j = 0; j < data.technologies.length; j++) { // Find the obsolete tech from id
-                if (data.displayed[i].obsolete === data.technologies[j].id) {
-                    obsTech = data.technologies[j];
-                }
-            }
-            var arcDist = obsTech.pos - data.displayed[i].pos;
-            if (arcDist > maxArcDist) {
-                maxArcDist = arcDist;
-            }
-            if (obsTech.pos < minPos) {
-                minPos = obsTech.pos;
-            }
-            var obs = {"id": obsTech.id, "dist": arcDist, "pos": data.displayed[i].pos};
-            obsoleted.push(obs);
-            console.log(data.displayed[i]);
-        }
-        data.displayed[i].obs = obsoleted;
+        // if (data.displayed[i].obsolete) {
+        //     var obsTech;
+        //     for (var j = 0; j < data.technologies.length; j++) { // Find the obsolete tech from id
+        //         if (data.displayed[i].obsolete === data.technologies[j].id) {
+        //             obsTech = data.technologies[j];
+        //         }
+        //     }
+        //     var arcDist = obsTech.pos - data.displayed[i].pos;
+        //     if (arcDist > maxArcDist) {
+        //         maxArcDist = arcDist;
+        //     }
+        //     if (obsTech.pos < minPos) {
+        //         minPos = obsTech.pos;
+        //     }
+        //     var obs = {"id": obsTech.id, "dist": arcDist, "pos": data.displayed[i].pos};
+        //     obsoleted.push(obs);
+        //     console.log(data.displayed[i]);
+        // }
+        // data.displayed[i].obs = obsoleted;
         
+        // Calculate angle of end of arc
         data.displayed[i].arcDist = ((2 * Math.PI) / data.displayed.length) * maxArcDist;
+
+        // Calculate angle of start of arc
         var baseDist = 0;
         if (minPos < data.displayed[i].pos) {
             baseDist = data.displayed[i].pos - minPos;
@@ -97,9 +100,9 @@ function setupArcs(data) {
             for (var j = 0; j < data.displayed[i].lopt.length; j++) {
                 data.displayed[i].lopt[j].arcRank = data.displayed[i].arcRank;
             }
-            for (var j = 0; j < data.displayed[i].obs.length; j++) {
-                data.displayed[i].obs[j].arcRank = data.displayed[i].arcRank;
-            }
+            // for (var j = 0; j < data.displayed[i].obs.length; j++) {
+            //     data.displayed[i].obs[j].arcRank = data.displayed[i].arcRank;
+            // }
         } else {
             data.displayed[i].arcRank = 500;
         }
@@ -118,6 +121,40 @@ function setupArcs(data) {
             data.displayed[i].spokeRank = spokeRank;
         } else {
             data.displayed[i].spokeRank = 0;
+        }
+    }
+
+    // Set up arcs for each unlock, if necessary
+    for (var i = 0; i < data.displayed.length; i++) {
+        var itemUnlocks = data.displayed[i].unlocks;
+        var itemPos = data.displayed[i].pos;
+        var maxPos = itemPos;
+        var minPos = itemPos;
+
+        for (var j = 0; j < itemUnlocks.length; j++) {
+            if (itemUnlocks[j].ref.requires.length > 1) {
+                for (var k = 0; k < itemUnlocks[j].ref.requires.length; k++) {
+                    var unlockReq = getTechById(itemUnlocks[j].ref.requires[k], data);
+                    if (unlockReq.pos > maxPos) {
+                        maxPos = unlockReq.pos;
+                    }
+                    if (unlockReq.pos < minPos) {
+                        minPos = unlockReq.pos;
+                    }
+                }
+                var endDist = 0;
+                if (maxPos > itemPos) {
+                    endDist = itemPos + maxPos;
+                }
+                itemUnlocks[j].ref.arcEnd = ((2 * Math.PI) / data.displayed.length) * endDist;
+                var baseDist = 0;
+                if (minPos < itemPos) {
+                    baseDist = itemPos - minPos;
+                }
+                itemUnlocks[j].ref.arcBack = ((2 * Math.PI) / data.displayed.length) * baseDist;
+
+                itemUnlocks[j].arcRank = k;
+            }
         }
     }
     

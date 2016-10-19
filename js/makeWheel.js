@@ -136,6 +136,7 @@ function makeWheel(game, civilization) {
                     return link;
                 })
                 .on("mouseover", function(d) {
+                    console.log(d);
                     var tipName = "";
                     if (d.ref.cat === "units" || d.ref.cat === "buildings") {
                         if (d.ref[civilization]) {
@@ -147,9 +148,16 @@ function makeWheel(game, civilization) {
                         tipName = d.ref.name;
                     }
                     displayTooltip(tipName);
+
+                    d3.selectAll(".unlock")
+                        .classed("unlockFade", true);
+                    d3.select(this)
+                        .classed("unlockFade", false);
                 })
                 .on("mouseout", function(d) {
                     d3.select("#tooltip").classed("hidden", true);
+                    d3.selectAll(".unlock")
+                        .classed("unlockFade", false);
                 })
                 .on("click", function(d) {
                     displayDetailsBox(d.ref, game, civilization, data);
