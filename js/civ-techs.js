@@ -48,6 +48,20 @@ var arc = d3.arc()
     .endAngle(function(d) {
         return d.arcDist;   
     });
+
+var unlockArc = d3.arc()
+    .innerRadius(function(d) {
+        return arcBase + 283 + (17 * d.rank);
+    })
+    .outerRadius(function(d) {
+        return (arcBase + 283 + arcWidth) + (17 * d.rank);
+    })
+    .startAngle(function(d) {
+        return -1 * d.arcBack;
+    })
+    .endAngle(function(d) {
+        return d.arcEnd;   
+    });
     
 // Colour scale for arcs
 var color = d3.scaleOrdinal(d3.schemeCategory10);

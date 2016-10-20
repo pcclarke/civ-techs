@@ -128,35 +128,37 @@ function setupArcs(data) {
     for (var i = 0; i < data.displayed.length; i++) {
         var itemUnlocks = data.displayed[i].unlocks;
         var itemPos = data.displayed[i].pos;
-        var maxPos = itemPos;
-        var minPos = itemPos;
 
         for (var j = 0; j < itemUnlocks.length; j++) {
             if (itemUnlocks[j].ref.requires.length > 1) {
+                var maxPos = 0;
+                var minPos = data.displayed[i].pos;
+
                 for (var k = 0; k < itemUnlocks[j].ref.requires.length; k++) {
                     var unlockReq = getTechById(itemUnlocks[j].ref.requires[k], data);
                     if (unlockReq.pos > maxPos) {
                         maxPos = unlockReq.pos;
+                        
                     }
                     if (unlockReq.pos < minPos) {
                         minPos = unlockReq.pos;
                     }
                 }
+                
                 var endDist = 0;
-                if (maxPos > itemPos) {
-                    endDist = itemPos + maxPos;
+                if (maxPos > data.displayed[i].pos) {
+                    endDist = maxPos - data.displayed[i].pos;
                 }
-                itemUnlocks[j].ref.arcEnd = ((2 * Math.PI) / data.displayed.length) * endDist;
+                itemUnlocks[j].arcEnd = ((2 * Math.PI) / data.displayed.length) * endDist;
                 var baseDist = 0;
-                if (minPos < itemPos) {
-                    baseDist = itemPos - minPos;
+                if (minPos < data.displayed[i].pos) {
+                    baseDist = data.displayed[i].pos - minPos;
                 }
-                itemUnlocks[j].ref.arcBack = ((2 * Math.PI) / data.displayed.length) * baseDist;
-
-                itemUnlocks[j].arcRank = k;
+                itemUnlocks[j].arcBack = ((2 * Math.PI) / data.displayed.length) * baseDist;
             }
         }
     }
+
     
     
     // Reverse order of data so that arcs are drawn over spokes

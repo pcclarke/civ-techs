@@ -108,6 +108,29 @@ function makeWheel(game, civilization) {
                     displayDetailsBox(d, game, civilization, data);
                 });
 
+
+            spokes.selectAll(".unlockArc")
+                .data(function(d) {
+                    return d.unlocks;
+                })
+                .enter().append("path")
+                .filter(function(d) {
+                    if (d.arcEnd || d.arcBack) {
+                        return true;
+                    }
+                    return false;
+                })
+                .attr("class", function(d) {
+                    return "unlockArc " + d.ref.id;
+                })
+                .attr("rank", function(d) {
+                    return d.rank;
+                })
+                .style("fill", function(d) {
+                    return color(d.pos);
+                })
+                .attr("d", unlockArc);
+
             var unlockIcons = spokes.selectAll(".unlock")
                 .data(function(d) {
                     return d.unlocks;
@@ -162,6 +185,7 @@ function makeWheel(game, civilization) {
                 .on("click", function(d) {
                     displayDetailsBox(d.ref, game, civilization, data);
                 });
+
 
             // Update icons with unique civilization units
             d3.select("#selectCiv")
