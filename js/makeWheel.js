@@ -121,7 +121,7 @@ function makeWheel(game, civilization) {
                     return false;
                 })
                 .attr("class", function(d) {
-                    return "unlockArc " + d.ref.id;
+                    return "unlockArc hidden " + d.ref.id + "" + d.pos;
                 })
                 .attr("rank", function(d) {
                     return d.rank;
@@ -174,6 +174,8 @@ function makeWheel(game, civilization) {
 
                     d3.selectAll(".unlock")
                         .classed("unlockFade", true);
+                    d3.selectAll("." + d.ref.id + "" + d.pos)
+                        .classed("hidden", false);
                     d3.select(this)
                         .classed("unlockFade", false);
                 })
@@ -181,6 +183,8 @@ function makeWheel(game, civilization) {
                     d3.select("#tooltip").classed("hidden", true);
                     d3.selectAll(".unlock")
                         .classed("unlockFade", false);
+                    d3.selectAll(".unlockArc")
+                        .classed("hidden", true);
                 })
                 .on("click", function(d) {
                     displayDetailsBox(d.ref, game, civilization, data);
