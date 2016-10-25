@@ -108,20 +108,26 @@ function makeWheel(game, civilization) {
                     displayDetailsBox(d, game, civilization, data);
                 });
 
-
-            spokes.selectAll(".unlockArc")
+            var unlocks = spokes.selectAll(".unlocks")
                 .data(function(d) {
                     return d.unlocks;
                 })
-                .enter().append("path")
+                .enter()
                 .filter(function(d) {
                     if (d.arcEnd || d.arcBack) {
                         return true;
                     }
                     return false;
                 })
+                .append("g")
                 .attr("class", function(d) {
-                    return "unlockArc hidden " + d.ref.id + "" + d.pos;
+                    return "unlock hidden " + d.ref.id + "" + d.pos;
+                });
+
+
+            var unlockArcs = unlocks.append("path")
+                .attr("class", function(d) {
+                    return "unlockArc";
                 })
                 .attr("rank", function(d) {
                     return d.rank;
@@ -131,12 +137,34 @@ function makeWheel(game, civilization) {
                 })
                 .attr("d", unlockArc);
 
-            var unlockIcons = spokes.selectAll(".unlock")
+            var unlockSquares = unlocks.selectAll(".unlockSquare")
+                .data(function(d) {
+                    console.log(d);
+                    return d.lreq;
+                })
+                .enter().append("g")
+                .attr("transform", function(d) {
+                    var ang = d.dist * (360 / data.displayed.length);
+                    return "rotate(" + ang + ") translate(0, " + (-(width/2) + 104.9 - (17 * d.arcRank)) + ")";
+                })
+                .attr("class", "unlockSquare");
+                
+            unlockSquares.append("rect")
+                .attr("x", -2.5)
+                .attr("y", -0.75)
+                .attr("width", 5)
+                .attr("height", 5)
+                .attr("fill", function(d) {
+                    return color(d.pos);
+                });
+
+            var unlockIcons = spokes.selectAll(".unlockIcon")
                 .data(function(d) {
                     return d.unlocks;
                 })
-                .enter().append("image")
-                .attr("class", "unlock")
+                .enter() 
+                .append("image")
+                .attr("class", "unlockIcon")
                 .attr("transform", function(d) {
                     if (d.pos > (data.displayed.length / 2)) {
                         return "translate(7.5, " + (-(width / 2) + (100 - (17 * d.rank))) + ") rotate(90)";
@@ -172,7 +200,7 @@ function makeWheel(game, civilization) {
                     }
                     displayTooltip(tipName);
 
-                    d3.selectAll(".unlock")
+                    d3.selectAll(".unlockIcon")
                         .classed("unlockFade", true);
                     d3.selectAll("." + d.ref.id + "" + d.pos)
                         .classed("hidden", false);
@@ -181,9 +209,9 @@ function makeWheel(game, civilization) {
                 })
                 .on("mouseout", function(d) {
                     d3.select("#tooltip").classed("hidden", true);
-                    d3.selectAll(".unlock")
+                    d3.selectAll(".unlockIcon")
                         .classed("unlockFade", false);
-                    d3.selectAll(".unlockArc")
+                    d3.selectAll(".unlock")
                         .classed("hidden", true);
                 })
                 .on("click", function(d) {
@@ -235,16 +263,16 @@ function makeWheel(game, civilization) {
                 });
                 
             var reqSquares = spokes.selectAll(".reqSquare")
-            .data(function(d) {
-                return d.lreq;
-            })
-            .enter().append("g")
-            .attr("transform", function(d) {
-                var ang = d.dist * (360 / data.displayed.length);
-                return "rotate(" + ang + ") translate(0, " + (-arcBase - 2.5 - (arcSpace * d.arcRank)) + ")";
-            })
-            .attr("class", "reqSquare");
-            
+                .data(function(d) {
+                    return d.lreq;
+                })
+                .enter().append("g")
+                .attr("transform", function(d) {
+                    var ang = d.dist * (360 / data.displayed.length);
+                    return "rotate(" + ang + ") translate(0, " + (-arcBase - 2.5 - (arcSpace * d.arcRank)) + ")";
+                })
+                .attr("class", "reqSquare");
+                
             reqSquares.append("rect")
                 .attr("x", -2.5)
                 .attr("y", -0.75)
@@ -255,15 +283,15 @@ function makeWheel(game, civilization) {
                 });
                 
             var optCircles = spokes.selectAll(".optCircle")
-            .data(function(d) {
-                return d.lopt;
-            })
-            .enter().append("g")
-            .attr("transform", function(d) {
-                var ang = d.dist * (360 / data.displayed.length);
-                return "rotate(" + ang + ") translate(0, " + (-arcBase - 2.5 - (arcSpace * d.arcRank)) + ")";
-            })
-            .attr("class", "optCircle");
+                .data(function(d) {
+                    return d.lopt;
+                })
+                .enter().append("g")
+                .attr("transform", function(d) {
+                    var ang = d.dist * (360 / data.displayed.length);
+                    return "rotate(" + ang + ") translate(0, " + (-arcBase - 2.5 - (arcSpace * d.arcRank)) + ")";
+                })
+                .attr("class", "optCircle");
             
             optCircles.append("circle")
                 .attr("cx", 0)

@@ -133,15 +133,20 @@ function setupArcs(data) {
             if (itemUnlocks[j].ref.requires.length > 1) {
                 var maxPos = 0;
                 var minPos = data.displayed[i].pos;
+                itemUnlocks[j].lreq = [];
 
                 for (var k = 0; k < itemUnlocks[j].ref.requires.length; k++) {
                     var unlockReq = getTechById(itemUnlocks[j].ref.requires[k], data);
                     if (unlockReq.pos > maxPos) {
                         maxPos = unlockReq.pos;
-                        
                     }
                     if (unlockReq.pos < minPos) {
                         minPos = unlockReq.pos;
+                    }
+                    if (unlockReq.pos !== itemPos) { // unlock arc square positions
+                        var arcDist = unlockReq.pos - itemPos;
+                        var req = {"id": unlockReq.id, "dist": arcDist, "pos": itemPos, "arcRank": itemUnlocks[j].rank};
+                        itemUnlocks[j].lreq.push(req);
                     }
                 }
                 
