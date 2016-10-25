@@ -38,6 +38,10 @@ h1 {
     cursor: pointer;
 }
 
+.unlockFade {
+    opacity: 0.25;
+}
+
 .spokeLine {
     cursor: pointer;
     stroke: #bcbec0;

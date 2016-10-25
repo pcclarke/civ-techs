@@ -48,6 +48,20 @@ var arc = d3.arc()
     .endAngle(function(d) {
         return d.arcDist;   
     });
+
+var unlockArc = d3.arc()
+    .innerRadius(function(d) {
+        return arcBase + 283 + (17 * d.rank);
+    })
+    .outerRadius(function(d) {
+        return (arcBase + 283 + arcWidth) + (17 * d.rank);
+    })
+    .startAngle(function(d) {
+        return -1 * d.arcBack;
+    })
+    .endAngle(function(d) {
+        return d.arcEnd;   
+    });
     
 // Colour scale for arcs
 var color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -62,19 +76,14 @@ d3.select("#selectGame")
         .on("change", selected);
 
 function selected() {
-    d3.selectAll(".civWheel")
-        .remove();
+    d3.selectAll(".civWheel").remove();
     d3.select("#description").classed("hidden", true);
 
     civilization = "CIVILIZATION_ALL";
     document.getElementById("selectCiv").value = civilization;
 
     var selectCiv = document.getElementById("selectCiv");
-    for (var i = 0; i < selectCiv.length; i++) {
-        if (selectCiv.options[i].value !== "CIVILIZATION_ALL") {
-            selectCiv.remove(i);
-        }
-    }
+    selectCiv.options.length = 1;
 
     makeWheel(this.options[this.selectedIndex].value);
 }

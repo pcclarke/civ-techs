@@ -7,6 +7,7 @@ function setupData(data) {
         return a.cost - b.cost;
     });
 
+    // Scoop up all the things each technology leads to and put it in the unlocks object
     for (var i = 0; i < data.technologies.length; i++) {
         data.technologies[i].cat = "technologies";
         data.displayed.push(data.technologies[i]);

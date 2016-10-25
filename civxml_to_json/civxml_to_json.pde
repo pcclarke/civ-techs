@@ -984,6 +984,13 @@ void getUnitInfos(String path, XML[][] texts, String civPath, JSONObject dataObj
         continue;
       }
       
+      unitDetails.setInt("cost", Integer.parseInt(unitInfo[i].getChild("iCost").getContent()));
+      unitDetails.setInt("combat", Integer.parseInt(unitInfo[i].getChild("iCombat").getContent()));
+      unitDetails.setInt("cityAttack", Integer.parseInt(unitInfo[i].getChild("iCityAttack").getContent()));
+      unitDetails.setInt("cityDefense", Integer.parseInt(unitInfo[i].getChild("iCityDefense").getContent()));
+      unitDetails.setInt("withdrawalProb", Integer.parseInt(unitInfo[i].getChild("iWithdrawalProb").getContent()));
+      
+      
       // Set the technology prerequisites
       JSONArray preReqs = new JSONArray();
       preReqs.append(prereq);
