@@ -7,8 +7,10 @@ function setupData(data) {
         return a.cost - b.cost;
     });
 
+    var unlocksList = []
+
     // Scoop up all the things each technology leads to and put it in the unlocks object
-    for (var i = 0; i < data.technologies.length; i++) {
+    for (var i = data.technologies.length - 1; i > 0; i--) {
         data.technologies[i].cat = "technologies";
         data.displayed.push(data.technologies[i]);
 
@@ -30,11 +32,27 @@ function setupData(data) {
             }
         }
 
-        var unlocksHandler = [];
+        var toSplice = [];
+        var uniqueUnlocks = [];
         for (var j = 0; j < unlocks.length; j++) {
+            var matchFound = 0;
+            for (var k = 0; k < unlocksList.length; k++) {
+                if (unlocks[j].id === unlocksList[k].id) {
+                    matchFound = 1;
+                }
+            }
+            if (matchFound !== 1) {
+                uniqueUnlocks.push(unlocks[j]);
+            }
+        }
+        unlocksList = unlocksList.concat(uniqueUnlocks);
+
+        var unlocksHandler = [];
+        for (var j = 0; j < uniqueUnlocks.length; j++) {
+
             var unlocksItem = {};
             unlocksItem.rank = j;
-            unlocksItem.ref = unlocks[j];
+            unlocksItem.ref = uniqueUnlocks[j];
             unlocksHandler.push(unlocksItem);
         }
         data.technologies[i].unlocks = unlocksHandler;
