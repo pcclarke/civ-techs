@@ -139,7 +139,6 @@ function makeWheel(game, civilization) {
 
             var unlockSquares = unlocks.selectAll(".unlockSquare")
                 .data(function(d) {
-                    console.log(d);
                     return d.lreq;
                 })
                 .enter().append("g")
@@ -187,7 +186,6 @@ function makeWheel(game, civilization) {
                     return link;
                 })
                 .on("mouseover", function(d) {
-                    console.log(d);
                     var tipName = "";
                     if (d.ref.cat === "units" || d.ref.cat === "buildings") {
                         if (d.ref[civilization]) {
