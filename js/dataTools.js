@@ -3,13 +3,13 @@ function getReqTechPreReqs(examine, data) {
     var preReqs = [];
 
     if (examine.requires) {
-        for (var i = 0; i < data.technologies.length; i++) {
-            for (var j = 0; j < examine.requires.length; j++) {
-                if (examine.requires[j] === data.technologies[i].id) {
-                    preReqs.push(data.technologies[i]);
+        data.technologies.forEach(function(t) {
+            examine.requires.forEach(function(r) {
+                if (r === t.id) {
+                    preReqs.push(t);
                 }
-            }
-        }
+            });
+        });
     }
     
     return preReqs;

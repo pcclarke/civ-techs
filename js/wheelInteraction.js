@@ -81,8 +81,8 @@ function spokeMouseOut(d) {
 // Show the name of an icon in a hover box
 function displayTooltip(name) {
     d3.select("#tooltip")
-        .style("left", coordinates[0] + "px")
-        .style("top", coordinates[1] + "px");
+        .style("left", civ.coords[0] + "px")
+        .style("top", civ.coords[1] + "px");
 
     d3.select("#tipName").text(name);
 

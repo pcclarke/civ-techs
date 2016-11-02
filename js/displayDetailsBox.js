@@ -1,12 +1,12 @@
-function displayDetailsBox(item, game, civilization, data) {
+function displayDetailsBox(item, game, civ, data) {
     var itemCat = item.cat;
     var itemName = "";
     var itemId = "";
 
     if (itemCat === "units" || itemCat === "buildings") {
-        if (item[civilization]) {
-            itemName = item[civilization].name;
-            itemId = item[civilization].id;
+        if (item[civ.ilization]) {
+            itemName = item[civ.ilization].name;
+            itemId = item[civ.ilization].id;
         } else {
             itemName = item.CIVILIZATION_ALL.name;
             itemId = item.CIVILIZATION_ALL.id;
