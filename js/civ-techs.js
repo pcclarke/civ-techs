@@ -13,20 +13,22 @@ The distance between ranks is arbitrary, and is set by the variable arcSpace (or
 */
 
 // Global variables
-var arcBase = 100;
-var arcWidth = 1.5;
-var arcSpace = 14;
-var zoomed = false;
-var civilization = "CIVILIZATION_ALL";
-var coordinates = [0, 0];
+var civ = {
+    arcBase: 100,
+    arcSpace: 14,
+    arcWidth: 1.5,
+    color: d3.scaleOrdinal(d3.schemeCategory10),
+    coords: [0, 0],
+    ilization: "CIVILIZATION_ALL"
+};
 
 // Update mouse coordinates variable
 var body = d3.select("body")
 	.on("mousemove", function() {
-		coordinates = d3.mouse(this);
+		civ.coords = d3.mouse(this);
 	})
 	.on("mousedown", function() {
-		coordinates = d3.mouse(this);
+		civ.coords = d3.mouse(this);
 	});
 
 // Drawing area
@@ -37,10 +39,10 @@ var margin = {top: 10, right: 10, bottom: 10, left: 10},
 // Draw leads to arcs
 var arc = d3.arc()
     .innerRadius(function(d) {
-        return arcBase + (arcSpace * d.arcRank);
+        return civ.arcBase + (civ.arcSpace * d.arcRank);
     })
     .outerRadius(function(d) {
-        return (arcBase + arcWidth) + (arcSpace * d.arcRank);
+        return (civ.arcBase + civ.arcWidth) + (civ.arcSpace * d.arcRank);
     })
     .startAngle(function(d) {
         return -1 * d.arcBack;
@@ -51,10 +53,10 @@ var arc = d3.arc()
 
 var unlockArc = d3.arc()
     .innerRadius(function(d) {
-        return arcBase + 283 + (17 * d.rank);
+        return civ.arcBase + 283 + (17 * d.rank);
     })
     .outerRadius(function(d) {
-        return (arcBase + 283 + arcWidth) + (17 * d.rank);
+        return (civ.arcBase + 283 + civ.arcWidth) + (17 * d.rank);
     })
     .startAngle(function(d) {
         return -1 * d.arcBack;
@@ -62,31 +64,26 @@ var unlockArc = d3.arc()
     .endAngle(function(d) {
         return d.arcEnd;   
     });
-    
-// Colour scale for arcs
-var color = d3.scaleOrdinal(d3.schemeCategory10);
+
 
 // Set game wheel to what's currently in selection box
-var sel = document.getElementById('selectGame');
-var selCiv = document.getElementById("selectCiv");
-makeWheel(sel.options[sel.selectedIndex].value, civilization);
+makeWheel(document.getElementById('selectGame')
+    .options[document.getElementById('selectGame').selectedIndex].value, civ.ilization);
 
 // Game selection drop-down
 d3.select("#selectGame")
-        .on("change", selected);
+    .on("change", function() {
+        d3.selectAll(".civWheel").remove();
+        d3.select("#description").classed("hidden", true);
 
-function selected() {
-    d3.selectAll(".civWheel").remove();
-    d3.select("#description").classed("hidden", true);
+        civ.ilization = "CIVILIZATION_ALL";
+        document.getElementById("selectCiv").value = civ.ilization;
 
-    civilization = "CIVILIZATION_ALL";
-    document.getElementById("selectCiv").value = civilization;
+        var selectCiv = document.getElementById("selectCiv");
+        selectCiv.options.length = 1;
 
-    var selectCiv = document.getElementById("selectCiv");
-    selectCiv.options.length = 1;
-
-    makeWheel(this.options[this.selectedIndex].value);
-}
+        makeWheel(this.options[this.selectedIndex].value);
+    });
 
 // Close the details box
 d3.select("#descCloseButton")

@@ -1,4 +1,4 @@
-function setupArcs(data) {
+var setupArcs = function (data) {
     var arcDists = []; // list of recent arcRanks
     // Add in the displayed into their prerequisites so that the arcs can be set up
     for (var i = 0; i < data.displayed.length; i++) {

@@ -1,33 +1,40 @@
-function orderDisplayed(data) {
+var orderDisplayed = function (data) {
+    var i = 0;
+    var maxCost;
+    var preReqs;
+
     // Give each technology an arbitrary position value
-    for (var i = 0; i < data.displayed.length; i++) {
-        data.displayed[i].pos = i;
-    }
+    data.displayed.forEach(function (d) {
+        d.pos = i;
+        i = i + 1; 
+    });
 
-    for (var i = 0; i < data.displayed.length; i++) {
-        var maxCost = 0;
-        if (data.displayed[i].cost) {
-            maxCost = data.displayed[i].cost;
+    data.displayed.forEach(function (d) {
+        maxCost = 0;
+        if (d.cost) {
+            maxCost = d.cost;
         }
-        var preReqs = getTechPrereqs(data.displayed[i], data);
+        preReqs = getTechPrereqs(d, data);
 
-        for (var j = 0; j < preReqs.length; j++) {
-            if (preReqs[j].cost > maxCost) {
-                maxCost = preReqs[j].cost;
+        preReqs.forEach(function (p) {
+            if (p.cost > maxCost) {
+                maxCost = p.cost;
             }
-        }
+        });
 
-        data.displayed[i].pos = maxCost;
-    }
+        d.pos = maxCost;
+    });
     
     data.displayed.sort(function(a, b) {
         return a.pos - b.pos;
     });
 
-    for (var i = 0; i < data.displayed.length; i++) {
-        data.displayed[i].pos = i;
-        for (var j = 0; j < data.displayed[i].unlocks.length; j++) {
-            data.displayed[i].unlocks[j].pos = i;
-        }            
-    }
+    i = 0;
+    data.displayed.forEach(function (d) {
+        d.pos = i;
+        i = i + 1;
+        d.unlocks.forEach(function (u) {
+            u.pos = i;
+        });
+    });
 }
