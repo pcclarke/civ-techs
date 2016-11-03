@@ -1,50 +1,62 @@
 var setupArcs = function (data) {
     var arcDists = []; // list of recent arcRanks
+    var arcDist;
+    var leadsReq;
+    var leadsOpt;
+    var req;
+    var rekked;
+    var opt;
+    var opted;
+    var minArcDist;
+    var maxArcDist;
+    var minPos;
+    var maxPos;
+    var obsoleted;
+
     // Add in the displayed into their prerequisites so that the arcs can be set up
     for (var i = 0; i < data.displayed.length; i++) {
-        var rekked = []; // copy leads to required displayed
-        var opted = []; // copy leads to optional displayed
-        var obsoleted = [];
-        var optedDist = [];
-        var minArcDist = 0;
-        var maxArcDist = 0;
-        var leadsReq = getLeadsToReq(data.displayed[i], data.displayed);
-        var leadsOpt = getLeadsToOpt(data.displayed[i], data.displayed);
-        var minPos = data.displayed[i].pos;
-        var maxPos = data.displayed[i].pos;
+        rekked = []; // copy leads to required displayed
+        opted = []; // copy leads to optional displayed
+        obsoleted = [];
+        minArcDist = 0;
+        maxArcDist = 0;
+        leadsReq = getLeadsToReq(data.displayed[i], data.displayed);
+        leadsOpt = getLeadsToOpt(data.displayed[i], data.displayed);
+        minPos = data.displayed[i].pos;
+        maxPos = data.displayed[i].pos;
         
         // Determine how many positions arc goes through and what it is mandatory for
-        for (var j = 0; j < leadsReq.length; j++) {
-            var arcDist = leadsReq[j].pos - data.displayed[i].pos;
+        leadsReq.forEach(function (lr) {
+            arcDist = lr.pos - data.displayed[i].pos;
             if (arcDist > maxArcDist) {
                 maxArcDist = arcDist;
             }
-            if (leadsReq[j].pos > maxPos) {
-                maxPos = leadsReq[j].pos;
+            if (lr.pos > maxPos) {
+                maxPos = lr.pos;
             }
-            if (leadsReq[j].pos < minPos) {
-                minPos = leadsReq[j].pos;
+            if (lr.pos < minPos) {
+                minPos = lr.pos;
             }
-            var req = {"id": leadsReq[j].id, "dist": arcDist, "pos": data.displayed[i].pos};
+            req = {"id": lr.id, "dist": arcDist, "pos": data.displayed[i].pos};
             rekked.push(req);
-        }
+        });
         data.displayed[i].lreq = rekked;
         
         // Determine how many positions arc goes through and what it is optional for
-        for (var j = 0; j < leadsOpt.length; j++) {
-            var arcDist = leadsOpt[j].pos - data.displayed[i].pos;
+        leadsOpt.forEach(function (lo) {
+            arcDist = lo.pos - data.displayed[i].pos;
             if (arcDist > maxArcDist) {
                 maxArcDist = arcDist;
             }
-            if (leadsOpt[j].pos > maxPos) {
-                maxPos = leadsOpt[j].pos;
+            if (lo.pos > maxPos) {
+                maxPos = lo.pos;
             }
-            if (leadsOpt[j].pos < minPos) {
-                minPos = leadsOpt[j].pos;
+            if (lo.pos < minPos) {
+                minPos = lo.pos;
             }
-            var opt = {"id": leadsOpt[j].id, "dist": arcDist, "pos": data.displayed[i].pos};
+            opt = {"id": lo.id, "dist": arcDist, "pos": data.displayed[i].pos};
             opted.push(opt);
-        }
+        });
         data.displayed[i].lopt = opted;
 
         // if (data.displayed[i].obsolete) {
@@ -164,8 +176,6 @@ var setupArcs = function (data) {
         }
     }
 
-    
-    
     // Reverse order of data so that arcs are drawn over spokes
     data.displayed.sort(function(a, b) {
         return b.pos - a.pos;
