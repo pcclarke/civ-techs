@@ -1,11 +1,8 @@
 var setupArcs = function (data) {
     var arcDists = []; // list of recent arcRanks
-    var arcDist;
     var leadsReq;
     var leadsOpt;
-    var req;
     var rekked;
-    var opt;
     var opted;
     var minArcDist;
     var maxArcDist;
@@ -14,20 +11,20 @@ var setupArcs = function (data) {
     var obsoleted;
 
     // Add in the displayed into their prerequisites so that the arcs can be set up
-    for (var i = 0; i < data.displayed.length; i++) {
+    data.displayed.forEach(function (d, i) {
         rekked = []; // copy leads to required displayed
         opted = []; // copy leads to optional displayed
         obsoleted = [];
         minArcDist = 0;
         maxArcDist = 0;
-        leadsReq = getLeadsToReq(data.displayed[i], data.displayed);
-        leadsOpt = getLeadsToOpt(data.displayed[i], data.displayed);
-        minPos = data.displayed[i].pos;
-        maxPos = data.displayed[i].pos;
-        
+        leadsReq = getLeadsToReq(d, data.displayed);
+        leadsOpt = getLeadsToOpt(d, data.displayed);
+        minPos = d.pos;
+        maxPos = d.pos;
+
         // Determine how many positions arc goes through and what it is mandatory for
         leadsReq.forEach(function (lr) {
-            arcDist = lr.pos - data.displayed[i].pos;
+            var arcDist = lr.pos - d.pos;
             if (arcDist > maxArcDist) {
                 maxArcDist = arcDist;
             }
@@ -37,14 +34,14 @@ var setupArcs = function (data) {
             if (lr.pos < minPos) {
                 minPos = lr.pos;
             }
-            req = {"id": lr.id, "dist": arcDist, "pos": data.displayed[i].pos};
+            var req = {"id": lr.id, "dist": arcDist, "pos": d.pos};
             rekked.push(req);
         });
-        data.displayed[i].lreq = rekked;
-        
+        d.lreq = rekked;
+
         // Determine how many positions arc goes through and what it is optional for
         leadsOpt.forEach(function (lo) {
-            arcDist = lo.pos - data.displayed[i].pos;
+            var arcDist = lo.pos - d.pos;
             if (arcDist > maxArcDist) {
                 maxArcDist = arcDist;
             }
@@ -54,10 +51,10 @@ var setupArcs = function (data) {
             if (lo.pos < minPos) {
                 minPos = lo.pos;
             }
-            opt = {"id": lo.id, "dist": arcDist, "pos": data.displayed[i].pos};
+            var opt = {"id": lo.id, "dist": arcDist, "pos": d.pos};
             opted.push(opt);
         });
-        data.displayed[i].lopt = opted;
+        d.lopt = opted;
 
         // if (data.displayed[i].obsolete) {
         //     var obsTech;
@@ -78,103 +75,102 @@ var setupArcs = function (data) {
         //     console.log(data.displayed[i]);
         // }
         // data.displayed[i].obs = obsoleted;
-        
+
         // Calculate angle of end of arc
-        data.displayed[i].arcDist = ((2 * Math.PI) / data.displayed.length) * maxArcDist;
+        d.arcDist = ((2 * Math.PI) / data.displayed.length) * maxArcDist;
 
         // Calculate angle of start of arc
         var baseDist = 0;
-        if (minPos < data.displayed[i].pos) {
-            baseDist = data.displayed[i].pos - minPos;
+        if (minPos < d.pos) {
+            baseDist = d.pos - minPos;
         }
-        data.displayed[i].arcBack = ((2 * Math.PI) / data.displayed.length) * baseDist;
+        d.arcBack = ((2 * Math.PI) / data.displayed.length) * baseDist;
         
         // Set arc rank - distance of arc from centre
-        if (data.displayed[i].lreq.length > 0 || data.displayed[i].lopt.length > 0) {
+        if (d.lreq.length > 0 || d.lopt.length > 0) {
             var ranked = 0;
             for (var j = 0; j < arcDists.length; j++) {
                 if (arcDists[j] < minPos) {
                     arcDists[j] = i + maxArcDist;
-                    data.displayed[i].arcRank = j;
+                    d.arcRank = j;
                     ranked = 1;
                     break;
                 }
             }
-            if (ranked == 0) {
+            if (ranked === 0) {
                 arcDists.push(i + maxArcDist);
-                data.displayed[i].arcRank = (arcDists.length - 1);
+                d.arcRank = (arcDists.length - 1);
             }
             
             // Add the arc rank to leads to
-            for (var j = 0; j < data.displayed[i].lreq.length; j++) {
-                data.displayed[i].lreq[j].arcRank = data.displayed[i].arcRank;
-            }
-            for (var j = 0; j < data.displayed[i].lopt.length; j++) {
-                data.displayed[i].lopt[j].arcRank = data.displayed[i].arcRank;
-            }
-            // for (var j = 0; j < data.displayed[i].obs.length; j++) {
-            //     data.displayed[i].obs[j].arcRank = data.displayed[i].arcRank;
-            // }
+            d.lreq.forEach(function (lr) {
+                lr.arcRank = d.arcRank;
+            });
+            d.lopt.forEach(function (lo) {
+                lo.arcRank = d.arcRank;
+            });
+            // d.lobs(function (ob) {
+            //    ob.arcRank = d.arcRank;
+            // });
         } else {
-            data.displayed[i].arcRank = 500;
+            d.arcRank = 500;
         }
-    }
+    });
+
     
     // Set spoke rank - where to start drawing spoke
-    for (var i = data.displayed.length - 1; i >= 0; i--) {
-        if (data.displayed[i].arcRank > 0) {
-            var spokeRank = data.displayed[i].arcRank;
-            var preReqs = getTechPrereqs(data.displayed[i], data);
-            for (var j = 0; j < preReqs.length; j++) {
-                if (preReqs[j].arcRank < spokeRank) {
-                    spokeRank = preReqs[j].arcRank;
+    data.displayed.forEach(function (d) {
+        if (d.arcRank > 0) {
+            var spokeRank = d.arcRank;
+            var preReqs = getTechPrereqs(d, data);
+            preReqs.forEach(function (p) {
+                if (p.arcRank < spokeRank) {
+                    spokeRank = p.arcRank;
                 }
-            }
-            data.displayed[i].spokeRank = spokeRank;
+            });
+            d.spokeRank = spokeRank;
         } else {
-            data.displayed[i].spokeRank = 0;
+            d.spokeRank = 0;
         }
-    }
+    });
 
+    
     // Set up arcs for each unlock, if necessary
-    for (var i = 0; i < data.displayed.length; i++) {
-        var itemUnlocks = data.displayed[i].unlocks;
-        var itemPos = data.displayed[i].pos;
-
-        for (var j = 0; j < itemUnlocks.length; j++) {
-            if (itemUnlocks[j].ref.requires.length > 1) {
+    data.displayed.forEach(function(d) {
+        d.unlocks.forEach(function (u) {
+            if (u.ref.requires.length > 1) {
                 var maxPos = 0;
-                var minPos = data.displayed[i].pos;
-                itemUnlocks[j].lreq = [];
+                var minPos = d.pos;
+                u.lreq = [];
 
-                for (var k = 0; k < itemUnlocks[j].ref.requires.length; k++) {
-                    var unlockReq = getTechById(itemUnlocks[j].ref.requires[k], data);
+                u.ref.requires.forEach(function (r) {
+                    var unlockReq = getTechById(r, data);
                     if (unlockReq.pos > maxPos) {
                         maxPos = unlockReq.pos;
                     }
                     if (unlockReq.pos < minPos) {
                         minPos = unlockReq.pos;
                     }
-                    if (unlockReq.pos !== itemPos) { // unlock arc square positions
-                        var arcDist = unlockReq.pos - itemPos;
-                        var req = {"id": unlockReq.id, "dist": arcDist, "pos": itemPos, "arcRank": itemUnlocks[j].rank};
-                        itemUnlocks[j].lreq.push(req);
+                    if (unlockReq.pos !== d.pos) { // unlock arc square positions
+                        var req = {"id": unlockReq.id, "dist": (unlockReq.pos - d.pos), "pos": d.pos, "arcRank": u.rank};
+                        u.lreq.push(req);
                     }
-                }
+                });
                 
                 var endDist = 0;
-                if (maxPos > data.displayed[i].pos) {
-                    endDist = maxPos - data.displayed[i].pos;
+                if (maxPos > d.pos) {
+                    endDist = maxPos - d.pos;
                 }
-                itemUnlocks[j].arcEnd = ((2 * Math.PI) / data.displayed.length) * endDist;
+                u.arcEnd = ((2 * Math.PI) / data.displayed.length) * endDist;
                 var baseDist = 0;
-                if (minPos < data.displayed[i].pos) {
-                    baseDist = data.displayed[i].pos - minPos;
+                if (minPos < d.pos) {
+                    baseDist = d.pos - minPos;
                 }
-                itemUnlocks[j].arcBack = ((2 * Math.PI) / data.displayed.length) * baseDist;
+                u.arcBack = ((2 * Math.PI) / data.displayed.length) * baseDist;
             }
-        }
-    }
+        });
+    });
+
 
     // Reverse order of data so that arcs are drawn over spokes
     data.displayed.sort(function(a, b) {
