@@ -120,9 +120,12 @@ var setupArcs = function (data) {
     
     // Set spoke rank - where to start drawing spoke
     data.displayed.forEach(function (d) {
-        if (d.arcRank > 0) {
-            var spokeRank = d.arcRank;
-            var preReqs = getTechPrereqs(d, data);
+        var spokeRank;
+        var preReqs;
+
+        if (d.arcRank > 0 && d.arcRank !== 500) {
+            spokeRank = d.arcRank;
+            preReqs = getTechPrereqs(d, data);
             preReqs.forEach(function (p) {
                 if (p.arcRank < spokeRank) {
                     spokeRank = p.arcRank;
@@ -141,10 +144,15 @@ var setupArcs = function (data) {
             if (u.ref.requires.length > 1) {
                 var maxPos = 0;
                 var minPos = d.pos;
+                var endDist;
+                var baseDist;
+
                 u.lreq = [];
 
                 u.ref.requires.forEach(function (r) {
                     var unlockReq = getTechById(r, data);
+                    var req;
+
                     if (unlockReq.pos > maxPos) {
                         maxPos = unlockReq.pos;
                     }
@@ -152,17 +160,17 @@ var setupArcs = function (data) {
                         minPos = unlockReq.pos;
                     }
                     if (unlockReq.pos !== d.pos) { // unlock arc square positions
-                        var req = {"id": unlockReq.id, "dist": (unlockReq.pos - d.pos), "pos": d.pos, "arcRank": u.rank};
+                        req = {"id": unlockReq.id, "dist": (unlockReq.pos - d.pos), "pos": d.pos, "arcRank": u.rank};
                         u.lreq.push(req);
                     }
                 });
                 
-                var endDist = 0;
+                endDist = 0;
                 if (maxPos > d.pos) {
                     endDist = maxPos - d.pos;
                 }
                 u.arcEnd = ((2 * Math.PI) / data.displayed.length) * endDist;
-                var baseDist = 0;
+                baseDist = 0;
                 if (minPos < d.pos) {
                     baseDist = d.pos - minPos;
                 }

@@ -37,4 +37,4 @@ var orderDisplayed = function (data) {
             u.pos = i;
         });
     });
-}
+};
