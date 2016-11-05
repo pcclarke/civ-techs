@@ -58,7 +58,7 @@ function makeWheel(game, civilization) {
                     if (!d.requires && !d.optional) {
                         return 0;
                     } 
-                    return -(civ.arcBase + (civ.arcSpace * d.spokeRank));
+                    return -(CIV.arcBase + (CIV.arcSpace * d.spokeRank));
                 })
                 .attr("x2", 0)
                 .attr("y2", function(d) {
@@ -78,8 +78,8 @@ function makeWheel(game, civilization) {
                 .attr("xlink:href", function(d) {
                     var link;
                     if (d.cat === "units" || d.cat === "buildings") {
-                        if (d[civ.ilization]) {
-                            link = game + "/img/" + d.cat + "/" + d[civ.ilization].id + ".png";
+                        if (d[CIV.ilization]) {
+                            link = game + "/img/" + d.cat + "/" + d[CIV.ilization].id + ".png";
                         } else {
                             link = game + "/img/" + d.cat + "/" + d.CIVILIZATION_ALL.id + ".png";    
                         }
@@ -91,8 +91,8 @@ function makeWheel(game, civilization) {
                 .on("mouseover", function(d) {
                     var tipName = "";
                     if (d.cat === "units" || d.cat === "buildings") {
-                        if (d[civ.ilization]) {
-                            tipName = d[civ.ilization].name;
+                        if (d[CIV.ilization]) {
+                            tipName = d[CIV.ilization].name;
                         } else {
                             tipName = d.CIVILIZATION_ALL.name;
                         }
@@ -106,7 +106,7 @@ function makeWheel(game, civilization) {
                     d3.select("#tooltip").classed("hidden", true);
                 })
                 .on("click", function(d) {
-                    displayDetailsBox(d, game, civ, data);
+                    displayDetailsBox(d, game, CIV, data);
                 });
 
             var unlocks = spokes.selectAll(".unlocks")
@@ -125,7 +125,6 @@ function makeWheel(game, civilization) {
                     return "unlock hidden " + d.ref.id + "" + d.pos;
                 });
 
-
             var unlockArcs = unlocks.append("path")
                 .attr("class", function(d) {
                     return "unlockArc";
@@ -134,7 +133,7 @@ function makeWheel(game, civilization) {
                     return d.rank;
                 })
                 .style("fill", function(d) {
-                    return civ.color(d.pos);
+                    return CIV.color(d.pos);
                 })
                 .attr("d", unlockArc);
 
@@ -155,7 +154,7 @@ function makeWheel(game, civilization) {
                 .attr("width", 5)
                 .attr("height", 5)
                 .attr("fill", function(d) {
-                    return civ.color(d.pos);
+                    return CIV.color(d.pos);
                 });
 
             var unlockIcons = spokes.selectAll(".unlockIcon")
@@ -176,8 +175,8 @@ function makeWheel(game, civilization) {
                 .attr("xlink:href", function(d) {
                     var link;
                     if (d.ref.cat === "units" || d.ref.cat === "buildings") {
-                        if (d.ref[civ.ilization]) {
-                            link = game + "/img/" + d.ref.cat + "/" + d.ref[civ.ilization].id + ".png";
+                        if (d.ref[CIV.ilization]) {
+                            link = game + "/img/" + d.ref.cat + "/" + d.ref[CIV.ilization].id + ".png";
                         } else {
                             link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
                         }
@@ -189,8 +188,8 @@ function makeWheel(game, civilization) {
                 .on("mouseover", function(d) {
                     var tipName = "";
                     if (d.ref.cat === "units" || d.ref.cat === "buildings") {
-                        if (d.ref[civ.ilization]) {
-                            tipName = d.ref[civ.ilization].name;
+                        if (d.ref[CIV.ilization]) {
+                            tipName = d.ref[CIV.ilization].name;
                         } else {
                             tipName = d.ref.CIVILIZATION_ALL.name;
                         }
@@ -214,21 +213,21 @@ function makeWheel(game, civilization) {
                         .classed("hidden", true);
                 })
                 .on("click", function(d) {
-                    displayDetailsBox(d.ref, game, civ, data);
+                    displayDetailsBox(d.ref, game, CIV, data);
                 });
 
 
             // Update icons with unique civilization units
             d3.select("#selectCiv")
                 .on("change", function(d) {
-                    civ.ilization = this.options[this.selectedIndex].value;
+                    CIV.ilization = this.options[this.selectedIndex].value;
                     d3.select("#description").classed("hidden", true);
 
                     unlockIcons.attr("xlink:href", function(d) {
                         var link;
                         if (d.ref.cat === "units" || d.ref.cat === "buildings") {
-                            if (d.ref[civ.ilization]) {
-                                link = game + "/img/" + d.ref.cat + "/" + d.ref[civ.ilization].id + ".png";
+                            if (d.ref[CIV.ilization]) {
+                                link = game + "/img/" + d.ref.cat + "/" + d.ref[CIV.ilization].id + ".png";
                             } else {
                                 link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
                             }
@@ -242,7 +241,7 @@ function makeWheel(game, civilization) {
             var reqArc = spokes.append("path")
                 .attr("class", "spokeArc")
                 .style("fill", function(d) {
-                    return civ.color(d.pos);
+                    return CIV.color(d.pos);
                 })
                 .attr("d", arc);
                 
@@ -250,15 +249,15 @@ function makeWheel(game, civilization) {
                 .attr("class", "spokePin")
                 .attr("x1", 0)
                 .attr("y1", function(d) {
-                    return -(civ.arcBase + 7 + (civ.arcSpace * d.arcRank));
+                    return -(CIV.arcBase + 7 + (CIV.arcSpace * d.arcRank));
                 })
                 .attr("x2", 0)
                 .attr("y2", function(d) {
-                    return -(civ.arcBase - 5 + (civ.arcSpace * d.arcRank));
+                    return -(CIV.arcBase - 5 + (CIV.arcSpace * d.arcRank));
                 })
-                .attr("stroke-width", civ.arcWidth)
+                .attr("stroke-width", CIV.arcWidth)
                 .attr("stroke", function(d) {
-                return civ.color(d.pos); 
+                return CIV.color(d.pos); 
                 });
                 
             var reqSquares = spokes.selectAll(".reqSquare")
@@ -268,7 +267,7 @@ function makeWheel(game, civilization) {
                 .enter().append("g")
                 .attr("transform", function(d) {
                     var ang = d.dist * (360 / data.displayed.length);
-                    return "rotate(" + ang + ") translate(0, " + (-civ.arcBase - 2.5 - (civ.arcSpace * d.arcRank)) + ")";
+                    return "rotate(" + ang + ") translate(0, " + (-CIV.arcBase - 2.5 - (CIV.arcSpace * d.arcRank)) + ")";
                 })
                 .attr("class", "reqSquare");
                 
@@ -278,7 +277,7 @@ function makeWheel(game, civilization) {
                 .attr("width", 5)
                 .attr("height", 5)
                 .attr("fill", function(d) {
-                    return civ.color(d.pos);
+                    return CIV.color(d.pos);
                 });
                 
             var optCircles = spokes.selectAll(".optCircle")
@@ -288,7 +287,7 @@ function makeWheel(game, civilization) {
                 .enter().append("g")
                 .attr("transform", function(d) {
                     var ang = d.dist * (360 / data.displayed.length);
-                    return "rotate(" + ang + ") translate(0, " + (-civ.arcBase - 2.5 - (civ.arcSpace * d.arcRank)) + ")";
+                    return "rotate(" + ang + ") translate(0, " + (-CIV.arcBase - 2.5 - (CIV.arcSpace * d.arcRank)) + ")";
                 })
                 .attr("class", "optCircle");
             
@@ -298,7 +297,7 @@ function makeWheel(game, civilization) {
                 .attr("r", 2.5)
                 .attr("stroke-width", 1)
                 .attr("stroke", function(d) {
-                    return civ.color(d.pos);
+                    return CIV.color(d.pos);
                 })
                 .attr("fill", "white");
 

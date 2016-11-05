@@ -9,32 +9,32 @@ function spokeMouseOver(d) {
         .classed("spokeTextBoxSelected", true);
         
     if (d.requires) {
-        for (var i = 0; i < d.requires.length; i++) {
-            d3.selectAll("." + d.requires[i])
+        d.requires.forEach(function (r) {
+            d3.selectAll("." + r)
             .selectAll(".spokeLine")
                 .classed("lineRequired", true);
-        }
+        });
     }
     if (d.optional) {
-        for (var i = 0; i < d.optional.length; i++) {
-            d3.selectAll("." + d.optional[i])
+        d.optional.forEach(function (o) {
+            d3.selectAll("." + o)
             .selectAll(".spokeLine")
                 .classed("lineOptional", true);
-        }
+        });
     }
     if (d.lreq) {
-        for (var i = 0; i < d.lreq.length; i++) {
-            d3.selectAll("." + d.lreq[i].id)
+        d.lreq.forEach(function (lr) {
+            d3.selectAll("." + lr.id)
             .selectAll(".spokeLine")
                 .classed("lineLeads", true);
-        }
+        });
     }
     if (d.lopt) {
-        for (var i = 0; i < d.lopt.length; i++) {
-            d3.selectAll("." + d.lopt[i].id)
+        d.lopt.forEach(function (lo) {
+            d3.selectAll("." + lo.id)
             .selectAll(".spokeLine")
                 .classed("lineLeads", true);
-        }
+        });
     }
 }
 
@@ -49,40 +49,40 @@ function spokeMouseOut(d) {
         .classed("spokeTextBoxSelected", false);
 
     if (d.requires) {
-        for (var i = 0; i < d.requires.length; i++) {
-            d3.selectAll("." + d.requires[i])
+        d.requires.forEach(function (r) {
+            d3.selectAll("." + r)
             .selectAll(".spokeLine")
                 .classed("lineRequired", false);
-        }
+        });
     }
     if (d.optional) {
-        for (var i = 0; i < d.optional.length; i++) {
-            d3.selectAll("." + d.optional[i])
+        d.optional.forEach(function (o) {
+            d3.selectAll("." + o)
             .selectAll(".spokeLine")
                 .classed("lineOptional", false);
-        }
+        });
     }
     if (d.lreq) {
-        for (var i = 0; i < d.lreq.length; i++) {
-            d3.selectAll("." + d.lreq[i].id)
+        d.lreq.forEach(function (lr) {
+            d3.selectAll("." + lr.id)
             .selectAll(".spokeLine")
                 .classed("lineLeads", false);
-        }
+        });
     }
     if (d.lopt) {
-        for (var i = 0; i < d.lopt.length; i++) {
-            d3.selectAll("." + d.lopt[i].id)
+        d.lopt.forEach(function (lo) {
+            d3.selectAll("." + lo.id)
             .selectAll(".spokeLine")
                 .classed("lineLeads", false);
-        }
+        });
     }
 }
 
 // Show the name of an icon in a hover box
 function displayTooltip(name) {
     d3.select("#tooltip")
-        .style("left", civ.coords[0] + "px")
-        .style("top", civ.coords[1] + "px");
+        .style("left", CIV.coords[0] + "px")
+        .style("top", CIV.coords[1] + "px");
 
     d3.select("#tipName").text(name);
 

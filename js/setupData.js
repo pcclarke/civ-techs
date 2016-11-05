@@ -1,68 +1,67 @@
 // Append technologies to displayed & the things they unlock
 function setupData(data) {
     data.displayed = [];
+    var unlocksList = [];
 
     // First, arrange the technologies by cost
     data.technologies.sort(function(a, b) {
         return a.cost - b.cost;
     });
 
-    var unlocksList = []
-
     // Scoop up all the things each technology leads to and put it in the unlocks object
-    for (var i = data.technologies.length - 1; i > 0; i--) {
-        data.technologies[i].cat = "technologies";
-        data.displayed.push(data.technologies[i]);
-
-        var unlocks = getLeadsTo(data.technologies[i], data.units);
-        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.buildings));
-        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.projects));
-        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.promotions));
-        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.build));
-        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.civics));
-        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.religions));
-        unlocks = unlocks.concat(getLeadsTo(data.technologies[i], data.resources));
-
-        if (data.technologies[i].special) {
-            for (var j = 0; j < data.technologies[i].special.length; j++) {
-                data.technologies[i].special[j].cat = "specials";
-                data.technologies[i].special[j].requires = [];
-                data.technologies[i].special[j].requires.push(data.technologies[i].id);
-                unlocks.push(data.technologies[i].special[j]);
-            }
-        }
-
+    data.technologies.forEach(function(d) {
         var toSplice = [];
         var uniqueUnlocks = [];
-        for (var j = 0; j < unlocks.length; j++) {
+        var unlocks;
+
+        d.cat = "technologies";
+        data.displayed.push(d);
+
+        unlocks = getLeadsTo(d, data.units);
+        unlocks = unlocks.concat(getLeadsTo(d, data.buildings));
+        unlocks = unlocks.concat(getLeadsTo(d, data.projects));
+        unlocks = unlocks.concat(getLeadsTo(d, data.promotions));
+        unlocks = unlocks.concat(getLeadsTo(d, data.build));
+        unlocks = unlocks.concat(getLeadsTo(d, data.civics));
+        unlocks = unlocks.concat(getLeadsTo(d, data.religions));
+        unlocks = unlocks.concat(getLeadsTo(d, data.resources));
+
+        if (d.special) {
+            d.special.forEach(function (s) {
+                s.cat = "specials";
+                s.requires = [];
+                s.requires.push(d.id);
+                unlocks.push(s);
+            });
+        }
+
+        unlocks.forEach(function (u, j) {
             var matchFound = 0;
-            for (var k = 0; k < unlocksList.length; k++) {
-                if (unlocks[j].id === unlocksList[k].id) {
+            unlocksList.forEach(function (l, k) {
+                if (u.id === l.id) {
                     matchFound = 1;
                 }
-            }
+            });
             if (matchFound !== 1) {
-                uniqueUnlocks.push(unlocks[j]);
+                uniqueUnlocks.push(u);
             }
-        }
+        });
         unlocksList = unlocksList.concat(uniqueUnlocks);
 
         var unlocksHandler = [];
-        for (var j = 0; j < uniqueUnlocks.length; j++) {
-
+        uniqueUnlocks.forEach(function (u, j) {
             var unlocksItem = {};
             unlocksItem.rank = j;
-            unlocksItem.ref = uniqueUnlocks[j];
+            unlocksItem.ref = u;
             unlocksHandler.push(unlocksItem);
-        }
-        data.technologies[i].unlocks = unlocksHandler;
-    }
+        });
+        d.unlocks = unlocksHandler;
+    });
     
     // Label data categories
-    var dataTypes = ["units", "buildings", "religions", "build", "resources", "projects", "promotions", "civics"];
-    for (var i = 0; i < dataTypes.length; i++) {
-        for (var j = 0; j < data[dataTypes[i]].length; j++) {
-            data[dataTypes[i]][j].cat = dataTypes[i];
-        }
-    }
+    CIV.dataTypes.forEach(function (t) {
+        data[t].forEach(function (d) {
+            d.cat = t;
+        });
+    });
 }

@@ -13,7 +13,7 @@ var getReqTechPreReqs = function (examine, data) {
     }
     
     return preReqs;
-}
+};
 
 // Get a list of the displayed things this technology leads to that require it
  var getLeadsToReq = function (examine, compareData) {
@@ -30,7 +30,7 @@ var getReqTechPreReqs = function (examine, data) {
     });
     
     return leads;
-}
+};
 
 // Get a list of the optional technology prerequisites for a given thing
 var getOptTechPreReqs = function (examine, data) {
@@ -47,7 +47,7 @@ var getOptTechPreReqs = function (examine, data) {
     }
     
     return preReqs;
-}
+};
 
 // Get a list of the displayed things this technology leads to that optionally require it
 var getLeadsToOpt = function (examine, compareData) {
@@ -64,7 +64,7 @@ var getLeadsToOpt = function (examine, compareData) {
     });
     
     return leads;
-}
+};
 
 // Get a list of the technology prerequsites (required and optional) for a given thing (techs, units, whatever)
 var getTechPrereqs = function (examine, data) {
@@ -90,7 +90,7 @@ var getTechPrereqs = function (examine, data) {
     }
     
     return preReqs;
-}
+};
 
 // Get a list of the displayed things this technology leads to (required and optional)
 var getLeadsTo = function (examine, compareData) {
@@ -114,7 +114,7 @@ var getLeadsTo = function (examine, compareData) {
     });
 
     return leads;
-}
+};
 
 // Returns a technology item by its Id
 var getTechById = function (examineId, data) {
@@ -127,7 +127,7 @@ var getTechById = function (examineId, data) {
     });
 
     return tech;
-}
+};
 
 // For a given technology, creates a list including:
 // technologies that it requires (optional & mandatory)
@@ -170,7 +170,7 @@ var findNearby = function (origin, data) {
     }
 
     return nearbyList;
-}
+};
 
 // Converts the specials in a technology into prereq objects
 var convertSpecial = function (examine) {
@@ -187,4 +187,4 @@ var convertSpecial = function (examine) {
     }
 
     return specials;
-}
+};

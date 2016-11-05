@@ -4,9 +4,9 @@ function displayDetailsBox(item, game, civ, data) {
     var itemId = "";
 
     if (itemCat === "units" || itemCat === "buildings") {
-        if (item[civ.ilization]) {
-            itemName = item[civ.ilization].name;
-            itemId = item[civ.ilization].id;
+        if (item[CIV.ilization]) {
+            itemName = item[CIV.ilization].name;
+            itemId = item[CIV.ilization].id;
         } else {
             itemName = item.CIVILIZATION_ALL.name;
             itemId = item.CIVILIZATION_ALL.id;
@@ -21,17 +21,17 @@ function displayDetailsBox(item, game, civ, data) {
     if (item.requires) {
         var reqText = "None";
         var reqs = getReqTechPreReqs(item, data);
-        for (var i = 0; i < reqs.length; i++) {
+        reqs.forEach(function (r, i) {
             if (i == 0) {
-                reqText = reqs[i].name;
+                reqText = r.name;
             } else if (i == reqs.length - 1 && reqs.length == 2) {
-                reqText = reqText + " and " + reqs[i].name;
+                reqText = reqText + " and " + r.name;
             } else if (i == reqs.length - 1) {
-                reqText = reqText + ", and " + reqs[i].name;    
+                reqText = reqText + ", and " + r.name;    
             } else {
-                reqText = reqText + ", " + reqs[i].name;
+                reqText = reqText + ", " + r.name;
             }
-        }
+        });
         d3.select("#descMand").text(reqText);
         d3.select("#descMandLine").classed("hidden", false);
         d3.select("#descNoLine").classed("hidden", true);
@@ -114,4 +114,4 @@ function displayDetailsBox(item, game, civ, data) {
     }
 
     d3.select("#description").classed("hidden", false);
-}
+};
