@@ -125,7 +125,6 @@ function makeWheel(game, civilization) {
                     return "unlock hidden " + d.ref.id + "" + d.pos;
                 });
 
-
             var unlockArcs = unlocks.append("path")
                 .attr("class", function(d) {
                     return "unlockArc";

@@ -114,4 +114,4 @@ function displayDetailsBox(item, game, civ, data) {
     }
 
     d3.select("#description").classed("hidden", false);
-}
+};

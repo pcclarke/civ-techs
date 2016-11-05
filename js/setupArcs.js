@@ -2,25 +2,20 @@ var setupArcs = function (data) {
     var arcDists = []; // list of recent arcRanks
     var leadsReq;
     var leadsOpt;
-    var rekked;
-    var opted;
     var minArcDist;
     var maxArcDist;
-    var minPos;
-    var maxPos;
-    var obsoleted;
 
     // Add in the displayed into their prerequisites so that the arcs can be set up
     data.displayed.forEach(function (d, i) {
-        rekked = []; // copy leads to required displayed
-        opted = []; // copy leads to optional displayed
-        obsoleted = [];
+        var rekked = []; // copy leads to required displayed
+        var opted = []; // copy leads to optional displayed
+        var obsoleted = [];
         minArcDist = 0;
         maxArcDist = 0;
         leadsReq = getLeadsToReq(d, data.displayed);
         leadsOpt = getLeadsToOpt(d, data.displayed);
-        minPos = d.pos;
-        maxPos = d.pos;
+        var minPos = d.pos;
+        var maxPos = d.pos;
 
         // Determine how many positions arc goes through and what it is mandatory for
         leadsReq.forEach(function (lr) {
@@ -160,7 +155,7 @@ var setupArcs = function (data) {
                         minPos = unlockReq.pos;
                     }
                     if (unlockReq.pos !== d.pos) { // unlock arc square positions
-                        req = {"id": unlockReq.id, "dist": (unlockReq.pos - d.pos), "pos": d.pos, "arcRank": u.rank};
+                        req = {"id": unlockReq.id, "dist": (unlockReq.pos - d.pos), "pos": u.pos, "arcRank": u.rank};
                         u.lreq.push(req);
                     }
                 });
