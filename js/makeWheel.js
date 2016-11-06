@@ -98,15 +98,14 @@ function makeWheel(game, civilization) {
                     } else {
                         tipName = d.name;
                     }
-                    displayTooltip(tipName);
                     spokeHighlightIn(d);
                 })
                 .on("mouseout", function(d) {
-                    d3.select("#tooltip").classed("hidden", true);
+                    //d3.select("#tooltip").classed("hidden", true);
                     spokeHighlightOut(d);
                 })
-                .on("click", function(d) {
-                    displayDetailsBox(d, game, CIV, data);
+                .on("click", function(d) { 
+                    displayDetailsBox(d, d.pos, game, CIV, data);
                 });
 
             var unlocks = spokes.selectAll(".unlocks")
@@ -186,36 +185,25 @@ function makeWheel(game, civilization) {
                     return link;
                 })
                 .on("mouseover", function(d) {
-                    var tipName = "";
-                    if (d.ref.cat === "units" || d.ref.cat === "buildings") {
-                        if (d.ref[CIV.ilization]) {
-                            tipName = d.ref[CIV.ilization].name;
-                        } else {
-                            tipName = d.ref.CIVILIZATION_ALL.name;
-                        }
-                    } else {
-                        tipName = d.ref.name;
-                    }
-                    displayTooltip(tipName);
-
                     d3.selectAll(".unlockIcon")
                         .classed("unlockFade", true);
                     d3.selectAll("." + d.ref.id + "" + d.pos)
                         .classed("hidden", false);
                     d3.select(this)
                         .classed("unlockFade", false);
+
                     spokeHighlightIn(d.ref);
                 })
                 .on("mouseout", function(d) {
-                    d3.select("#tooltip").classed("hidden", true);
                     d3.selectAll(".unlockIcon")
                         .classed("unlockFade", false);
                     d3.selectAll(".unlock")
                         .classed("hidden", true);
+
                     spokeHighlightOut(d.ref);
                 })
-                .on("click", function(d) {
-                    displayDetailsBox(d.ref, game, CIV, data);
+                .on("click", function(d) { 
+                    displayDetailsBox(d.ref, d.pos, game, CIV, data);
                 });
 
 
