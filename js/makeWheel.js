@@ -47,8 +47,6 @@ function makeWheel(game, civilization) {
                         var ang = d.pos * (360 / data.displayed.length);
                         return "rotate(" + ang +")";
                     })
-                    .on("mouseover", spokeMouseOver)
-                    .on("mouseout", spokeMouseOut)
                     .on("click", function(d) { });
 
             spokes.append("line") // Spoke lines from center
@@ -101,9 +99,11 @@ function makeWheel(game, civilization) {
                         tipName = d.name;
                     }
                     displayTooltip(tipName);
+                    spokeHighlightIn(d);
                 })
                 .on("mouseout", function(d) {
                     d3.select("#tooltip").classed("hidden", true);
+                    spokeHighlightOut(d);
                 })
                 .on("click", function(d) {
                     displayDetailsBox(d, game, CIV, data);
@@ -204,6 +204,7 @@ function makeWheel(game, civilization) {
                         .classed("hidden", false);
                     d3.select(this)
                         .classed("unlockFade", false);
+                    spokeHighlightIn(d.ref);
                 })
                 .on("mouseout", function(d) {
                     d3.select("#tooltip").classed("hidden", true);
@@ -211,6 +212,7 @@ function makeWheel(game, civilization) {
                         .classed("unlockFade", false);
                     d3.selectAll(".unlock")
                         .classed("hidden", true);
+                    spokeHighlightOut(d.ref);
                 })
                 .on("click", function(d) {
                     displayDetailsBox(d.ref, game, CIV, data);

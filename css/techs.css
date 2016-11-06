@@ -93,14 +93,13 @@ h1 {
 }
 
 .spokeLine {
-    cursor: pointer;
     stroke: #bcbec0;
     stroke-width: 0.5px;
 }
 
 .lineSelected {
     stroke: #1f1f1f;
-    stroke-width: 2px;
+    stroke-width: 1.5px;
 }
 
 .lineRequired {
@@ -136,6 +135,10 @@ h1 {
 
 .spokeTextBoxSelected {
     fill: #1f1f1f;   
+}
+
+.techImg, .unlockIcon {
+    cursor: pointer;
 }
 
 #tooltip {
