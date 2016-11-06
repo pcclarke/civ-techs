@@ -5,7 +5,7 @@ function setupData(data) {
 
     // First, arrange the technologies by cost
     data.technologies.sort(function(a, b) {
-        return a.cost - b.cost;
+        return b.cost - a.cost;
     });
 
     // Scoop up all the things each technology leads to and put it in the unlocks object
