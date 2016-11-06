@@ -238,14 +238,27 @@ function makeWheel(game, civilization) {
                     });
                 });
 
-            var reqArc = spokes.append("path")
+            var reqGroup = wheel.selectAll(".reqGroup")
+                    .data(data.displayed)
+                .enter().append("g")
+                    .attr("class", function(d) {
+                        var className = d.id + " reqGroup";
+                        return className;
+                    })
+                    .attr("transform", function(d) {
+                        var ang = d.pos * (360 / data.displayed.length);
+                        return "rotate(" + ang +")";
+                    })
+                    .on("click", function(d) { });
+
+            var reqArc = reqGroup.append("path")
                 .attr("class", "spokeArc")
                 .style("fill", function(d) {
                     return CIV.color(d.pos);
                 })
                 .attr("d", arc);
                 
-            var reqPin = spokes.append("line")
+            var reqPin = reqGroup.append("line")
                 .attr("class", "spokePin")
                 .attr("x1", 0)
                 .attr("y1", function(d) {
@@ -260,7 +273,7 @@ function makeWheel(game, civilization) {
                 return CIV.color(d.pos); 
                 });
                 
-            var reqSquares = spokes.selectAll(".reqSquare")
+            var reqSquares = reqGroup.selectAll(".reqSquare")
                 .data(function(d) {
                     return d.lreq;
                 })
@@ -280,7 +293,7 @@ function makeWheel(game, civilization) {
                     return CIV.color(d.pos);
                 });
                 
-            var optCircles = spokes.selectAll(".optCircle")
+            var optCircles = reqGroup.selectAll(".optCircle")
                 .data(function(d) {
                     return d.lopt;
                 })
