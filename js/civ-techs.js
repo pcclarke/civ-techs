@@ -87,7 +87,7 @@ d3.select("#selectGame")
     });
 
 // Close the details box
-d3.select("#descCloseButton")
+d3.select("#tooltip")
     .on("click", function(d) {
-        d3.select("#description").classed("hidden", true);
+        d3.select("#tooltip").classed("hidden", true);
     });

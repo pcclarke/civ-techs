@@ -1,13 +1,19 @@
-// Mouseover for the spokes of the wheel
-function spokeMouseOver(d) {
-    d3.select(this)
-        .classed("textSelected", true)
-    .selectAll(".spokeLine")
+// Show the name of an icon in a hover box
+function displayTooltip(name) {
+    d3.select("#tooltip")
+        .style("left", CIV.coords[0] + "px")
+        .style("top", CIV.coords[1] + "px");
+
+    d3.select("#tipName").text(name);
+
+    d3.select("#tooltip").classed("hidden", false);
+}
+
+function spokeHighlightIn(d) {
+    d3.selectAll("." + d.id)  
+        .selectAll(".spokeLine")
         .classed("lineSelected", true);
-    d3.select(this)
-    .selectAll(".spokeTextBox")
-        .classed("spokeTextBoxSelected", true);
-        
+
     if (d.requires) {
         d.requires.forEach(function (r) {
             d3.selectAll("." + r)
@@ -38,15 +44,10 @@ function spokeMouseOver(d) {
     }
 }
 
-// Mouseout for the spokes of the wheel
-function spokeMouseOut(d) {
-    d3.select(this)
-        .classed("textSelected", false)
-    .selectAll(".spokeLine")
+function spokeHighlightOut(d) {
+    d3.selectAll("." + d.id)  
+        .selectAll(".spokeLine")
         .classed("lineSelected", false);
-    d3.select(this)
-    .selectAll(".spokeTextBox")
-        .classed("spokeTextBoxSelected", false);
 
     if (d.requires) {
         d.requires.forEach(function (r) {
@@ -76,15 +77,4 @@ function spokeMouseOut(d) {
                 .classed("lineLeads", false);
         });
     }
-}
-
-// Show the name of an icon in a hover box
-function displayTooltip(name) {
-    d3.select("#tooltip")
-        .style("left", CIV.coords[0] + "px")
-        .style("top", CIV.coords[1] + "px");
-
-    d3.select("#tipName").text(name);
-
-    d3.select("#tooltip").classed("hidden", false);
 }

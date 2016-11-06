@@ -1,7 +1,20 @@
-function displayDetailsBox(item, game, civ, data) {
+function displayDetailsBox(item, pos, game, civ, data) {
     var itemCat = item.cat;
     var itemName = "";
     var itemId = "";
+
+    d3.select("#tooltip")
+        .style("left", function () {
+            if (pos > (data.displayed.length / 2)) {
+                return (CIV.coords[0] + 15) + "px";
+            } else {
+                return (CIV.coords[0] - 415) + "px";
+            }
+        })
+        .style("top", function () {
+            return (CIV.coords[1] - 100) + "px";
+            
+        });
 
     if (itemCat === "units" || itemCat === "buildings") {
         if (item[CIV.ilization]) {
@@ -16,8 +29,8 @@ function displayDetailsBox(item, game, civ, data) {
         itemId = item.id;
     }
 
-    d3.select("#descTitle").text(itemName);
-    d3.select("#descImg").attr("src", game + "/img/" + itemCat + "/" + itemId + ".png");
+    d3.select("#tipName").text(itemName);
+    d3.select("#tipImg").attr("src", game + "/img/" + itemCat + "/" + itemId + ".png");
     if (item.requires) {
         var reqText = "None";
         var reqs = getReqTechPreReqs(item, data);
@@ -32,13 +45,13 @@ function displayDetailsBox(item, game, civ, data) {
                 reqText = reqText + ", " + r.name;
             }
         });
-        d3.select("#descMand").text(reqText);
-        d3.select("#descMandLine").classed("hidden", false);
-        d3.select("#descNoLine").classed("hidden", true);
+        d3.select("#tipMand").text(reqText);
+        d3.select("#tipMandLine").classed("hidden", false);
+        d3.select("#tipNoLine").classed("hidden", true);
     } else {
-        d3.select("#descMandLine").classed("hidden", true);
+        d3.select("#tipMandLine").classed("hidden", true);
         if (!item.optional) {
-            d3.select("#descNoLine").classed("hidden", false);
+            d3.select("#tipNoLine").classed("hidden", false);
         }
     }
     if (item.optional) {
@@ -56,62 +69,62 @@ function displayDetailsBox(item, game, civ, data) {
             }
         }
         if (item.requires) {
-            d3.select("#descPlusLine").classed("hidden", false);    
+            d3.select("#tipPlusLine").classed("hidden", false);    
         } else {
-            d3.select("#descPlusLine").classed("hidden", true);
+            d3.select("#tipPlusLine").classed("hidden", true);
         }
-        d3.select("#descOpt").text(optText);
-        d3.select("#descOptLine").classed("hidden", false);
-        d3.select("#descNoLine").classed("hidden", true);
+        d3.select("#tipOpt").text(optText);
+        d3.select("#tipOptLine").classed("hidden", false);
+        d3.select("#tipNoLine").classed("hidden", true);
     } else {
-        d3.select("#descPlusLine").classed("hidden", true);
-        d3.select("#descOptLine").classed("hidden", true);
-        d3.select("#descOpt").text("None");
+        d3.select("#tipPlusLine").classed("hidden", true);
+        d3.select("#tipOptLine").classed("hidden", true);
+        d3.select("#tipOpt").text("None");
     }
 
     if (itemCat === "technologies") {
         if (item.lopt.length > 0 || item.lreq.length > 0) {
-            d3.select("#descLeads").classed("hidden", false);
+            d3.select("#tipLeads").classed("hidden", false);
             if (item.lreq.length > 0) {
-                var descMandatoryLeads = "";
+                var tipMandatoryLeads = "";
                 for (var i = 0; i < item.lreq.length; i++) {
                     var leadTech = getTechById(item.lreq[i].id, data);
                     if (i == 0) {
-                        descMandatoryLeads = leadTech.name;
+                        tipMandatoryLeads = leadTech.name;
                     } else {
-                        descMandatoryLeads = descMandatoryLeads + ", " + leadTech.name;
+                        tipMandatoryLeads = tipMandatoryLeads + ", " + leadTech.name;
                     }
                 }
-                d3.select("#descMld").text(descMandatoryLeads);
-                d3.select("#descMldLine").classed("hidden", false);
+                d3.select("#tipMld").text(tipMandatoryLeads);
+                d3.select("#tipMldLine").classed("hidden", false);
             } else {
-                d3.select("#descMldLine").classed("hidden", true);
+                d3.select("#tipMldLine").classed("hidden", true);
             }
             if (item.lopt.length > 0) {
-                var descOptionalLeads = "";
+                var tipOptionalLeads = "";
                 for (var i = 0; i < item.lopt.length; i++) {
                     var leadTech = getTechById(item.lopt[i].id, data);
                     if (i == 0) {
-                        descOptionalLeads = leadTech.name;
+                        tipOptionalLeads = leadTech.name;
                     } else {
-                        descOptionalLeads = descOptionalLeads + ", " + leadTech.name;
+                        tipOptionalLeads = tipOptionalLeads + ", " + leadTech.name;
                     }
                 }
-                d3.select("#descOld").text(descOptionalLeads);
-                d3.select("#descOldLine").classed("hidden", false);
+                d3.select("#tipOld").text(tipOptionalLeads);
+                d3.select("#tipOldLine").classed("hidden", false);
             } else {
-                d3.select("#descOldLine").classed("hidden", true);
+                d3.select("#tipOldLine").classed("hidden", true);
             }
         } else {
-            d3.select("#descLeads").classed("hidden", true);
+            d3.select("#tipLeads").classed("hidden", true);
         }
 
-        d3.select("#descCost").text(item.cost);
-        d3.select("#descCostLine").classed("hidden", false);
+        d3.select("#tipCost").text(item.cost);
+        d3.select("#tipCostLine").classed("hidden", false);
     } else {
-        d3.select("#descCostLine").classed("hidden", true);
-        d3.select("#descLeads").classed("hidden", true);
+        d3.select("#tipCostLine").classed("hidden", true);
+        d3.select("#tipLeads").classed("hidden", true);
     }
 
-    d3.select("#description").classed("hidden", false);
+    d3.select("#tooltip").classed("hidden", false);
 };
