@@ -81,7 +81,7 @@ d3.select("#selectGame")
         document.getElementById("selectCiv").value = CIV.ilization;
 
         var selectCiv = document.getElementById("selectCiv");
-        selectCIV.options.length = 1;
+        selectCiv.options.length = 1;
 
         makeWheel(this.options[this.selectedIndex].value);
     });
