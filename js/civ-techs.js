@@ -83,7 +83,15 @@ d3.select("#selectGame")
         var selectCiv = document.getElementById("selectCiv");
         selectCiv.options.length = 1;
 
-        makeWheel(this.options[this.selectedIndex].value);
+        var selectGame = this.options[this.selectedIndex].value;
+
+        if (selectGame === "civ1" || selectGame === "civ2") {
+            d3.select("#selectCivBox").classed("hidden", true);
+        } else {
+            d3.select("#selectCivBox").classed("hidden", false);
+        }
+
+        makeWheel(selectGame);
     });
 
 // Close the details box

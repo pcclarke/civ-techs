@@ -1,0 +1,52 @@
+{
+	"build": [
+		{
+			"name": "Build Railroad",
+			"id": "BUILD_RAILROAD",
+			"requires": "TECH_RAILROAD"
+		},
+		{
+			"name": "Build Fortress",
+			"id": "BUILD_FORTRESS",
+			"requires": "TECH_CONSTRUCTION"
+		},
+		{
+			"name": "Build Airbase",
+			"id": "BUILD_AIRBASE",
+			"requires": "TECH_RADIO"
+		},
+		{
+			"name": "Improve Farmland",
+			"id": "BUILD_IMPROVE_FARMLAND",
+			"requires": "TECH_REFRIGERATION"
+		}
+		
+	],
+	"civics": [
+		{
+			"name": "Monarchy",
+			"id": "CIVIC_MONARCHY",
+			"requires": "TECH_MONARCHY"
+		},
+		{
+			"name": "Communism",
+			"id": "CIVIC_COMMUNISM",
+			"requires": "TECH_COMMUNISM"
+		},
+		{
+			"name": "Fundamentalism",
+			"id": "CIVIC_FUNDAMENTALISM",
+			"requires": "TECH_FUNDAMENTALISM"
+		},
+		{
+			"name": "Republic",
+			"id": "CIVIC_REPUBLIC",
+			"requires": "TECH_THE_REPUBLIC"
+		},
+		{
+			"name": "Democracy",
+			"id": "CIVIC_DEMOCRACY",
+			"requires": "TECH_DEMOCRACY"
+		}
+	]
+}

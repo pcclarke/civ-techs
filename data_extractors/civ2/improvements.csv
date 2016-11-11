@@ -36,7 +36,7 @@ Port Facility,8,3,Amp,nil,nil
 SS Structural,8,0,SFl,nil,nil
 SS Component,16,0,Pla,nil,nil
 SS Module,32,0,Sup,nil,nil
-(Capitalization),60,0,Cor,nil,nil
+Capitalization,60,0,Cor,nil,nil
 Pyramids,20,0,Mas,nil,nil
 Hanging Gardens,20,0,Pot,RR,nil
 Colossus,20,0,Bro,Fli,nil
@@ -52,9 +52,9 @@ Copernicus' Observatory,30,0,Ast,nil,nil
 Magellan's Expedition,40,0,Nav,nil,nil
 Shakespeare's Theatre,30,0,Med,nil,nil
 Leonardo's Workshop,40,0,Inv,Aut,nil
-J. S. Bach's Cathedral,40,0,The,nil,nil
+J.S. Bach's Cathedral,40,0,The,nil,nil
 Isaac Newton's College,40,0,ToG,nil,nil
-Adam Smith's Trading Co.,40,0,Eco,nil,nil
+Adam Smith's Trading Company,40,0,Eco,nil,nil
 Darwin's Voyage,40,0,RR,nil,nil
 Statue of Liberty,40,0,Dem,nil,nil
 Eiffel Tower,30,0,SE,nil,nil

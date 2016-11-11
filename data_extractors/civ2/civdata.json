@@ -845,6 +845,28 @@
       ]
     }
   ],
+  "build": [
+    {
+      "name": "Build Railroad",
+      "id": "BUILD_RAILROAD",
+      "requires": "TECH_RAILROAD"
+    },
+    {
+      "name": "Build Fortress",
+      "id": "BUILD_FORTRESS",
+      "requires": "TECH_CONSTRUCTION"
+    },
+    {
+      "name": "Build Airbase",
+      "id": "BUILD_AIRBASE",
+      "requires": "TECH_RADIO"
+    },
+    {
+      "name": "Improve Farmland",
+      "id": "BUILD_IMPROVE_FARMLAND",
+      "requires": "TECH_REFRIGERATION"
+    }
+  ],
   "buildings": [
     {
       "cost": 10,
@@ -1109,8 +1131,8 @@
     {
       "cost": 60,
       "upkeep": 0,
-      "name": "(Capitalization)",
-      "id": "BUILDING_(CAPITALIZATION)",
+      "name": "Capitalization",
+      "id": "BUILDING_CAPITALIZATION",
       "requires": "TECH_THE_CORPORATION"
     },
     {
@@ -1173,7 +1195,7 @@
       "upkeep": 0,
       "name": "Sun Tzu's War Academy",
       "obsolete": "TECH_MOBILE_WARFARE",
-      "id": "BUILDING_SUN_TZU'S_WAR_ACADEMY",
+      "id": "BUILDING_SUN_TZUS_WAR_ACADEMY",
       "requires": "TECH_FEUDALISM"
     },
     {
@@ -1181,7 +1203,7 @@
       "upkeep": 0,
       "name": "King Richard's Crusade",
       "obsolete": "TECH_INDUSTRIALIZATION",
-      "id": "BUILDING_KING_RICHARD'S_CRUSADE",
+      "id": "BUILDING_KING_RICHARDS_CRUSADE",
       "requires": "TECH_ENGINEERING"
     },
     {
@@ -1189,35 +1211,35 @@
       "upkeep": 0,
       "name": "Marco Polo's Embassy",
       "obsolete": "TECH_COMMUNISM",
-      "id": "BUILDING_MARCO_POLO'S_EMBASSY",
+      "id": "BUILDING_MARCO_POLOS_EMBASSY",
       "requires": "TECH_TRADE"
     },
     {
       "cost": 40,
       "upkeep": 0,
       "name": "Michelangelo's Chapel",
-      "id": "BUILDING_MICHELANGELO'S_CHAPEL",
+      "id": "BUILDING_MICHELANGELOS_CHAPEL",
       "requires": "TECH_MONOTHEISM"
     },
     {
       "cost": 30,
       "upkeep": 0,
       "name": "Copernicus' Observatory",
-      "id": "BUILDING_COPERNICUS'_OBSERVATORY",
+      "id": "BUILDING_COPERNICUS_OBSERVATORY",
       "requires": "TECH_ASTRONOMY"
     },
     {
       "cost": 40,
       "upkeep": 0,
       "name": "Magellan's Expedition",
-      "id": "BUILDING_MAGELLAN'S_EXPEDITION",
+      "id": "BUILDING_MAGELLANS_EXPEDITION",
       "requires": "TECH_NAVIGATION"
     },
     {
       "cost": 30,
       "upkeep": 0,
       "name": "Shakespeare's Theatre",
-      "id": "BUILDING_SHAKESPEARE'S_THEATRE",
+      "id": "BUILDING_SHAKESPEARES_THEATRE",
       "requires": "TECH_MEDICINE"
     },
     {
@@ -1225,35 +1247,35 @@
       "upkeep": 0,
       "name": "Leonardo's Workshop",
       "obsolete": "TECH_AUTOMOBILE",
-      "id": "BUILDING_LEONARDO'S_WORKSHOP",
+      "id": "BUILDING_LEONARDOS_WORKSHOP",
       "requires": "TECH_INVENTION"
     },
     {
       "cost": 40,
       "upkeep": 0,
-      "name": "J. S. Bach's Cathedral",
-      "id": "BUILDING_J._S._BACH'S_CATHEDRAL",
+      "name": "J.S. Bach's Cathedral",
+      "id": "BUILDING_JS_BACHS_CATHEDRAL",
       "requires": "TECH_THEOLOGY"
     },
     {
       "cost": 40,
       "upkeep": 0,
       "name": "Isaac Newton's College",
-      "id": "BUILDING_ISAAC_NEWTON'S_COLLEGE",
+      "id": "BUILDING_ISAAC_NEWTONS_COLLEGE",
       "requires": "TECH_THEORY_OF_GRAVITY"
     },
     {
       "cost": 40,
       "upkeep": 0,
-      "name": "Adam Smith's Trading Co.",
-      "id": "BUILDING_ADAM_SMITH'S_TRADING_CO.",
+      "name": "Adam Smith's Trading Company",
+      "id": "BUILDING_ADAM_SMITHS_TRADING_COMPANY",
       "requires": "TECH_ECONOMICS"
     },
     {
       "cost": 40,
       "upkeep": 0,
       "name": "Darwin's Voyage",
-      "id": "BUILDING_DARWIN'S_VOYAGE",
+      "id": "BUILDING_DARWINS_VOYAGE",
       "requires": "TECH_RAILROAD"
     },
     {
@@ -1274,7 +1296,7 @@
       "cost": 60,
       "upkeep": 0,
       "name": "Women's Suffrage",
-      "id": "BUILDING_WOMEN'S_SUFFRAGE",
+      "id": "BUILDING_WOMENS_SUFFRAGE",
       "requires": "TECH_INDUSTRIALIZATION"
     },
     {
@@ -1318,6 +1340,33 @@
       "name": "Cure for Cancer",
       "id": "BUILDING_CURE_FOR_CANCER",
       "requires": "TECH_GENETIC_ENGINEERING"
+    }
+  ],
+  "civics": [
+    {
+      "name": "Monarchy",
+      "id": "CIVIC_MONARCHY",
+      "requires": "TECH_MONARCHY"
+    },
+    {
+      "name": "Communism",
+      "id": "CIVIC_COMMUNISM",
+      "requires": "TECH_COMMUNISM"
+    },
+    {
+      "name": "Fundamentalism",
+      "id": "CIVIC_FUNDAMENTALISM",
+      "requires": "TECH_FUNDAMENTALISM"
+    },
+    {
+      "name": "Republic",
+      "id": "CIVIC_REPUBLIC",
+      "requires": "TECH_THE_REPUBLIC"
+    },
+    {
+      "name": "Democracy",
+      "id": "CIVIC_DEMOCRACY",
+      "requires": "TECH_DEMOCRACY"
     }
   ],
   "units": [
@@ -1514,11 +1563,11 @@
       "defense": 6,
       "moves": 3,
       "attack": 6,
-      "name": "Mech. Inf.",
+      "name": "Mechanized Infantry",
       "hp": 3,
       "range": 0,
       "holds": 0,
-      "id": "UNIT_MECH._INF.",
+      "id": "UNIT_MECHANIZED_INFANTRY",
       "requires": "TECH_LABOR_UNION"
     },
     {
@@ -1734,11 +1783,11 @@
       "defense": 4,
       "moves": 14,
       "attack": 8,
-      "name": "Stlth Ftr.",
+      "name": "Stealth Fighter",
       "hp": 2,
       "range": 1,
       "holds": 0,
-      "id": "UNIT_STLTH_FTR.",
+      "id": "UNIT_STEALTH_FIGHTER",
       "requires": "TECH_STEALTH"
     },
     {
@@ -1747,11 +1796,11 @@
       "defense": 5,
       "moves": 12,
       "attack": 14,
-      "name": "Stlth Bmbr.",
+      "name": "Stealth Bomber",
       "hp": 2,
       "range": 2,
       "holds": 0,
-      "id": "UNIT_STLTH_BMBR.",
+      "id": "UNIT_STEALTH_BOMBER",
       "requires": "TECH_STEALTH"
     },
     {
@@ -1922,11 +1971,11 @@
       "defense": 0,
       "moves": 12,
       "attack": 18,
-      "name": "Cruise Msl.",
+      "name": "Cruise Missile",
       "hp": 1,
       "range": 1,
       "holds": 0,
-      "id": "UNIT_CRUISE_MSL.",
+      "id": "UNIT_CRUISE_MISSILE",
       "requires": "TECH_ROCKETRY"
     },
     {
@@ -1935,11 +1984,11 @@
       "defense": 0,
       "moves": 16,
       "attack": 99,
-      "name": "Nuclear Msl.",
+      "name": "Nuclear Missile",
       "hp": 1,
       "range": 1,
       "holds": 0,
-      "id": "UNIT_NUCLEAR_MSL.",
+      "id": "UNIT_NUCLEAR_MISSILE",
       "requires": "TECH_ROCKETRY"
     },
     {

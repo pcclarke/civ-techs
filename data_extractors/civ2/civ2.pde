@@ -13,6 +13,10 @@ void setup() {
   getBuildings(buildingsFilename, civ2);
   getUnits(unitsFilename, civ2);
   
+  JSONObject extras = loadJSONObject("civ2_extra.json");
+  civ2.setJSONArray("build", extras.getJSONArray("build"));
+  civ2.setJSONArray("civics", extras.getJSONArray("civics"));
+  
   saveJSONObject(civ2, "civdata.json");
   
   println("Done!");
@@ -142,6 +146,27 @@ void getUnits(String path, JSONObject dataObj) {
 String nameToId(String inputName, String type) {
   String[] nameSplit = splitTokens(inputName, " ");
   for (int i = 0; i < nameSplit.length; i++) {
+    
+    if (match(nameSplit[i], "'") != null) { // Check for apostophes
+      String[] nameApSplit = splitTokens(nameSplit[i], "'");
+      for (int j = 0; j < nameApSplit.length; j++) {
+        if (nameApSplit[j].equals("'")) {
+          nameApSplit[j] = "";
+        }
+      }
+      nameSplit[i] = join(nameApSplit, "");
+    }
+    
+    if (match(nameSplit[i], ".") != null) { // Check for periods
+      String[] nameApSplit = splitTokens(nameSplit[i], ".");
+      for (int j = 0; j < nameApSplit.length; j++) {
+        if (nameApSplit[j].equals(".")) {
+          nameApSplit[j] = "";
+        }
+      }
+      nameSplit[i] = join(nameApSplit, "");
+    }
+    
     nameSplit[i] = nameSplit[i].toUpperCase();
   }
   String id = join(nameSplit, "_");

@@ -3,11 +3,6 @@ function setupData(data) {
     data.displayed = [];
     var unlocksList = [];
 
-    // First, arrange the technologies by cost
-    data.technologies.sort(function(a, b) {
-        return b.cost - a.cost;
-    });
-
     // Scoop up all the things each technology leads to and put it in the unlocks object
     data.technologies.forEach(function(d) {
         var toSplice = [];
