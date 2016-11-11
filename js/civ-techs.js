@@ -75,7 +75,7 @@ makeWheel(document.getElementById('selectGame')
 d3.select("#selectGame")
     .on("change", function() {
         d3.selectAll(".civWheel").remove();
-        d3.select("#description").classed("hidden", true);
+        d3.select("#tooltip").classed("hidden", true);
 
         CIV.ilization = "CIVILIZATION_ALL";
         document.getElementById("selectCiv").value = CIV.ilization;

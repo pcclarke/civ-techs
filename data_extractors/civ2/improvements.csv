@@ -1,0 +1,67 @@
+Improvement,Cost,Upkeep,Prereq,Obs1,Obs2
+Palace,10,0,Mas,nil,nil
+Barracks,4,1,nil,Gun,Mob
+Granary,6,1,Pot,nil,nil
+Temple,4,1,Cer,nil,nil
+MarketPlace,8,1,Cur,nil,nil
+Library,8,1,Wri,nil,nil
+Courthouse,8,1,CoL,nil,nil
+City Walls,8,0,Mas,nil,nil
+Aqueduct,8,2,Cst,nil,nil
+Bank,12,3,Ban,nil,nil
+Cathedral,12,3,MT,nil,nil
+University,16,3,Uni,nil,nil
+Mass Transit,16,4,MP,nil,nil
+Colosseum,10,4,Cst,nil,nil
+Factory,20,4,Ind,nil,nil
+Manufacturing Plant,32,6,Rob,nil,nil
+SDI Defense,20,4,Las,nil,nil
+Recycling Center,20,2,Rec,nil,nil
+Power Plant,16,4,Ref,nil,nil
+Hydro Plant,24,4,E2,nil,nil
+Nuclear Plant,16,2,NP,nil,nil
+Stock Exchange,16,4,Eco,nil,nil
+Sewer System,12,2,San,nil,nil
+Supermarket,8,3,Rfg,nil,nil
+Superhighways,20,5,Aut,nil,nil
+Research Lab,16,3,Cmp,nil,nil
+SAM Missile Battery,10,2,Roc,nil,nil
+Coastal Fortress,8,1,Met,nil,nil
+Solar Plant,32,4,Env,nil,nil
+Harbor,6,1,Sea,nil,nil
+Offshore Platform,16,3,Min,nil,nil
+Airport,16,3,Rad,nil,nil
+Police Station,6,2,Cmn,nil,nil
+Port Facility,8,3,Amp,nil,nil
+SS Structural,8,0,SFl,nil,nil
+SS Component,16,0,Pla,nil,nil
+SS Module,32,0,Sup,nil,nil
+(Capitalization),60,0,Cor,nil,nil
+Pyramids,20,0,Mas,nil,nil
+Hanging Gardens,20,0,Pot,RR,nil
+Colossus,20,0,Bro,Fli,nil
+Lighthouse,20,0,Map,Mag,nil
+Great Library,30,0,Lit,E1,nil
+Oracle,30,0,Mys,The,nil
+Great Wall,30,0,Mas,Met,nil
+Sun Tzu's War Academy,30,0,Feu,Mob,nil
+King Richard's Crusade,30,0,Eng,Ind,nil
+Marco Polo's Embassy,20,0,Tra,Cmn,nil
+Michelangelo's Chapel,40,0,MT,nil,nil
+Copernicus' Observatory,30,0,Ast,nil,nil
+Magellan's Expedition,40,0,Nav,nil,nil
+Shakespeare's Theatre,30,0,Med,nil,nil
+Leonardo's Workshop,40,0,Inv,Aut,nil
+J. S. Bach's Cathedral,40,0,The,nil,nil
+Isaac Newton's College,40,0,ToG,nil,nil
+Adam Smith's Trading Co.,40,0,Eco,nil,nil
+Darwin's Voyage,40,0,RR,nil,nil
+Statue of Liberty,40,0,Dem,nil,nil
+Eiffel Tower,30,0,SE,nil,nil
+Women's Suffrage,60,0,Ind,nil,nil
+Hoover Dam,60,0,E2,nil,nil
+Manhattan Project,60,0,NF,nil,nil
+United Nations,60,0,Cmn,nil,nil
+Apollo Program,60,0,SFl,nil,nil
+SETI Program,60,0,Cmp,nil,nil
+Cure for Cancer,60,0,Gen,nil,nil

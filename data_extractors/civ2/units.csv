@@ -1,0 +1,52 @@
+Unit,Obsolete,Domain,Move,Range,Attack,Defense,Hit Points,Firepower,Cost,Holds,Role,Prereq
+Settlers,Exp,0,1,0,0,1,2,1,4,0,5,nil
+Engineers,nil,0,2,0,0,2,2,1,4,0,5,Exp
+Warriors,Feu,0,1,0,1,1,1,1,1,0,1,nil
+Phalanx,Feu,0,1,0,1,2,1,1,2,0,1,Bro
+Archers,Gun,0,1,0,3,2,1,1,3,0,1,War
+Legion,Gun,0,1,0,4,2,1,1,4,0,1,Iro
+Pikemen,Gun,0,1,0,1,2,1,1,2,0,1,Feu
+Musketeers,Csc,0,1,0,3,3,2,1,3,0,1,Gun
+Fanatics,nil,0,1,0,4,4,2,1,2,0,1,Fun
+Partisans,nil,0,1,0,4,4,2,1,5,0,1,Gue
+Alpine Troops,nil,0,1,0,5,5,2,1,5,0,1,Tac
+Riflemen,nil,0,1,0,5,4,2,1,4,0,1,Csc
+Marines,nil,0,1,0,8,5,2,1,6,0,0,Amp
+Paratroopers,nil,0,1,0,6,4,2,1,6,0,1,CA
+Mech. Inf.,nil,0,3,0,6,6,3,1,5,0,1,Lab
+Horsemen,Chi,0,2,0,2,1,1,1,2,0,0,Hor
+Chariot,PT,0,2,0,3,1,1,1,3,0,0,Whe
+Elephant,MT,0,2,0,4,1,1,1,4,0,0,PT
+Crusaders,Ldr,0,2,0,5,1,1,1,4,0,0,MT
+Knights,Ldr,0,2,0,4,2,1,1,4,0,0,Chi
+Dragoons,Tac,0,2,0,5,2,2,1,5,0,0,Ldr
+Cavalry,Mob,0,2,0,8,3,2,1,6,0,0,Tac
+Armor,nil,0,3,0,10,5,3,1,8,0,0,Mob
+Catapult,Met,0,1,0,6,1,1,1,4,0,0,Mat
+Cannon,Too,0,1,0,8,1,2,1,4,0,0,Met
+Artillery,Rob,0,1,0,10,1,2,2,5,0,0,Too
+Howitzer,nil,0,2,0,12,2,3,2,7,0,0,Rob
+Fighter,Sth,1,10,1,4,3,2,2,6,0,3,Fli
+Bomber,Sth,1,8,2,12,1,2,2,12,0,0,AFl
+Helicopter,nil,1,6,0,10,3,2,2,10,0,0,CA
+Stlth Ftr.,nil,1,14,1,8,4,2,2,8,0,3,Sth
+Stlth Bmbr.,nil,1,12,2,14,5,2,2,16,0,0,Sth
+Trireme,Nav,2,3,0,1,1,1,1,4,2,4,Map
+Caravel,Mag,2,3,0,2,1,1,1,4,3,4,Nav
+Galleon,Ind,2,4,0,0,2,2,1,4,4,4,Mag
+Frigate,E1,2,4,0,4,2,2,1,5,2,2,Mag
+Ironclad,E1,2,4,0,4,4,3,1,6,0,2,SE
+Destroyer,nil,2,6,0,4,4,3,1,6,0,2,E1
+Cruiser,Roc,2,5,0,6,6,3,2,8,0,2,Stl
+AEGIS Cruiser,nil,2,5,0,8,8,3,2,10,0,2,Roc
+Battleship,nil,2,4,0,12,12,4,2,16,0,2,Aut
+Submarine,nil,2,3,0,10,2,3,2,6,0,2,Cmb
+Carrier,nil,2,5,0,1,9,4,2,16,0,2,AFl
+Transport,nil,2,5,0,0,3,3,1,5,8,4,Ind
+Cruise Msl.,nil,1,12,1,18,0,1,3,6,0,0,Roc
+Nuclear Msl.,nil,1,16,1,99,0,1,1,16,0,0,Roc
+Diplomat,Esp,0,2,0,0,0,1,1,3,0,6,Wri
+Spy,nil,0,3,0,0,0,1,1,3,0,6,Esp
+Caravan,Cor,0,1,0,0,1,1,1,5,0,7,Tra
+Freight,nil,0,2,0,0,1,1,1,5,0,7,Cor
+Explorer,Gue,0,1,0,0,1,1,1,3,0,0,Sea
