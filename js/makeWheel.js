@@ -21,12 +21,14 @@ function makeWheel(game, civilization) {
         console.log(data.displayed);
 
         // Populate select civilizations drop-down
-        data.civilizations.forEach(function (c) {
-            d3.select("#selectCiv")
-                .append("option")
-                .attr("value", c.id)
-                .text(c.name);
-        });
+        if (!(game === "civ1" || game === "civ2")) {
+            data.civilizations.forEach(function (c) {
+                d3.select("#selectCiv")
+                    .append("option")
+                    .attr("value", c.id)
+                    .text(c.name);
+            });
+        }
 
         drawWheel();
         
@@ -98,7 +100,7 @@ function makeWheel(game, civilization) {
                     } else {
                         tipName = d.name;
                     }
-                    spokeHighlightIn(d);
+                        spokeHighlightIn(d);
                 })
                 .on("mouseout", function(d) {
                     //d3.select("#tooltip").classed("hidden", true);
@@ -173,7 +175,8 @@ function makeWheel(game, civilization) {
                 .attr("width", 15)
                 .attr("xlink:href", function(d) {
                     var link;
-                    if (d.ref.cat === "units" || d.ref.cat === "buildings") {
+                    if ((d.ref.cat === "units" || d.ref.cat === "buildings") && 
+                        !(game === "civ1" || game === "civ2")) {
                         if (d.ref[CIV.ilization]) {
                             link = game + "/img/" + d.ref.cat + "/" + d.ref[CIV.ilization].id + ".png";
                         } else {
@@ -208,25 +211,27 @@ function makeWheel(game, civilization) {
 
 
             // Update icons with unique civilization units
-            d3.select("#selectCiv")
-                .on("change", function(d) {
-                    CIV.ilization = this.options[this.selectedIndex].value;
-                    d3.select("#description").classed("hidden", true);
+            if (!(game === "civ1" || game === "civ2")) {
+                d3.select("#selectCiv")
+                    .on("change", function(d) {
+                        CIV.ilization = this.options[this.selectedIndex].value;
+                        d3.select("#description").classed("hidden", true);
 
-                    unlockIcons.attr("xlink:href", function(d) {
-                        var link;
-                        if (d.ref.cat === "units" || d.ref.cat === "buildings") {
-                            if (d.ref[CIV.ilization]) {
-                                link = game + "/img/" + d.ref.cat + "/" + d.ref[CIV.ilization].id + ".png";
+                        unlockIcons.attr("xlink:href", function(d) {
+                            var link;
+                            if (d.ref.cat === "units" || d.ref.cat === "buildings") {
+                                if (d.ref[CIV.ilization]) {
+                                    link = game + "/img/" + d.ref.cat + "/" + d.ref[CIV.ilization].id + ".png";
+                                } else {
+                                    link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
+                                }
                             } else {
-                                link = game + "/img/" + d.ref.cat + "/" + d.ref.CIVILIZATION_ALL.id + ".png";
+                                link = game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png";
                             }
-                        } else {
-                            link = game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png";
-                        }
-                        return link;
+                            return link;
+                        });
                     });
-                });
+            }
 
             var reqGroup = wheel.selectAll(".reqGroup")
                     .data(data.displayed)

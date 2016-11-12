@@ -3,6 +3,13 @@ function setupData(data) {
     data.displayed = [];
     var unlocksList = [];
 
+    // First, arrange the technologies by cost
+    if (!(CIV.game === "civ1" || CIV.game === "civ2")) {
+        data.technologies.sort(function(a, b) {
+            return b.cost - a.cost;
+        });
+    }
+
     // Scoop up all the things each technology leads to and put it in the unlocks object
     data.technologies.forEach(function(d) {
         var toSplice = [];
@@ -14,12 +21,20 @@ function setupData(data) {
 
         unlocks = getLeadsTo(d, data.units);
         unlocks = unlocks.concat(getLeadsTo(d, data.buildings));
-        unlocks = unlocks.concat(getLeadsTo(d, data.projects));
-        unlocks = unlocks.concat(getLeadsTo(d, data.promotions));
-        unlocks = unlocks.concat(getLeadsTo(d, data.build));
         unlocks = unlocks.concat(getLeadsTo(d, data.civics));
-        unlocks = unlocks.concat(getLeadsTo(d, data.religions));
-        unlocks = unlocks.concat(getLeadsTo(d, data.resources));
+        unlocks = unlocks.concat(getLeadsTo(d, data.build));
+        if (data.projects) {
+            unlocks = unlocks.concat(getLeadsTo(d, data.projects));
+        }
+        if (data.promotions) {
+            unlocks = unlocks.concat(getLeadsTo(d, data.promotions));
+        }
+        if (data.religions) {
+            unlocks = unlocks.concat(getLeadsTo(d, data.religions));
+        } 
+        if (data.resources) {
+            unlocks = unlocks.concat(getLeadsTo(d, data.resources));
+        }
 
         if (d.special) {
             d.special.forEach(function (s) {
@@ -52,11 +67,13 @@ function setupData(data) {
         });
         d.unlocks = unlocksHandler;
     });
-    
+
     // Label data categories
     CIV.dataTypes.forEach(function (t) {
-        data[t].forEach(function (d) {
-            d.cat = t;
-        });
+        if (data[t]) {
+            data[t].forEach(function (d) {
+                d.cat = t;
+            });
+        }
     });
 }

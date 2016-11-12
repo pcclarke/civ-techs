@@ -1,14 +1,10 @@
 {
   "technologies": [
     {
-      "era": "Modern",
-      "name": "Advanced Flight",
-      "id": "TECH_ADVANCED_FLIGHT",
-      "category": "Applied",
-      "requires": [
-        "TECH_RADIO",
-        "TECH_MACHINE_TOOLS"
-      ]
+      "era": "Ancient",
+      "name": "Pottery",
+      "id": "TECH_POTTERY",
+      "category": "Economic"
     },
     {
       "era": "Ancient",
@@ -17,64 +13,16 @@
       "category": "Academic"
     },
     {
-      "era": "Modern",
-      "name": "Amphibious Warfare",
-      "id": "TECH_AMPHIBIOUS_WARFARE",
-      "category": "Military",
-      "requires": [
-        "TECH_NAVIGATION",
-        "TECH_TACTICS"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Astronomy",
-      "id": "TECH_ASTRONOMY",
-      "category": "Academic",
-      "requires": [
-        "TECH_MYSTICISM",
-        "TECH_MATHEMATICS"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Atomic Theory",
-      "id": "TECH_ATOMIC_THEORY",
-      "category": "Academic",
-      "requires": [
-        "TECH_THEORY_OF_GRAVITY",
-        "TECH_PHYSICS"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Automobile",
-      "id": "TECH_AUTOMOBILE",
-      "category": "Applied",
-      "requires": [
-        "TECH_COMBUSTION",
-        "TECH_STEEL"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Banking",
-      "id": "TECH_BANKING",
-      "category": "Economic",
-      "requires": [
-        "TECH_TRADE",
-        "TECH_THE_REPUBLIC"
-      ]
+      "era": "Ancient",
+      "name": "Warrior Code",
+      "id": "TECH_WARRIOR_CODE",
+      "category": "Military"
     },
     {
       "era": "Ancient",
-      "name": "Bridge Building",
-      "id": "TECH_BRIDGE_BUILDING",
-      "category": "Applied",
-      "requires": [
-        "TECH_IRON_WORKING",
-        "TECH_CONSTRUCTION"
-      ]
+      "name": "Horseback Riding",
+      "id": "TECH_HORSEBACK_RIDING",
+      "category": "Military"
     },
     {
       "era": "Ancient",
@@ -84,18 +32,136 @@
     },
     {
       "era": "Ancient",
+      "name": "Masonry",
+      "id": "TECH_MASONRY",
+      "category": "Applied"
+    },
+    {
+      "era": "Ancient",
       "name": "Ceremonial Burial",
       "id": "TECH_CEREMONIAL_BURIAL",
       "category": "Social"
     },
     {
-      "era": "Renaissance",
-      "name": "Chemistry",
-      "id": "TECH_CHEMISTRY",
+      "era": "Ancient",
+      "name": "Map Making",
+      "id": "TECH_MAP_MAKING",
+      "category": "Economic",
+      "requires": ["TECH_ALPHABET"]
+    },
+    {
+      "era": "Ancient",
+      "name": "Writing",
+      "id": "TECH_WRITING",
+      "category": "Academic",
+      "requires": ["TECH_ALPHABET"]
+    },
+    {
+      "era": "Ancient",
+      "name": "Code of Laws",
+      "id": "TECH_CODE_OF_LAWS",
+      "category": "Social",
+      "requires": ["TECH_ALPHABET"]
+    },
+    {
+      "era": "Ancient",
+      "name": "Mathematics",
+      "id": "TECH_MATHEMATICS",
       "category": "Academic",
       "requires": [
-        "TECH_UNIVERSITY",
-        "TECH_MEDICINE"
+        "TECH_ALPHABET",
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "era": "Ancient",
+      "name": "The Wheel",
+      "id": "TECH_THE_WHEEL",
+      "category": "Applied",
+      "requires": ["TECH_HORSEBACK_RIDING"]
+    },
+    {
+      "era": "Ancient",
+      "name": "Iron Working",
+      "id": "TECH_IRON_WORKING",
+      "category": "Applied",
+      "requires": [
+        "TECH_BRONZE_WORKING",
+        "TECH_WARRIOR_CODE"
+      ]
+    },
+    {
+      "era": "Ancient",
+      "name": "Currency",
+      "id": "TECH_CURRENCY",
+      "category": "Economic",
+      "requires": ["TECH_BRONZE_WORKING"]
+    },
+    {
+      "era": "Ancient",
+      "name": "Construction",
+      "id": "TECH_CONSTRUCTION",
+      "category": "Applied",
+      "requires": [
+        "TECH_MASONRY",
+        "TECH_CURRENCY"
+      ]
+    },
+    {
+      "era": "Ancient",
+      "name": "Mysticism",
+      "id": "TECH_MYSTICISM",
+      "category": "Social",
+      "requires": ["TECH_CEREMONIAL_BURIAL"]
+    },
+    {
+      "era": "Ancient",
+      "name": "Polytheism",
+      "id": "TECH_POLYTHEISM",
+      "category": "Social",
+      "requires": [
+        "TECH_CEREMONIAL_BURIAL",
+        "TECH_HORSEBACK_RIDING"
+      ]
+    },
+    {
+      "era": "Ancient",
+      "name": "Seafaring",
+      "id": "TECH_SEAFARING",
+      "category": "Economic",
+      "requires": [
+        "TECH_MAP_MAKING",
+        "TECH_POTTERY"
+      ]
+    },
+    {
+      "era": "Ancient",
+      "name": "Literacy",
+      "id": "TECH_LITERACY",
+      "category": "Academic",
+      "requires": [
+        "TECH_WRITING",
+        "TECH_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "era": "Ancient",
+      "name": "Monarchy",
+      "id": "TECH_MONARCHY",
+      "category": "Social",
+      "requires": [
+        "TECH_CEREMONIAL_BURIAL",
+        "TECH_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "era": "Ancient",
+      "name": "Feudalism",
+      "id": "TECH_FEUDALISM",
+      "category": "Military",
+      "requires": [
+        "TECH_WARRIOR_CODE",
+        "TECH_MONARCHY"
       ]
     },
     {
@@ -110,130 +176,6 @@
     },
     {
       "era": "Ancient",
-      "name": "Code of Laws",
-      "id": "TECH_CODE_OF_LAWS",
-      "category": "Social",
-      "requires": ["TECH_ALPHABET"]
-    },
-    {
-      "era": "Modern",
-      "name": "Combined Arms",
-      "id": "TECH_COMBINED_ARMS",
-      "category": "Military",
-      "requires": [
-        "TECH_MOBILE_WARFARE",
-        "TECH_ADVANCED_FLIGHT"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Combustion",
-      "id": "TECH_COMBUSTION",
-      "category": "Applied",
-      "requires": [
-        "TECH_REFINING",
-        "TECH_EXPLOSIVES"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Communism",
-      "id": "TECH_COMMUNISM",
-      "category": "Social",
-      "requires": [
-        "TECH_PHILOSOPHY",
-        "TECH_INDUSTRIALIZATION"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Computers",
-      "id": "TECH_COMPUTERS",
-      "category": "Applied",
-      "requires": [
-        "TECH_MINIATURIZATION",
-        "TECH_MASS_PRODUCTION"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Conscription",
-      "id": "TECH_CONSCRIPTION",
-      "category": "Military",
-      "requires": [
-        "TECH_DEMOCRACY",
-        "TECH_METALLURGY"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Construction",
-      "id": "TECH_CONSTRUCTION",
-      "category": "Applied",
-      "requires": [
-        "TECH_MASONRY",
-        "TECH_CURRENCY"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "The Corporation",
-      "id": "TECH_THE_CORPORATION",
-      "category": "Economic",
-      "requires": [
-        "TECH_INDUSTRIALIZATION",
-        "TECH_ECONOMICS"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Currency",
-      "id": "TECH_CURRENCY",
-      "category": "Economic",
-      "requires": ["TECH_BRONZE_WORKING"]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Democracy",
-      "id": "TECH_DEMOCRACY",
-      "category": "Social",
-      "requires": [
-        "TECH_BANKING",
-        "TECH_INVENTION"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Economics",
-      "id": "TECH_ECONOMICS",
-      "category": "Economic",
-      "requires": [
-        "TECH_UNIVERSITY",
-        "TECH_BANKING"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Electricity",
-      "id": "TECH_ELECTRICITY",
-      "category": "Applied",
-      "requires": [
-        "TECH_METALLURGY",
-        "TECH_MAGNETISM"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Electronics",
-      "id": "TECH_ELECTRONICS",
-      "category": "Applied",
-      "requires": [
-        "TECH_ELECTRICITY",
-        "TECH_THE_CORPORATION"
-      ]
-    },
-    {
-      "era": "Ancient",
       "name": "Engineering",
       "id": "TECH_ENGINEERING",
       "category": "Applied",
@@ -243,555 +185,13 @@
       ]
     },
     {
-      "era": "Modern",
-      "name": "Environmentalism",
-      "id": "TECH_ENVIRONMENTALISM",
-      "category": "Social",
-      "requires": [
-        "TECH_RECYCLING",
-        "TECH_SPACE_FLIGHT"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Espionage",
-      "id": "TECH_ESPIONAGE",
-      "category": "Military",
-      "requires": [
-        "TECH_COMMUNISM",
-        "TECH_DEMOCRACY"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Explosives",
-      "id": "TECH_EXPLOSIVES",
+      "era": "Ancient",
+      "name": "Bridge Building",
+      "id": "TECH_BRIDGE_BUILDING",
       "category": "Applied",
       "requires": [
-        "TECH_GUNPOWDER",
-        "TECH_CHEMISTRY"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Feudalism",
-      "id": "TECH_FEUDALISM",
-      "category": "Military",
-      "requires": [
-        "TECH_WARRIOR_CODE",
-        "TECH_MONARCHY"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Flight",
-      "id": "TECH_FLIGHT",
-      "category": "Applied",
-      "requires": [
-        "TECH_COMBUSTION",
-        "TECH_THEORY_OF_GRAVITY"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Fundamentalism",
-      "id": "TECH_FUNDAMENTALISM",
-      "category": "Social",
-      "requires": [
-        "TECH_MONOTHEISM",
-        "TECH_CONSCRIPTION"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Fusion Power",
-      "id": "TECH_FUSION_POWER",
-      "category": "Academic",
-      "requires": [
-        "TECH_NUCLEAR_POWER",
-        "TECH_SUPERCONDUCTOR"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Genetic Engineering",
-      "id": "TECH_GENETIC_ENGINEERING",
-      "category": "Academic",
-      "requires": [
-        "TECH_MEDICINE",
-        "TECH_THE_CORPORATION"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Guerrilla Warfare",
-      "id": "TECH_GUERRILLA_WARFARE",
-      "category": "Military",
-      "requires": [
-        "TECH_COMMUNISM",
-        "TECH_TACTICS"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Gunpowder",
-      "id": "TECH_GUNPOWDER",
-      "category": "Military",
-      "requires": [
-        "TECH_INVENTION",
-        "TECH_IRON_WORKING"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Horseback Riding",
-      "id": "TECH_HORSEBACK_RIDING",
-      "category": "Military"
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Industrialization",
-      "id": "TECH_INDUSTRIALIZATION",
-      "category": "Economic",
-      "requires": [
-        "TECH_RAILROAD",
-        "TECH_BANKING"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Invention",
-      "id": "TECH_INVENTION",
-      "category": "Applied",
-      "requires": [
-        "TECH_ENGINEERING",
-        "TECH_LITERACY"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Iron Working",
-      "id": "TECH_IRON_WORKING",
-      "category": "Applied",
-      "requires": [
-        "TECH_BRONZE_WORKING",
-        "TECH_WARRIOR_CODE"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Labor Union",
-      "id": "TECH_LABOR_UNION",
-      "category": "Social",
-      "requires": [
-        "TECH_MASS_PRODUCTION",
-        "TECH_GUERRILLA_WARFARE"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "The Laser",
-      "id": "TECH_THE_LASER",
-      "category": "Academic",
-      "requires": [
-        "TECH_NUCLEAR_POWER",
-        "TECH_MASS_PRODUCTION"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Leadership",
-      "id": "TECH_LEADERSHIP",
-      "category": "Military",
-      "requires": [
-        "TECH_CHIVALRY",
-        "TECH_GUNPOWDER"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Literacy",
-      "id": "TECH_LITERACY",
-      "category": "Academic",
-      "requires": [
-        "TECH_WRITING",
-        "TECH_CODE_OF_LAWS"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Machine Tools",
-      "id": "TECH_MACHINE_TOOLS",
-      "category": "Applied",
-      "requires": [
-        "TECH_STEEL",
-        "TECH_TACTICS"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Magnetism",
-      "id": "TECH_MAGNETISM",
-      "category": "Academic",
-      "requires": [
-        "TECH_PHYSICS",
-        "TECH_IRON_WORKING"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Map Making",
-      "id": "TECH_MAP_MAKING",
-      "category": "Economic",
-      "requires": ["TECH_ALPHABET"]
-    },
-    {
-      "era": "Ancient",
-      "name": "Masonry",
-      "id": "TECH_MASONRY",
-      "category": "Applied"
-    },
-    {
-      "era": "Modern",
-      "name": "Mass Production",
-      "id": "TECH_MASS_PRODUCTION",
-      "category": "Applied",
-      "requires": [
-        "TECH_AUTOMOBILE",
-        "TECH_THE_CORPORATION"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Mathematics",
-      "id": "TECH_MATHEMATICS",
-      "category": "Academic",
-      "requires": [
-        "TECH_ALPHABET",
-        "TECH_MASONRY"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Medicine",
-      "id": "TECH_MEDICINE",
-      "category": "Economic",
-      "requires": [
-        "TECH_PHILOSOPHY",
-        "TECH_TRADE"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Metallurgy",
-      "id": "TECH_METALLURGY",
-      "category": "Military",
-      "requires": [
-        "TECH_GUNPOWDER",
-        "TECH_UNIVERSITY"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Miniaturization",
-      "id": "TECH_MINIATURIZATION",
-      "category": "Applied",
-      "requires": [
-        "TECH_MACHINE_TOOLS",
-        "TECH_ELECTRONICS"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Mobile Warfare",
-      "id": "TECH_MOBILE_WARFARE",
-      "category": "Military",
-      "requires": [
-        "TECH_AUTOMOBILE",
-        "TECH_TACTICS"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Monarchy",
-      "id": "TECH_MONARCHY",
-      "category": "Social",
-      "requires": [
-        "TECH_CEREMONIAL_BURIAL",
-        "TECH_CODE_OF_LAWS"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Monotheism",
-      "id": "TECH_MONOTHEISM",
-      "category": "Social",
-      "requires": [
-        "TECH_PHILOSOPHY",
-        "TECH_POLYTHEISM"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Mysticism",
-      "id": "TECH_MYSTICISM",
-      "category": "Social",
-      "requires": ["TECH_CEREMONIAL_BURIAL"]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Navigation",
-      "id": "TECH_NAVIGATION",
-      "category": "Economic",
-      "requires": [
-        "TECH_SEAFARING",
-        "TECH_ASTRONOMY"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Nuclear Fission",
-      "id": "TECH_NUCLEAR_FISSION",
-      "category": "Academic",
-      "requires": [
-        "TECH_ATOMIC_THEORY",
-        "TECH_MASS_PRODUCTION"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Nuclear Power",
-      "id": "TECH_NUCLEAR_POWER",
-      "category": "Academic",
-      "requires": [
-        "TECH_NUCLEAR_FISSION",
-        "TECH_ELECTRONICS"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Philosophy",
-      "id": "TECH_PHILOSOPHY",
-      "category": "Social",
-      "requires": [
-        "TECH_MYSTICISM",
-        "TECH_LITERACY"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Physics",
-      "id": "TECH_PHYSICS",
-      "category": "Academic",
-      "requires": [
-        "TECH_NAVIGATION",
-        "TECH_LITERACY"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Plastics",
-      "id": "TECH_PLASTICS",
-      "category": "Applied",
-      "requires": [
-        "TECH_REFINING",
-        "TECH_SPACE_FLIGHT"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Polytheism",
-      "id": "TECH_POLYTHEISM",
-      "category": "Social",
-      "requires": [
-        "TECH_CEREMONIAL_BURIAL",
-        "TECH_HORSEBACK_RIDING"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Pottery",
-      "id": "TECH_POTTERY",
-      "category": "Economic"
-    },
-    {
-      "era": "Modern",
-      "name": "Radio",
-      "id": "TECH_RADIO",
-      "category": "Applied",
-      "requires": [
-        "TECH_FLIGHT",
-        "TECH_ELECTRICITY"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Railroad",
-      "id": "TECH_RAILROAD",
-      "category": "Economic",
-      "requires": [
-        "TECH_STEAM_ENGINE",
-        "TECH_BRIDGE_BUILDING"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Recycling",
-      "id": "TECH_RECYCLING",
-      "category": "Social",
-      "requires": [
-        "TECH_MASS_PRODUCTION",
-        "TECH_DEMOCRACY"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Refining",
-      "id": "TECH_REFINING",
-      "category": "Applied",
-      "requires": [
-        "TECH_CHEMISTRY",
-        "TECH_THE_CORPORATION"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Refrigeration",
-      "id": "TECH_REFRIGERATION",
-      "category": "Economic",
-      "requires": [
-        "TECH_ELECTRICITY",
-        "TECH_SANITATION"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "The Republic",
-      "id": "TECH_THE_REPUBLIC",
-      "category": "Social",
-      "requires": [
-        "TECH_CODE_OF_LAWS",
-        "TECH_LITERACY"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Robotics",
-      "id": "TECH_ROBOTICS",
-      "category": "Military",
-      "requires": [
-        "TECH_COMPUTERS",
-        "TECH_MOBILE_WARFARE"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Rocketry",
-      "id": "TECH_ROCKETRY",
-      "category": "Military",
-      "requires": [
-        "TECH_ADVANCED_FLIGHT",
-        "TECH_ELECTRONICS"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Sanitation",
-      "id": "TECH_SANITATION",
-      "category": "Economic",
-      "requires": [
-        "TECH_MEDICINE",
-        "TECH_ENGINEERING"
-      ]
-    },
-    {
-      "era": "Ancient",
-      "name": "Seafaring",
-      "id": "TECH_SEAFARING",
-      "category": "Economic",
-      "requires": [
-        "TECH_MAP_MAKING",
-        "TECH_POTTERY"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Space Flight",
-      "id": "TECH_SPACE_FLIGHT",
-      "category": "Academic",
-      "requires": [
-        "TECH_COMPUTERS",
-        "TECH_ROCKETRY"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Stealth",
-      "id": "TECH_STEALTH",
-      "category": "Military",
-      "requires": [
-        "TECH_SUPERCONDUCTOR",
-        "TECH_ROBOTICS"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Steam Engine",
-      "id": "TECH_STEAM_ENGINE",
-      "category": "Academic",
-      "requires": [
-        "TECH_PHYSICS",
-        "TECH_INVENTION"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Steel",
-      "id": "TECH_STEEL",
-      "category": "Applied",
-      "requires": [
-        "TECH_ELECTRICITY",
-        "TECH_INDUSTRIALIZATION"
-      ]
-    },
-    {
-      "era": "Modern",
-      "name": "Superconductor",
-      "id": "TECH_SUPERCONDUCTOR",
-      "category": "Academic",
-      "requires": [
-        "TECH_PLASTICS",
-        "TECH_THE_LASER"
-      ]
-    },
-    {
-      "era": "Industrial Revolution",
-      "name": "Tactics",
-      "id": "TECH_TACTICS",
-      "category": "Military",
-      "requires": [
-        "TECH_CONSCRIPTION",
-        "TECH_LEADERSHIP"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Theology",
-      "id": "TECH_THEOLOGY",
-      "category": "Social",
-      "requires": [
-        "TECH_MONOTHEISM",
-        "TECH_FEUDALISM"
-      ]
-    },
-    {
-      "era": "Renaissance",
-      "name": "Theory of Gravity",
-      "id": "TECH_THEORY_OF_GRAVITY",
-      "category": "Academic",
-      "requires": [
-        "TECH_ASTRONOMY",
-        "TECH_UNIVERSITY"
+        "TECH_IRON_WORKING",
+        "TECH_CONSTRUCTION"
       ]
     },
     {
@@ -806,6 +206,26 @@
     },
     {
       "era": "Renaissance",
+      "name": "Astronomy",
+      "id": "TECH_ASTRONOMY",
+      "category": "Academic",
+      "requires": [
+        "TECH_MYSTICISM",
+        "TECH_MATHEMATICS"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Philosophy",
+      "id": "TECH_PHILOSOPHY",
+      "category": "Social",
+      "requires": [
+        "TECH_MYSTICISM",
+        "TECH_LITERACY"
+      ]
+    },
+    {
+      "era": "Renaissance",
       "name": "University",
       "id": "TECH_UNIVERSITY",
       "category": "Academic",
@@ -815,24 +235,604 @@
       ]
     },
     {
-      "era": "Ancient",
-      "name": "Warrior Code",
-      "id": "TECH_WARRIOR_CODE",
-      "category": "Military"
+      "era": "Renaissance",
+      "name": "Navigation",
+      "id": "TECH_NAVIGATION",
+      "category": "Economic",
+      "requires": [
+        "TECH_SEAFARING",
+        "TECH_ASTRONOMY"
+      ]
     },
     {
       "era": "Ancient",
-      "name": "The Wheel",
-      "id": "TECH_THE_WHEEL",
+      "name": "The Republic",
+      "id": "TECH_THE_REPUBLIC",
+      "category": "Social",
+      "requires": [
+        "TECH_CODE_OF_LAWS",
+        "TECH_LITERACY"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Invention",
+      "id": "TECH_INVENTION",
       "category": "Applied",
-      "requires": ["TECH_HORSEBACK_RIDING"]
+      "requires": [
+        "TECH_ENGINEERING",
+        "TECH_LITERACY"
+      ]
     },
     {
-      "era": "Ancient",
-      "name": "Writing",
-      "id": "TECH_WRITING",
+      "era": "Renaissance",
+      "name": "Banking",
+      "id": "TECH_BANKING",
+      "category": "Economic",
+      "requires": [
+        "TECH_TRADE",
+        "TECH_THE_REPUBLIC"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Medicine",
+      "id": "TECH_MEDICINE",
+      "category": "Economic",
+      "requires": [
+        "TECH_PHILOSOPHY",
+        "TECH_TRADE"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Theory of Gravity",
+      "id": "TECH_THEORY_OF_GRAVITY",
       "category": "Academic",
-      "requires": ["TECH_ALPHABET"]
+      "requires": [
+        "TECH_ASTRONOMY",
+        "TECH_UNIVERSITY"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Monotheism",
+      "id": "TECH_MONOTHEISM",
+      "category": "Social",
+      "requires": [
+        "TECH_PHILOSOPHY",
+        "TECH_POLYTHEISM"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Chemistry",
+      "id": "TECH_CHEMISTRY",
+      "category": "Academic",
+      "requires": [
+        "TECH_UNIVERSITY",
+        "TECH_MEDICINE"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Physics",
+      "id": "TECH_PHYSICS",
+      "category": "Academic",
+      "requires": [
+        "TECH_NAVIGATION",
+        "TECH_LITERACY"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Gunpowder",
+      "id": "TECH_GUNPOWDER",
+      "category": "Military",
+      "requires": [
+        "TECH_INVENTION",
+        "TECH_IRON_WORKING"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Economics",
+      "id": "TECH_ECONOMICS",
+      "category": "Economic",
+      "requires": [
+        "TECH_UNIVERSITY",
+        "TECH_BANKING"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Democracy",
+      "id": "TECH_DEMOCRACY",
+      "category": "Social",
+      "requires": [
+        "TECH_BANKING",
+        "TECH_INVENTION"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Sanitation",
+      "id": "TECH_SANITATION",
+      "category": "Economic",
+      "requires": [
+        "TECH_MEDICINE",
+        "TECH_ENGINEERING"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Theology",
+      "id": "TECH_THEOLOGY",
+      "category": "Social",
+      "requires": [
+        "TECH_MONOTHEISM",
+        "TECH_FEUDALISM"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Leadership",
+      "id": "TECH_LEADERSHIP",
+      "category": "Military",
+      "requires": [
+        "TECH_CHIVALRY",
+        "TECH_GUNPOWDER"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Magnetism",
+      "id": "TECH_MAGNETISM",
+      "category": "Academic",
+      "requires": [
+        "TECH_PHYSICS",
+        "TECH_IRON_WORKING"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Steam Engine",
+      "id": "TECH_STEAM_ENGINE",
+      "category": "Academic",
+      "requires": [
+        "TECH_PHYSICS",
+        "TECH_INVENTION"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Explosives",
+      "id": "TECH_EXPLOSIVES",
+      "category": "Applied",
+      "requires": [
+        "TECH_GUNPOWDER",
+        "TECH_CHEMISTRY"
+      ]
+    },
+    {
+      "era": "Renaissance",
+      "name": "Metallurgy",
+      "id": "TECH_METALLURGY",
+      "category": "Military",
+      "requires": [
+        "TECH_GUNPOWDER",
+        "TECH_UNIVERSITY"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Railroad",
+      "id": "TECH_RAILROAD",
+      "category": "Economic",
+      "requires": [
+        "TECH_STEAM_ENGINE",
+        "TECH_BRIDGE_BUILDING"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Electricity",
+      "id": "TECH_ELECTRICITY",
+      "category": "Applied",
+      "requires": [
+        "TECH_METALLURGY",
+        "TECH_MAGNETISM"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Conscription",
+      "id": "TECH_CONSCRIPTION",
+      "category": "Military",
+      "requires": [
+        "TECH_DEMOCRACY",
+        "TECH_METALLURGY"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Tactics",
+      "id": "TECH_TACTICS",
+      "category": "Military",
+      "requires": [
+        "TECH_CONSCRIPTION",
+        "TECH_LEADERSHIP"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Fundamentalism",
+      "id": "TECH_FUNDAMENTALISM",
+      "category": "Social",
+      "requires": [
+        "TECH_MONOTHEISM",
+        "TECH_CONSCRIPTION"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Amphibious Warfare",
+      "id": "TECH_AMPHIBIOUS_WARFARE",
+      "category": "Military",
+      "requires": [
+        "TECH_NAVIGATION",
+        "TECH_TACTICS"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Atomic Theory",
+      "id": "TECH_ATOMIC_THEORY",
+      "category": "Academic",
+      "requires": [
+        "TECH_THEORY_OF_GRAVITY",
+        "TECH_PHYSICS"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Industrialization",
+      "id": "TECH_INDUSTRIALIZATION",
+      "category": "Economic",
+      "requires": [
+        "TECH_RAILROAD",
+        "TECH_BANKING"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Steel",
+      "id": "TECH_STEEL",
+      "category": "Applied",
+      "requires": [
+        "TECH_ELECTRICITY",
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Communism",
+      "id": "TECH_COMMUNISM",
+      "category": "Social",
+      "requires": [
+        "TECH_PHILOSOPHY",
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "The Corporation",
+      "id": "TECH_THE_CORPORATION",
+      "category": "Economic",
+      "requires": [
+        "TECH_INDUSTRIALIZATION",
+        "TECH_ECONOMICS"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Refining",
+      "id": "TECH_REFINING",
+      "category": "Applied",
+      "requires": [
+        "TECH_CHEMISTRY",
+        "TECH_THE_CORPORATION"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Combustion",
+      "id": "TECH_COMBUSTION",
+      "category": "Applied",
+      "requires": [
+        "TECH_REFINING",
+        "TECH_EXPLOSIVES"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Flight",
+      "id": "TECH_FLIGHT",
+      "category": "Applied",
+      "requires": [
+        "TECH_COMBUSTION",
+        "TECH_THEORY_OF_GRAVITY"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Automobile",
+      "id": "TECH_AUTOMOBILE",
+      "category": "Applied",
+      "requires": [
+        "TECH_COMBUSTION",
+        "TECH_STEEL"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Radio",
+      "id": "TECH_RADIO",
+      "category": "Applied",
+      "requires": [
+        "TECH_FLIGHT",
+        "TECH_ELECTRICITY"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Mass Production",
+      "id": "TECH_MASS_PRODUCTION",
+      "category": "Applied",
+      "requires": [
+        "TECH_AUTOMOBILE",
+        "TECH_THE_CORPORATION"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Mobile Warfare",
+      "id": "TECH_MOBILE_WARFARE",
+      "category": "Military",
+      "requires": [
+        "TECH_AUTOMOBILE",
+        "TECH_TACTICS"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Electronics",
+      "id": "TECH_ELECTRONICS",
+      "category": "Applied",
+      "requires": [
+        "TECH_ELECTRICITY",
+        "TECH_THE_CORPORATION"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Nuclear Fission",
+      "id": "TECH_NUCLEAR_FISSION",
+      "category": "Academic",
+      "requires": [
+        "TECH_ATOMIC_THEORY",
+        "TECH_MASS_PRODUCTION"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Advanced Flight",
+      "id": "TECH_ADVANCED_FLIGHT",
+      "category": "Applied",
+      "requires": [
+        "TECH_RADIO",
+        "TECH_MACHINE_TOOLS"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Recycling",
+      "id": "TECH_RECYCLING",
+      "category": "Social",
+      "requires": [
+        "TECH_MASS_PRODUCTION",
+        "TECH_DEMOCRACY"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Combined Arms",
+      "id": "TECH_COMBINED_ARMS",
+      "category": "Military",
+      "requires": [
+        "TECH_MOBILE_WARFARE",
+        "TECH_ADVANCED_FLIGHT"
+      ]
+    },
+    {
+      "era": "Industrial Revolution",
+      "name": "Machine Tools",
+      "id": "TECH_MACHINE_TOOLS",
+      "category": "Applied",
+      "requires": [
+        "TECH_STEEL",
+        "TECH_TACTICS"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Espionage",
+      "id": "TECH_ESPIONAGE",
+      "category": "Military",
+      "requires": [
+        "TECH_COMMUNISM",
+        "TECH_DEMOCRACY"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Refrigeration",
+      "id": "TECH_REFRIGERATION",
+      "category": "Economic",
+      "requires": [
+        "TECH_ELECTRICITY",
+        "TECH_SANITATION"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Nuclear Power",
+      "id": "TECH_NUCLEAR_POWER",
+      "category": "Academic",
+      "requires": [
+        "TECH_NUCLEAR_FISSION",
+        "TECH_ELECTRONICS"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Guerrilla Warfare",
+      "id": "TECH_GUERRILLA_WARFARE",
+      "category": "Military",
+      "requires": [
+        "TECH_COMMUNISM",
+        "TECH_TACTICS"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Genetic Engineering",
+      "id": "TECH_GENETIC_ENGINEERING",
+      "category": "Academic",
+      "requires": [
+        "TECH_MEDICINE",
+        "TECH_THE_CORPORATION"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Rocketry",
+      "id": "TECH_ROCKETRY",
+      "category": "Military",
+      "requires": [
+        "TECH_ADVANCED_FLIGHT",
+        "TECH_ELECTRONICS"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Miniaturization",
+      "id": "TECH_MINIATURIZATION",
+      "category": "Applied",
+      "requires": [
+        "TECH_MACHINE_TOOLS",
+        "TECH_ELECTRONICS"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "The Laser",
+      "id": "TECH_THE_LASER",
+      "category": "Academic",
+      "requires": [
+        "TECH_NUCLEAR_POWER",
+        "TECH_MASS_PRODUCTION"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Labor Union",
+      "id": "TECH_LABOR_UNION",
+      "category": "Social",
+      "requires": [
+        "TECH_MASS_PRODUCTION",
+        "TECH_GUERRILLA_WARFARE"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Computers",
+      "id": "TECH_COMPUTERS",
+      "category": "Applied",
+      "requires": [
+        "TECH_MINIATURIZATION",
+        "TECH_MASS_PRODUCTION"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Space Flight",
+      "id": "TECH_SPACE_FLIGHT",
+      "category": "Academic",
+      "requires": [
+        "TECH_COMPUTERS",
+        "TECH_ROCKETRY"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Plastics",
+      "id": "TECH_PLASTICS",
+      "category": "Applied",
+      "requires": [
+        "TECH_REFINING",
+        "TECH_SPACE_FLIGHT"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Environmentalism",
+      "id": "TECH_ENVIRONMENTALISM",
+      "category": "Social",
+      "requires": [
+        "TECH_RECYCLING",
+        "TECH_SPACE_FLIGHT"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Robotics",
+      "id": "TECH_ROBOTICS",
+      "category": "Military",
+      "requires": [
+        "TECH_COMPUTERS",
+        "TECH_MOBILE_WARFARE"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Superconductor",
+      "id": "TECH_SUPERCONDUCTOR",
+      "category": "Academic",
+      "requires": [
+        "TECH_PLASTICS",
+        "TECH_THE_LASER"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Stealth",
+      "id": "TECH_STEALTH",
+      "category": "Military",
+      "requires": [
+        "TECH_SUPERCONDUCTOR",
+        "TECH_ROBOTICS"
+      ]
+    },
+    {
+      "era": "Modern",
+      "name": "Fusion Power",
+      "id": "TECH_FUSION_POWER",
+      "category": "Academic",
+      "requires": [
+        "TECH_NUCLEAR_POWER",
+        "TECH_SUPERCONDUCTOR"
+      ]
     },
     {
       "era": "Modern",

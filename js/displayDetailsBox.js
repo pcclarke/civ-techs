@@ -16,7 +16,7 @@ function displayDetailsBox(item, pos, game, civ, data) {
             
         });
 
-    if (itemCat === "units" || itemCat === "buildings") {
+    if ((itemCat === "units" || itemCat === "buildings") && !(game === "civ1" || game === "civ2")) {
         if (item[CIV.ilization]) {
             itemName = item[CIV.ilization].name;
             itemId = item[CIV.ilization].id;

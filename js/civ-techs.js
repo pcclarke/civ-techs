@@ -19,6 +19,7 @@ var CIV = {
     arcWidth: 1.5,
     color: d3.scaleOrdinal(d3.schemeCategory10),
     coords: [0, 0],
+    game: "civ4bts",
     ilization: "CIVILIZATION_ALL",
     dataTypes: ["units", "buildings", "religions", "build", "resources", "projects", "promotions", "civics"]
 };
@@ -83,15 +84,17 @@ d3.select("#selectGame")
         var selectCiv = document.getElementById("selectCiv");
         selectCiv.options.length = 1;
 
-        var selectGame = this.options[this.selectedIndex].value;
+        CIV.game = this.options[this.selectedIndex].value;
 
-        if (selectGame === "civ1" || selectGame === "civ2") {
+        if (CIV.game === "civ1" || CIV.game === "civ2") {
+            CIV.arcSpace = 13;
             d3.select("#selectCivBox").classed("hidden", true);
         } else {
+            CIV.arcSpace = 14;
             d3.select("#selectCivBox").classed("hidden", false);
         }
 
-        makeWheel(selectGame);
+        makeWheel(CIV.game);
     });
 
 // Close the details box
