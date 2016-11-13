@@ -4,11 +4,17 @@ var getReqTechPreReqs = function (examine, data) {
 
     if (examine.requires) {
         data.technologies.forEach(function (t) {
-            examine.requires.forEach(function (r) {
-                if (r === t.id) {
+            if (Array.isArray(examine.requires)) {
+                examine.requires.forEach(function (r) {
+                    if (r === t.id) {
+                        preReqs.push(t);
+                    }
+                });
+            } else {
+                if (examine.requires === t.id) {
                     preReqs.push(t);
                 }
-            });
+            }
         });
     }
     
@@ -21,11 +27,17 @@ var getReqTechPreReqs = function (examine, data) {
     
     compareData.forEach(function (d) {
         if (d.requires) {
-            d.requires.forEach(function (r) {
-                if(r === examine.id) {
+            if (Array.isArray(d.requires)) {
+                d.requires.forEach(function (r) {
+                    if(r === examine.id) {
+                        leads.push(d);
+                    }
+                });
+            } else {
+                if (d.requires === examine.id) {
                     leads.push(d);
                 }
-            });
+            }
         }
     });
     
@@ -38,11 +50,17 @@ var getOptTechPreReqs = function (examine, data) {
 
     if (examine.optional) {
         data.technologies.forEach(function (t) {
-            examine.optional.forEach(function (o) {
-                if (o === t.id) {
+            if (Array.isArray(examine.optional)) {
+                examine.optional.forEach(function (o) {
+                    if (o === t.id) {
+                        preReqs.push(t);
+                    }
+                });
+            } else {
+                if (examine.optional === t.id) {
                     preReqs.push(t);
                 }
-            });
+            }
         });
     }
     
@@ -55,11 +73,17 @@ var getLeadsToOpt = function (examine, compareData) {
     
     compareData.forEach(function (c) {
         if (c.optional) {
-            c.optional.forEach(function (o) {
-                if (o === examine.id) {
+            if (Array.isArray(c.optional)) {
+                c.optional.forEach(function (o) {
+                    if (o === examine.id) {
+                        leads.push(c);
+                    }
+                });
+            } else {
+                if (c.optional === examine.id) {
                     leads.push(c);
                 }
-            });
+            }
         }
     });
     
@@ -72,20 +96,32 @@ var getTechPrereqs = function (examine, data) {
 
     if (examine.requires) {
         data.technologies.forEach(function (t) {
-            examine.requires.forEach(function (r) {
-                if (r === t.id) {
+            if (Array.isArray(examine.requires)) {
+                examine.requires.forEach(function (r) {
+                    if (r === t.id) {
+                        preReqs.push(t);
+                    }
+                });
+            } else {
+                if (examine.requires === t.id) {
                     preReqs.push(t);
                 }
-            });
+            }
         });
     }
     if (examine.optional) {
         data.technologies.forEach(function (t) {
-            examine.optional.forEach(function (o) {
-                if (o === t.id) {
+            if (Array.isArray(examine.optional)) {
+                examine.optional.forEach(function (o) {
+                    if (o === t.id) {
+                        preReqs.push(t);
+                    }
+                });
+            } else {
+                if (examine.optional === t.id) {
                     preReqs.push(t);
                 }
-            });
+            }
         });
     }
     
@@ -98,18 +134,31 @@ var getLeadsTo = function (examine, compareData) {
     
     compareData.forEach(function (c) {
         if (c.requires) {
-            c.requires.forEach(function (r) {
-                if (r === examine.id) {
+            if (Array.isArray(c.requires)) {
+                c.requires.forEach(function (r) {
+                    if (r === examine.id) {
+                        leads.push(c);
+                    }
+                });
+            } else {
+                if (c.requires === examine.id) {
                     leads.push(c);
                 }
-            });
+            }
         }
         if (c.optional) {
-            c.optional.forEach(function (o) {
-                if (o === examine.id) {
+            if (Array.isArray(c.optional)) {
+                c.optional.forEach(function (o) {
+                    if (o === examine.id) {
+                        leads.push(c);
+                    }
+                });
+            } else {
+                if (c.optional === examine.id) {
                     leads.push(c);
                 }
-            });
+            }
+
         }
     });
 

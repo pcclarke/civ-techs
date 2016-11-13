@@ -9,24 +9,32 @@ function displayTooltip(name) {
     d3.select("#tooltip").classed("hidden", false);
 }
 
-function spokeHighlightIn(d) {
-    d3.selectAll("." + d.id)  
+var selLine = function(setId, setClass, toShow) {
+    d3.selectAll("." + setId)
         .selectAll(".spokeLine")
-        .classed("lineSelected", true);
+        .classed(setClass, toShow);
+};
+
+function spokeHighlightIn(d) {
+    selLine(d.id, "lineSelected", true);
 
     if (d.requires) {
-        d.requires.forEach(function (r) {
-            d3.selectAll("." + r)
-            .selectAll(".spokeLine")
-                .classed("lineRequired", true);
-        });
+        if (Array.isArray(d.requires)) {
+            d.requires.forEach(function (r) {
+                selLine(r, "lineRequired", true);
+            });
+        } else {
+            selLine(d.requires, "lineRequired", true);
+        }
     }
     if (d.optional) {
-        d.optional.forEach(function (o) {
-            d3.selectAll("." + o)
-            .selectAll(".spokeLine")
-                .classed("lineOptional", true);
-        });
+        if (Array.isArray(d.optional)) {
+            d.optional.forEach(function (o) {
+                selLine(o, "lineOptional", true);
+            });
+        } else {
+            selLine(d.optional, "lineOptional", true);
+        }
     }
     if (d.lreq) {
         d.lreq.forEach(function (lr) {
@@ -45,23 +53,25 @@ function spokeHighlightIn(d) {
 }
 
 function spokeHighlightOut(d) {
-    d3.selectAll("." + d.id)  
-        .selectAll(".spokeLine")
-        .classed("lineSelected", false);
+    selLine(d.id, "lineSelected", false);
 
     if (d.requires) {
-        d.requires.forEach(function (r) {
-            d3.selectAll("." + r)
-            .selectAll(".spokeLine")
-                .classed("lineRequired", false);
-        });
+        if (Array.isArray(d.requires)) {
+            d.requires.forEach(function (r) {
+                selLine(r, "lineRequired", false);
+            });
+        } else {
+            selLine(d.requires, "lineRequired", false);
+        }
     }
     if (d.optional) {
-        d.optional.forEach(function (o) {
-            d3.selectAll("." + o)
-            .selectAll(".spokeLine")
-                .classed("lineOptional", false);
-        });
+        if (Array.isArray(d.optional)) {
+            d.optional.forEach(function (o) {
+                selLine(o, "lineOptional", false);
+            });
+        } else {
+            selLine(d.optional, "lineOptional", false);
+        }
     }
     if (d.lreq) {
         d.lreq.forEach(function (lr) {
