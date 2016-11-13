@@ -1342,33 +1342,6 @@
       "requires": "TECH_GENETIC_ENGINEERING"
     }
   ],
-  "civics": [
-    {
-      "name": "Monarchy",
-      "id": "CIVIC_MONARCHY",
-      "requires": "TECH_MONARCHY"
-    },
-    {
-      "name": "Communism",
-      "id": "CIVIC_COMMUNISM",
-      "requires": "TECH_COMMUNISM"
-    },
-    {
-      "name": "Fundamentalism",
-      "id": "CIVIC_FUNDAMENTALISM",
-      "requires": "TECH_FUNDAMENTALISM"
-    },
-    {
-      "name": "Republic",
-      "id": "CIVIC_REPUBLIC",
-      "requires": "TECH_THE_REPUBLIC"
-    },
-    {
-      "name": "Democracy",
-      "id": "CIVIC_DEMOCRACY",
-      "requires": "TECH_DEMOCRACY"
-    }
-  ],
   "units": [
     {
       "firepower": 1,

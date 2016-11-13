@@ -15,7 +15,7 @@ void setup() {
   
   JSONObject extras = loadJSONObject("civ2_extra.json");
   civ2.setJSONArray("build", extras.getJSONArray("build"));
-  civ2.setJSONArray("civics", extras.getJSONArray("civics"));
+  //civ2.setJSONArray("civics", extras.getJSONArray("civics"));
   
   saveJSONObject(civ2, "civdata.json");
   

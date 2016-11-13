@@ -21,8 +21,10 @@ function setupData(data) {
 
         unlocks = getLeadsTo(d, data.units);
         unlocks = unlocks.concat(getLeadsTo(d, data.buildings));
-        unlocks = unlocks.concat(getLeadsTo(d, data.civics));
         unlocks = unlocks.concat(getLeadsTo(d, data.build));
+        if (data.civics) {
+            unlocks = unlocks.concat(getLeadsTo(d, data.civics));    
+        }
         if (data.projects) {
             unlocks = unlocks.concat(getLeadsTo(d, data.projects));
         }
