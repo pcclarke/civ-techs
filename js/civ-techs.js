@@ -67,10 +67,21 @@ var unlockArc = d3.arc()
         return d.arcEnd;   
     });
 
+var makeGame = function(selector) {
+    CIV.game = selector.options[selector.selectedIndex].value;
+
+    if (CIV.game === "civ1" || CIV.game === "civ2") {
+        CIV.arcSpace = 12.5;
+        d3.select("#selectCivBox").classed("hidden", true);
+    } else {
+        CIV.arcSpace = 14;
+        d3.select("#selectCivBox").classed("hidden", false);
+    }
+    makeWheel(CIV.game);
+}
 
 // Set game wheel to what's currently in selection box
-makeWheel(document.getElementById('selectGame')
-    .options[document.getElementById('selectGame').selectedIndex].value, CIV.ilization);
+makeGame(document.getElementById('selectGame'));
 
 // Game selection drop-down
 d3.select("#selectGame")
@@ -84,17 +95,7 @@ d3.select("#selectGame")
         var selectCiv = document.getElementById("selectCiv");
         selectCiv.options.length = 1;
 
-        CIV.game = this.options[this.selectedIndex].value;
-
-        if (CIV.game === "civ1" || CIV.game === "civ2") {
-            CIV.arcSpace = 13;
-            d3.select("#selectCivBox").classed("hidden", true);
-        } else {
-            CIV.arcSpace = 14;
-            d3.select("#selectCivBox").classed("hidden", false);
-        }
-
-        makeWheel(CIV.game);
+        makeGame(this);
     });
 
 // Close the details box

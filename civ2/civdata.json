@@ -2,48 +2,56 @@
   "technologies": [
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Pottery",
       "id": "TECH_POTTERY",
       "category": "Economic"
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Alphabet",
       "id": "TECH_ALPHABET",
       "category": "Academic"
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Warrior Code",
       "id": "TECH_WARRIOR_CODE",
       "category": "Military"
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Horseback Riding",
       "id": "TECH_HORSEBACK_RIDING",
       "category": "Military"
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Bronze Working",
       "id": "TECH_BRONZE_WORKING",
       "category": "Applied"
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Masonry",
       "id": "TECH_MASONRY",
       "category": "Applied"
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Ceremonial Burial",
       "id": "TECH_CEREMONIAL_BURIAL",
       "category": "Social"
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Map Making",
       "id": "TECH_MAP_MAKING",
       "category": "Economic",
@@ -51,6 +59,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Writing",
       "id": "TECH_WRITING",
       "category": "Academic",
@@ -58,6 +67,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Code of Laws",
       "id": "TECH_CODE_OF_LAWS",
       "category": "Social",
@@ -65,6 +75,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Mathematics",
       "id": "TECH_MATHEMATICS",
       "category": "Academic",
@@ -75,6 +86,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "The Wheel",
       "id": "TECH_THE_WHEEL",
       "category": "Applied",
@@ -82,6 +94,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Iron Working",
       "id": "TECH_IRON_WORKING",
       "category": "Applied",
@@ -92,6 +105,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Currency",
       "id": "TECH_CURRENCY",
       "category": "Economic",
@@ -99,6 +113,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Construction",
       "id": "TECH_CONSTRUCTION",
       "category": "Applied",
@@ -109,6 +124,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Mysticism",
       "id": "TECH_MYSTICISM",
       "category": "Social",
@@ -116,6 +132,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Polytheism",
       "id": "TECH_POLYTHEISM",
       "category": "Social",
@@ -126,6 +143,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Seafaring",
       "id": "TECH_SEAFARING",
       "category": "Economic",
@@ -136,6 +154,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Literacy",
       "id": "TECH_LITERACY",
       "category": "Academic",
@@ -146,6 +165,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Monarchy",
       "id": "TECH_MONARCHY",
       "category": "Social",
@@ -156,6 +176,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Feudalism",
       "id": "TECH_FEUDALISM",
       "category": "Military",
@@ -166,6 +187,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Chivalry",
       "id": "TECH_CHIVALRY",
       "category": "Military",
@@ -176,6 +198,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Engineering",
       "id": "TECH_ENGINEERING",
       "category": "Applied",
@@ -186,6 +209,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Bridge Building",
       "id": "TECH_BRIDGE_BUILDING",
       "category": "Applied",
@@ -196,6 +220,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "Trade",
       "id": "TECH_TRADE",
       "category": "Economic",
@@ -206,6 +231,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Astronomy",
       "id": "TECH_ASTRONOMY",
       "category": "Academic",
@@ -216,6 +242,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Philosophy",
       "id": "TECH_PHILOSOPHY",
       "category": "Social",
@@ -226,6 +253,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "University",
       "id": "TECH_UNIVERSITY",
       "category": "Academic",
@@ -236,6 +264,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Navigation",
       "id": "TECH_NAVIGATION",
       "category": "Economic",
@@ -246,6 +275,7 @@
     },
     {
       "era": "Ancient",
+      "kind": "Civilization Advance",
       "name": "The Republic",
       "id": "TECH_THE_REPUBLIC",
       "category": "Social",
@@ -256,6 +286,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Invention",
       "id": "TECH_INVENTION",
       "category": "Applied",
@@ -266,6 +297,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Banking",
       "id": "TECH_BANKING",
       "category": "Economic",
@@ -276,6 +308,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Medicine",
       "id": "TECH_MEDICINE",
       "category": "Economic",
@@ -286,6 +319,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Theory of Gravity",
       "id": "TECH_THEORY_OF_GRAVITY",
       "category": "Academic",
@@ -296,6 +330,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Monotheism",
       "id": "TECH_MONOTHEISM",
       "category": "Social",
@@ -306,6 +341,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Chemistry",
       "id": "TECH_CHEMISTRY",
       "category": "Academic",
@@ -316,6 +352,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Physics",
       "id": "TECH_PHYSICS",
       "category": "Academic",
@@ -326,6 +363,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Gunpowder",
       "id": "TECH_GUNPOWDER",
       "category": "Military",
@@ -336,6 +374,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Economics",
       "id": "TECH_ECONOMICS",
       "category": "Economic",
@@ -346,6 +385,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Democracy",
       "id": "TECH_DEMOCRACY",
       "category": "Social",
@@ -356,6 +396,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Sanitation",
       "id": "TECH_SANITATION",
       "category": "Economic",
@@ -366,6 +407,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Theology",
       "id": "TECH_THEOLOGY",
       "category": "Social",
@@ -376,6 +418,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Leadership",
       "id": "TECH_LEADERSHIP",
       "category": "Military",
@@ -386,6 +429,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Magnetism",
       "id": "TECH_MAGNETISM",
       "category": "Academic",
@@ -396,6 +440,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Steam Engine",
       "id": "TECH_STEAM_ENGINE",
       "category": "Academic",
@@ -406,6 +451,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Explosives",
       "id": "TECH_EXPLOSIVES",
       "category": "Applied",
@@ -416,6 +462,7 @@
     },
     {
       "era": "Renaissance",
+      "kind": "Civilization Advance",
       "name": "Metallurgy",
       "id": "TECH_METALLURGY",
       "category": "Military",
@@ -426,6 +473,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Railroad",
       "id": "TECH_RAILROAD",
       "category": "Economic",
@@ -436,6 +484,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Electricity",
       "id": "TECH_ELECTRICITY",
       "category": "Applied",
@@ -446,6 +495,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Conscription",
       "id": "TECH_CONSCRIPTION",
       "category": "Military",
@@ -456,6 +506,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Tactics",
       "id": "TECH_TACTICS",
       "category": "Military",
@@ -466,6 +517,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Fundamentalism",
       "id": "TECH_FUNDAMENTALISM",
       "category": "Social",
@@ -476,6 +528,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Amphibious Warfare",
       "id": "TECH_AMPHIBIOUS_WARFARE",
       "category": "Military",
@@ -486,6 +539,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Atomic Theory",
       "id": "TECH_ATOMIC_THEORY",
       "category": "Academic",
@@ -496,6 +550,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Industrialization",
       "id": "TECH_INDUSTRIALIZATION",
       "category": "Economic",
@@ -506,6 +561,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Steel",
       "id": "TECH_STEEL",
       "category": "Applied",
@@ -516,6 +572,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Communism",
       "id": "TECH_COMMUNISM",
       "category": "Social",
@@ -526,6 +583,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "The Corporation",
       "id": "TECH_THE_CORPORATION",
       "category": "Economic",
@@ -536,6 +594,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Refining",
       "id": "TECH_REFINING",
       "category": "Applied",
@@ -546,6 +605,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Combustion",
       "id": "TECH_COMBUSTION",
       "category": "Applied",
@@ -556,6 +616,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Flight",
       "id": "TECH_FLIGHT",
       "category": "Applied",
@@ -566,6 +627,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Automobile",
       "id": "TECH_AUTOMOBILE",
       "category": "Applied",
@@ -576,6 +638,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Radio",
       "id": "TECH_RADIO",
       "category": "Applied",
@@ -586,6 +649,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Mass Production",
       "id": "TECH_MASS_PRODUCTION",
       "category": "Applied",
@@ -596,6 +660,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Mobile Warfare",
       "id": "TECH_MOBILE_WARFARE",
       "category": "Military",
@@ -606,6 +671,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Electronics",
       "id": "TECH_ELECTRONICS",
       "category": "Applied",
@@ -616,6 +682,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Nuclear Fission",
       "id": "TECH_NUCLEAR_FISSION",
       "category": "Academic",
@@ -626,6 +693,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Advanced Flight",
       "id": "TECH_ADVANCED_FLIGHT",
       "category": "Applied",
@@ -636,6 +704,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Recycling",
       "id": "TECH_RECYCLING",
       "category": "Social",
@@ -646,6 +715,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Combined Arms",
       "id": "TECH_COMBINED_ARMS",
       "category": "Military",
@@ -656,6 +726,7 @@
     },
     {
       "era": "Industrial Revolution",
+      "kind": "Civilization Advance",
       "name": "Machine Tools",
       "id": "TECH_MACHINE_TOOLS",
       "category": "Applied",
@@ -666,6 +737,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Espionage",
       "id": "TECH_ESPIONAGE",
       "category": "Military",
@@ -676,6 +748,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Refrigeration",
       "id": "TECH_REFRIGERATION",
       "category": "Economic",
@@ -686,6 +759,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Nuclear Power",
       "id": "TECH_NUCLEAR_POWER",
       "category": "Academic",
@@ -696,6 +770,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Guerrilla Warfare",
       "id": "TECH_GUERRILLA_WARFARE",
       "category": "Military",
@@ -706,6 +781,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Genetic Engineering",
       "id": "TECH_GENETIC_ENGINEERING",
       "category": "Academic",
@@ -716,6 +792,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Rocketry",
       "id": "TECH_ROCKETRY",
       "category": "Military",
@@ -726,6 +803,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Miniaturization",
       "id": "TECH_MINIATURIZATION",
       "category": "Applied",
@@ -736,6 +814,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "The Laser",
       "id": "TECH_THE_LASER",
       "category": "Academic",
@@ -746,6 +825,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Labor Union",
       "id": "TECH_LABOR_UNION",
       "category": "Social",
@@ -756,6 +836,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Computers",
       "id": "TECH_COMPUTERS",
       "category": "Applied",
@@ -766,6 +847,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Space Flight",
       "id": "TECH_SPACE_FLIGHT",
       "category": "Academic",
@@ -776,6 +858,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Plastics",
       "id": "TECH_PLASTICS",
       "category": "Applied",
@@ -786,6 +869,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Environmentalism",
       "id": "TECH_ENVIRONMENTALISM",
       "category": "Social",
@@ -796,6 +880,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Robotics",
       "id": "TECH_ROBOTICS",
       "category": "Military",
@@ -806,6 +891,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Superconductor",
       "id": "TECH_SUPERCONDUCTOR",
       "category": "Academic",
@@ -816,6 +902,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Stealth",
       "id": "TECH_STEALTH",
       "category": "Military",
@@ -826,6 +913,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Fusion Power",
       "id": "TECH_FUSION_POWER",
       "category": "Academic",
@@ -836,6 +924,7 @@
     },
     {
       "era": "Modern",
+      "kind": "Civilization Advance",
       "name": "Future Technology",
       "id": "TECH_FUTURE_TECHNOLOGY",
       "category": "Academic",
@@ -847,21 +936,25 @@
   ],
   "build": [
     {
+      "kind": "Terrain Improvement",
       "name": "Build Railroad",
       "id": "BUILD_RAILROAD",
       "requires": "TECH_RAILROAD"
     },
     {
+      "kind": "Terrain Improvement",
       "name": "Build Fortress",
       "id": "BUILD_FORTRESS",
       "requires": "TECH_CONSTRUCTION"
     },
     {
+      "kind": "Terrain Improvement",
       "name": "Build Airbase",
       "id": "BUILD_AIRBASE",
       "requires": "TECH_RADIO"
     },
     {
+      "kind": "Terrain Improvement",
       "name": "Improve Farmland",
       "id": "BUILD_IMPROVE_FARMLAND",
       "requires": "TECH_REFRIGERATION"
@@ -871,6 +964,7 @@
     {
       "cost": 10,
       "upkeep": 0,
+      "kind": "City Improvement",
       "name": "Palace",
       "id": "BUILDING_PALACE",
       "requires": "TECH_MASONRY"
@@ -878,6 +972,7 @@
     {
       "cost": 4,
       "upkeep": 1,
+      "kind": "City Improvement",
       "name": "Barracks",
       "obsolete": "TECH_GUNPOWDER",
       "id": "BUILDING_BARRACKS",
@@ -886,6 +981,7 @@
     {
       "cost": 6,
       "upkeep": 1,
+      "kind": "City Improvement",
       "name": "Granary",
       "id": "BUILDING_GRANARY",
       "requires": "TECH_POTTERY"
@@ -893,6 +989,7 @@
     {
       "cost": 4,
       "upkeep": 1,
+      "kind": "City Improvement",
       "name": "Temple",
       "id": "BUILDING_TEMPLE",
       "requires": "TECH_CEREMONIAL_BURIAL"
@@ -900,6 +997,7 @@
     {
       "cost": 8,
       "upkeep": 1,
+      "kind": "City Improvement",
       "name": "MarketPlace",
       "id": "BUILDING_MARKETPLACE",
       "requires": "TECH_CURRENCY"
@@ -907,6 +1005,7 @@
     {
       "cost": 8,
       "upkeep": 1,
+      "kind": "City Improvement",
       "name": "Library",
       "id": "BUILDING_LIBRARY",
       "requires": "TECH_WRITING"
@@ -914,6 +1013,7 @@
     {
       "cost": 8,
       "upkeep": 1,
+      "kind": "City Improvement",
       "name": "Courthouse",
       "id": "BUILDING_COURTHOUSE",
       "requires": "TECH_CODE_OF_LAWS"
@@ -921,6 +1021,7 @@
     {
       "cost": 8,
       "upkeep": 0,
+      "kind": "City Improvement",
       "name": "City Walls",
       "id": "BUILDING_CITY_WALLS",
       "requires": "TECH_MASONRY"
@@ -928,6 +1029,7 @@
     {
       "cost": 8,
       "upkeep": 2,
+      "kind": "City Improvement",
       "name": "Aqueduct",
       "id": "BUILDING_AQUEDUCT",
       "requires": "TECH_CONSTRUCTION"
@@ -935,6 +1037,7 @@
     {
       "cost": 12,
       "upkeep": 3,
+      "kind": "City Improvement",
       "name": "Bank",
       "id": "BUILDING_BANK",
       "requires": "TECH_BANKING"
@@ -942,6 +1045,7 @@
     {
       "cost": 12,
       "upkeep": 3,
+      "kind": "City Improvement",
       "name": "Cathedral",
       "id": "BUILDING_CATHEDRAL",
       "requires": "TECH_MONOTHEISM"
@@ -949,6 +1053,7 @@
     {
       "cost": 16,
       "upkeep": 3,
+      "kind": "City Improvement",
       "name": "University",
       "id": "BUILDING_UNIVERSITY",
       "requires": "TECH_UNIVERSITY"
@@ -956,6 +1061,7 @@
     {
       "cost": 16,
       "upkeep": 4,
+      "kind": "City Improvement",
       "name": "Mass Transit",
       "id": "BUILDING_MASS_TRANSIT",
       "requires": "TECH_MASS_PRODUCTION"
@@ -963,6 +1069,7 @@
     {
       "cost": 10,
       "upkeep": 4,
+      "kind": "City Improvement",
       "name": "Colosseum",
       "id": "BUILDING_COLOSSEUM",
       "requires": "TECH_CONSTRUCTION"
@@ -970,6 +1077,7 @@
     {
       "cost": 20,
       "upkeep": 4,
+      "kind": "City Improvement",
       "name": "Factory",
       "id": "BUILDING_FACTORY",
       "requires": "TECH_INDUSTRIALIZATION"
@@ -977,6 +1085,7 @@
     {
       "cost": 32,
       "upkeep": 6,
+      "kind": "City Improvement",
       "name": "Manufacturing Plant",
       "id": "BUILDING_MANUFACTURING_PLANT",
       "requires": "TECH_ROBOTICS"
@@ -984,6 +1093,7 @@
     {
       "cost": 20,
       "upkeep": 4,
+      "kind": "City Improvement",
       "name": "SDI Defense",
       "id": "BUILDING_SDI_DEFENSE",
       "requires": "TECH_THE_LASER"
@@ -991,6 +1101,7 @@
     {
       "cost": 20,
       "upkeep": 2,
+      "kind": "City Improvement",
       "name": "Recycling Center",
       "id": "BUILDING_RECYCLING_CENTER",
       "requires": "TECH_RECYCLING"
@@ -998,6 +1109,7 @@
     {
       "cost": 16,
       "upkeep": 4,
+      "kind": "City Improvement",
       "name": "Power Plant",
       "id": "BUILDING_POWER_PLANT",
       "requires": "TECH_REFINING"
@@ -1005,6 +1117,7 @@
     {
       "cost": 24,
       "upkeep": 4,
+      "kind": "City Improvement",
       "name": "Hydro Plant",
       "id": "BUILDING_HYDRO_PLANT",
       "requires": "TECH_ELECTRONICS"
@@ -1012,6 +1125,7 @@
     {
       "cost": 16,
       "upkeep": 2,
+      "kind": "City Improvement",
       "name": "Nuclear Plant",
       "id": "BUILDING_NUCLEAR_PLANT",
       "requires": "TECH_NUCLEAR_POWER"
@@ -1019,6 +1133,7 @@
     {
       "cost": 16,
       "upkeep": 4,
+      "kind": "City Improvement",
       "name": "Stock Exchange",
       "id": "BUILDING_STOCK_EXCHANGE",
       "requires": "TECH_ECONOMICS"
@@ -1026,6 +1141,7 @@
     {
       "cost": 12,
       "upkeep": 2,
+      "kind": "City Improvement",
       "name": "Sewer System",
       "id": "BUILDING_SEWER_SYSTEM",
       "requires": "TECH_SANITATION"
@@ -1033,6 +1149,7 @@
     {
       "cost": 8,
       "upkeep": 3,
+      "kind": "City Improvement",
       "name": "Supermarket",
       "id": "BUILDING_SUPERMARKET",
       "requires": "TECH_REFRIGERATION"
@@ -1040,6 +1157,7 @@
     {
       "cost": 20,
       "upkeep": 5,
+      "kind": "City Improvement",
       "name": "Superhighways",
       "id": "BUILDING_SUPERHIGHWAYS",
       "requires": "TECH_AUTOMOBILE"
@@ -1047,6 +1165,7 @@
     {
       "cost": 16,
       "upkeep": 3,
+      "kind": "City Improvement",
       "name": "Research Lab",
       "id": "BUILDING_RESEARCH_LAB",
       "requires": "TECH_COMPUTERS"
@@ -1054,6 +1173,7 @@
     {
       "cost": 10,
       "upkeep": 2,
+      "kind": "City Improvement",
       "name": "SAM Missile Battery",
       "id": "BUILDING_SAM_MISSILE_BATTERY",
       "requires": "TECH_ROCKETRY"
@@ -1061,6 +1181,7 @@
     {
       "cost": 8,
       "upkeep": 1,
+      "kind": "City Improvement",
       "name": "Coastal Fortress",
       "id": "BUILDING_COASTAL_FORTRESS",
       "requires": "TECH_METALLURGY"
@@ -1068,6 +1189,7 @@
     {
       "cost": 32,
       "upkeep": 4,
+      "kind": "City Improvement",
       "name": "Solar Plant",
       "id": "BUILDING_SOLAR_PLANT",
       "requires": "TECH_ENVIRONMENTALISM"
@@ -1075,6 +1197,7 @@
     {
       "cost": 6,
       "upkeep": 1,
+      "kind": "City Improvement",
       "name": "Harbor",
       "id": "BUILDING_HARBOR",
       "requires": "TECH_SEAFARING"
@@ -1082,6 +1205,7 @@
     {
       "cost": 16,
       "upkeep": 3,
+      "kind": "City Improvement",
       "name": "Offshore Platform",
       "id": "BUILDING_OFFSHORE_PLATFORM",
       "requires": "TECH_MINIATURIZATION"
@@ -1089,6 +1213,7 @@
     {
       "cost": 16,
       "upkeep": 3,
+      "kind": "City Improvement",
       "name": "Airport",
       "id": "BUILDING_AIRPORT",
       "requires": "TECH_RADIO"
@@ -1096,6 +1221,7 @@
     {
       "cost": 6,
       "upkeep": 2,
+      "kind": "City Improvement",
       "name": "Police Station",
       "id": "BUILDING_POLICE_STATION",
       "requires": "TECH_COMMUNISM"
@@ -1103,6 +1229,7 @@
     {
       "cost": 8,
       "upkeep": 3,
+      "kind": "City Improvement",
       "name": "Port Facility",
       "id": "BUILDING_PORT_FACILITY",
       "requires": "TECH_AMPHIBIOUS_WARFARE"
@@ -1110,6 +1237,7 @@
     {
       "cost": 8,
       "upkeep": 0,
+      "kind": "Spaceship Part",
       "name": "SS Structural",
       "id": "BUILDING_SS_STRUCTURAL",
       "requires": "TECH_SPACE_FLIGHT"
@@ -1117,6 +1245,7 @@
     {
       "cost": 16,
       "upkeep": 0,
+      "kind": "Spaceship Part",
       "name": "SS Component",
       "id": "BUILDING_SS_COMPONENT",
       "requires": "TECH_PLASTICS"
@@ -1124,6 +1253,7 @@
     {
       "cost": 32,
       "upkeep": 0,
+      "kind": "Spaceship Part",
       "name": "SS Module",
       "id": "BUILDING_SS_MODULE",
       "requires": "TECH_SUPERCONDUCTOR"
@@ -1131,6 +1261,7 @@
     {
       "cost": 60,
       "upkeep": 0,
+      "kind": "City Improvement",
       "name": "Capitalization",
       "id": "BUILDING_CAPITALIZATION",
       "requires": "TECH_THE_CORPORATION"
@@ -1138,6 +1269,7 @@
     {
       "cost": 20,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Pyramids",
       "id": "BUILDING_PYRAMIDS",
       "requires": "TECH_MASONRY"
@@ -1145,6 +1277,7 @@
     {
       "cost": 20,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Hanging Gardens",
       "obsolete": "TECH_RAILROAD",
       "id": "BUILDING_HANGING_GARDENS",
@@ -1153,6 +1286,7 @@
     {
       "cost": 20,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Colossus",
       "obsolete": "TECH_FLIGHT",
       "id": "BUILDING_COLOSSUS",
@@ -1161,6 +1295,7 @@
     {
       "cost": 20,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Lighthouse",
       "obsolete": "TECH_MAGNETISM",
       "id": "BUILDING_LIGHTHOUSE",
@@ -1169,6 +1304,7 @@
     {
       "cost": 30,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Great Library",
       "obsolete": "TECH_ELECTRICITY",
       "id": "BUILDING_GREAT_LIBRARY",
@@ -1177,6 +1313,7 @@
     {
       "cost": 30,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Oracle",
       "obsolete": "TECH_THEOLOGY",
       "id": "BUILDING_ORACLE",
@@ -1185,6 +1322,7 @@
     {
       "cost": 30,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Great Wall",
       "obsolete": "TECH_METALLURGY",
       "id": "BUILDING_GREAT_WALL",
@@ -1193,6 +1331,7 @@
     {
       "cost": 30,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Sun Tzu's War Academy",
       "obsolete": "TECH_MOBILE_WARFARE",
       "id": "BUILDING_SUN_TZUS_WAR_ACADEMY",
@@ -1201,6 +1340,7 @@
     {
       "cost": 30,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "King Richard's Crusade",
       "obsolete": "TECH_INDUSTRIALIZATION",
       "id": "BUILDING_KING_RICHARDS_CRUSADE",
@@ -1209,6 +1349,7 @@
     {
       "cost": 20,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Marco Polo's Embassy",
       "obsolete": "TECH_COMMUNISM",
       "id": "BUILDING_MARCO_POLOS_EMBASSY",
@@ -1217,6 +1358,7 @@
     {
       "cost": 40,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Michelangelo's Chapel",
       "id": "BUILDING_MICHELANGELOS_CHAPEL",
       "requires": "TECH_MONOTHEISM"
@@ -1224,6 +1366,7 @@
     {
       "cost": 30,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Copernicus' Observatory",
       "id": "BUILDING_COPERNICUS_OBSERVATORY",
       "requires": "TECH_ASTRONOMY"
@@ -1231,6 +1374,7 @@
     {
       "cost": 40,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Magellan's Expedition",
       "id": "BUILDING_MAGELLANS_EXPEDITION",
       "requires": "TECH_NAVIGATION"
@@ -1238,6 +1382,7 @@
     {
       "cost": 30,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Shakespeare's Theatre",
       "id": "BUILDING_SHAKESPEARES_THEATRE",
       "requires": "TECH_MEDICINE"
@@ -1245,6 +1390,7 @@
     {
       "cost": 40,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Leonardo's Workshop",
       "obsolete": "TECH_AUTOMOBILE",
       "id": "BUILDING_LEONARDOS_WORKSHOP",
@@ -1253,6 +1399,7 @@
     {
       "cost": 40,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "J.S. Bach's Cathedral",
       "id": "BUILDING_JS_BACHS_CATHEDRAL",
       "requires": "TECH_THEOLOGY"
@@ -1260,6 +1407,7 @@
     {
       "cost": 40,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Isaac Newton's College",
       "id": "BUILDING_ISAAC_NEWTONS_COLLEGE",
       "requires": "TECH_THEORY_OF_GRAVITY"
@@ -1267,6 +1415,7 @@
     {
       "cost": 40,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Adam Smith's Trading Company",
       "id": "BUILDING_ADAM_SMITHS_TRADING_COMPANY",
       "requires": "TECH_ECONOMICS"
@@ -1274,6 +1423,7 @@
     {
       "cost": 40,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Darwin's Voyage",
       "id": "BUILDING_DARWINS_VOYAGE",
       "requires": "TECH_RAILROAD"
@@ -1281,6 +1431,7 @@
     {
       "cost": 40,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Statue of Liberty",
       "id": "BUILDING_STATUE_OF_LIBERTY",
       "requires": "TECH_DEMOCRACY"
@@ -1288,6 +1439,7 @@
     {
       "cost": 30,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Eiffel Tower",
       "id": "BUILDING_EIFFEL_TOWER",
       "requires": "TECH_STEAM_ENGINE"
@@ -1295,6 +1447,7 @@
     {
       "cost": 60,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Women's Suffrage",
       "id": "BUILDING_WOMENS_SUFFRAGE",
       "requires": "TECH_INDUSTRIALIZATION"
@@ -1302,6 +1455,7 @@
     {
       "cost": 60,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Hoover Dam",
       "id": "BUILDING_HOOVER_DAM",
       "requires": "TECH_ELECTRONICS"
@@ -1309,6 +1463,7 @@
     {
       "cost": 60,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Manhattan Project",
       "id": "BUILDING_MANHATTAN_PROJECT",
       "requires": "TECH_NUCLEAR_FISSION"
@@ -1316,6 +1471,7 @@
     {
       "cost": 60,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "United Nations",
       "id": "BUILDING_UNITED_NATIONS",
       "requires": "TECH_COMMUNISM"
@@ -1323,6 +1479,7 @@
     {
       "cost": 60,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Apollo Program",
       "id": "BUILDING_APOLLO_PROGRAM",
       "requires": "TECH_SPACE_FLIGHT"
@@ -1330,6 +1487,7 @@
     {
       "cost": 60,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "SETI Program",
       "id": "BUILDING_SETI_PROGRAM",
       "requires": "TECH_COMPUTERS"
@@ -1337,6 +1495,7 @@
     {
       "cost": 60,
       "upkeep": 0,
+      "kind": "Wonder",
       "name": "Cure for Cancer",
       "id": "BUILDING_CURE_FOR_CANCER",
       "requires": "TECH_GENETIC_ENGINEERING"
@@ -1347,6 +1506,7 @@
       "firepower": 1,
       "cost": 4,
       "defense": 1,
+      "kind": "Land Unit",
       "moves": 1,
       "attack": 0,
       "name": "Settlers",
@@ -1360,6 +1520,7 @@
       "firepower": 1,
       "cost": 4,
       "defense": 2,
+      "kind": "Land Unit",
       "moves": 2,
       "attack": 0,
       "name": "Engineers",
@@ -1373,6 +1534,7 @@
       "firepower": 1,
       "cost": 1,
       "defense": 1,
+      "kind": "Land Unit",
       "moves": 1,
       "attack": 1,
       "name": "Warriors",
@@ -1383,71 +1545,76 @@
       "id": "UNIT_WARRIORS"
     },
     {
-      "firepower": 1,
       "cost": 2,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_FEUDALISM",
+      "range": 0,
+      "firepower": 1,
       "defense": 2,
       "moves": 1,
       "attack": 1,
       "name": "Phalanx",
-      "hp": 1,
-      "obsolete": "TECH_FEUDALISM",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_PHALANX",
       "requires": "TECH_BRONZE_WORKING"
     },
     {
-      "firepower": 1,
       "cost": 3,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_GUNPOWDER",
+      "range": 0,
+      "firepower": 1,
       "defense": 2,
       "moves": 1,
       "attack": 3,
       "name": "Archers",
-      "hp": 1,
-      "obsolete": "TECH_GUNPOWDER",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_ARCHERS",
       "requires": "TECH_WARRIOR_CODE"
     },
     {
-      "firepower": 1,
       "cost": 4,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_GUNPOWDER",
+      "range": 0,
+      "firepower": 1,
       "defense": 2,
       "moves": 1,
       "attack": 4,
       "name": "Legion",
-      "hp": 1,
-      "obsolete": "TECH_GUNPOWDER",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_LEGION",
       "requires": "TECH_IRON_WORKING"
     },
     {
-      "firepower": 1,
       "cost": 2,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_GUNPOWDER",
+      "range": 0,
+      "firepower": 1,
       "defense": 2,
       "moves": 1,
       "attack": 1,
       "name": "Pikemen",
-      "hp": 1,
-      "obsolete": "TECH_GUNPOWDER",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_PIKEMEN",
       "requires": "TECH_FEUDALISM"
     },
     {
-      "firepower": 1,
       "cost": 3,
+      "kind": "Land Unit",
+      "hp": 2,
+      "obsolete": "TECH_CONSCRIPTION",
+      "range": 0,
+      "firepower": 1,
       "defense": 3,
       "moves": 1,
       "attack": 3,
       "name": "Musketeers",
-      "hp": 2,
-      "obsolete": "TECH_CONSCRIPTION",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_MUSKETEERS",
       "requires": "TECH_GUNPOWDER"
@@ -1456,6 +1623,7 @@
       "firepower": 1,
       "cost": 2,
       "defense": 4,
+      "kind": "Land Unit",
       "moves": 1,
       "attack": 4,
       "name": "Fanatics",
@@ -1469,6 +1637,7 @@
       "firepower": 1,
       "cost": 5,
       "defense": 4,
+      "kind": "Land Unit",
       "moves": 1,
       "attack": 4,
       "name": "Partisans",
@@ -1482,6 +1651,7 @@
       "firepower": 1,
       "cost": 5,
       "defense": 5,
+      "kind": "Land Unit",
       "moves": 1,
       "attack": 5,
       "name": "Alpine Troops",
@@ -1495,6 +1665,7 @@
       "firepower": 1,
       "cost": 4,
       "defense": 4,
+      "kind": "Land Unit",
       "moves": 1,
       "attack": 5,
       "name": "Riflemen",
@@ -1508,6 +1679,7 @@
       "firepower": 1,
       "cost": 6,
       "defense": 5,
+      "kind": "Land Unit",
       "moves": 1,
       "attack": 8,
       "name": "Marines",
@@ -1521,6 +1693,7 @@
       "firepower": 1,
       "cost": 6,
       "defense": 4,
+      "kind": "Land Unit",
       "moves": 1,
       "attack": 6,
       "name": "Paratroopers",
@@ -1534,6 +1707,7 @@
       "firepower": 1,
       "cost": 5,
       "defense": 6,
+      "kind": "Land Unit",
       "moves": 3,
       "attack": 6,
       "name": "Mechanized Infantry",
@@ -1544,99 +1718,106 @@
       "requires": "TECH_LABOR_UNION"
     },
     {
-      "firepower": 1,
       "cost": 2,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_CHIVALRY",
+      "range": 0,
+      "firepower": 1,
       "defense": 1,
       "moves": 2,
       "attack": 2,
       "name": "Horsemen",
-      "hp": 1,
-      "obsolete": "TECH_CHIVALRY",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_HORSEMEN",
       "requires": "TECH_HORSEBACK_RIDING"
     },
     {
-      "firepower": 1,
       "cost": 3,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_POLYTHEISM",
+      "range": 0,
+      "firepower": 1,
       "defense": 1,
       "moves": 2,
       "attack": 3,
       "name": "Chariot",
-      "hp": 1,
-      "obsolete": "TECH_POLYTHEISM",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_CHARIOT",
       "requires": "TECH_THE_WHEEL"
     },
     {
-      "firepower": 1,
       "cost": 4,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_MONOTHEISM",
+      "range": 0,
+      "firepower": 1,
       "defense": 1,
       "moves": 2,
       "attack": 4,
       "name": "Elephant",
-      "hp": 1,
-      "obsolete": "TECH_MONOTHEISM",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_ELEPHANT",
       "requires": "TECH_POLYTHEISM"
     },
     {
-      "firepower": 1,
       "cost": 4,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_LEADERSHIP",
+      "range": 0,
+      "firepower": 1,
       "defense": 1,
       "moves": 2,
       "attack": 5,
       "name": "Crusaders",
-      "hp": 1,
-      "obsolete": "TECH_LEADERSHIP",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_CRUSADERS",
       "requires": "TECH_MONOTHEISM"
     },
     {
-      "firepower": 1,
       "cost": 4,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_LEADERSHIP",
+      "range": 0,
+      "firepower": 1,
       "defense": 2,
       "moves": 2,
       "attack": 4,
       "name": "Knights",
-      "hp": 1,
-      "obsolete": "TECH_LEADERSHIP",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_KNIGHTS",
       "requires": "TECH_CHIVALRY"
     },
     {
-      "firepower": 1,
       "cost": 5,
+      "kind": "Land Unit",
+      "hp": 2,
+      "obsolete": "TECH_TACTICS",
+      "range": 0,
+      "firepower": 1,
       "defense": 2,
       "moves": 2,
       "attack": 5,
       "name": "Dragoons",
-      "hp": 2,
-      "obsolete": "TECH_TACTICS",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_DRAGOONS",
       "requires": "TECH_LEADERSHIP"
     },
     {
-      "firepower": 1,
       "cost": 6,
+      "kind": "Land Unit",
+      "hp": 2,
+      "obsolete": "TECH_MOBILE_WARFARE",
+      "range": 0,
+      "firepower": 1,
       "defense": 3,
       "moves": 2,
       "attack": 8,
       "name": "Cavalry",
-      "hp": 2,
-      "obsolete": "TECH_MOBILE_WARFARE",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_CAVALRY",
       "requires": "TECH_TACTICS"
@@ -1645,6 +1826,7 @@
       "firepower": 1,
       "cost": 8,
       "defense": 5,
+      "kind": "Land Unit",
       "moves": 3,
       "attack": 10,
       "name": "Armor",
@@ -1655,43 +1837,46 @@
       "requires": "TECH_MOBILE_WARFARE"
     },
     {
-      "firepower": 1,
       "cost": 4,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_METALLURGY",
+      "range": 0,
+      "firepower": 1,
       "defense": 1,
       "moves": 1,
       "attack": 6,
       "name": "Catapult",
-      "hp": 1,
-      "obsolete": "TECH_METALLURGY",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_CATAPULT",
       "requires": "TECH_MATHEMATICS"
     },
     {
-      "firepower": 1,
       "cost": 4,
+      "kind": "Land Unit",
+      "hp": 2,
+      "obsolete": "TECH_MACHINE_TOOLS",
+      "range": 0,
+      "firepower": 1,
       "defense": 1,
       "moves": 1,
       "attack": 8,
       "name": "Cannon",
-      "hp": 2,
-      "obsolete": "TECH_MACHINE_TOOLS",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_CANNON",
       "requires": "TECH_METALLURGY"
     },
     {
-      "firepower": 2,
       "cost": 5,
+      "kind": "Land Unit",
+      "hp": 2,
+      "obsolete": "TECH_ROBOTICS",
+      "range": 0,
+      "firepower": 2,
       "defense": 1,
       "moves": 1,
       "attack": 10,
       "name": "Artillery",
-      "hp": 2,
-      "obsolete": "TECH_ROBOTICS",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_ARTILLERY",
       "requires": "TECH_MACHINE_TOOLS"
@@ -1700,6 +1885,7 @@
       "firepower": 2,
       "cost": 7,
       "defense": 2,
+      "kind": "Land Unit",
       "moves": 2,
       "attack": 12,
       "name": "Howitzer",
@@ -1710,29 +1896,31 @@
       "requires": "TECH_ROBOTICS"
     },
     {
-      "firepower": 2,
       "cost": 6,
+      "kind": "Air Unit",
+      "hp": 2,
+      "obsolete": "TECH_STEALTH",
+      "range": 1,
+      "firepower": 2,
       "defense": 3,
       "moves": 10,
       "attack": 4,
       "name": "Fighter",
-      "hp": 2,
-      "obsolete": "TECH_STEALTH",
-      "range": 1,
       "holds": 0,
       "id": "UNIT_FIGHTER",
       "requires": "TECH_FLIGHT"
     },
     {
-      "firepower": 2,
       "cost": 12,
+      "kind": "Air Unit",
+      "hp": 2,
+      "obsolete": "TECH_STEALTH",
+      "range": 2,
+      "firepower": 2,
       "defense": 1,
       "moves": 8,
       "attack": 12,
       "name": "Bomber",
-      "hp": 2,
-      "obsolete": "TECH_STEALTH",
-      "range": 2,
       "holds": 0,
       "id": "UNIT_BOMBER",
       "requires": "TECH_ADVANCED_FLIGHT"
@@ -1741,6 +1929,7 @@
       "firepower": 2,
       "cost": 10,
       "defense": 3,
+      "kind": "Air Unit",
       "moves": 6,
       "attack": 10,
       "name": "Helicopter",
@@ -1754,6 +1943,7 @@
       "firepower": 2,
       "cost": 8,
       "defense": 4,
+      "kind": "Air Unit",
       "moves": 14,
       "attack": 8,
       "name": "Stealth Fighter",
@@ -1767,6 +1957,7 @@
       "firepower": 2,
       "cost": 16,
       "defense": 5,
+      "kind": "Air Unit",
       "moves": 12,
       "attack": 14,
       "name": "Stealth Bomber",
@@ -1777,71 +1968,76 @@
       "requires": "TECH_STEALTH"
     },
     {
-      "firepower": 1,
       "cost": 4,
+      "kind": "Sea Unit",
+      "hp": 1,
+      "obsolete": "TECH_NAVIGATION",
+      "range": 0,
+      "firepower": 1,
       "defense": 1,
       "moves": 3,
       "attack": 1,
       "name": "Trireme",
-      "hp": 1,
-      "obsolete": "TECH_NAVIGATION",
-      "range": 0,
       "holds": 2,
       "id": "UNIT_TRIREME",
       "requires": "TECH_MAP_MAKING"
     },
     {
-      "firepower": 1,
       "cost": 4,
+      "kind": "Sea Unit",
+      "hp": 1,
+      "obsolete": "TECH_MAGNETISM",
+      "range": 0,
+      "firepower": 1,
       "defense": 1,
       "moves": 3,
       "attack": 2,
       "name": "Caravel",
-      "hp": 1,
-      "obsolete": "TECH_MAGNETISM",
-      "range": 0,
       "holds": 3,
       "id": "UNIT_CARAVEL",
       "requires": "TECH_NAVIGATION"
     },
     {
-      "firepower": 1,
       "cost": 4,
+      "kind": "Sea Unit",
+      "hp": 2,
+      "obsolete": "TECH_INDUSTRIALIZATION",
+      "range": 0,
+      "firepower": 1,
       "defense": 2,
       "moves": 4,
       "attack": 0,
       "name": "Galleon",
-      "hp": 2,
-      "obsolete": "TECH_INDUSTRIALIZATION",
-      "range": 0,
       "holds": 4,
       "id": "UNIT_GALLEON",
       "requires": "TECH_MAGNETISM"
     },
     {
-      "firepower": 1,
       "cost": 5,
+      "kind": "Sea Unit",
+      "hp": 2,
+      "obsolete": "TECH_ELECTRICITY",
+      "range": 0,
+      "firepower": 1,
       "defense": 2,
       "moves": 4,
       "attack": 4,
       "name": "Frigate",
-      "hp": 2,
-      "obsolete": "TECH_ELECTRICITY",
-      "range": 0,
       "holds": 2,
       "id": "UNIT_FRIGATE",
       "requires": "TECH_MAGNETISM"
     },
     {
-      "firepower": 1,
       "cost": 6,
+      "kind": "Sea Unit",
+      "hp": 3,
+      "obsolete": "TECH_ELECTRICITY",
+      "range": 0,
+      "firepower": 1,
       "defense": 4,
       "moves": 4,
       "attack": 4,
       "name": "Ironclad",
-      "hp": 3,
-      "obsolete": "TECH_ELECTRICITY",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_IRONCLAD",
       "requires": "TECH_STEAM_ENGINE"
@@ -1850,6 +2046,7 @@
       "firepower": 1,
       "cost": 6,
       "defense": 4,
+      "kind": "Sea Unit",
       "moves": 6,
       "attack": 4,
       "name": "Destroyer",
@@ -1860,15 +2057,16 @@
       "requires": "TECH_ELECTRICITY"
     },
     {
-      "firepower": 2,
       "cost": 8,
+      "kind": "Sea Unit",
+      "hp": 3,
+      "obsolete": "TECH_ROCKETRY",
+      "range": 0,
+      "firepower": 2,
       "defense": 6,
       "moves": 5,
       "attack": 6,
       "name": "Cruiser",
-      "hp": 3,
-      "obsolete": "TECH_ROCKETRY",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_CRUISER",
       "requires": "TECH_STEEL"
@@ -1877,6 +2075,7 @@
       "firepower": 2,
       "cost": 10,
       "defense": 8,
+      "kind": "Sea Unit",
       "moves": 5,
       "attack": 8,
       "name": "AEGIS Cruiser",
@@ -1890,6 +2089,7 @@
       "firepower": 2,
       "cost": 16,
       "defense": 12,
+      "kind": "Sea Unit",
       "moves": 4,
       "attack": 12,
       "name": "Battleship",
@@ -1903,6 +2103,7 @@
       "firepower": 2,
       "cost": 6,
       "defense": 2,
+      "kind": "Sea Unit",
       "moves": 3,
       "attack": 10,
       "name": "Submarine",
@@ -1916,6 +2117,7 @@
       "firepower": 2,
       "cost": 16,
       "defense": 9,
+      "kind": "Sea Unit",
       "moves": 5,
       "attack": 1,
       "name": "Carrier",
@@ -1929,6 +2131,7 @@
       "firepower": 1,
       "cost": 5,
       "defense": 3,
+      "kind": "Sea Unit",
       "moves": 5,
       "attack": 0,
       "name": "Transport",
@@ -1942,6 +2145,7 @@
       "firepower": 3,
       "cost": 6,
       "defense": 0,
+      "kind": "Air Unit",
       "moves": 12,
       "attack": 18,
       "name": "Cruise Missile",
@@ -1955,6 +2159,7 @@
       "firepower": 1,
       "cost": 16,
       "defense": 0,
+      "kind": "Air Unit",
       "moves": 16,
       "attack": 99,
       "name": "Nuclear Missile",
@@ -1965,15 +2170,16 @@
       "requires": "TECH_ROCKETRY"
     },
     {
-      "firepower": 1,
       "cost": 3,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_ESPIONAGE",
+      "range": 0,
+      "firepower": 1,
       "defense": 0,
       "moves": 2,
       "attack": 0,
       "name": "Diplomat",
-      "hp": 1,
-      "obsolete": "TECH_ESPIONAGE",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_DIPLOMAT",
       "requires": "TECH_WRITING"
@@ -1982,6 +2188,7 @@
       "firepower": 1,
       "cost": 3,
       "defense": 0,
+      "kind": "Land Unit",
       "moves": 3,
       "attack": 0,
       "name": "Spy",
@@ -1992,15 +2199,16 @@
       "requires": "TECH_ESPIONAGE"
     },
     {
-      "firepower": 1,
       "cost": 5,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_THE_CORPORATION",
+      "range": 0,
+      "firepower": 1,
       "defense": 1,
       "moves": 1,
       "attack": 0,
       "name": "Caravan",
-      "hp": 1,
-      "obsolete": "TECH_THE_CORPORATION",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_CARAVAN",
       "requires": "TECH_TRADE"
@@ -2009,6 +2217,7 @@
       "firepower": 1,
       "cost": 5,
       "defense": 1,
+      "kind": "Land Unit",
       "moves": 2,
       "attack": 0,
       "name": "Freight",
@@ -2019,15 +2228,16 @@
       "requires": "TECH_THE_CORPORATION"
     },
     {
-      "firepower": 1,
       "cost": 3,
+      "kind": "Land Unit",
+      "hp": 1,
+      "obsolete": "TECH_GUERRILLA_WARFARE",
+      "range": 0,
+      "firepower": 1,
       "defense": 1,
       "moves": 1,
       "attack": 0,
       "name": "Explorer",
-      "hp": 1,
-      "obsolete": "TECH_GUERRILLA_WARFARE",
-      "range": 0,
       "holds": 0,
       "id": "UNIT_EXPLORER",
       "requires": "TECH_SEAFARING"

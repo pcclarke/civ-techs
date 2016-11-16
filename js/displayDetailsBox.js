@@ -118,12 +118,22 @@ function displayDetailsBox(item, pos, game, civ, data) {
         } else {
             d3.select("#tipLeads").classed("hidden", true);
         }
+    } else {
+        d3.select("#tipLeads").classed("hidden", true);
+    }
 
+    if (item.cost) {
         d3.select("#tipCost").text(item.cost);
         d3.select("#tipCostLine").classed("hidden", false);
     } else {
         d3.select("#tipCostLine").classed("hidden", true);
-        d3.select("#tipLeads").classed("hidden", true);
+    }
+
+    if (item.kind) {
+        d3.select("#tipKind").text(item.kind);
+        d3.select("#tipKind").classed("hidden", false);
+    } else {
+        d3.select("#tipKind").classed("hidden", true);
     }
 
     d3.select("#tooltip").classed("hidden", false);
