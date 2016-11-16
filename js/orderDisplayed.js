@@ -9,21 +9,23 @@ var orderDisplayed = function (data) {
         i = i + 1; 
     });
 
-    data.displayed.forEach(function (d) {
-        maxCost = 0;
-        if (d.cost) {
-            maxCost = d.cost;
-        }
-        preReqs = getTechPrereqs(d, data);
-
-        preReqs.forEach(function (p) {
-            if (p.cost > maxCost) {
-                maxCost = p.cost;
+    if (!(CIV.game === "civ1" || CIV.game === "civ2")) {
+        data.displayed.forEach(function (d) {
+            maxCost = 0;
+            if (d.cost) {
+                maxCost = d.cost;
             }
-        });
+            preReqs = getTechPrereqs(d, data);
 
-        d.pos = maxCost;
-    });
+            preReqs.forEach(function (p) {
+                if (p.cost > maxCost) {
+                    maxCost = p.cost;
+                }
+            });
+
+            d.pos = maxCost;
+        });
+    }
     
     data.displayed.sort(function(a, b) {
         return a.pos - b.pos;
@@ -36,5 +38,6 @@ var orderDisplayed = function (data) {
         d.unlocks.forEach(function (u) {
             u.pos = i;
         });
+        console.log(d.id);
     });
 };
