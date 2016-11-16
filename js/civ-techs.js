@@ -87,7 +87,7 @@ d3.select("#selectGame")
         CIV.game = this.options[this.selectedIndex].value;
 
         if (CIV.game === "civ1" || CIV.game === "civ2") {
-            CIV.arcSpace = 13;
+            CIV.arcSpace = 12.5;
             d3.select("#selectCivBox").classed("hidden", true);
         } else {
             CIV.arcSpace = 14;

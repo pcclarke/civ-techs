@@ -129,5 +129,12 @@ function displayDetailsBox(item, pos, game, civ, data) {
         d3.select("#tipCostLine").classed("hidden", true);
     }
 
+    if (item.kind) {
+        d3.select("#tipKind").text(item.kind);
+        d3.select("#tipKind").classed("hidden", false);
+    } else {
+        d3.select("#tipKind").classed("hidden", true);
+    }
+
     d3.select("#tooltip").classed("hidden", false);
 };

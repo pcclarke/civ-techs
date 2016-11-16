@@ -38,6 +38,5 @@ var orderDisplayed = function (data) {
         d.unlocks.forEach(function (u) {
             u.pos = i;
         });
-        console.log(d.id);
     });
 };
