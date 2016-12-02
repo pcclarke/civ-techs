@@ -9,7 +9,7 @@ var orderDisplayed = function (data) {
         i = i + 1; 
     });
 
-    if (!(CIV.game === "civ1" || CIV.game === "civ2")) {
+    if ((+(CIV.game[3])) > 3) {
         data.displayed.forEach(function (d) {
             maxCost = 0;
             if (d.cost) {

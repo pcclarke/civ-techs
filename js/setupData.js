@@ -4,7 +4,7 @@ function setupData(data) {
     var unlocksList = [];
 
     // First, arrange the technologies by cost
-    if (!(CIV.game === "civ1" || CIV.game === "civ2")) {
+    if ((+(CIV.game[3])) > 3) {
         data.technologies.sort(function(a, b) {
             return b.cost - a.cost;
         });
