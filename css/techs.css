@@ -12,7 +12,6 @@
 
 html {
     background: #fff9e7;
-    height: 1500px;
 }
 
 body {
@@ -31,7 +30,7 @@ h1 {
 
 #container {
     margin: 0 auto;
-    width: 1000px;
+    width: 1200px;
 }
 
 #intro {
@@ -41,7 +40,7 @@ h1 {
 
 .col {
     display: inline-block;
-    width: 460px;
+    width: 570px;
     padding: 10px;
     vertical-align: top;
 }

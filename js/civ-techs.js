@@ -21,7 +21,9 @@ var CIV = {
     coords: [0, 0],
     game: "civ4bts",
     ilization: "CIVILIZATION_ALL",
-    dataTypes: ["units", "buildings", "religions", "build", "resources", "projects", "promotions", "civics"]
+    dataTypes: ["units", "buildings", "religions", "build", "resources", "projects", "promotions", "civics"],
+    width: 1200,
+    height: 1200
 };
 
 // Update mouse coordinates variable
@@ -35,8 +37,8 @@ var body = d3.select("body")
 
 // Drawing area
 var margin = {top: 10, right: 10, bottom: 10, left: 10},
-    width = 1000 - margin.left - margin.right,
-    height = 1000 - margin.top - margin.bottom;
+    width = CIV.width - margin.left - margin.right,
+    height = CIV.width - margin.top - margin.bottom;
     
 // Draw leads to arcs
 var arc = d3.arc()
@@ -70,11 +72,15 @@ var unlockArc = d3.arc()
 var makeGame = function(selector) {
     CIV.game = selector.options[selector.selectedIndex].value;
 
-    if (CIV.game === "civ1" || CIV.game === "civ2") {
-        CIV.arcSpace = 12.5;
+    if ((+(CIV.game[3])) < 4) {
+        CIV.arcSpace = 16;
+    } else {
+        CIV.arcSpace = 18;   
+    }
+
+    if ((+(CIV.game[3])) < 3) {
         d3.select("#selectCivBox").classed("hidden", true);
     } else {
-        CIV.arcSpace = 14;
         d3.select("#selectCivBox").classed("hidden", false);
     }
     makeWheel(CIV.game);
