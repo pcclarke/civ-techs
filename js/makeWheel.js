@@ -145,7 +145,7 @@ function makeWheel(game, civilization) {
                 .enter().append("g")
                 .attr("transform", function(d) {
                     var ang = d.dist * (360 / data.displayed.length);
-                    return "rotate(" + ang + ") translate(0, " + (-(width/2) + 104.9 - (17 * d.arcRank)) + ")";
+                    return "rotate(" + ang + ") translate(0, " + (-(width/2) + 141 - (17 * d.arcRank)) + ")";
                 })
                 .attr("class", "unlockSquare");
                 

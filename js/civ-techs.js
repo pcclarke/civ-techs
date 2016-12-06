@@ -57,10 +57,10 @@ var arc = d3.arc()
 
 var unlockArc = d3.arc()
     .innerRadius(function(d) {
-        return CIV.arcBase + 283 + (17 * d.rank);
+        return CIV.arcBase + 346.5 + (17 * d.rank);
     })
     .outerRadius(function(d) {
-        return (CIV.arcBase + 283 + CIV.arcWidth) + (17 * d.rank);
+        return (CIV.arcBase + 346.6 + CIV.arcWidth) + (17 * d.rank);
     })
     .startAngle(function(d) {
         return -1 * d.arcBack;
