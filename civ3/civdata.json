@@ -1,56 +1,61 @@
 {
   "technologies": [
     {
-      "eraopt": 0,
+      "era": "Ancient Times",
+      "kind": "Era",
+      "name": "Ancient Times",
+      "id": "TECH_ANCIENT_TIMES"
+    },
+    {
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Bronze Working",
-      "id": "TECH_BRONZE_WORKING"
+      "id": "TECH_BRONZE_WORKING",
+      "requires": ["TECH_ANCIENT_TIMES"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Masonry",
-      "id": "TECH_MASONRY"
+      "id": "TECH_MASONRY",
+      "requires": ["TECH_ANCIENT_TIMES"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Alphabet",
-      "id": "TECH_ALPHABET"
+      "id": "TECH_ALPHABET",
+      "requires": ["TECH_ANCIENT_TIMES"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Pottery",
-      "id": "TECH_POTTERY"
+      "id": "TECH_POTTERY",
+      "requires": ["TECH_ANCIENT_TIMES"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "The Wheel",
-      "id": "TECH_THE_WHEEL"
+      "id": "TECH_THE_WHEEL",
+      "requires": ["TECH_ANCIENT_TIMES"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Warrior Code",
-      "id": "TECH_WARRIOR_CODE"
+      "id": "TECH_WARRIOR_CODE",
+      "requires": ["TECH_ANCIENT_TIMES"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Ceremonial Burial",
-      "id": "TECH_CEREMONIAL_BURIAL"
+      "id": "TECH_CEREMONIAL_BURIAL",
+      "requires": ["TECH_ANCIENT_TIMES"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Iron Working",
@@ -58,7 +63,6 @@
       "requires": ["TECH_BRONZE_WORKING"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Mathematics",
@@ -69,7 +73,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Writing",
@@ -77,7 +80,6 @@
       "requires": ["TECH_ALPHABET"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Horseback Riding",
@@ -88,7 +90,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Mysticism",
@@ -96,7 +97,6 @@
       "requires": ["TECH_CEREMONIAL_BURIAL"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Construction",
@@ -107,7 +107,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Currency",
@@ -115,7 +114,6 @@
       "requires": ["TECH_MATHEMATICS"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Philosophy",
@@ -123,7 +121,6 @@
       "requires": ["TECH_WRITING"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Code of Laws",
@@ -131,7 +128,6 @@
       "requires": ["TECH_WRITING"]
     },
     {
-      "eraopt": 1,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Literature",
@@ -139,7 +135,6 @@
       "requires": ["TECH_WRITING"]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Map Making",
@@ -150,7 +145,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Polytheism",
@@ -158,7 +152,6 @@
       "requires": ["TECH_MYSTICISM"]
     },
     {
-      "eraopt": 1,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "The Republic",
@@ -169,7 +162,6 @@
       ]
     },
     {
-      "eraopt": 1,
       "era": "Ancient Times",
       "kind": "Civilization Advance",
       "name": "Monarchy",
@@ -180,28 +172,53 @@
       ]
     },
     {
-      "eraopt": 0,
+      "era": "Middle Ages",
+      "kind": "Era",
+      "name": "Middle Ages",
+      "id": "TECH_MIDDLE_AGES",
+      "requires": [
+        "TECH_BRONZE_WORKING",
+        "TECH_MASONRY",
+        "TECH_ALPHABET",
+        "TECH_POTTERY",
+        "TECH_THE_WHEEL",
+        "TECH_WARRIOR_CODE",
+        "TECH_CEREMONIAL_BURIAL",
+        "TECH_IRON_WORKING",
+        "TECH_MATHEMATICS",
+        "TECH_WRITING",
+        "TECH_HORSEBACK_RIDING",
+        "TECH_MYSTICISM",
+        "TECH_CONSTRUCTION",
+        "TECH_CURRENCY",
+        "TECH_PHILOSOPHY",
+        "TECH_CODE_OF_LAWS",
+        "TECH_MAP_MAKING",
+        "TECH_POLYTHEISM"
+      ]
+    },
+    {
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Monotheism",
-      "id": "TECH_MONOTHEISM"
+      "id": "TECH_MONOTHEISM",
+      "requires": ["TECH_MIDDLE_AGES"]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Feudalism",
-      "id": "TECH_FEUDALISM"
+      "id": "TECH_FEUDALISM",
+      "requires": ["TECH_MIDDLE_AGES"]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Engineering",
-      "id": "TECH_ENGINEERING"
+      "id": "TECH_ENGINEERING",
+      "requires": ["TECH_MIDDLE_AGES"]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Theology",
@@ -209,7 +226,6 @@
       "requires": ["TECH_MONOTHEISM"]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Education",
@@ -217,7 +233,6 @@
       "requires": ["TECH_THEOLOGY"]
     },
     {
-      "eraopt": 1,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Music Theory",
@@ -225,7 +240,6 @@
       "requires": ["TECH_EDUCATION"]
     },
     {
-      "eraopt": 1,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Chivalry",
@@ -236,7 +250,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Invention",
@@ -247,7 +260,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Gunpowder",
@@ -255,7 +267,6 @@
       "requires": ["TECH_INVENTION"]
     },
     {
-      "eraopt": 1,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Printing Press",
@@ -263,7 +274,6 @@
       "requires": ["TECH_THEOLOGY"]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Banking",
@@ -271,7 +281,6 @@
       "requires": ["TECH_EDUCATION"]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Astronomy",
@@ -279,7 +288,6 @@
       "requires": ["TECH_EDUCATION"]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Chemistry",
@@ -287,7 +295,6 @@
       "requires": ["TECH_GUNPOWDER"]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Physics",
@@ -298,7 +305,6 @@
       ]
     },
     {
-      "eraopt": 1,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Democracy",
@@ -306,7 +312,6 @@
       "requires": ["TECH_PRINTING_PRESS"]
     },
     {
-      "eraopt": 1,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Free Artistry",
@@ -314,7 +319,6 @@
       "requires": ["TECH_DEMOCRACY"]
     },
     {
-      "eraopt": 1,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Economics",
@@ -322,7 +326,6 @@
       "requires": ["TECH_BANKING"]
     },
     {
-      "eraopt": 1,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Navigation",
@@ -330,7 +333,6 @@
       "requires": ["TECH_ASTRONOMY"]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Theory of Gravity",
@@ -338,7 +340,6 @@
       "requires": ["TECH_PHYSICS"]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Magnetism",
@@ -346,7 +347,6 @@
       "requires": ["TECH_PHYSICS"]
     },
     {
-      "eraopt": 0,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Metallurgy",
@@ -354,7 +354,6 @@
       "requires": ["TECH_CHEMISTRY"]
     },
     {
-      "eraopt": 1,
       "era": "Middle Ages",
       "kind": "Civilization Advance",
       "name": "Military Tradition",
@@ -362,28 +361,49 @@
       "requires": ["TECH_METALLURGY"]
     },
     {
-      "eraopt": 1,
+      "era": "Era",
+      "kind": "Era",
+      "name": "Industrial Ages",
+      "id": "TECH_INDUSTRIAL_AGES",
+      "requires": [
+        "TECH_MONOTHEISM",
+        "TECH_FEUDALISM",
+        "TECH_ENGINEERING",
+        "TECH_THEOLOGY",
+        "TECH_EDUCATION",
+        "TECH_INVENTION",
+        "TECH_GUNPOWDER",
+        "TECH_BANKING",
+        "TECH_ASTRONOMY",
+        "TECH_CHEMISTRY",
+        "TECH_PHYSICS",
+        "TECH_THEORY_OF_GRAVITY",
+        "TECH_MAGNETISM",
+        "TECH_METALLURGY"
+      ]
+    },
+    {
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Nationalism",
-      "id": "TECH_NATIONALISM"
+      "id": "TECH_NATIONALISM",
+      "requires": ["TECH_INDUSTRIAL_AGES"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Steam Power",
-      "id": "TECH_STEAM_POWER"
+      "id": "TECH_STEAM_POWER",
+      "requires": ["TECH_INDUSTRIAL_AGES"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Medicine",
-      "id": "TECH_MEDICINE"
+      "id": "TECH_MEDICINE",
+      "requires": ["TECH_INDUSTRIAL_AGES"]
     },
     {
-      "eraopt": 1,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Communism",
@@ -391,7 +411,6 @@
       "requires": ["TECH_NATIONALISM"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Industrialization",
@@ -399,7 +418,6 @@
       "requires": ["TECH_STEAM_POWER"]
     },
     {
-      "eraopt": 1,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Espionage",
@@ -410,7 +428,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "The Corporation",
@@ -418,7 +435,6 @@
       "requires": ["TECH_INDUSTRIALISATION"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Electricity",
@@ -426,7 +442,6 @@
       "requires": ["TECH_STEAM_POWER"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Scientific Method",
@@ -437,7 +452,6 @@
       ]
     },
     {
-      "eraopt": 1,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Sanitation",
@@ -445,7 +459,6 @@
       "requires": ["TECH_MEDICINE"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Refining",
@@ -453,7 +466,6 @@
       "requires": ["TECH_THE_CORPORATION"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Steel",
@@ -461,7 +473,6 @@
       "requires": ["TECH_THE_CORPORATION"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Combustion",
@@ -472,7 +483,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Replaceable Parts",
@@ -480,7 +490,6 @@
       "requires": ["TECH_ELECTRICITY"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Atomic Theory",
@@ -488,7 +497,6 @@
       "requires": ["TECH_SCIENTIFIC_METHOD"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Electronics",
@@ -496,7 +504,6 @@
       "requires": ["TECH_ATOMIC_THEORY"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Flight",
@@ -504,7 +511,6 @@
       "requires": ["TECH_COMBUSTION"]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Mass Production",
@@ -515,7 +521,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Motorized Transportation",
@@ -526,7 +531,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Radio",
@@ -534,7 +538,6 @@
       "requires": ["TECH_ELECTRONICS"]
     },
     {
-      "eraopt": 1,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Advanced Flight",
@@ -545,7 +548,6 @@
       ]
     },
     {
-      "eraopt": 1,
       "era": "Industrial Ages",
       "kind": "Civilization Advance",
       "name": "Amphibious Warfare",
@@ -553,35 +555,58 @@
       "requires": ["TECH_MASS_PRODUCTION"]
     },
     {
-      "eraopt": 0,
+      "era": "Modern Times",
+      "kind": "Era",
+      "name": "Modern Times",
+      "id": "TECH_MODERN_TIMES",
+      "requires": [
+        "TECH_STEAM_POWER",
+        "TECH_MEDICINE",
+        "TECH_INDUSTRIALIZATION",
+        "TECH_THE_CORPORATION",
+        "TECH_ELECTRICITY",
+        "TECH_SCIENTIFIC_METHOD",
+        "TECH_REFINING",
+        "TECH_STEEL",
+        "TECH_COMBUSTION",
+        "TECH_REPLACEABLE_PARTS",
+        "TECH_ATOMIC_THEORY",
+        "TECH_ELECTRONICS",
+        "TECH_FLIGHT",
+        "TECH_MASS_PRODUCTION",
+        "TECH_MOTORIZED_TRANSPORTATION",
+        "TECH_RADIO"
+      ]
+    },
+    {
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Ecology",
-      "id": "TECH_ECOLOGY"
+      "id": "TECH_ECOLOGY",
+      "requires": ["TECH_MODERN_TIMES"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Rocketry",
-      "id": "TECH_ROCKETRY"
+      "id": "TECH_ROCKETRY",
+      "requires": ["TECH_MODERN_TIMES"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Fission",
-      "id": "TECH_FISSION"
+      "id": "TECH_FISSION",
+      "requires": ["TECH_MODERN_TIMES"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Computers",
-      "id": "TECH_COMPUTERS"
+      "id": "TECH_COMPUTERS",
+      "requires": ["TECH_MODERN_TIMES"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Synthetic Fibers",
@@ -589,7 +614,6 @@
       "requires": ["TECH_ECOLOGY"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Recycling",
@@ -597,7 +621,6 @@
       "requires": ["TECH_ECOLOGY"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Space Flight",
@@ -605,7 +628,6 @@
       "requires": ["TECH_ROCKETRY"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Nuclear Power",
@@ -613,7 +635,6 @@
       "requires": ["TECH_FISSION"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Miniaturization",
@@ -621,7 +642,6 @@
       "requires": ["TECH_COMPUTERS"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Stealth",
@@ -629,7 +649,6 @@
       "requires": ["TECH_SYNTHETIC_FIBRES"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Superconductor",
@@ -640,7 +659,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Satellites",
@@ -648,7 +666,6 @@
       "requires": ["TECH_SPACE_FLIGHT"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "The Laser",
@@ -659,7 +676,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Smart Weapons",
@@ -670,7 +686,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Genetics",
@@ -678,7 +693,6 @@
       "requires": ["TECH_MINIATURIZATION"]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Integrated Defense",
@@ -690,7 +704,6 @@
       ]
     },
     {
-      "eraopt": 0,
       "era": "Modern Times",
       "kind": "Civilization Advance",
       "name": "Robotics",
@@ -757,6 +770,18 @@
       "kind": "City Improvement",
       "id": "BUILDINGCLASS_BANK",
       "requires": "TECH_BANKING"
+    },
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 40,
+        "upkeep": 1,
+        "culture": 0,
+        "name": "Barracks",
+        "id": "BUILDING_BARRACKS"
+      },
+      "kind": "City Improvement",
+      "id": "BUILDINGCLASS_BARRACKS",
+      "requires": "TECH_ANCIENT_TIMES"
     },
     {
       "CIVILIZATION_ALL": {
@@ -1354,6 +1379,78 @@
     },
     {
       "CIVILIZATION_ALL": {
+        "cost": 200,
+        "upkeep": 0,
+        "culture": 4,
+        "name": "Heroic Epic",
+        "id": "BUILDING_HEROIC_EPIC"
+      },
+      "kind": "Small Wonder",
+      "id": "BUILDINGCLASS_HEROIC_EPIC",
+      "requires": "TECH_ANCIENT_TIMES"
+    },
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 300,
+        "upkeep": 0,
+        "culture": 2,
+        "name": "Iron Works",
+        "id": "BUILDING_IRON_WORKS"
+      },
+      "kind": "Small Wonder",
+      "id": "BUILDINGCLASS_IRON_WORKS",
+      "requires": "TECH_INDUSTRIAL_AGES"
+    },
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 200,
+        "upkeep": 0,
+        "culture": 2,
+        "name": "Forbidden Palace",
+        "id": "BUILDING_FORBIDDEN_PALACE"
+      },
+      "kind": "Small Wonder",
+      "id": "BUILDINGCLASS_FORBIDDEN_PALACE",
+      "requires": "TECH_ANCIENT_TIMES"
+    },
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 300,
+        "upkeep": 0,
+        "culture": 2,
+        "name": "Wall Street",
+        "id": "BUILDING_WALL_STREET"
+      },
+      "kind": "Small Wonder",
+      "id": "BUILDINGCLASS_WALL_STREET",
+      "requires": "TECH_MIDDLE_AGES"
+    },
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 400,
+        "upkeep": 0,
+        "culture": 1,
+        "name": "Military Academy",
+        "id": "BUILDING_MILITARY_ACADEMY"
+      },
+      "kind": "Small Wonder",
+      "id": "BUILDINGCLASS_MILITARY_ACADEMY",
+      "requires": "TECH_MIDDLE_AGES"
+    },
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 400,
+        "upkeep": 0,
+        "culture": 1,
+        "name": "Pentagon",
+        "id": "BUILDING_PENTAGON"
+      },
+      "kind": "Small Wonder",
+      "id": "BUILDINGCLASS_PENTAGON",
+      "requires": "TECH_ANCIENT_TIMES"
+    },
+    {
+      "CIVILIZATION_ALL": {
         "cost": 400,
         "upkeep": 0,
         "culture": 1,
@@ -1375,6 +1472,30 @@
       "kind": "Small Wonder",
       "id": "BUILDINGCLASS_APOLLO_PROGRAM",
       "requires": "TECH_SPACE_FLIGHT"
+    },
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 500,
+        "upkeep": 0,
+        "culture": 1,
+        "name": "Strategic Missile Defence",
+        "id": "BUILDING_STRATEGIC_MISSILE_DEFENCE"
+      },
+      "kind": "Small Wonder",
+      "id": "BUILDINGCLASS_STRATEGIC_MISSILE_DEFENCE",
+      "requires": "TECH_MODERN_TIMES"
+    },
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 500,
+        "upkeep": 0,
+        "culture": 1,
+        "name": "Battlefield Medicine",
+        "id": "BUILDING_BATTLEFIELD_MEDICINE"
+      },
+      "kind": "Small Wonder",
+      "id": "BUILDINGCLASS_BATTLEFIELD_MEDICINE",
+      "requires": "TECH_INDUSTRIAL_AGES"
     },
     {
       "CIVILIZATION_ALL": {
@@ -1540,6 +1661,29 @@
     }
   ],
   "units": [
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 10,
+        "defense": 1,
+        "moves": 1,
+        "attack": 1,
+        "name": "Warrior",
+        "holds": 0,
+        "id": "UNIT_WARRIOR"
+      },
+      "kind": "Land Unit",
+      "id": "UNITCLASS_WARRIOR",
+      "requires": "TECH_ANCIENT_TIMES",
+      "CIVILIZATION_AZTEC": {
+        "cost": 10,
+        "defense": 1,
+        "moves": 2,
+        "attack": 1,
+        "name": "Jaguar Warrior",
+        "holds": 0,
+        "id": "UNIT_JAGUAR_WARRIOR"
+      }
+    },
     {
       "CIVILIZATION_ALL": {
         "cost": 20,
@@ -2279,6 +2423,48 @@
     },
     {
       "CIVILIZATION_ALL": {
+        "cost": 30,
+        "defense": 0,
+        "moves": 1,
+        "attack": 0,
+        "name": "Settler",
+        "holds": 0,
+        "id": "UNIT_SETTLER"
+      },
+      "kind": "Non-combat Unit",
+      "id": "UNITCLASS_SETTLER",
+      "requires": "TECH_ANCIENT_TIMES"
+    },
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 10,
+        "defense": 0,
+        "moves": 1,
+        "attack": 0,
+        "name": "Worker",
+        "holds": 0,
+        "id": "UNIT_WORKER"
+      },
+      "kind": "Non-combat Unit",
+      "id": "UNITCLASS_WORKER",
+      "requires": "TECH_ANCIENT_TIMES"
+    },
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 10,
+        "defense": 0,
+        "moves": 2,
+        "attack": 0,
+        "name": "Scout",
+        "holds": 0,
+        "id": "UNIT_SCOUT"
+      },
+      "kind": "Non-combat Unit",
+      "id": "UNITCLASS_SCOUT",
+      "requires": "TECH_ANCIENT_TIMES"
+    },
+    {
+      "CIVILIZATION_ALL": {
         "cost": 20,
         "defense": 0,
         "moves": 2,
@@ -2290,6 +2476,20 @@
       "kind": "Non-combat Unit",
       "id": "UNITCLASS_EXPLORER",
       "requires": "TECH_NAVIGATION"
+    },
+    {
+      "CIVILIZATION_ALL": {
+        "cost": 0,
+        "defense": 0,
+        "moves": 3,
+        "attack": 0,
+        "name": "Leader",
+        "holds": 0,
+        "id": "UNIT_LEADER"
+      },
+      "kind": "Non-combat Unit",
+      "id": "UNITCLASS_LEADER",
+      "requires": "TECH_ANCIENT_TIMES"
     }
   ],
   "civilizations": [
