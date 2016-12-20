@@ -62,7 +62,7 @@ function makeWheel(game, civilization) {
                 })
                 .attr("x2", 0)
                 .attr("y2", function(d) {
-                    return -(width / 2) + 120 - (d.unlocks.length * 17);
+                    return -(width / 2) + 160 - (d.unlocks.length * 17);
                 });
                 
             var techIcons = spokes.append("image") // Displayed item icons

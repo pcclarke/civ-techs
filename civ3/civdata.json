@@ -361,7 +361,7 @@
       "requires": ["TECH_METALLURGY"]
     },
     {
-      "era": "Era",
+      "era": "Industrial Ages",
       "kind": "Era",
       "name": "Industrial Ages",
       "id": "TECH_INDUSTRIAL_AGES",
@@ -646,7 +646,7 @@
       "kind": "Civilization Advance",
       "name": "Stealth",
       "id": "TECH_STEALTH",
-      "requires": ["TECH_SYNTHETIC_FIBRES"]
+      "requires": ["TECH_SYNTHETIC_FIBERS"]
     },
     {
       "era": "Modern Times",

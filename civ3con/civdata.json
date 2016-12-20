@@ -660,7 +660,7 @@
       "kind": "Civilization Advance",
       "name": "Stealth",
       "id": "TECH_STEALTH",
-      "requires": ["TECH_SYNTHETIC_FIBRES"]
+      "requires": ["TECH_SYNTHETIC_FIBERS"]
     },
     {
       "era": "Modern Times",

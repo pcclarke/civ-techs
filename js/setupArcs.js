@@ -107,6 +107,8 @@ var setupArcs = function (data) {
             // d.lobs(function (ob) {
             //    ob.arcRank = d.arcRank;
             // });
+        } else if (d.requires || d.optional) {
+            d.arcRank = 499;
         } else {
             d.arcRank = 500;
         }
@@ -174,11 +176,5 @@ var setupArcs = function (data) {
                 }
             }
         });
-    });
-
-
-    // Reverse order of data so that arcs are drawn over spokes
-    data.displayed.sort(function(a, b) {
-        return b.pos - a.pos;
     });
 }
