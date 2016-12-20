@@ -119,7 +119,7 @@ var setupArcs = function (data) {
     data.displayed.forEach(function (d) {
         var spokeRank;
         var preReqs;
-        
+
         if (d.arcRank > 0 && d.arcRank !== 500) {
             spokeRank = d.arcRank;
             preReqs = getTechPrereqs(d, data);
@@ -176,11 +176,5 @@ var setupArcs = function (data) {
                 }
             }
         });
-    });
-
-
-    // Reverse order of data so that arcs are drawn over spokes
-    data.displayed.sort(function(a, b) {
-        return b.pos - a.pos;
     });
 }

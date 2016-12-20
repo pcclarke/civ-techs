@@ -11,7 +11,7 @@
 }
 
 html {
-    background: #fff9e7;
+    background: #fff;
 }
 
 body {
@@ -85,10 +85,11 @@ h1 {
 
 .techImg, .unlock {
     cursor: pointer;
+    transition: all 0.5s ease;
 }
 
 .unlockFade {
-    opacity: 0.25;
+    opacity: 0.05;
 }
 
 .spokeLine {
