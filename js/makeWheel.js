@@ -123,7 +123,7 @@ function makeWheel(game, civilization) {
                 })
                 .append("g")
                 .attr("class", function(d) {
-                    return "unlock hidden " + d.ref.id + "" + d.pos;
+                    return "unlock opaque " + d.ref.id + "" + d.pos;
                 });
 
             var unlockArcs = unlocks.append("path")
@@ -191,7 +191,7 @@ function makeWheel(game, civilization) {
                     d3.selectAll(".unlockIcon")
                         .classed("unlockFade", true);
                     d3.selectAll("." + d.ref.id + "" + d.pos)
-                        .classed("hidden", false);
+                        .classed("opaque", false);
                     d3.select(this)
                         .classed("unlockFade", false);
 
@@ -201,7 +201,7 @@ function makeWheel(game, civilization) {
                     d3.selectAll(".unlockIcon")
                         .classed("unlockFade", false);
                     d3.selectAll(".unlock")
-                        .classed("hidden", true);
+                        .classed("opaque", true);
 
                     spokeHighlightOut(d.ref);
                 })

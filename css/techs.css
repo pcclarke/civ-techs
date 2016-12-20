@@ -85,11 +85,11 @@ h1 {
 
 .techImg, .unlock {
     cursor: pointer;
-    transition: all 0.5s ease;
 }
 
 .unlockFade {
     opacity: 0.05;
+    transition: all 0.5s ease;
 }
 
 .spokeLine {
@@ -141,6 +141,10 @@ h1 {
     cursor: pointer;
 }
 
+.opaque {
+    opacity: 0;
+    transition: all 0.5s ease;
+}
 
 
 .hidden {
