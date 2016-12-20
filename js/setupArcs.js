@@ -107,6 +107,8 @@ var setupArcs = function (data) {
             // d.lobs(function (ob) {
             //    ob.arcRank = d.arcRank;
             // });
+        } else if (d.requires || d.optional) {
+            d.arcRank = 499;
         } else {
             d.arcRank = 500;
         }
@@ -117,7 +119,7 @@ var setupArcs = function (data) {
     data.displayed.forEach(function (d) {
         var spokeRank;
         var preReqs;
-
+        
         if (d.arcRank > 0 && d.arcRank !== 500) {
             spokeRank = d.arcRank;
             preReqs = getTechPrereqs(d, data);
