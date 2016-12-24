@@ -39,8 +39,6 @@ var makeTempArc = function(highlighted, setId, data) {
         .append("g")
         .attr("class", "tempArcG");
 
-        console.log(tempArcG);
-
     tempArcG.append("path")
         .attr("class", "tempArc")
         .style("fill", function(d) {
@@ -135,14 +133,22 @@ function spokeHighlightIn(d, data) {
             d.requires.forEach(function (r) {
                 d3.select(".spokeAll")
                     .selectAll("." + r)
-                    .classed("fade", false);
+                    .classed("fade", false)
+                    .select(".spokeLine")
+                    .attr("y1", function(rt) {
+                        return -(CIV.arcBase + (CIV.arcSpace * rt.arcRank));
+                    });
 
                 makeTempArc(d, r, data);
             });
         } else {
             d3.select(".spokeAll")
                 .selectAll("." + d.requires)
-                .classed("fade", false);
+                .classed("fade", false)
+                .select(".spokeLine")
+                .attr("y1", function(rt) {
+                    return -(CIV.arcBase + (CIV.arcSpace * rt.arcRank));
+                });
             makeTempArc(d, d.requires, data);
         }
     }
@@ -151,14 +157,22 @@ function spokeHighlightIn(d, data) {
             d.optional.forEach(function (o) {
                 d3.select(".spokeAll")
                     .selectAll("." + o)
-                    .classed("fade", false);
+                    .classed("fade", false)
+                    .select(".spokeLine")
+                    .attr("y1", function(ot) {
+                        return -(CIV.arcBase + (CIV.arcSpace * ot.arcRank));
+                    });
 
                 makeTempArc(d, o, data);
             });
         } else {
             d3.select(".spokeAll")
                 .selectAll("." + d.optional)
-                .classed("fade", false);
+                .classed("fade", false)
+                .select(".spokeLine")
+                .attr("y1", function(ot) {
+                    return -(CIV.arcBase + (CIV.arcSpace * ot.arcRank));
+                });
             makeTempArc(d, d.optional, data);
         }
     }
@@ -166,23 +180,32 @@ function spokeHighlightIn(d, data) {
         d.lreq.forEach(function (lr) {
             d3.select(".spokeAll")
                 .selectAll("." + lr.id)
-                .classed("fade", false);
+                .classed("fade", false)
+                .select(".spokeLine")
+                .attr("y1",  -(CIV.arcBase + (CIV.arcSpace * d.arcRank)));
         });
     }
     if (d.lopt) {
         d.lopt.forEach(function (lo) {
             d3.select(".spokeAll")
                 .selectAll("." + lo.id)
-                .classed("fade", false);
+                .classed("fade", false)
+                .select(".spokeLine")
+                .attr("y1",  -(CIV.arcBase + (CIV.arcSpace * d.arcRank)));
         });
     }
-
-
 }
 
 function spokeHighlightOut(d) {
     d3.selectAll(".spoke")
-        .classed("fade", false);
+        .classed("fade", false)
+        .selectAll(".spokeLine")
+        .attr("y1", function (e) {
+            if (!e.requires && !e.optional) {
+                return 0;
+            } 
+            return -(CIV.arcBase + (CIV.arcSpace * e.spokeRank));
+        });
     d3.selectAll(".reqGroup")
         .selectAll(function() {
             return this.childNodes;

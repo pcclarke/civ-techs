@@ -54,7 +54,7 @@ function makeWheel(game, civilization) {
                     })
                     .on("click", function(d) { });
 
-            spokes.append("line") // Spoke lines from center
+            var spokeLine = spokes.append("line") // Spoke lines from center
                 .attr("class", "spokeLine")
                 .attr("x1", 0)
                 .attr("y1", function(d) {
