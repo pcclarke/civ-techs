@@ -73,7 +73,7 @@ function makeWheel(game, civilization) {
                 })
                 .attr("x2", 0)
                 .attr("y2", function(d) {
-                    return -(width / 2) + 160 - (d.unlocks.length * 17);
+                    return -(width / 2) + 160 - (d.unlocks.length * 14);
                 });
                 
             var techIcons = spokes.append("image") // Displayed item icons
@@ -156,7 +156,7 @@ function makeWheel(game, civilization) {
                 .enter().append("g")
                 .attr("transform", function(d) {
                     var ang = d.dist * (360 / data.displayed.length);
-                    return "rotate(" + ang + ") translate(0, " + (-(width/2) + 141 - (17 * d.arcRank)) + ")";
+                    return "rotate(" + ang + ") translate(0, " + (-(width/2) + 145 - (14 * d.arcRank)) + ")";
                 })
                 .attr("class", "unlockSquare");
                 
@@ -178,12 +178,12 @@ function makeWheel(game, civilization) {
                 .attr("class", "unlockIcon")
                 .attr("transform", function(d) {
                     if (d.pos > (data.displayed.length / 2)) {
-                        return "translate(7.5, " + (-(width / 2) + (135 - (18 * d.rank))) + ") rotate(90)";
+                        return "translate(6, " + (-(width / 2) + (142 - (14 * d.rank))) + ") rotate(90)";
                     }
-                    return "translate(-7.5, " + (-(width / 2) + (151 - (18 * d.rank))) + ") rotate(270)";
+                    return "translate(-6, " + (-(width / 2) + (153 - (14 * d.rank))) + ") rotate(270)";
                 })
-                .attr("height", 16)
-                .attr("width", 16)
+                .attr("height", 13)
+                .attr("width", 13)
                 .attr("xlink:href", function(d) {
                     var link;
                     if ((d.ref.cat === "units" || d.ref.cat === "buildings") && 
