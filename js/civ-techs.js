@@ -23,7 +23,8 @@ var CIV = {
     ilization: "CIVILIZATION_ALL",
     dataTypes: ["units", "buildings", "religions", "build", "resources", "projects", "promotions", "civics"],
     width: 1200,
-    height: 1200
+    height: 1200,
+    angleShift: 2
 };
 
 // Update mouse coordinates variable

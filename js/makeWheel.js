@@ -38,6 +38,14 @@ function makeWheel(game, civilization) {
                 .attr("class", "wheel")
                 .attr("transform", "translate(" + (width / 2) + " " + (height / 2) +")");
 
+            wheel.append("image") // pie "slice" to indicate start of spokes
+                .attr("id", "startSlice")
+                .attr("x", 0)
+                .attr("y", -(height/2))
+                .attr("width", 167)
+                .attr("height", (height/2))
+                .attr("xlink:href", "img/startSlice.png");
+
             var spokeAll = wheel.append("g")
                 .attr("class", "spokeAll");
                 
@@ -49,7 +57,7 @@ function makeWheel(game, civilization) {
                         return className;
                     })
                     .attr("transform", function(d) {
-                        var ang = d.pos * (360 / data.displayed.length);
+                        var ang = d.pos * (360 / data.displayed.length) + CIV.angleShift;
                         return "rotate(" + ang +")";
                     })
                     .on("click", function(d) { });
@@ -247,7 +255,7 @@ function makeWheel(game, civilization) {
                         return className;
                     })
                     .attr("transform", function(d) {
-                        var ang = d.pos * (360 / data.displayed.length);
+                        var ang = d.pos * (360 / data.displayed.length) + CIV.angleShift;
                         return "rotate(" + ang +")";
                     })
                     .on("click", function(d) { });
