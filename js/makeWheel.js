@@ -21,7 +21,7 @@ function makeWheel(game, civilization) {
         console.log(data.displayed);
 
         // Populate select civilizations drop-down
-        if (!(game === "civ1" || game === "civ2")) {
+        if ((+(CIV.game[3])) > 2) {
             data.civilizations.forEach(function (c) {
                 d3.select("#selectCiv")
                     .append("option")
@@ -37,8 +37,11 @@ function makeWheel(game, civilization) {
             var wheel = svg.append("g")
                 .attr("class", "wheel")
                 .attr("transform", "translate(" + (width / 2) + " " + (height / 2) +")");
+
+            var spokeAll = wheel.append("g")
+                .attr("class", "spokeAll");
                 
-            var spokes = wheel.selectAll(".spoke")
+            var spokes = spokeAll.selectAll(".spoke")
                     .data(data.displayed)
                 .enter().append("g")
                     .attr("class", function(d) {
@@ -51,7 +54,7 @@ function makeWheel(game, civilization) {
                     })
                     .on("click", function(d) { });
 
-            spokes.append("line") // Spoke lines from center
+            var spokeLine = spokes.append("line") // Spoke lines from center
                 .attr("class", "spokeLine")
                 .attr("x1", 0)
                 .attr("y1", function(d) {
@@ -100,7 +103,7 @@ function makeWheel(game, civilization) {
                     } else {
                         tipName = d.name;
                     }
-                        spokeHighlightIn(d);
+                        spokeHighlightIn(d, data);
                 })
                 .on("mouseout", function(d) {
                     //d3.select("#tooltip").classed("hidden", true);
@@ -189,21 +192,21 @@ function makeWheel(game, civilization) {
                 })
                 .on("mouseover", function(d) {
                     d3.selectAll(".unlockIcon")
-                        .classed("unlockFade", true);
+                        .classed("fade", true);
                     d3.selectAll("." + d.ref.id + "" + d.pos)
                         .classed("opaque", false);
                     d3.select(this)
-                        .classed("unlockFade", false);
+                        .classed("fade", false);
 
-                    spokeHighlightIn(d.ref);
+                    //spokeHighlightIn(d.ref);
                 })
                 .on("mouseout", function(d) {
                     d3.selectAll(".unlockIcon")
-                        .classed("unlockFade", false);
+                        .classed("fade", false);
                     d3.selectAll(".unlock")
                         .classed("opaque", true);
 
-                    spokeHighlightOut(d.ref);
+                    //spokeHighlightOut(d.ref);
                 })
                 .on("click", function(d) { 
                     displayDetailsBox(d.ref, d.pos, game, CIV, data);
@@ -211,7 +214,7 @@ function makeWheel(game, civilization) {
 
 
             // Update icons with unique civilization units
-            if (!(game === "civ1" || game === "civ2")) {
+            if ((+(CIV.game[3])) > 2) {
                 d3.select("#selectCiv")
                     .on("change", function(d) {
                         CIV.ilization = this.options[this.selectedIndex].value;
@@ -233,7 +236,10 @@ function makeWheel(game, civilization) {
                     });
             }
 
-            var reqGroup = wheel.selectAll(".reqGroup")
+            var reqArcs = wheel.append("g")
+                .attr("class", "reqArcs");
+
+            var reqGroup = reqArcs.selectAll(".reqGroup")
                     .data(data.displayed)
                 .enter().append("g")
                     .attr("class", function(d) {
@@ -265,7 +271,7 @@ function makeWheel(game, civilization) {
                 })
                 .attr("stroke-width", CIV.arcWidth)
                 .attr("stroke", function(d) {
-                return CIV.color(d.pos); 
+                    return CIV.color(d.pos); 
                 });
                 
             var reqSquares = reqGroup.selectAll(".reqSquare")

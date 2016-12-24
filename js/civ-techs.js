@@ -55,6 +55,20 @@ var arc = d3.arc()
         return d.arcDist;   
     });
 
+var tempArc = d3.arc()
+    .innerRadius(function(d) {
+        return CIV.arcBase + (CIV.arcSpace * d.arcRank);
+    })
+    .outerRadius(function(d) {
+        return (CIV.arcBase + CIV.arcWidth) + (CIV.arcSpace * d.arcRank);
+    })
+    .startAngle(function(d) {
+        return -1 * d.tempArcBack;
+    })
+    .endAngle(function(d) {
+        return d.tempArcDist;   
+    });
+
 var unlockArc = d3.arc()
     .innerRadius(function(d) {
         return CIV.arcBase + 346.5 + (17 * d.rank);
