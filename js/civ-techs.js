@@ -72,10 +72,10 @@ var tempArc = d3.arc()
 
 var unlockArc = d3.arc()
     .innerRadius(function(d) {
-        return CIV.arcBase + 346.5 + (17 * d.rank);
+        return CIV.arcBase + 342.5 + (14 * d.rank);
     })
     .outerRadius(function(d) {
-        return (CIV.arcBase + 346.6 + CIV.arcWidth) + (17 * d.rank);
+        return (CIV.arcBase + 342.6 + CIV.arcWidth) + (14 * d.rank);
     })
     .startAngle(function(d) {
         return -1 * d.arcBack;
