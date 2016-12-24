@@ -118,6 +118,8 @@ function spokeHighlightIn(d, data) {
             return this.childNodes;
         })
         .classed("fade", true);
+    d3.select("#startSlice")
+        .classed("fade", true);
 
     d3.select("." + d.id)
         .classed("fade", false);
@@ -210,6 +212,8 @@ function spokeHighlightOut(d) {
         .selectAll(function() {
             return this.childNodes;
         })
+        .classed("fade", false);
+    d3.select("#startSlice")
         .classed("fade", false);
     d3.selectAll(".tempArcG")
         .remove();
