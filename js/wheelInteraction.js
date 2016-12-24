@@ -34,10 +34,12 @@ var makeTempArc = function(highlighted, setId, data) {
     reqD.tempArcDist = ((2 * Math.PI) / data.displayed.length) * tempDist;
     reqD.tempArcBack = ((2 * Math.PI) / data.displayed.length) * tempBack;
 
-    var tempArcG = d3.select(".spokeAll") // TODO: move to reqArcs
+    var tempArcG = d3.select(".reqArcs") // TODO: move to reqArcs
         .select("." + reqD.id)
         .append("g")
         .attr("class", "tempArcG");
+
+        console.log(tempArcG);
 
     tempArcG.append("path")
         .attr("class", "tempArc")
@@ -114,12 +116,18 @@ function spokeHighlightIn(d, data) {
         .classed("fade", true);
     d3.select(".reqArcs")
         .selectAll(".reqGroup")
+        .selectAll(function() {
+            return this.childNodes;
+        })
         .classed("fade", true);
 
     d3.select("." + d.id)
         .classed("fade", false);
     d3.select(".reqArcs")
         .select("." + d.id)
+        .selectAll(function() {
+            return this.childNodes;
+        })
         .classed("fade", false);
 
     if (d.requires) {
@@ -176,6 +184,9 @@ function spokeHighlightOut(d) {
     d3.selectAll(".spoke")
         .classed("fade", false);
     d3.selectAll(".reqGroup")
+        .selectAll(function() {
+            return this.childNodes;
+        })
         .classed("fade", false);
     d3.selectAll(".tempArcG")
         .remove();
