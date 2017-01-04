@@ -9,24 +9,24 @@ var orderDisplayed = function (data) {
         i = i + 1; 
     });
 
-    if ((+(CIV.game[3])) > 3) {
-        data.displayed.forEach(function (d) {
-            maxCost = 0;
-            if (d.cost) {
-                maxCost = d.cost;
-            }
-            preReqs = getTechPrereqs(d, data);
+    // if ((+(CIV.game[3])) > 3) {
+    //     data.displayed.forEach(function (d) {
+    //         maxCost = 0;
+    //         if (d.cost) {
+    //             maxCost = d.cost;
+    //         }
+    //         preReqs = getTechPrereqs(d, data);
 
-            preReqs.forEach(function (p) {
-                if (p.cost > maxCost) {
-                    maxCost = p.cost;
-                }
-            });
+    //         preReqs.forEach(function (p) {
+    //             if (p.cost > maxCost) {
+    //                 maxCost = p.cost;
+    //             }
+    //         });
 
-            d.pos = maxCost;
-        });
-    }
-    
+    //         d.pos = maxCost;
+    //     });
+    // }
+
     data.displayed.sort(function(a, b) {
         return a.pos - b.pos;
     });
@@ -35,8 +35,8 @@ var orderDisplayed = function (data) {
     data.displayed.forEach(function (d) {
         d.pos = i;
         i = i + 1;
-        d.unlocks.forEach(function (u) {
-            u.pos = i;
-        });
+        // d.unlocks.forEach(function (u) {
+        //     u.pos = i;
+        // });
     });
 };

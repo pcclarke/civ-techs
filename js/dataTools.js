@@ -128,6 +128,24 @@ var getTechPrereqs = function (examine, data) {
     return preReqs;
 };
 
+// Get all technology prerequisites, then their prerequisites, and so on
+var getAllTechPrereqs = function(examine, data) {
+    var preReqs = getTechPrereqs(examine, data);
+    var reqReqs = [];
+
+    preReqs.forEach(function(d) {
+        reqReqs = reqReqs.concat(getAllTechPrereqs(d, data));
+    });
+
+    preReqs = preReqs.concat(reqReqs);
+
+    function onlyUnique(value, index, self) { 
+        return self.indexOf(value) === index;
+    }
+
+    return preReqs.filter(onlyUnique);
+}
+
 // Get a list of the displayed things this technology leads to (required and optional)
 var getLeadsTo = function (examine, compareData) {
     var leads = [];

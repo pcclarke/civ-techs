@@ -83,6 +83,21 @@ h1 {
     margin: 3px;
 }
 
+.techText {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.unitText {
+    fill: red;
+    font-size: 10px;
+}
+
+.buildingText {
+    fill: blue;
+    font-size: 10px;
+}
+
 .techImg, .unlock {
     cursor: pointer;
 }

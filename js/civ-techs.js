@@ -16,7 +16,7 @@ The distance between ranks is arbitrary, and is set by the variable arcSpace (or
 var CIV = {
     arcBase: 100,
     arcSpace: 14,
-    arcWidth: 1.5,
+    arcWidth: 1,
     color: d3.scaleOrdinal(d3.schemeCategory10),
     coords: [0, 0],
     game: "civ4bts",
@@ -90,7 +90,7 @@ var makeGame = function(selector) {
     if ((+(CIV.game[3])) < 4) {
         CIV.arcSpace = 16;
     } else {
-        CIV.arcSpace = 18;   
+        CIV.arcSpace = 12.7;   
     }
 
     if ((+(CIV.game[3])) < 3) {

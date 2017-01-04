@@ -136,45 +136,45 @@ var setupArcs = function (data) {
 
     
     // Set up arcs for each unlock, if necessary
-    data.displayed.forEach(function(d) {
-        d.unlocks.forEach(function (u) {
-            if (Array.isArray(u.ref.requires)) {
-                if (u.ref.requires.length > 1) {
-                    var maxPos = 0;
-                    var minPos = d.pos;
-                    var endDist;
-                    var baseDist;
+    // data.displayed.forEach(function(d) {
+    //     d.unlocks.forEach(function (u) {
+    //         if (Array.isArray(u.ref.requires)) {
+    //             if (u.ref.requires.length > 1) {
+    //                 var maxPos = 0;
+    //                 var minPos = d.pos;
+    //                 var endDist;
+    //                 var baseDist;
 
-                    u.lreq = [];
+    //                 u.lreq = [];
 
-                    u.ref.requires.forEach(function (r) {
-                        var unlockReq = getTechById(r, data);
-                        var req;
+    //                 u.ref.requires.forEach(function (r) {
+    //                     var unlockReq = getTechById(r, data);
+    //                     var req;
 
-                        if (unlockReq.pos > maxPos) {
-                            maxPos = unlockReq.pos;
-                        }
-                        if (unlockReq.pos < minPos) {
-                            minPos = unlockReq.pos;
-                        }
-                        if (unlockReq.pos !== d.pos) { // unlock arc square positions
-                            req = {"id": unlockReq.id, "dist": (unlockReq.pos - d.pos), "pos": u.pos, "arcRank": u.rank};
-                            u.lreq.push(req);
-                        }
-                    });
+    //                     if (unlockReq.pos > maxPos) {
+    //                         maxPos = unlockReq.pos;
+    //                     }
+    //                     if (unlockReq.pos < minPos) {
+    //                         minPos = unlockReq.pos;
+    //                     }
+    //                     if (unlockReq.pos !== d.pos) { // unlock arc square positions
+    //                         req = {"id": unlockReq.id, "dist": (unlockReq.pos - d.pos), "pos": u.pos, "arcRank": u.rank};
+    //                         u.lreq.push(req);
+    //                     }
+    //                 });
                     
-                    endDist = 0;
-                    if (maxPos > d.pos) {
-                        endDist = maxPos - d.pos;
-                    }
-                    u.arcEnd = ((2 * Math.PI) / data.displayed.length) * endDist;
-                    baseDist = 0;
-                    if (minPos < d.pos) {
-                        baseDist = d.pos - minPos;
-                    }
-                    u.arcBack = ((2 * Math.PI) / data.displayed.length) * baseDist;
-                }
-            }
-        });
-    });
+    //                 endDist = 0;
+    //                 if (maxPos > d.pos) {
+    //                     endDist = maxPos - d.pos;
+    //                 }
+    //                 u.arcEnd = ((2 * Math.PI) / data.displayed.length) * endDist;
+    //                 baseDist = 0;
+    //                 if (minPos < d.pos) {
+    //                     baseDist = d.pos - minPos;
+    //                 }
+    //                 u.arcBack = ((2 * Math.PI) / data.displayed.length) * baseDist;
+    //             }
+    //         }
+    //     });
+    // });
 }
