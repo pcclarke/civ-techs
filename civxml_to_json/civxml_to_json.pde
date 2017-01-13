@@ -96,7 +96,7 @@ void setup() {
   getCivicsInfos("bts/XML/GameInfo/CIV4CivicInfos.xml", texts, civ4bts);
   getCivilizationInfos(btsCivilizations, texts, civ4bts);
   getProjectInfo("bts/XML/GameInfo/CIV4ProjectInfo.xml", texts, civ4bts);
-  
+  addOrder("civ4_order.csv", civ4bts);
   
   //println(civ4bts);
   saveJSONObject(civ4base, "civ4/civdata.json");
@@ -1055,9 +1055,23 @@ void getUnitInfos(String path, XML[][] texts, String civPath, JSONObject dataObj
         }
       }
 
-      unitList.append(unitDetails);
+      unitList.append(unitDetails); 
     }
   }
   
   dataObj.setJSONArray("units", unitList);
+}
+
+void addOrder(String orderFileName, JSONObject dataObj) {
+  Table orderTable = loadTable(orderFileName, "header");
+  
+  for (TableRow order : orderTable.rows()) {
+    JSONArray techs = dataObj.getJSONArray("technologies");
+    
+    for (int i = 0; i < techs.size(); i++) {
+      if (order.getString("id").equals(techs.getJSONObject(i).getString("id"))) {
+        techs.getJSONObject(i).setInt("order", order.getInt(0));
+      }
+    }
+  }
 }

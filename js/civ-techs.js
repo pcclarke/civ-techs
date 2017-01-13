@@ -24,7 +24,7 @@ var CIV = {
     dataTypes: ["units", "buildings", "religions", "build", "resources", "projects", "promotions", "civics"],
     width: 1200,
     height: 1200,
-    angleShift: 2
+    angleShift: 4
 };
 
 // Update mouse coordinates variable

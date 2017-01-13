@@ -3,19 +3,22 @@
     {
       "cost": 50,
       "name": "Mysticism",
-      "id": "TECH_MYSTICISM"
+      "id": "TECH_MYSTICISM",
+      "order": 5
     },
     {
       "cost": 80,
       "name": "Meditation",
       "id": "TECH_MEDITATION",
-      "requires": ["TECH_MYSTICISM"]
+      "requires": ["TECH_MYSTICISM"],
+      "order": 11
     },
     {
       "cost": 100,
       "name": "Polytheism",
       "id": "TECH_POLYTHEISM",
-      "requires": ["TECH_MYSTICISM"]
+      "requires": ["TECH_MYSTICISM"],
+      "order": 12
     },
     {
       "cost": 60,
@@ -24,7 +27,8 @@
         "TECH_MEDITATION",
         "TECH_POLYTHEISM"
       ],
-      "id": "TECH_PRIESTHOOD"
+      "id": "TECH_PRIESTHOOD",
+      "order": 15
     },
     {
       "cost": 120,
@@ -33,7 +37,8 @@
       "requires": [
         "TECH_POLYTHEISM",
         "TECH_MASONRY"
-      ]
+      ],
+      "order": 16
     },
     {
       "cost": 300,
@@ -42,7 +47,8 @@
         "TECH_PRIESTHOOD",
         "TECH_MONOTHEISM"
       ],
-      "id": "TECH_MONARCHY"
+      "id": "TECH_MONARCHY",
+      "order": 24
     },
     {
       "cost": 200,
@@ -51,7 +57,8 @@
       "requires": [
         "TECH_AESTHETICS",
         "TECH_POLYTHEISM"
-      ]
+      ],
+      "order": 26
     },
     {
       "cost": 350,
@@ -61,13 +68,15 @@
         "TECH_CURRENCY"
       ],
       "id": "TECH_CODE_OF_LAWS",
-      "requires": ["TECH_WRITING"]
+      "requires": ["TECH_WRITING"],
+      "order": 33
     },
     {
       "cost": 300,
       "name": "Drama",
       "id": "TECH_DRAMA",
-      "requires": ["TECH_AESTHETICS"]
+      "requires": ["TECH_AESTHETICS"],
+      "order": 31
     },
     {
       "cost": 700,
@@ -76,7 +85,8 @@
       "requires": [
         "TECH_MONARCHY",
         "TECH_WRITING"
-      ]
+      ],
+      "order": 34
     },
     {
       "cost": 500,
@@ -85,7 +95,8 @@
       "requires": [
         "TECH_MONOTHEISM",
         "TECH_WRITING"
-      ]
+      ],
+      "order": 39
     },
     {
       "special": [{
@@ -99,7 +110,8 @@
         "TECH_DRAMA"
       ],
       "id": "TECH_MUSIC",
-      "requires": ["TECH_MATHEMATICS"]
+      "requires": ["TECH_MATHEMATICS"],
+      "order": 36
     },
     {
       "special": [{
@@ -113,7 +125,8 @@
         "TECH_FEUDALISM"
       ],
       "id": "TECH_CIVIL_SERVICE",
-      "requires": ["TECH_MATHEMATICS"]
+      "requires": ["TECH_MATHEMATICS"],
+      "order": 38
     },
     {
       "special": [{
@@ -129,7 +142,8 @@
       "requires": [
         "TECH_MACHINERY",
         "TECH_FEUDALISM"
-      ]
+      ],
+      "order": 42
     },
     {
       "cost": 1200,
@@ -138,7 +152,8 @@
       "requires": [
         "TECH_THEOLOGY",
         "TECH_MONARCHY"
-      ]
+      ],
+      "order": 40
     },
     {
       "cost": 1800,
@@ -148,7 +163,8 @@
         "TECH_PHILOSOPHY"
       ],
       "id": "TECH_NATIONALISM",
-      "requires": ["TECH_CIVIL_SERVICE"]
+      "requires": ["TECH_CIVIL_SERVICE"],
+      "order": 43
     },
     {
       "special": [{
@@ -161,7 +177,8 @@
       "requires": [
         "TECH_NATIONALISM",
         "TECH_MUSIC"
-      ]
+      ],
+      "order": 48
     },
     {
       "cost": 2000,
@@ -170,7 +187,8 @@
       "requires": [
         "TECH_NATIONALISM",
         "TECH_CODE_OF_LAWS"
-      ]
+      ],
+      "order": 47
     },
     {
       "cost": 1400,
@@ -179,7 +197,8 @@
       "requires": [
         "TECH_EDUCATION",
         "TECH_PHILOSOPHY"
-      ]
+      ],
+      "order": 50
     },
     {
       "cost": 2800,
@@ -188,7 +207,8 @@
       "requires": [
         "TECH_CONSTITUTION",
         "TECH_PRINTING_PRESS"
-      ]
+      ],
+      "order": 53
     },
     {
       "special": [{
@@ -201,7 +221,8 @@
       "requires": [
         "TECH_ECONOMICS",
         "TECH_CONSTITUTION"
-      ]
+      ],
+      "order": 56
     },
     {
       "special": [
@@ -220,7 +241,8 @@
       "requires": [
         "TECH_ASSEMBLY_LINE",
         "TECH_NATIONALISM"
-      ]
+      ],
+      "order": 69
     },
     {
       "special": [
@@ -239,13 +261,15 @@
       "requires": [
         "TECH_SCIENTIFIC_METHOD",
         "TECH_LIBERALISM"
-      ]
+      ],
+      "order": 63
     },
     {
       "cost": 3600,
       "name": "Mass Media",
       "id": "TECH_MASS_MEDIA",
-      "requires": ["TECH_RADIO"]
+      "requires": ["TECH_RADIO"],
+      "order": 80
     },
     {
       "cost": 5500,
@@ -255,7 +279,8 @@
         "TECH_FISSION"
       ],
       "id": "TECH_ECOLOGY",
-      "requires": ["TECH_BIOLOGY"]
+      "requires": ["TECH_BIOLOGY"],
+      "order": 85
     },
     {
       "special": [{
@@ -264,17 +289,20 @@
       }],
       "cost": 40,
       "name": "Fishing",
-      "id": "TECH_FISHING"
+      "id": "TECH_FISHING",
+      "order": 1
     },
     {
       "cost": 60,
       "name": "The Wheel",
-      "id": "TECH_THE_WHEEL"
+      "id": "TECH_THE_WHEEL",
+      "order": 2
     },
     {
       "cost": 60,
       "name": "Agriculture",
-      "id": "TECH_AGRICULTURE"
+      "id": "TECH_AGRICULTURE",
+      "order": 3
     },
     {
       "cost": 80,
@@ -284,13 +312,15 @@
         "TECH_FISHING"
       ],
       "id": "TECH_POTTERY",
-      "requires": ["TECH_THE_WHEEL"]
+      "requires": ["TECH_THE_WHEEL"],
+      "order": 8
     },
     {
       "cost": 300,
       "name": "Aesthetics",
       "id": "TECH_AESTHETICS",
-      "requires": ["TECH_WRITING"]
+      "requires": ["TECH_WRITING"],
+      "order": 21
     },
     {
       "special": [
@@ -306,7 +336,8 @@
       "cost": 100,
       "name": "Sailing",
       "id": "TECH_SAILING",
-      "requires": ["TECH_FISHING"]
+      "requires": ["TECH_FISHING"],
+      "order": 7
     },
     {
       "special": [{
@@ -320,7 +351,8 @@
         "TECH_ANIMAL_HUSBANDRY",
         "TECH_POTTERY"
       ],
-      "id": "TECH_WRITING"
+      "id": "TECH_WRITING",
+      "order": 18
     },
     {
       "special": [{
@@ -330,7 +362,8 @@
       "cost": 250,
       "name": "Mathematics",
       "id": "TECH_MATHEMATICS",
-      "requires": ["TECH_WRITING"]
+      "requires": ["TECH_WRITING"],
+      "order": 22
     },
     {
       "special": [{
@@ -340,7 +373,8 @@
       "cost": 300,
       "name": "Alphabet",
       "id": "TECH_ALPHABET",
-      "requires": ["TECH_WRITING"]
+      "requires": ["TECH_WRITING"],
+      "order": 23
     },
     {
       "special": [{
@@ -353,7 +387,8 @@
       "requires": [
         "TECH_MATHEMATICS",
         "TECH_SAILING"
-      ]
+      ],
+      "order": 27
     },
     {
       "special": [
@@ -372,7 +407,8 @@
         "TECH_MATHEMATICS",
         "TECH_ALPHABET"
       ],
-      "id": "TECH_CURRENCY"
+      "id": "TECH_CURRENCY",
+      "order": 29
     },
     {
       "cost": 800,
@@ -382,7 +418,8 @@
         "TECH_DRAMA"
       ],
       "id": "TECH_PHILOSOPHY",
-      "requires": ["TECH_MEDITATION"]
+      "requires": ["TECH_MEDITATION"],
+      "order": 37
     },
     {
       "special": [{
@@ -395,7 +432,8 @@
         "TECH_THEOLOGY",
         "TECH_CIVIL_SERVICE"
       ],
-      "id": "TECH_PAPER"
+      "id": "TECH_PAPER",
+      "order": 41
     },
     {
       "cost": 700,
@@ -404,13 +442,15 @@
       "requires": [
         "TECH_GUILDS",
         "TECH_CURRENCY"
-      ]
+      ],
+      "order": 46
     },
     {
       "cost": 1800,
       "name": "Education",
       "id": "TECH_EDUCATION",
-      "requires": ["TECH_PAPER"]
+      "requires": ["TECH_PAPER"],
+      "order": 45
     },
     {
       "special": [
@@ -436,7 +476,8 @@
         "TECH_PAPER",
         "TECH_MACHINERY",
         "TECH_ALPHABET"
-      ]
+      ],
+      "order": 44
     },
     {
       "special": [{
@@ -449,7 +490,8 @@
       "requires": [
         "TECH_EDUCATION",
         "TECH_BANKING"
-      ]
+      ],
+      "order": 51
     },
     {
       "special": [{
@@ -462,7 +504,8 @@
       "requires": [
         "TECH_CALENDAR",
         "TECH_OPTICS"
-      ]
+      ],
+      "order": 55
     },
     {
       "special": [{
@@ -478,7 +521,8 @@
       "requires": [
         "TECH_GUNPOWDER",
         "TECH_ENGINEERING"
-      ]
+      ],
+      "order": 57
     },
     {
       "cost": 2400,
@@ -488,7 +532,8 @@
         "TECH_ASTRONOMY"
       ],
       "id": "TECH_SCIENTIFIC_METHOD",
-      "requires": ["TECH_PRINTING_PRESS"]
+      "requires": ["TECH_PRINTING_PRESS"],
+      "order": 59
     },
     {
       "special": [{
@@ -501,7 +546,8 @@
       "requires": [
         "TECH_SCIENTIFIC_METHOD",
         "TECH_ASTRONOMY"
-      ]
+      ],
+      "order": 64
     },
     {
       "special": [
@@ -523,7 +569,8 @@
       "requires": [
         "TECH_SCIENTIFIC_METHOD",
         "TECH_CHEMISTRY"
-      ]
+      ],
+      "order": 65
     },
     {
       "cost": 4500,
@@ -532,7 +579,8 @@
       "requires": [
         "TECH_BIOLOGY",
         "TECH_OPTICS"
-      ]
+      ],
+      "order": 71
     },
     {
       "special": [
@@ -554,19 +602,22 @@
       "cost": 4500,
       "name": "Electricity",
       "id": "TECH_ELECTRICITY",
-      "requires": ["TECH_PHYSICS"]
+      "requires": ["TECH_PHYSICS"],
+      "order": 70
     },
     {
       "cost": 3600,
       "name": "Combustion",
       "id": "TECH_COMBUSTION",
-      "requires": ["TECH_RAILROAD"]
+      "requires": ["TECH_RAILROAD"],
+      "order": 72
     },
     {
       "cost": 5500,
       "name": "Fission",
       "id": "TECH_FISSION",
-      "requires": ["TECH_ELECTRICITY"]
+      "requires": ["TECH_ELECTRICITY"],
+      "order": 75
     },
     {
       "cost": 5000,
@@ -575,7 +626,8 @@
       "requires": [
         "TECH_PHYSICS",
         "TECH_COMBUSTION"
-      ]
+      ],
+      "order": 67
     },
     {
       "cost": 5000,
@@ -584,7 +636,8 @@
       "requires": [
         "TECH_FLIGHT",
         "TECH_SATELLITES"
-      ]
+      ],
+      "order": 82
     },
     {
       "cost": 7000,
@@ -593,7 +646,8 @@
       "requires": [
         "TECH_INDUSTRIALISM",
         "TECH_COMBUSTION"
-      ]
+      ],
+      "order": 79
     },
     {
       "cost": 7500,
@@ -602,7 +656,8 @@
       "requires": [
         "TECH_PLASTICS",
         "TECH_SATELLITES"
-      ]
+      ],
+      "order": 84
     },
     {
       "cost": 8000,
@@ -611,7 +666,8 @@
       "requires": [
         "TECH_ADVANCED_FLIGHT",
         "TECH_COMPOSITES"
-      ]
+      ],
+      "order": 87
     },
     {
       "special": [{
@@ -624,7 +680,8 @@
       "requires": [
         "TECH_SUPERCONDUCTORS",
         "TECH_MEDICINE"
-      ]
+      ],
+      "order": 90
     },
     {
       "cost": 7500,
@@ -633,7 +690,8 @@
         "TECH_COMPUTERS",
         "TECH_LASER"
       ],
-      "id": "TECH_FIBER_OPTICS"
+      "id": "TECH_FIBER_OPTICS",
+      "order": 88
     },
     {
       "special": [{
@@ -646,23 +704,27 @@
       "requires": [
         "TECH_FIBER_OPTICS",
         "TECH_FISSION"
-      ]
+      ],
+      "order": 91
     },
     {
       "cost": 40,
       "name": "Hunting",
-      "id": "TECH_HUNTING"
+      "id": "TECH_HUNTING",
+      "order": 4
     },
     {
       "cost": 50,
       "name": "Mining",
-      "id": "TECH_MINING"
+      "id": "TECH_MINING",
+      "order": 6
     },
     {
       "cost": 60,
       "name": "Archery",
       "id": "TECH_ARCHERY",
-      "requires": ["TECH_HUNTING"]
+      "requires": ["TECH_HUNTING"],
+      "order": 10
     },
     {
       "cost": 80,
@@ -671,7 +733,8 @@
         "TECH_MINING",
         "TECH_MYSTICISM"
       ],
-      "id": "TECH_MASONRY"
+      "id": "TECH_MASONRY",
+      "order": 13
     },
     {
       "cost": 100,
@@ -680,25 +743,29 @@
         "TECH_HUNTING",
         "TECH_AGRICULTURE"
       ],
-      "id": "TECH_ANIMAL_HUSBANDRY"
+      "id": "TECH_ANIMAL_HUSBANDRY",
+      "order": 9
     },
     {
       "cost": 120,
       "name": "Bronze Working",
       "id": "TECH_BRONZE_WORKING",
-      "requires": ["TECH_MINING"]
+      "requires": ["TECH_MINING"],
+      "order": 17
     },
     {
       "cost": 250,
       "name": "Horseback Riding",
       "id": "TECH_HORSEBACK_RIDING",
-      "requires": ["TECH_ANIMAL_HUSBANDRY"]
+      "requires": ["TECH_ANIMAL_HUSBANDRY"],
+      "order": 14
     },
     {
       "cost": 200,
       "name": "Iron Working",
       "id": "TECH_IRON_WORKING",
-      "requires": ["TECH_BRONZE_WORKING"]
+      "requires": ["TECH_BRONZE_WORKING"],
+      "order": 20
     },
     {
       "cost": 450,
@@ -707,7 +774,8 @@
       "requires": [
         "TECH_BRONZE_WORKING",
         "TECH_POTTERY"
-      ]
+      ],
+      "order": 19
     },
     {
       "cost": 400,
@@ -716,7 +784,8 @@
       "requires": [
         "TECH_IRON_WORKING",
         "TECH_SAILING"
-      ]
+      ],
+      "order": 25
     },
     {
       "special": [{
@@ -729,13 +798,15 @@
       "requires": [
         "TECH_MATHEMATICS",
         "TECH_MASONRY"
-      ]
+      ],
+      "order": 28
     },
     {
       "cost": 700,
       "name": "Machinery",
       "id": "TECH_MACHINERY",
-      "requires": ["TECH_METAL_CASTING"]
+      "requires": ["TECH_METAL_CASTING"],
+      "order": 30
     },
     {
       "special": [{
@@ -748,7 +819,8 @@
       "requires": [
         "TECH_CONSTRUCTION",
         "TECH_MACHINERY"
-      ]
+      ],
+      "order": 32
     },
     {
       "special": [{
@@ -761,7 +833,8 @@
       "requires": [
         "TECH_COMPASS",
         "TECH_MACHINERY"
-      ]
+      ],
+      "order": 35
     },
     {
       "cost": 1200,
@@ -770,7 +843,8 @@
         "TECH_GUILDS",
         "TECH_EDUCATION"
       ],
-      "id": "TECH_GUNPOWDER"
+      "id": "TECH_GUNPOWDER",
+      "order": 52
     },
     {
       "special": [
@@ -795,13 +869,15 @@
       "requires": [
         "TECH_PRINTING_PRESS",
         "TECH_BANKING"
-      ]
+      ],
+      "order": 49
     },
     {
       "cost": 2000,
       "name": "Military Science",
       "id": "TECH_MILITARY_SCIENCE",
-      "requires": ["TECH_CHEMISTRY"]
+      "requires": ["TECH_CHEMISTRY"],
+      "order": 60
     },
     {
       "cost": 2400,
@@ -810,7 +886,8 @@
       "requires": [
         "TECH_REPLACEABLE_PARTS",
         "TECH_GUNPOWDER"
-      ]
+      ],
+      "order": 54
     },
     {
       "special": [{
@@ -823,7 +900,8 @@
       "requires": [
         "TECH_REPLACEABLE_PARTS",
         "TECH_CHEMISTRY"
-      ]
+      ],
+      "order": 58
     },
     {
       "cost": 2800,
@@ -832,7 +910,8 @@
       "requires": [
         "TECH_CHEMISTRY",
         "TECH_IRON_WORKING"
-      ]
+      ],
+      "order": 61
     },
     {
       "cost": 5000,
@@ -841,7 +920,8 @@
       "requires": [
         "TECH_STEAM_POWER",
         "TECH_CORPORATION"
-      ]
+      ],
+      "order": 62
     },
     {
       "cost": 4500,
@@ -850,7 +930,8 @@
       "requires": [
         "TECH_STEEL",
         "TECH_STEAM_POWER"
-      ]
+      ],
+      "order": 66
     },
     {
       "cost": 4000,
@@ -860,7 +941,8 @@
         "TECH_RIFLING",
         "TECH_PHYSICS",
         "TECH_STEEL"
-      ]
+      ],
+      "order": 68
     },
     {
       "cost": 6500,
@@ -869,13 +951,15 @@
       "requires": [
         "TECH_ASSEMBLY_LINE",
         "TECH_ELECTRICITY"
-      ]
+      ],
+      "order": 74
     },
     {
       "cost": 6000,
       "name": "Radio",
       "id": "TECH_RADIO",
-      "requires": ["TECH_ELECTRICITY"]
+      "requires": ["TECH_ELECTRICITY"],
+      "order": 76
     },
     {
       "special": [{
@@ -888,7 +972,8 @@
       "requires": [
         "TECH_ELECTRICITY",
         "TECH_BIOLOGY"
-      ]
+      ],
+      "order": 77
     },
     {
       "cost": 6500,
@@ -897,7 +982,8 @@
         "TECH_REFRIGERATION",
         "TECH_COMPUTERS"
       ],
-      "id": "TECH_SUPERCONDUCTORS"
+      "id": "TECH_SUPERCONDUCTORS",
+      "order": 86
     },
     {
       "cost": 6500,
@@ -906,7 +992,8 @@
       "requires": [
         "TECH_RADIO",
         "TECH_PLASTICS"
-      ]
+      ],
+      "order": 81
     },
     {
       "cost": 7000,
@@ -915,7 +1002,8 @@
       "requires": [
         "TECH_SATELLITES",
         "TECH_PLASTICS"
-      ]
+      ],
+      "order": 83
     },
     {
       "cost": 5000,
@@ -925,7 +1013,8 @@
         "TECH_ARTILLERY"
       ],
       "id": "TECH_ROCKETRY",
-      "requires": ["TECH_RIFLING"]
+      "requires": ["TECH_RIFLING"],
+      "order": 73
     },
     {
       "special": [{
@@ -938,13 +1027,15 @@
       "requires": [
         "TECH_ROCKETRY",
         "TECH_RADIO"
-      ]
+      ],
+      "order": 78
     },
     {
       "cost": 8000,
       "name": "Robotics",
       "id": "TECH_ROBOTICS",
-      "requires": ["TECH_COMPUTERS"]
+      "requires": ["TECH_COMPUTERS"],
+      "order": 89
     },
     {
       "special": [
@@ -963,7 +1054,8 @@
       "requires": [
         "TECH_GENETICS",
         "TECH_STEALTH"
-      ]
+      ],
+      "order": 92
     }
   ],
   "promotions": [
@@ -2305,6 +2397,11 @@
         "name": "Scout",
         "id": "UNIT_SCOUT"
       },
+      "cost": 15,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 1,
+      "cityDefense": 0,
       "id": "UNITCLASS_SCOUT",
       "requires": ["TECH_HUNTING"]
     },
@@ -2313,6 +2410,11 @@
         "name": "Explorer",
         "id": "UNIT_EXPLORER"
       },
+      "cost": 40,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 4,
+      "cityDefense": 0,
       "id": "UNITCLASS_EXPLORER",
       "requires": ["TECH_COMPASS"]
     },
@@ -2321,6 +2423,11 @@
         "name": "Spy",
         "id": "UNIT_SPY"
       },
+      "cost": 40,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 0,
+      "cityDefense": 0,
       "id": "UNITCLASS_SPY",
       "requires": ["TECH_ALPHABET"]
     },
@@ -2329,6 +2436,11 @@
         "name": "Swordsman",
         "id": "UNIT_SWORDSMAN"
       },
+      "cost": 40,
+      "cityAttack": 10,
+      "withdrawalProb": 0,
+      "combat": 6,
+      "cityDefense": 0,
       "id": "UNITCLASS_SWORDSMAN",
       "CIVILIZATION_CELT": {
         "name": "Gallic Warrior",
@@ -2361,6 +2473,11 @@
         "name": "Phalanx",
         "id": "UNIT_GREEK_PHALANX"
       },
+      "cost": 35,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 5,
+      "cityDefense": 0,
       "id": "UNITCLASS_AXEMAN",
       "requires": ["TECH_BRONZE_WORKING"]
     },
@@ -2373,6 +2490,11 @@
         "name": "Maceman",
         "id": "UNIT_MACEMAN"
       },
+      "cost": 70,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 8,
+      "cityDefense": 0,
       "id": "UNITCLASS_MACEMAN",
       "CIVILIZATION_VIKING": {
         "name": "Berserker",
@@ -2392,10 +2514,15 @@
         "name": "Holkan",
         "id": "UNIT_MAYA_HOLKAN"
       },
+      "cost": 35,
       "CIVILIZATION_ZULU": {
         "name": "Impi",
         "id": "UNIT_ZULU_IMPI"
       },
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 4,
+      "cityDefense": 0,
       "id": "UNITCLASS_SPEARMAN",
       "requires": ["TECH_HUNTING"]
     },
@@ -2404,6 +2531,11 @@
         "name": "Pikeman",
         "id": "UNIT_PIKEMAN"
       },
+      "cost": 60,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 6,
+      "cityDefense": 0,
       "id": "UNITCLASS_PIKEMAN",
       "requires": ["TECH_ENGINEERING"],
       "CIVILIZATION_HOLY_ROMAN": {
@@ -2420,10 +2552,15 @@
         "name": "Musketman",
         "id": "UNIT_MUSKETMAN"
       },
+      "cost": 80,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
       "CIVILIZATION_ETHIOPIA": {
         "name": "Oromo Warrior",
         "id": "UNIT_ETHIOPIAN_OROMO_WARRIOR"
       },
+      "combat": 9,
+      "cityDefense": 0,
       "id": "UNITCLASS_MUSKETMAN",
       "CIVILIZATION_FRANCE": {
         "name": "Musketeer",
@@ -2436,10 +2573,15 @@
         "name": "Rifleman",
         "id": "UNIT_RIFLEMAN"
       },
+      "cost": 110,
       "CIVILIZATION_ENGLAND": {
         "name": "Redcoat",
         "id": "UNIT_ENGLISH_REDCOAT"
       },
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 14,
+      "cityDefense": 0,
       "id": "UNITCLASS_RIFLEMAN",
       "requires": ["TECH_RIFLING"]
     },
@@ -2448,6 +2590,11 @@
         "name": "Grenadier",
         "id": "UNIT_GRENADIER"
       },
+      "cost": 100,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 12,
+      "cityDefense": 0,
       "id": "UNITCLASS_GRENADIER",
       "requires": ["TECH_MILITARY_SCIENCE"]
     },
@@ -2456,6 +2603,11 @@
         "name": "Anti-Tank",
         "id": "UNIT_AT_INFANTRY"
       },
+      "cost": 120,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 14,
+      "cityDefense": 0,
       "id": "UNITCLASS_AT_INFANTRY",
       "requires": ["TECH_ARTILLERY"]
     },
@@ -2464,6 +2616,11 @@
         "name": "Infantry",
         "id": "UNIT_INFANTRY"
       },
+      "cost": 140,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 20,
+      "cityDefense": 0,
       "id": "UNITCLASS_INFANTRY",
       "requires": [
         "TECH_ASSEMBLY_LINE",
@@ -2475,6 +2632,11 @@
         "name": "SAM Infantry",
         "id": "UNIT_SAM_INFANTRY"
       },
+      "cost": 150,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 18,
+      "cityDefense": 0,
       "id": "UNITCLASS_SAM_INFANTRY",
       "requires": ["TECH_ROCKETRY"]
     },
@@ -2483,6 +2645,11 @@
         "name": "Mobile SAM",
         "id": "UNIT_MOBILE_SAM"
       },
+      "cost": 220,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 22,
+      "cityDefense": 0,
       "id": "UNITCLASS_MOBILE_SAM",
       "requires": ["TECH_LASER"]
     },
@@ -2495,6 +2662,11 @@
         "name": "Navy SEAL",
         "id": "UNIT_AMERICAN_NAVY_SEAL"
       },
+      "cost": 160,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 24,
+      "cityDefense": 0,
       "id": "UNITCLASS_MARINE",
       "requires": [
         "TECH_INDUSTRIALISM",
@@ -2506,6 +2678,11 @@
         "name": "Paratrooper",
         "id": "UNIT_PARATROOPER"
       },
+      "cost": 160,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 24,
+      "cityDefense": 0,
       "id": "UNITCLASS_PARATROOPER",
       "requires": [
         "TECH_FASCISM",
@@ -2518,6 +2695,11 @@
         "name": "Mechanized Infantry",
         "id": "UNIT_MECHANIZED_INFANTRY"
       },
+      "cost": 200,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 32,
+      "cityDefense": 0,
       "id": "UNITCLASS_MECHANIZED_INFANTRY",
       "requires": [
         "TECH_ROBOTICS",
@@ -2533,10 +2715,15 @@
         "name": "Bowman",
         "id": "UNIT_BABYLON_BOWMAN"
       },
+      "cost": 25,
       "CIVILIZATION_MALI": {
         "name": "Skirmisher",
         "id": "UNIT_MALI_SKIRMISHER"
       },
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 3,
+      "cityDefense": 50,
       "id": "UNITCLASS_ARCHER",
       "requires": ["TECH_ARCHERY"]
     },
@@ -2545,6 +2732,11 @@
         "name": "Longbowman",
         "id": "UNIT_LONGBOWMAN"
       },
+      "cost": 50,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 6,
+      "cityDefense": 25,
       "id": "UNITCLASS_LONGBOWMAN",
       "requires": [
         "TECH_FEUDALISM",
@@ -2560,6 +2752,11 @@
         "name": "Cho-Ko-Nu",
         "id": "UNIT_CHINA_CHOKONU"
       },
+      "cost": 60,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 6,
+      "cityDefense": 0,
       "id": "UNITCLASS_CROSSBOWMAN",
       "requires": [
         "TECH_MACHINERY",
@@ -2571,10 +2768,15 @@
         "name": "Chariot",
         "id": "UNIT_CHARIOT"
       },
+      "cost": 30,
+      "cityAttack": 0,
+      "withdrawalProb": 10,
       "CIVILIZATION_EGYPT": {
         "name": "War Chariot",
         "id": "UNIT_EGYPT_WARCHARIOT"
       },
+      "combat": 4,
+      "cityDefense": 0,
       "id": "UNITCLASS_CHARIOT",
       "requires": ["TECH_THE_WHEEL"],
       "CIVILIZATION_PERSIA": {
@@ -2587,14 +2789,19 @@
         "name": "Horse Archer",
         "id": "UNIT_HORSE_ARCHER"
       },
+      "cost": 50,
+      "cityAttack": 0,
       "CIVILIZATION_CARTHAGE": {
         "name": "Numidian Cavalry",
         "id": "UNIT_CARTHAGE_NUMIDIAN_CAVALRY"
       },
+      "withdrawalProb": 20,
       "CIVILIZATION_MONGOL": {
         "name": "Keshik",
         "id": "UNIT_MONGOL_KESHIK"
       },
+      "combat": 6,
+      "cityDefense": 0,
       "id": "UNITCLASS_HORSE_ARCHER",
       "requires": [
         "TECH_HORSEBACK_RIDING",
@@ -2614,6 +2821,11 @@
         "name": "Camel Archer",
         "id": "UNIT_ARABIA_CAMELARCHER"
       },
+      "cost": 90,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 10,
+      "cityDefense": 0,
       "id": "UNITCLASS_KNIGHT",
       "requires": [
         "TECH_GUILDS",
@@ -2625,10 +2837,15 @@
         "name": "Cuirassier",
         "id": "UNIT_CUIRASSIER"
       },
+      "cost": 100,
+      "cityAttack": 0,
       "CIVILIZATION_SPAIN": {
         "name": "Conquistador",
         "id": "UNIT_SPANISH_CONQUISTADOR"
       },
+      "withdrawalProb": 15,
+      "combat": 12,
+      "cityDefense": 0,
       "id": "UNITCLASS_CUIRASSIER",
       "requires": [
         "TECH_MILITARY_TRADITION",
@@ -2641,10 +2858,15 @@
         "name": "Cavalry",
         "id": "UNIT_CAVALRY"
       },
+      "cost": 120,
+      "cityAttack": 0,
       "CIVILIZATION_RUSSIA": {
         "name": "Cossack",
         "id": "UNIT_RUSSIA_COSSACK"
       },
+      "withdrawalProb": 30,
+      "combat": 15,
+      "cityDefense": 0,
       "id": "UNITCLASS_CAVALRY",
       "requires": [
         "TECH_MILITARY_TRADITION",
@@ -2657,10 +2879,15 @@
         "name": "War Elephant",
         "id": "UNIT_WAR_ELEPHANT"
       },
+      "cost": 60,
+      "cityAttack": 0,
       "CIVILIZATION_KHMER": {
         "name": "Ballista Elephant",
         "id": "UNIT_KHMER_BALLISTA_ELEPHANT"
       },
+      "withdrawalProb": 0,
+      "combat": 8,
+      "cityDefense": 0,
       "id": "UNITCLASS_WAR_ELEPHANT",
       "requires": [
         "TECH_CONSTRUCTION",
@@ -2676,6 +2903,11 @@
         "name": "Panzer",
         "id": "UNIT_GERMAN_PANZER"
       },
+      "cost": 180,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 28,
+      "cityDefense": 0,
       "id": "UNITCLASS_TANK",
       "requires": [
         "TECH_INDUSTRIALISM",
@@ -2687,6 +2919,11 @@
         "name": "Modern Armor",
         "id": "UNIT_MODERN_ARMOR"
       },
+      "cost": 240,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 40,
+      "cityDefense": 0,
       "id": "UNITCLASS_MODERN_ARMOR",
       "requires": [
         "TECH_COMPOSITES",
@@ -2698,6 +2935,11 @@
         "name": "Gunship",
         "id": "UNIT_GUNSHIP"
       },
+      "cost": 160,
+      "cityAttack": 0,
+      "withdrawalProb": 25,
+      "combat": 24,
+      "cityDefense": 0,
       "id": "UNITCLASS_GUNSHIP",
       "requires": ["TECH_ADVANCED_FLIGHT"]
     },
@@ -2710,6 +2952,11 @@
         "name": "Catapult",
         "id": "UNIT_CATAPULT"
       },
+      "cost": 50,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 5,
+      "cityDefense": 0,
       "id": "UNITCLASS_CATAPULT",
       "requires": ["TECH_CONSTRUCTION"]
     },
@@ -2718,6 +2965,11 @@
         "name": "Trebuchet",
         "id": "UNIT_TREBUCHET"
       },
+      "cost": 80,
+      "cityAttack": 100,
+      "withdrawalProb": 0,
+      "combat": 4,
+      "cityDefense": 0,
       "id": "UNITCLASS_TREBUCHET",
       "requires": ["TECH_ENGINEERING"]
     },
@@ -2726,6 +2978,11 @@
         "name": "Cannon",
         "id": "UNIT_CANNON"
       },
+      "cost": 100,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 12,
+      "cityDefense": 0,
       "id": "UNITCLASS_CANNON",
       "requires": ["TECH_STEEL"]
     },
@@ -2734,6 +2991,11 @@
         "name": "Machine Gun",
         "id": "UNIT_MACHINE_GUN"
       },
+      "cost": 125,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 18,
+      "cityDefense": 0,
       "id": "UNITCLASS_MACHINE_GUN",
       "requires": ["TECH_RAILROAD"]
     },
@@ -2742,6 +3004,11 @@
         "name": "Artillery",
         "id": "UNIT_ARTILLERY"
       },
+      "cost": 150,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 18,
+      "cityDefense": 0,
       "id": "UNITCLASS_ARTILLERY",
       "requires": ["TECH_ARTILLERY"]
     },
@@ -2750,6 +3017,11 @@
         "name": "Mobile Artillery",
         "id": "UNIT_MOBILE_ARTILLERY"
       },
+      "cost": 200,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 26,
+      "cityDefense": 0,
       "id": "UNITCLASS_MOBILE_ARTILLERY",
       "requires": [
         "TECH_LASER",
@@ -2761,6 +3033,11 @@
         "name": "Work Boat",
         "id": "UNIT_WORKBOAT"
       },
+      "cost": 30,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 0,
+      "cityDefense": 0,
       "id": "UNITCLASS_WORKBOAT",
       "requires": ["TECH_FISHING"]
     },
@@ -2769,6 +3046,11 @@
         "name": "Galley",
         "id": "UNIT_GALLEY"
       },
+      "cost": 50,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 2,
+      "cityDefense": 0,
       "id": "UNITCLASS_GALLEY",
       "requires": ["TECH_SAILING"]
     },
@@ -2777,6 +3059,11 @@
         "name": "Trireme",
         "id": "UNIT_TRIREME"
       },
+      "cost": 50,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 2,
+      "cityDefense": 0,
       "id": "UNITCLASS_TRIREME",
       "requires": [
         "TECH_METAL_CASTING",
@@ -2792,6 +3079,11 @@
         "name": "Caravel",
         "id": "UNIT_CARAVEL"
       },
+      "cost": 60,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 3,
+      "cityDefense": 0,
       "id": "UNITCLASS_CARAVEL",
       "requires": ["TECH_OPTICS"]
     },
@@ -2800,10 +3092,15 @@
         "name": "Galleon",
         "id": "UNIT_GALLEON"
       },
+      "cost": 80,
+      "cityAttack": 0,
       "CIVILIZATION_NETHERLANDS": {
         "name": "East Indiaman",
         "id": "UNIT_NETHERLANDS_OOSTINDIEVAARDER"
       },
+      "withdrawalProb": 0,
+      "combat": 4,
+      "cityDefense": 0,
       "id": "UNITCLASS_GALLEON",
       "requires": ["TECH_ASTRONOMY"]
     },
@@ -2812,6 +3109,11 @@
         "name": "Privateer",
         "id": "UNIT_PRIVATEER"
       },
+      "cost": 80,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 6,
+      "cityDefense": 0,
       "id": "UNITCLASS_PRIVATEER",
       "requires": [
         "TECH_CHEMISTRY",
@@ -2823,6 +3125,11 @@
         "name": "Frigate",
         "id": "UNIT_FRIGATE"
       },
+      "cost": 90,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 8,
+      "cityDefense": 0,
       "id": "UNITCLASS_FRIGATE",
       "requires": [
         "TECH_CHEMISTRY",
@@ -2834,6 +3141,11 @@
         "name": "Ship of the Line",
         "id": "UNIT_SHIP_OF_THE_LINE"
       },
+      "cost": 120,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 8,
+      "cityDefense": 0,
       "id": "UNITCLASS_SHIP_OF_THE_LINE",
       "requires": [
         "TECH_MILITARY_SCIENCE",
@@ -2845,6 +3157,11 @@
         "name": "Ironclad",
         "id": "UNIT_IRONCLAD"
       },
+      "cost": 100,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 12,
+      "cityDefense": 0,
       "id": "UNITCLASS_IRONCLAD",
       "requires": [
         "TECH_STEEL",
@@ -2856,6 +3173,11 @@
         "name": "Transport",
         "id": "UNIT_TRANSPORT"
       },
+      "cost": 125,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 16,
+      "cityDefense": 0,
       "id": "UNITCLASS_TRANSPORT",
       "requires": ["TECH_COMBUSTION"]
     },
@@ -2864,6 +3186,11 @@
         "name": "Destroyer",
         "id": "UNIT_DESTROYER"
       },
+      "cost": 200,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 30,
+      "cityDefense": 0,
       "id": "UNITCLASS_DESTROYER",
       "requires": ["TECH_COMBUSTION"]
     },
@@ -2872,6 +3199,11 @@
         "name": "Battleship",
         "id": "UNIT_BATTLESHIP"
       },
+      "cost": 225,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 40,
+      "cityDefense": 0,
       "id": "UNITCLASS_BATTLESHIP",
       "requires": ["TECH_INDUSTRIALISM"]
     },
@@ -2880,6 +3212,11 @@
         "name": "Missile Cruiser",
         "id": "UNIT_MISSILE_CRUISER"
       },
+      "cost": 260,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 40,
+      "cityDefense": 0,
       "id": "UNITCLASS_MISSILE_CRUISER",
       "requires": ["TECH_ROBOTICS"]
     },
@@ -2888,6 +3225,11 @@
         "name": "Stealth Destroyer",
         "id": "UNIT_STEALTH_DESTROYER"
       },
+      "cost": 220,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 30,
+      "cityDefense": 0,
       "id": "UNITCLASS_STEALTH_DESTROYER",
       "requires": [
         "TECH_STEALTH",
@@ -2899,6 +3241,11 @@
         "name": "Submarine",
         "id": "UNIT_SUBMARINE"
       },
+      "cost": 150,
+      "cityAttack": 0,
+      "withdrawalProb": 50,
+      "combat": 24,
+      "cityDefense": 0,
       "id": "UNITCLASS_SUBMARINE",
       "requires": ["TECH_RADIO"]
     },
@@ -2907,6 +3254,11 @@
         "name": "Attack Submarine",
         "id": "UNIT_ATTACK_SUBMARINE"
       },
+      "cost": 200,
+      "cityAttack": 0,
+      "withdrawalProb": 50,
+      "combat": 30,
+      "cityDefense": 0,
       "id": "UNITCLASS_ATTACK_SUBMARINE",
       "requires": [
         "TECH_ROCKETRY",
@@ -2919,6 +3271,11 @@
         "name": "Carrier",
         "id": "UNIT_CARRIER"
       },
+      "cost": 175,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 16,
+      "cityDefense": 0,
       "id": "UNITCLASS_CARRIER",
       "requires": ["TECH_FLIGHT"]
     },
@@ -2927,6 +3284,11 @@
         "name": "Airship",
         "id": "UNIT_AIRSHIP"
       },
+      "cost": 80,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 0,
+      "cityDefense": 0,
       "id": "UNITCLASS_AIRSHIP",
       "requires": ["TECH_PHYSICS"]
     },
@@ -2935,6 +3297,11 @@
         "name": "Fighter",
         "id": "UNIT_FIGHTER"
       },
+      "cost": 100,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 0,
+      "cityDefense": 0,
       "id": "UNITCLASS_FIGHTER",
       "requires": ["TECH_FLIGHT"]
     },
@@ -2943,6 +3310,11 @@
         "name": "Jet Fighter",
         "id": "UNIT_JET_FIGHTER"
       },
+      "cost": 150,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 0,
+      "cityDefense": 0,
       "id": "UNITCLASS_JET_FIGHTER",
       "requires": ["TECH_ADVANCED_FLIGHT"]
     },
@@ -2951,6 +3323,11 @@
         "name": "Bomber",
         "id": "UNIT_BOMBER"
       },
+      "cost": 140,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 0,
+      "cityDefense": 0,
       "id": "UNITCLASS_BOMBER",
       "requires": [
         "TECH_RADIO",
@@ -2962,6 +3339,11 @@
         "name": "Stealth Bomber",
         "id": "UNIT_STEALTH_BOMBER"
       },
+      "cost": 200,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 0,
+      "cityDefense": 0,
       "id": "UNITCLASS_STEALTH_BOMBER",
       "requires": [
         "TECH_STEALTH",
@@ -2973,6 +3355,11 @@
         "name": "Guided Missile",
         "id": "UNIT_GUIDED_MISSILE"
       },
+      "cost": 60,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 0,
+      "cityDefense": 0,
       "id": "UNITCLASS_GUIDED_MISSILE",
       "requires": [
         "TECH_ROCKETRY",
@@ -2984,6 +3371,11 @@
         "name": "Tactical Nuke",
         "id": "UNIT_TACTICAL_NUKE"
       },
+      "cost": 250,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 0,
+      "cityDefense": 0,
       "id": "UNITCLASS_TACTICAL_NUKE",
       "requires": [
         "TECH_FISSION",
@@ -2995,6 +3387,11 @@
         "name": "ICBM",
         "id": "UNIT_ICBM"
       },
+      "cost": 500,
+      "cityAttack": 0,
+      "withdrawalProb": 0,
+      "combat": 0,
+      "cityDefense": 0,
       "id": "UNITCLASS_ICBM",
       "requires": [
         "TECH_FISSION",

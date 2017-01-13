@@ -57,7 +57,7 @@ function makeWheel(game, civilization) {
                         return className;
                     })
                     .attr("transform", function(d) {
-                        var ang = d.pos * (360 / data.displayed.length) + CIV.angleShift;
+                        var ang = d.pos * (359 / data.displayed.length) + CIV.angleShift;
                         return "rotate(" + ang +")";
                     })
                     .on("click", function(d) { });
@@ -73,7 +73,7 @@ function makeWheel(game, civilization) {
                 })
                 .attr("x2", 0)
                 .attr("y2", function(d) {
-                    return -(width / 2) + 130/* - (d.unlocks.length * 14)*/;
+                    return -(width / 2) + 250/* - (d.unlocks.length * 14)*/;
                 })
                 .style("stroke", function(d) {
                     if (d.cat === "technologies") {
@@ -91,20 +91,22 @@ function makeWheel(game, civilization) {
                         return "unitText";
                     } else if (d.cat === "buildings") {
                         return "buildingText";
+                    } else {
+                        return "blahText";
                     }
                 })
                 .attr("transform", function(d) {
                     if (d.pos > (data.displayed.length / 2)) {
                         if (d.cat === "technologies") {
-                            return "translate(-3, " + (-(width / 2) + 132) + ") rotate(90)";
+                            return "translate(-3, " + (-(width / 2) + 262) + ") rotate(90)";
                         } else {
                             return "translate(-3, " + (-(width / 2) + 132) + ") rotate(90)";
                         }
                     }
                     if (d.cat === "technologies") {
-                        return "translate(3, " + (-(width / 2) + 132) + ") rotate(270)";
+                        return "translate(3, " + (-(width / 2) + 262) + ") rotate(270)";
                     }
-                    return "translate(3, " + (-(width / 2) + 132) + ") rotate(270)";
+                    return "translate(3, " + (-(width / 2) + 262) + ") rotate(270)";
                 })
                 /*.attr("height", 25)
                 .attr("width", 25)
@@ -167,6 +169,71 @@ function makeWheel(game, civilization) {
                 })
                 .on("click", function(d) { 
                     displayDetailsBox(d, d.pos, game, CIV, data);
+                });
+
+            var outerAll = wheel.append("g")
+                .attr("class", "spokeAll");
+                
+            var outers = outerAll.selectAll(".outer")
+                    .data(data.outerDisplayed)
+                .enter().append("g")
+                    .attr("class", function(d) {
+                        var className = d.id + " outer";
+                        return className;
+                    })
+                    .attr("transform", function(d, i) {
+                        var ang = i * (359 / data.outerDisplayed.length) + 2.5;
+                        return "rotate(" + ang +")";
+                    })
+                    .on("click", function(d) { });
+
+            var outerText = outers.append("text") // Displayed item icons
+                .attr("class", function(d) {
+                    if (d.cat === "technologies") {
+                        return "techText";
+                    } else if (d.cat === "units") {
+                        return "unitText";
+                    } else if (d.cat === "buildings") {
+                        return "buildingText";
+                    } else {
+                        return "blahText";
+                    }
+                })
+                .attr("transform", function(d, i) {
+                    if (i > (data.outerDisplayed.length / 2)) {
+                        if (d.cat === "technologies") {
+                            return "translate(-3, " + (-(width / 2) + 100) + ") rotate(90)";
+                        } else {
+                            return "translate(-3, " + (-(width / 2) + 100) + ") rotate(90)";
+                        }
+                    }
+                    if (d.cat === "technologies") {
+                        return "translate(3, " + (-(width / 2) + 100) + ") rotate(270)";
+                    }
+                    return "translate(3, " + (-(width / 2) + 100) + ") rotate(270)";
+                })
+                .text(function(d) {
+                    var name;
+                    if (d.cat === "units" || d.cat === "buildings") {
+                        if (d[CIV.ilization]) {
+                            name = d[CIV.ilization].name;
+                        } else {
+                            name = d.CIVILIZATION_ALL.name;
+                        }
+                    } else {
+                        name = d.name;
+                    }
+
+                    // if (name.length > 15) {
+                    //     name = name.substring(0, 12) + "\u2026";
+                    // }
+                    return name;
+                })
+                .attr("text-anchor", function(d, i) {
+                    if (i > (data.outerDisplayed.length / 2)) {
+                        return "end";
+                    }
+                    return "start";
                 });
 
             // var unlocks = spokes.selectAll(".unlocks")
@@ -341,46 +408,46 @@ function makeWheel(game, civilization) {
                 })
                 .attr("class", "reqSquare");
                 
-            // reqSquares.append("rect")
-            //     .attr("x", -2.5)
-            //     .attr("y", -0.75)
-            //     .attr("width", 5)
-            //     .attr("height", 5)
-            //     .attr("fill", function(d) {
-            //         return CIV.color(d.pos);
-            //     });
-
-            reqSquares.append("line")
-                .attr("x1", 0)
-                .attr("y1", -3)
-                .attr("x2", 0)
-                .attr("y2", 7)
-                .attr("stroke-width", CIV.arcWidth)
-                .attr("stroke", function(d) {
-                    return CIV.color(d.pos); 
+            reqSquares.append("rect")
+                .attr("x", -2.5)
+                .attr("y", -0.75)
+                .attr("width", 5)
+                .attr("height", 5)
+                .attr("fill", function(d) {
+                    return CIV.color(d.pos);
                 });
 
-                
-            // var optCircles = reqGroup.selectAll(".optCircle")
-            //     .data(function(d) {
-            //         return d.lopt;
-            //     })
-            //     .enter().append("g")
-            //     .attr("transform", function(d) {
-            //         var ang = d.dist * (360 / data.displayed.length);
-            //         return "rotate(" + ang + ") translate(0, " + (-CIV.arcBase - 2.5 - (CIV.arcSpace * d.arcRank)) + ")";
-            //     })
-            //     .attr("class", "optCircle");
-            
-            // optCircles.append("circle")
-            //     .attr("cx", 0)
-            //     .attr("cy", 2)
-            //     .attr("r", 2.5)
-            //     .attr("stroke-width", 1)
+            // reqSquares.append("line")
+            //     .attr("x1", 0)
+            //     .attr("y1", -3)
+            //     .attr("x2", 0)
+            //     .attr("y2", 7)
+            //     .attr("stroke-width", CIV.arcWidth)
             //     .attr("stroke", function(d) {
-            //         return CIV.color(d.pos);
-            //     })
-            //     .attr("fill", "white");
+            //         return CIV.color(d.pos); 
+            //     });
+
+                
+            var optCircles = reqGroup.selectAll(".optCircle")
+                .data(function(d) {
+                    return d.lopt;
+                })
+                .enter().append("g")
+                .attr("transform", function(d) {
+                    var ang = d.dist * (360 / data.displayed.length);
+                    return "rotate(" + ang + ") translate(0, " + (-CIV.arcBase - 2.5 - (CIV.arcSpace * d.arcRank)) + ")";
+                })
+                .attr("class", "optCircle");
+            
+            optCircles.append("circle")
+                .attr("cx", 0)
+                .attr("cy", 2)
+                .attr("r", 2.5)
+                .attr("stroke-width", 1)
+                .attr("stroke", function(d) {
+                    return CIV.color(d.pos);
+                })
+                .attr("fill", "white");
 
             // Add the center image
             wheel.append("image")
