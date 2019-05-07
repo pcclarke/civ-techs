@@ -1,10 +1,10 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import logo from '../img/logo.svg';
+import '../css/App.css';
 
-function App() {
+function CivTechs() {
   return (
-    <div className="App">
+    <div className="CivTechs">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -23,4 +23,4 @@ function App() {
   );
 }
 
-export default App;
+export default CivTechs;
