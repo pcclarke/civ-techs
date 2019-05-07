@@ -1,0 +1,212 @@
+@font-face {
+    font-family: 'Goudy Trajan Regular';
+    src: url('../font/goudytrajan-regular-trial.eot');
+    src: url('../font/goudytrajan-regular-trial.eot?#iefix') format('embedded-opentype'),
+         url('../font/goudytrajan-regular-trial.woff2') format('woff2'),
+         url('../font/goudytrajan-regular-trial.woff') format('woff'),
+         url('../font/goudytrajan-regular-trial.ttf') format('truetype'),
+         url('../font/goudytrajan-regular-trial.svg#goudy_trajan_regularregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    background: #fff;
+}
+
+body {
+    font-family: "helvetica neue", Helvetica, Geneva, Tahoma, Arial, "sans-serif";
+}
+
+h1, h2 {
+    font-family: "Goudy Trajan Regular";
+    font-weight: normal;
+}
+
+h1 {
+    font-size: 3em;
+    text-align: center;
+}
+
+#container {
+    margin: 0 auto;
+    width: 1200px;
+}
+
+#intro {
+    border-bottom: 1px solid #bcbec0;
+    margin: 50px 0;
+}
+
+.col {
+    display: inline-block;
+    width: 570px;
+    padding: 10px;
+    vertical-align: top;
+}
+
+.col h3 {
+    font-size: 1em;
+    margin: 5px 0 0 0;
+}
+
+.col img {
+    vertical-align: top;
+}
+
+.col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.col ul li {
+    margin-bottom: 3px;
+}
+
+.col ul li img {
+    display: inline-block;
+}
+
+.col ul li p {
+    display: inline-block;
+    margin: 0;
+    width: 400px;
+}
+
+.selectBox {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.selectBox p {
+    margin: 3px;
+}
+
+.techImg, .unlock {
+    cursor: pointer;
+}
+
+.fade {
+    opacity: 0.05;
+    transition: all 0.5s ease;
+}
+
+.spokeLine {
+    stroke: #bcbec0;
+    stroke-width: 0.5px;
+}
+
+.lineSelected {
+    stroke: #1f1f1f;
+    stroke-width: 1.5px;
+}
+
+.lineRequired {
+    stroke: #1f1f1f;
+}
+
+.lineOptional {
+    stroke: #1f1f1f;
+}
+
+.lineLeads {
+    stroke: #1f1f1f;
+    stroke-dasharray: 15px 5px;
+}
+
+.spokeText {
+    cursor: pointer;
+    
+    font-size: 12px;
+    font-weight: normal;
+    text-transform: capitalize;
+}
+
+.textSelected {
+    fill: #fff;   
+}
+
+.spokeTextBox {
+    cursor: pointer;
+    stroke: #bcbec0;
+    fill: #fff;
+}
+
+.spokeTextBoxSelected {
+    fill: #1f1f1f;   
+}
+
+.techImg, .unlockIcon {
+    cursor: pointer;
+}
+
+.opaque {
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+
+.hidden {
+    display: none;
+}
+
+#tooltip {
+	border: 1px solid black;
+    border-radius: 6px;
+	background-color: white;
+    position: absolute;
+    width: 400px;
+    height: auto;
+    padding: 5px;
+}
+
+.desc {
+    padding-left: 10px;
+}
+
+#tipCloseButton {
+    cursor: pointer;
+}
+
+#tipKind {
+    float: left;
+    font-size: 12px;
+    font-style: italic;
+    margin: 6px 0px;
+    width: 100%;
+}
+
+#tipName {
+    float: left;
+    font-family: "Goudy Trajan Regular";
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+    width: 305px;
+}
+
+#tipImg {
+    float: left;
+    padding-right: 5px;
+    width: 45px;
+}
+
+#tipCloseButton {
+    float: right;
+}
+
+#tipPlusLine {
+    font-style: italic;
+    margin: 0;
+    padding: 0;
+}
+
+.tipSubTitle {
+    font-weight: bold;
+    padding-bottom: 0;
+}
+
+.clear {
+    clear: both;
+}
