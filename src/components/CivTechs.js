@@ -15,13 +15,13 @@ function CivTechs() {
     <div className="CivTechs">
       <div id="container">
         <div id="intro">
-            <h1 class="title">Civilization Technologies Wheel</h1>
-            <div id="leftIntro" class="col">
+            <h1 className="title">Civilization Technologies Wheel</h1>
+            <div id="leftIntro" className="col">
                 <h2>The Challenge of History</h2>
                 <p>In the Sid Meier’s Civilization series of games, the objective is to build an empire that will stand the test of time. Advances in knowledge are represented by the technology tree, a diagram that shows the progression of advances and what things they enable for the player. For example, a tank might require the technology industrialism, which requires electricity and assembly line. This tree of relationships spans the whole of human history, from agriculture to space flight.</p>
                 <p>However, representing so much history and culture in one tree has made for some very complex, albeit attractive, diagrams. The goal of this project was to make the encoding of information in the technology tree consistent, explicit, and as much as possible, condensed on to one screen. Where the trees in the other Civilization games left relationships unclear and spread out, the Technologies wheel puts it all in one place.</p>
             </div>
-            <div id="rightIntro" class="col">
+            <div id="rightIntro" className="col">
                 <h2>How to Read the Wheel</h2>
                 <p>The wheel is divided into two components, spokes and arcs:</p>
                 <h3>Spokes</h3>
@@ -41,7 +41,7 @@ function CivTechs() {
         </div>
 
         <div id="selectOptions">
-            <div class="selectBox">
+            <div className="selectBox">
                 <p>Select a Civilization Game:</p>
                 <select id="selectGame">
                     <option value="civ1">Civilization</option>
@@ -51,44 +51,44 @@ function CivTechs() {
                     <option value="civ3con">Civilization III: Conquests</option>
                     <option value="civ4">Civilization IV</option>
                     <option value="civ4war">Civilization IV: Warlords</option>
-                    <option value="civ4bts" selected="selected">Civilization IV: Beyond the Sword</option>
+                    <option value="civ4bts" defaultValue="selected">Civilization IV: Beyond the Sword</option>
                 </select>
             </div>
-            <div class="selectBox" id="selectCivBox">
+            <div className="selectBox" id="selectCivBox">
                 <p>Select a Civilization's Unique Units (and if available, buildings):</p>
                 <select id="selectCiv">
-                    <option value="CIVILIZATION_ALL" selected="selected">Common Units &amp; Buildings</option>
+                    <option value="CIVILIZATION_ALL" defaultValue="selected">Common Units &amp; Buildings</option>
                 </select>
             </div>
         </div>
 
         <div id="chart"></div>
 
-        <div id="tooltip" class="hidden">
+        <div id="tooltip" className="hidden">
             <div id="tipHead">
                 <img id="tipImg"></img>
                 <p id="tipName"></p>
                 <button id="tipCloseButton" name="reset">X</button>
                 <p id="tipKind"></p>
-                <div class="clear"></div>
+                <div className="clear"></div>
             </div>
             <div id="tipTraits">
-                <p id="tipCostLine" class="hidden">Cost: <span id="tipCost"></span> <span id="tipCostType"></span></p>
+                <p id="tipCostLine" className="hidden">Cost: <span id="tipCost"></span> <span id="tipCostType"></span></p>
             </div>
             <div id="tipReqs">
-                <p class="tipSubTitle">Requirements</p>
-                <div class="desc">
-                    <p id="tipNoLine" class="hidden">Available at game start</p>
-                    <p id="tipMandLine" class="hidden">You must have: <span id="tipMand"></span></p>
-                    <p id="tipPlusLine" class="hidden">plus</p>
-                    <p id="tipOptLine" class="hidden">You need one of: <span id="tipOpt"></span></p>
+                <p className="tipSubTitle">Requirements</p>
+                <div className="desc">
+                    <p id="tipNoLine" className="hidden">Available at game start</p>
+                    <p id="tipMandLine" className="hidden">You must have: <span id="tipMand"></span></p>
+                    <p id="tipPlusLine" className="hidden">plus</p>
+                    <p id="tipOptLine" className="hidden">You need one of: <span id="tipOpt"></span></p>
                 </div>
             </div>
-            <div id="tipLeads" class="hidden">
-                <p class="tipSubTitle">Leads to</p>
-                <div class="desc">
-                    <p id="tipMldLine" class="hidden">Must have for: <span id="tipMld"></span></p>
-                    <p id="tipOldLine" class="hidden">Optional for: <span id="tipOld"></span></p>
+            <div id="tipLeads" className="hidden">
+                <p className="tipSubTitle">Leads to</p>
+                <div className="desc">
+                    <p id="tipMldLine" className="hidden">Must have for: <span id="tipMld"></span></p>
+                    <p id="tipOldLine" className="hidden">Optional for: <span id="tipOld"></span></p>
                 </div>
             </div>
         </div>
