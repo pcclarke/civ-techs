@@ -70,6 +70,8 @@ export function setupData(data, installment, types) {
     d.unlocks = unlocksHandler;
   });
 
+  sortedData.displayed = displayed;
+
   // Label data categories
   types.forEach(function (t) {
     if (sortedData[t]) {

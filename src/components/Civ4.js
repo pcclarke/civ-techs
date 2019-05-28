@@ -1,4 +1,5 @@
 import React from 'react';
+import {orderDisplayed}  from '../libs/orderDisplayed.js';
 import {setupData} from '../libs/setupData.js';
 
 import civ4Data from '../data/civ4.json';
@@ -12,7 +13,8 @@ function Civ4(props) {
     margin,
   } = props;
 
-  const orderedData = setupData(civ4Data, installment, dataTypes);
+  const sortedData = setupData(civ4Data, installment, dataTypes);
+  const orderedData = orderDisplayed(sortedData, installment);
 
   return (
     <svg
