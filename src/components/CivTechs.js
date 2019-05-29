@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
 import {scaleOrdinal as d3_scaleOrdinal} from 'd3-scale';
 import {schemeCategory10 as d3_schemeCategory10} from 'd3-scale-chromatic';
 
 import Civ4 from './Civ4.js';
+import {orderDisplayed}  from '../libs/orderDisplayed.js';
+import {setupArcs} from '../libs/setupArcs.js';
+import {setupData} from '../libs/setupData.js';
 
 import arc from '../img/arc.gif';
 import arcCircle from '../img/arc_circle.gif';
@@ -15,7 +18,7 @@ import spoke from '../img/spoke.gif';
 
 import '../css/CivTechs.css';
 
-
+import civ4Data from '../data/civ4.json';
 
 function CivTechs() {
   let arcSpace = 18;
@@ -80,6 +83,11 @@ function CivTechs() {
     empire = event.target.value;
   };
 
+  const sortedData = setupData(civ4Data, installment, dataTypes);
+  const orderedData = orderDisplayed(sortedData, installment);
+  const arcData = setupArcs(sortedData);
+  console.log(arcData);
+
   return (
     <div className='CivTechs'>
       <div id='container'>
@@ -128,6 +136,7 @@ function CivTechs() {
               <p>Select a Civilization's Unique Units (and if available, buildings):</p>
               <select id='selectCiv' onChange={selectEmpire}>
                 <option value='CIVILIZATION_ALL' defaultValue='selected'>Common Units &amp; Buildings</option>
+                {arcData.civilizations.map((c, i) => (<option key={`empire-${i}`} value={c.id}>{c.name}</option>))}
               </select>
             </div>
           }
