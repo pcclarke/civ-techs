@@ -8,6 +8,7 @@ function Civ4(props) {
     arcBase,
     arcSpace,
     data,
+    game,
     width,
     height,
     margin,
@@ -52,6 +53,15 @@ function Civ4(props) {
                     y2={-(width / 2) + 160 - (d.unlocks.length * 14)}
                   >
                   </line>
+                  <image
+                    className='techImg'
+                    transform={(() => (d.pos > (data.displayed.length / 2)) ?
+                      `translate(10, ${(-(width / 2) + 157)}) rotate(90)` :
+                      `translate(-10, ${(-(width / 2) + 182)}) rotate(270)`)()}
+                    height={25}
+                    width={25}
+                    xlinkHref={`/${game}/img/${d.cat}/${d.id}.png`}
+                  />
                 </g>
               ))
             }

@@ -52,7 +52,7 @@ function CivTechs() {
     width = defaults.width - margin.left - margin.right,
     height = defaults.width - margin.top - margin.bottom;
 
-  const [game, setGame] = useState('civ4bts');
+  const [game, setGame] = useState('civ4');
 
   // const selectGame = () => {
   //   // d3.selectAll('.civWheel').remove();
@@ -148,6 +148,7 @@ function CivTechs() {
             arcBase={defaults.arcBase}
             arcSpace={defaults.arcSpace}
             data={arcData}
+            game={game}
             margin={margin}
             width={width}
             height={height}
