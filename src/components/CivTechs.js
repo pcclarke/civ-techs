@@ -85,7 +85,7 @@ function CivTechs() {
 
   const sortedData = setupData(civ4Data, installment, dataTypes);
   const orderedData = orderDisplayed(sortedData, installment);
-  const arcData = setupArcs(sortedData);
+  const arcData = setupArcs(orderedData);
   console.log(arcData);
 
   return (
@@ -144,8 +144,10 @@ function CivTechs() {
 
         <div id='chart'>
           <Civ4
-            dataTypes={dataTypes}
-            installment={installment}
+            angleShift={defaults.angleShift}
+            arcBase={defaults.arcBase}
+            arcSpace={defaults.arcSpace}
+            data={arcData}
             margin={margin}
             width={width}
             height={height}
