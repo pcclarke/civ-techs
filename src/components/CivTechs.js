@@ -1,8 +1,5 @@
 import React, {useState} from 'react';
 
-import {scaleOrdinal as d3_scaleOrdinal} from 'd3-scale';
-import {schemeCategory10 as d3_schemeCategory10} from 'd3-scale-chromatic';
-
 import Civ4 from './Civ4.js';
 import {orderDisplayed}  from '../libs/orderDisplayed.js';
 import {setupArcs} from '../libs/setupArcs.js';
@@ -39,7 +36,6 @@ function CivTechs() {
     arcBase: 100,
     arcSpace: 14,
     arcWidth: 1.5,
-    color: d3_scaleOrdinal(d3_schemeCategory10),
     coords: [0, 0],
     game: 'civ4bts',
     ilization: 'CIVILIZATION_ALL',
@@ -147,6 +143,7 @@ function CivTechs() {
             angleShift={defaults.angleShift}
             arcBase={defaults.arcBase}
             arcSpace={defaults.arcSpace}
+            arcWidth={defaults.arcWidth}
             data={arcData}
             game={game}
             margin={margin}

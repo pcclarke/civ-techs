@@ -1,5 +1,9 @@
 import React from 'react';
 
+import {scaleOrdinal as d3_scaleOrdinal} from 'd3-scale';
+import {arc as d3_arc} from 'd3-shape';
+import {schemeCategory10 as d3_schemeCategory10} from 'd3-scale-chromatic';
+
 import startSlice from '../img/startSlice.png';
 
 function Civ4(props) {
@@ -7,6 +11,7 @@ function Civ4(props) {
     angleShift,
     arcBase,
     arcSpace,
+    arcWidth,
     data,
     game,
     width,
@@ -15,6 +20,18 @@ function Civ4(props) {
   } = props;
 
   console.log(data.displayed);
+
+  const color = d3_scaleOrdinal(d3_schemeCategory10);
+
+  const unlockArc = d3_arc()
+    .innerRadius((d) => arcBase + 342.5 + (14 * d.rank))
+    .outerRadius((d) => (arcBase + 342.6 + arcWidth) + (14 * d.rank))
+    .startAngle((d) => {
+      console.log(d);
+      console.log(d.arcBack);
+      return -1 * d.arcBack
+    })
+    .endAngle((d) => d.arcEnd);
 
   return (
     <svg
@@ -51,8 +68,7 @@ function Civ4(props) {
                     y1={(!d.requires && !d.optional) ? 0 : -(arcBase + (arcSpace * d.spokeRank))}
                     x2={0}
                     y2={-(width / 2) + 160 - (d.unlocks.length * 14)}
-                  >
-                  </line>
+                  />
                   <image
                     className='techImg'
                     transform={(() => (d.pos > (data.displayed.length / 2)) ?
@@ -62,6 +78,25 @@ function Civ4(props) {
                     width={25}
                     xlinkHref={`/${game}/img/${d.cat}/${d.id}.png`}
                   />
+                  {
+                    d.unlocks.map((u, i) => {
+                      if (u.lreq) {
+                        return (
+                          <g
+                            className={`unlock opaque ${u.ref.id}${u.pos}`}
+                            key={`unlock-${i}`}
+                          >
+                            <path
+                              className='unlockArc'
+                              rank={u.rank}
+                              fill={color(u.pos)}
+                              d={unlockArc(u)}
+                            />
+                          </g>
+                        );
+                      }
+                    })
+                  }
                 </g>
               ))
             }
