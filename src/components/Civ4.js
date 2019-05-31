@@ -13,6 +13,7 @@ function Civ4(props) {
     arcSpace,
     arcWidth,
     data,
+    empire,
     game,
     width,
     height,
@@ -26,11 +27,7 @@ function Civ4(props) {
   const unlockArc = d3_arc()
     .innerRadius((d) => arcBase + 342.5 + (14 * d.rank))
     .outerRadius((d) => (arcBase + 342.6 + arcWidth) + (14 * d.rank))
-    .startAngle((d) => {
-      console.log(d);
-      console.log(d.arcBack);
-      return -1 * d.arcBack
-    })
+    .startAngle((d) => -1 * d.arcBack)
     .endAngle((d) => d.arcEnd);
 
   return (
@@ -71,32 +68,65 @@ function Civ4(props) {
                   />
                   <image
                     className='techImg'
+                    height={25}
+                    width={25}
                     transform={(() => (d.pos > (data.displayed.length / 2)) ?
                       `translate(10, ${(-(width / 2) + 157)}) rotate(90)` :
                       `translate(-10, ${(-(width / 2) + 182)}) rotate(270)`)()}
-                    height={25}
-                    width={25}
                     xlinkHref={`/${game}/img/${d.cat}/${d.id}.png`}
                   />
-                  {
-                    d.unlocks.map((u, i) => {
-                      if (u.lreq) {
-                        return (
-                          <g
-                            className={`unlock opaque ${u.ref.id}${u.pos}`}
-                            key={`unlock-${i}`}
-                          >
-                            <path
-                              className='unlockArc'
-                              rank={u.rank}
-                              fill={color(u.pos)}
-                              d={unlockArc(u)}
-                            />
-                          </g>
-                        );
+                  {d.unlocks.map((u, j) => (
+                    <g key={`unlock-${j}`}>
+                      {u.lreq &&
+                        <g className={`unlock opaque ${u.ref.id}${u.pos}`}>
+                          <path
+                            className='unlockArc'
+                            rank={u.rank}
+                            fill={color(u.pos)}
+                            d={unlockArc(u)}
+                          />
+                          {u.lreq.map((l, k) => (
+                            <g
+                              className='unlockSquare'
+                              key={`unlock-square-${k}`}
+                              transform={`rotate(${l.dist * (360 / data.displayed.length)}) translate(0, ${(-(width/2) + 145 - (14 * l.arcRank))})`}
+                            >
+                              <rect
+                                x={-2.5}
+                                y={-0.75}
+                                width={5}
+                                height={5}
+                                fill={color(l.pos)}
+                              />
+                            </g>
+                          ))}
+                        </g>
                       }
-                    })
-                  }
+                      <image
+                        className='unlockIcon'
+                        height={13}
+                        transform={(() => (u.pos > (data.displayed.length / 2)) ?
+                          `translate(6, ${(-(width / 2) + (142 - (14 * u.rank)))}) rotate(90)` :
+                          `translate(-6, ${(-(width / 2) + (153 - (14 * u.rank)))}) rotate(270)`)()}
+                        width={13}
+                        xlinkHref={(() => {
+                          let link;
+                          if ((u.ref.cat === 'units' || u.ref.cat === 'buildings') &&
+                              !(game === 'civ1' || game === 'civ2')) {
+                              if (u.ref[empire]) {
+                                  link = `${game}/img/${u.ref.cat}/${u.ref[empire].id}.png`;
+                              } else {
+                                  link = `${game}/img/${u.ref.cat}/${u.ref.CIVILIZATION_ALL.id}.png`;
+                              }
+                          } else {
+                              link = `${game}/img/${u.ref.cat}/${u.ref.id}.png`;
+                          }
+
+                          return link;
+                        })()}
+                      />
+                    </g>
+                  ))}
                 </g>
               ))
             }
