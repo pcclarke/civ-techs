@@ -1,4 +1,8 @@
 import React, {useState} from 'react';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 import Wheel from './Wheel.js';
 import {orderDisplayed}  from '../libs/orderDisplayed.js';
@@ -98,32 +102,43 @@ function CivTechs() {
 
         <div id='selectOptions'>
           <div className='selectBox'>
-            <p>Select a Civilization Game:</p>
-            <select
-              id='selectGame'
-              onChange={(event) => setGame(event.target.value)}
-              value={game}
-            >
-              <option value='civ1'>Civilization</option>
-              <option value='civ2'>Civilization II</option>
-              <option value='civ3'>Civilization III</option>
-              <option value='civ3ptw'>Civilization III: Play the World</option>
-              <option value='civ3con'>Civilization III: Conquests</option>
-              <option value='civ4'>Civilization IV</option>
-              <option value='civ4war'>Civilization IV: Warlords</option>
-              <option value='civ4bts'>Civilization IV: Beyond the Sword</option>
-            </select>
+            <FormControl className='selectGame'>
+              <InputLabel htmlFor='civ-game'>Game</InputLabel>
+              <Select
+                inputProps={{
+                  name: 'game',
+                  id: 'civ-game',
+                }}
+                onChange={(event) => setGame(event.target.value)}
+                value={game}
+              >
+                <MenuItem value='civ1'>Civilization</MenuItem>
+                <MenuItem value='civ2'>Civilization II</MenuItem>
+                <MenuItem value='civ3'>Civilization III</MenuItem>
+                <MenuItem value='civ3ptw'>Civilization III: Play the World</MenuItem>
+                <MenuItem value='civ3con'>Civilization III: Conquests</MenuItem>
+                <MenuItem value='civ4'>Civilization IV</MenuItem>
+                <MenuItem value='civ4war'>Civilization IV: Warlords</MenuItem>
+                <MenuItem value='civ4bts'>Civilization IV: Beyond the Sword</MenuItem>
+              </Select>
+            </FormControl>
           </div>
           {(+(game[3]) >= 3) &&
             <div className='selectBox' id='selectCivBox'>
-              <p>Select a Civilization's Unique Units (and if available, buildings):</p>
-              <select
-                id='selectCiv'
-                onChange={(event) => setEmpire(event.target.value)}
-              >
-                <option value='CIVILIZATION_ALL' defaultValue='selected'>Common Units &amp; Buildings</option>
-                {arcData.civilizations.map((c, i) => (<option key={`empire-${i}`} value={c.id}>{c.name}</option>))}
-              </select>
+              <FormControl className='selectEmpire'>
+                <InputLabel htmlFor='civ-empire'>Empire</InputLabel>
+                <Select
+                  inputProps={{
+                    name: 'empire',
+                    id: 'civ-empire',
+                  }}
+                  onChange={(event) => setEmpire(event.target.value)}
+                  value={empire}
+                >
+                  <MenuItem value='CIVILIZATION_ALL'>Common Units &amp; Buildings</MenuItem>
+                  {arcData.civilizations.map((c, i) => (<MenuItem key={`empire-${i}`} value={c.id}>{c.name}</MenuItem>))}
+                </Select>
+              </FormControl>
             </div>
           }
         </div>
