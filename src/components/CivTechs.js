@@ -25,7 +25,6 @@ import civ4WarData from '../data/civ4war.json';
 import civ4BtsData from '../data/civ4bts.json';
 
 function CivTechs() {
-  let empire = 'CIVILIZATION_ALL';
   const dataTypes = [
     'units',
     'buildings',
@@ -62,10 +61,7 @@ function CivTechs() {
     height = defaults.width - margin.top - margin.bottom;
 
   const [game, setGame] = useState('civ4');
-
-  const selectEmpire = (event) => {
-    empire = event.target.value;
-  };
+  const [empire, setEmpire] = useState('CIVILIZATION_ALL');
 
   const sortedData = setupData(data[game], +(game[3]), dataTypes);
   const orderedData = orderDisplayed(sortedData, +(game[3]));
@@ -121,7 +117,10 @@ function CivTechs() {
           {(+(game[3]) >= 3) &&
             <div className='selectBox' id='selectCivBox'>
               <p>Select a Civilization's Unique Units (and if available, buildings):</p>
-              <select id='selectCiv' onChange={selectEmpire}>
+              <select
+                id='selectCiv'
+                onChange={(event) => setEmpire(event.target.value)}
+              >
                 <option value='CIVILIZATION_ALL' defaultValue='selected'>Common Units &amp; Buildings</option>
                 {arcData.civilizations.map((c, i) => (<option key={`empire-${i}`} value={c.id}>{c.name}</option>))}
               </select>

@@ -20,8 +20,6 @@ function Wheel(props) {
     margin,
   } = props;
 
-  console.log(data.displayed);
-
   const color = d3_scaleOrdinal(d3_schemeCategory10);
 
   const arc = d3_arc()
