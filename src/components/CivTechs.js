@@ -34,7 +34,6 @@ function CivTechs() {
 
   const defaults = {
     arcBase: 100,
-    arcSpace: 14,
     arcWidth: 1.5,
     coords: [0, 0],
     game: 'civ4bts',
@@ -142,9 +141,10 @@ function CivTechs() {
           <Civ4
             angleShift={defaults.angleShift}
             arcBase={defaults.arcBase}
-            arcSpace={defaults.arcSpace}
+            arcSpace={arcSpace}
             arcWidth={defaults.arcWidth}
             data={arcData}
+            empire={empire}
             game={game}
             margin={margin}
             width={width}

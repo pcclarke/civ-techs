@@ -24,6 +24,12 @@ function Civ4(props) {
 
   const color = d3_scaleOrdinal(d3_schemeCategory10);
 
+  const arc = d3_arc()
+    .innerRadius((d) => arcBase + (arcSpace * d.arcRank))
+    .outerRadius((d) => (arcBase + arcWidth) + (arcSpace * d.arcRank))
+    .startAngle((d) => -1 * d.arcBack)
+    .endAngle((d) => d.arcDist);
+
   const unlockArc = d3_arc()
     .innerRadius((d) => arcBase + 342.5 + (14 * d.rank))
     .outerRadius((d) => (arcBase + 342.6 + arcWidth) + (14 * d.rank))
@@ -131,6 +137,76 @@ function Civ4(props) {
               ))
             }
           </g>
+
+          <g className='reqArcs'>
+            {data.displayed.map((d, i) => (
+              <g
+                className={`${d.id} reqGroup`}
+                key={`req-arcs-${i}`}
+                transform={`rotate(${d.pos * (360 / data.displayed.length) + angleShift})`}
+              >
+                <path
+                  className='spokeArc'
+                  d={arc(d)}
+                  fill={color(d.pos)}
+                />
+                <line
+                  className='spokePin'
+                  x1={0}
+                  y1={-(arcBase + 7 + (arcSpace * d.arcRank))}
+                  x2={0}
+                  y2={-(arcBase - 5 + (arcSpace * d.arcRank))}
+                  strokeWidth={arcWidth}
+                  stroke={color(d.pos)}
+                />
+                {d.lreq.map((r, j) => (
+                  <g
+                    className='reqSquare'
+                    key={`req-square-${j}`}
+                    transform={(() => {
+                      const ang = r.dist * (360 / data.displayed.length);
+                      return `rotate(${ang}) translate(0, ${(-arcBase - 2.5 - (arcSpace * r.arcRank))})`;
+                    })()}
+                  >
+                    <rect
+                      x={-2.5}
+                      y={-0.75}
+                      width={5}
+                      height={5}
+                      fill={color(r.pos)}
+                    />
+                  </g>
+                ))}
+                {d.lopt.map((o, j) => (
+                  <g
+                    className='optCircle'
+                    key={`opt-circle-${j}`}
+                    transform={(() => {
+                      const ang = o.dist * (360 / data.displayed.length);
+                      return `rotate(${ang}) translate(0, ${(-arcBase - 2.5 - (arcSpace * d.arcRank))})`;
+                    })()}
+                  >
+                    <circle
+                      cx={0}
+                      cy={2}
+                      r={2.5}
+                      strokeWidth={1}
+                      stroke={color(o.pos)}
+                      fill='white'
+                    />
+                  </g>
+                ))}
+              </g>
+            ))}
+          </g>
+
+          <image
+            x={-75}
+            y={-75}
+            width={150}
+            height={150}
+            xlinkHref={`${game}/img/${game}-center.png`}
+          />
         </g>
       </g>
     </svg>
