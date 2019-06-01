@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import Civ4 from './Civ4.js';
+import Wheel from './Wheel.js';
 import {orderDisplayed}  from '../libs/orderDisplayed.js';
 import {setupArcs} from '../libs/setupArcs.js';
 import {setupData} from '../libs/setupData.js';
@@ -15,12 +15,17 @@ import spoke from '../img/spoke.gif';
 
 import '../css/CivTechs.css';
 
+import civ1Data from '../data/civ1.json';
+import civ2Data from '../data/civ2.json';
+import civ3Data from '../data/civ3.json';
+import civ3PtwData from '../data/civ3ptw.json';
+import civ3ConData from '../data/civ3con.json';
 import civ4Data from '../data/civ4.json';
+import civ4WarData from '../data/civ4war.json';
+import civ4BtsData from '../data/civ4bts.json';
 
 function CivTechs() {
-  let arcSpace = 18;
   let empire = 'CIVILIZATION_ALL';
-  let installment = 4;
   const dataTypes = [
     'units',
     'buildings',
@@ -36,11 +41,20 @@ function CivTechs() {
     arcBase: 100,
     arcWidth: 1.5,
     coords: [0, 0],
-    game: 'civ4bts',
-    ilization: 'CIVILIZATION_ALL',
     width: 1200,
     height: 1200,
     angleShift: 2
+  };
+
+  const data = {
+    civ1: civ1Data,
+    civ2: civ2Data,
+    civ3: civ3Data,
+    civ3ptw: civ3PtwData,
+    civ3con: civ3ConData,
+    civ4: civ4Data,
+    civ4war: civ4WarData,
+    civ4bts: civ4BtsData,
   };
 
   const margin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -49,39 +63,13 @@ function CivTechs() {
 
   const [game, setGame] = useState('civ4');
 
-  // const selectGame = () => {
-  //   // d3.selectAll('.civWheel').remove();
-  //   // d3.select('#tooltip').classed('hidden', true);
-
-  //   selectedCivilization = 'CIVILIZATION_ALL';
-  //   document.getElementById('selectCiv').value = CIV.ilization;
-
-  //   var selectCiv = document.getElementById('selectCiv');
-  //   // selectCiv.options.length = 1;
-
-  //   makeGame(this);
-  // }
-  const selectGame = (event) => {
-    setGame(event.target.value);
-    installment = +(game[3]);
-
-    if (installment < 4) {
-        arcSpace = 16;
-    } else {
-        arcSpace = 18;
-    }
-
-    // makeWheel(CIV.game);
-  };
-
   const selectEmpire = (event) => {
     empire = event.target.value;
   };
 
-  const sortedData = setupData(civ4Data, installment, dataTypes);
-  const orderedData = orderDisplayed(sortedData, installment);
+  const sortedData = setupData(data[game], +(game[3]), dataTypes);
+  const orderedData = orderDisplayed(sortedData, +(game[3]));
   const arcData = setupArcs(orderedData);
-  console.log(arcData);
 
   return (
     <div className='CivTechs'>
@@ -115,7 +103,11 @@ function CivTechs() {
         <div id='selectOptions'>
           <div className='selectBox'>
             <p>Select a Civilization Game:</p>
-            <select id='selectGame' onChange={selectGame}>
+            <select
+              id='selectGame'
+              onChange={(event) => setGame(event.target.value)}
+              value={game}
+            >
               <option value='civ1'>Civilization</option>
               <option value='civ2'>Civilization II</option>
               <option value='civ3'>Civilization III</option>
@@ -123,10 +115,10 @@ function CivTechs() {
               <option value='civ3con'>Civilization III: Conquests</option>
               <option value='civ4'>Civilization IV</option>
               <option value='civ4war'>Civilization IV: Warlords</option>
-              <option value='civ4bts' defaultValue='selected'>Civilization IV: Beyond the Sword</option>
+              <option value='civ4bts'>Civilization IV: Beyond the Sword</option>
             </select>
           </div>
-          {((+(game[3])) >= 3) &&
+          {(+(game[3]) >= 3) &&
             <div className='selectBox' id='selectCivBox'>
               <p>Select a Civilization's Unique Units (and if available, buildings):</p>
               <select id='selectCiv' onChange={selectEmpire}>
@@ -138,10 +130,10 @@ function CivTechs() {
         </div>
 
         <div id='chart'>
-          <Civ4
+          <Wheel
             angleShift={defaults.angleShift}
             arcBase={defaults.arcBase}
-            arcSpace={arcSpace}
+            arcSpace={(+(game[3]) < 4) ? 16 : 18}
             arcWidth={defaults.arcWidth}
             data={arcData}
             empire={empire}
