@@ -26,6 +26,7 @@ function Wheel(props) {
 
   const [notFaded, setNotFaded] = useState([]);
   const [tempArcs, setTempArcs] = useState([]);
+  const [notUnlockFaded, setNotUnlockFaded] = useState(null);
 
   const color = d3_scaleOrdinal(d3_schemeCategory10);
 
@@ -133,7 +134,6 @@ function Wheel(props) {
 
     setNotFaded(updateNotFaded);
     setTempArcs(updateTempArcs);
-
   };
 
   const setFade = (d) => {
@@ -146,6 +146,20 @@ function Wheel(props) {
     }
 
     return '';
+  }
+
+  const updateUnlockFade = (u) => {
+    if (u) {
+      setNotUnlockFaded(u);
+    } else {
+      setNotUnlockFaded(null);
+    }
+  }
+
+  const setUnlockFade = (u) => {
+    if (notUnlockFaded) {
+      return (u === notUnlockFaded) ? '' : 'fade';
+    }
   }
 
   return (
@@ -277,7 +291,7 @@ function Wheel(props) {
                   {d.unlocks.map((u, j) => (
                     <g key={`unlock-${j}`}>
                       {u.lreq &&
-                        <g className={`unlock opaque ${u.ref.id}${u.pos}`}>
+                        <g className={`unlock ${(notUnlockFaded === u.ref.id) ? '' : 'opaque'} ${u.ref.id}${u.pos}`}>
                           <path
                             className='unlockArc'
                             rank={u.rank}
@@ -302,8 +316,10 @@ function Wheel(props) {
                         </g>
                       }
                       <image
-                        className={`unlockIcon ${setFade(d)}`}
+                        className={`unlockIcon ${setFade(d)} ${setUnlockFade(u.ref.id)}`}
                         height={13}
+                        onMouseLeave={() => updateUnlockFade()}
+                        onMouseOver={() => updateUnlockFade(u.ref.id)}
                         transform={(() => (u.pos > (data.displayed.length / 2)) ?
                           `translate(6, ${(-(width / 2) + (142 - (14 * u.rank)))}) rotate(90)` :
                           `translate(-6, ${(-(width / 2) + (153 - (14 * u.rank)))}) rotate(270)`)()}
