@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
 
-import {find} from 'lodash';
-
 import {getLeadsTo, getTechPrereqs} from '../libs/dataTools.js';
 
 import {scaleOrdinal as d3_scaleOrdinal} from 'd3-scale';

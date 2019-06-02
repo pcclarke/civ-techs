@@ -12,15 +12,15 @@ export function setupArcs(data) {
   let arcDists = []; // list of recent arcRanks
   let leadsReq;
   let leadsOpt;
-  let minArcDist;
+  // let minArcDist;
   let maxArcDist;
 
   // Add in the displayed into their prerequisites so that the arcs can be set up
   arcData.displayed.forEach((d, i) => {
     let rekked = []; // copy leads to required displayed
     let opted = []; // copy leads to optional displayed
-    let obsoleted = [];
-    minArcDist = 0;
+    // let obsoleted = [];
+    // minArcDist = 0;
     maxArcDist = 0;
     leadsReq = getLeadsToReq(d, arcData.displayed);
     leadsOpt = getLeadsToOpt(d, arcData.displayed);
