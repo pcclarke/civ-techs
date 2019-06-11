@@ -1,5 +1,9 @@
 import React, {useState} from 'react';
 
+import {makeStyles} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Modal from '@material-ui/core/Modal';
+
 import {getLeadsTo, getTechPrereqs} from '../libs/dataTools.js';
 
 import {scaleOrdinal as d3_scaleOrdinal} from 'd3-scale';
@@ -7,6 +11,32 @@ import {arc as d3_arc} from 'd3-shape';
 import {schemeCategory10 as d3_schemeCategory10} from 'd3-scale-chromatic';
 
 import startSlice from '../img/startSlice.png';
+
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(4),
+    outline: 'none',
+  },
+}));
 
 function Wheel(props) {
   const {
@@ -25,6 +55,8 @@ function Wheel(props) {
   const [notFaded, setNotFaded] = useState([]);
   const [tempArcs, setTempArcs] = useState([]);
   const [notUnlockFaded, setNotUnlockFaded] = useState(null);
+  const [displayModal, setDisplayModal] = React.useState(false);
+  const [modalInfo, setModalInfo] = React.useState({});
 
   const color = d3_scaleOrdinal(d3_schemeCategory10);
 
@@ -160,70 +192,243 @@ function Wheel(props) {
     }
   }
 
+  const [modalStyle] = React.useState(getModalStyle);
+
+  const classes = useStyles();
+
+  function displayUnlockModal(unlock) {
+    console.log(unlock);
+    if (unlock.ref.name) {
+      setModalInfo({
+        title: unlock.ref.name,
+      });
+    } else {
+      setModalInfo({
+        title: unlock.ref[empire].name,
+      });
+    }
+
+    setDisplayModal(true);
+    console.log(modalInfo);
+  }
+
   return (
-    <svg
-      width={width + margin.left + margin.right}
-      height={height + margin.top + margin.bottom}
-    >
-      <g
-        className='civTechs'
-        transform={`translate(${margin.left}, ${margin.top})`}
+    <div>
+      <svg
+        width={width + margin.left + margin.right}
+        height={height + margin.top + margin.bottom}
       >
         <g
-          className='wheel'
-          transform={`translate(${width / 2}, ${height / 2})`}
+          className='civTechs'
+          transform={`translate(${margin.left}, ${margin.top})`}
         >
-          <image
-            id='startSlice'
-            x={0}
-            y={-(height/2)}
-            width={167}
-            height={height/2}
-            xlinkHref={startSlice}
-          />
-          {(notFaded.length > 0 && tempArcs.length > 0) &&
-            <g className='tempArcs'>
-              {tempArcs.map((t, i) => (
+          <g
+            className='wheel'
+            transform={`translate(${width / 2}, ${height / 2})`}
+          >
+            <image
+              id='startSlice'
+              x={0}
+              y={-(height/2)}
+              width={167}
+              height={height/2}
+              xlinkHref={startSlice}
+            />
+            {(notFaded.length > 0 && tempArcs.length > 0) &&
+              <g className='tempArcs'>
+                {tempArcs.map((t, i) => (
+                  <g
+                    className='temp-spokes'
+                    key={`temp-spokes-${i}`}
+                    transform={`rotate(${t.pos * (360 / data.displayed.length) + angleShift})`}
+                  >
+                    <line
+                      className='spokeLine'
+                      x1={0}
+                      y1={-(arcBase + (arcSpace * t.spokeRank))}
+                      x2={0}
+                      y2={-(width / 2) + 160 - (t.unlocks.length * 14)}
+                    />
+                  </g>
+                ))}
+                {tempArcs.filter((t) => t.lopt.length > 0 || t.lreq.length > 0).map((t, i) => (
+                  <g
+                    className='tempGroup'
+                    key={`temp-arcs-${i}`}
+                    transform={`rotate(${t.pos * (360 / data.displayed.length) + angleShift})`}
+                  >
+                    <path
+                      className='tempArc'
+                      d={arc(t)}
+                      fill={color(t.pos)}
+                    />
+                    <line
+                      className='tempSpokePin'
+                      x1={0}
+                      y1={-(arcBase + 7 + (arcSpace * t.arcRank))}
+                      x2={0}
+                      y2={-(arcBase - 5 + (arcSpace * t.arcRank))}
+                      strokeWidth={arcWidth}
+                      stroke={color(t.pos)}
+                    />
+                   {t.lreq.map((r, j) => (
+                      <g
+                        className='tempReqSquare'
+                        key={`req-square-${j}`}
+                        transform={(() => {
+                          const ang = r.dist * (360 / data.displayed.length);
+                          return `rotate(${ang}) translate(0, ${(-arcBase - 2.5 - (arcSpace * r.arcRank))})`;
+                        })()}
+                      >
+                        <rect
+                          x={-2.5}
+                          y={-0.75}
+                          width={5}
+                          height={5}
+                          fill={color(r.pos)}
+                        />
+                      </g>
+                    ))}
+                    {t.lopt.map((o, j) => (
+                      <g
+                        className='optCircle'
+                        key={`opt-circle-${j}`}
+                        transform={(() => {
+                          const ang = o.dist * (360 / data.displayed.length);
+                          return `rotate(${ang}) translate(0, ${(-arcBase - 2.5 - (arcSpace * o.arcRank))})`;
+                        })()}
+                      >
+                        <circle
+                          cx={0}
+                          cy={2}
+                          r={2.5}
+                          strokeWidth={1}
+                          stroke={color(o.pos)}
+                          fill='white'
+                        />
+                      </g>
+                    ))}
+                  </g>
+                ))}
+              </g>
+            }
+
+            <g className='spokeAll'>
+              {
+                data.displayed.map((d, i) => (
+                  <g
+                    className={`${d.id} spoke`}
+                    key={`spoke-${i}`}
+                    transform={`rotate(${d.pos * (360 / data.displayed.length) + angleShift})`}
+                  >
+                    <line
+                      className={`spokeLine ${(notFaded.length > 0) ? 'fade' : ''}`}
+                      x1={0}
+                      y1={(!d.requires && !d.optional) ? 0 : -(arcBase + (arcSpace * d.spokeRank))}
+                      x2={0}
+                      y2={-(width / 2) + 160 - (d.unlocks.length * 14)}
+                    />
+                    <image
+                      className={`techImg ${setFade(d)}`}
+                      height={25}
+                      onMouseLeave={() => setNotFaded([])}
+                      onMouseOver={() => updateDataFade(d)}
+                      transform={(() => (d.pos > (data.displayed.length / 2)) ?
+                        `translate(10, ${(-(width / 2) + 157)}) rotate(90)` :
+                        `translate(-10, ${(-(width / 2) + 182)}) rotate(270)`)()}
+                      width={25}
+                      xlinkHref={`/${game}/${d.cat}/${d.id}.png`}
+                    />
+                    {d.unlocks.map((u, j) => (
+                      <g key={`unlock-${j}`}>
+                        {u.lreq &&
+                          <g className={`unlock ${(notUnlockFaded === u.ref.id) ? '' : 'opaque'} ${u.ref.id}${u.pos}`}>
+                            <path
+                              className='unlockArc'
+                              rank={u.rank}
+                              fill={color(u.pos)}
+                              d={unlockArc(u)}
+                            />
+                            {u.lreq.map((l, k) => (
+                              <g
+                                className='unlockSquare'
+                                key={`unlock-square-${k}`}
+                                transform={`rotate(${l.dist * (360 / data.displayed.length)}) translate(0, ${(-(width/2) + 145 - (14 * l.arcRank))})`}
+                              >
+                                <rect
+                                  x={-2.5}
+                                  y={-0.75}
+                                  width={5}
+                                  height={5}
+                                  fill={color(l.pos)}
+                                />
+                              </g>
+                            ))}
+                          </g>
+                        }
+                        <image
+                          className={`unlockIcon ${setFade(d)} ${setUnlockFade(u.ref.id)}`}
+                          height={13}
+                          onClick={() => displayUnlockModal(u)}
+                          onMouseLeave={() => updateUnlockFade()}
+                          onMouseOver={() => updateUnlockFade(u.ref.id)}
+                          transform={(() => (u.pos > (data.displayed.length / 2)) ?
+                            `translate(6, ${(-(width / 2) + (142 - (14 * u.rank)))}) rotate(90)` :
+                            `translate(-6, ${(-(width / 2) + (153 - (14 * u.rank)))}) rotate(270)`)()}
+                          width={13}
+                          xlinkHref={(() => {
+                            let link;
+                            if ((u.ref.cat === 'units' || u.ref.cat === 'buildings') &&
+                                !(game === 'civ1' || game === 'civ2')) {
+                                if (u.ref[empire]) {
+                                    link = `${game}/${u.ref.cat}/${u.ref[empire].id}.png`;
+                                } else {
+                                    link = `${game}/${u.ref.cat}/${u.ref.CIVILIZATION_ALL.id}.png`;
+                                }
+                            } else {
+                                link = `${game}/${u.ref.cat}/${u.ref.id}.png`;
+                            }
+
+                            return link;
+                          })()}
+                        />
+                      </g>
+                    ))}
+                  </g>
+                ))
+              }
+            </g>
+
+            <g className='reqArcs'>
+              {data.displayed.map((d, i) => (
                 <g
-                  className='temp-spokes'
-                  key={`temp-spokes-${i}`}
-                  transform={`rotate(${t.pos * (360 / data.displayed.length) + angleShift})`}
-                >
-                  <line
-                    className='spokeLine'
-                    x1={0}
-                    y1={-(arcBase + (arcSpace * t.spokeRank))}
-                    x2={0}
-                    y2={-(width / 2) + 160 - (t.unlocks.length * 14)}
-                  />
-                </g>
-              ))}
-              {tempArcs.filter((t) => t.lopt.length > 0 || t.lreq.length > 0).map((t, i) => (
-                <g
-                  className='tempGroup'
-                  key={`temp-arcs-${i}`}
-                  transform={`rotate(${t.pos * (360 / data.displayed.length) + angleShift})`}
+                  className={`${d.id} reqGroup ${(notFaded.length > 0) ? 'fade' : ''}`}
+                  key={`req-arcs-${i}`}
+                  transform={`rotate(${d.pos * (360 / data.displayed.length) + angleShift})`}
                 >
                   <path
-                    className='tempArc'
-                    d={arc(t)}
-                    fill={color(t.pos)}
+                    className='spokeArc'
+                    d={arc(d)}
+                    fill={color(d.pos)}
                   />
                   <line
-                    className='tempSpokePin'
+                    className='spokePin'
                     x1={0}
-                    y1={-(arcBase + 7 + (arcSpace * t.arcRank))}
+                    y1={-(arcBase + 7 + (arcSpace * d.arcRank))}
                     x2={0}
-                    y2={-(arcBase - 5 + (arcSpace * t.arcRank))}
+                    y2={-(arcBase - 5 + (arcSpace * d.arcRank))}
                     strokeWidth={arcWidth}
-                    stroke={color(t.pos)}
+                    stroke={color(d.pos)}
                   />
-                 {t.lreq.map((r, j) => (
+                  {d.lreq.map((r, j) => (
                     <g
-                      className='tempReqSquare'
+                      className='reqSquare'
                       key={`req-square-${j}`}
                       transform={(() => {
+
                         const ang = r.dist * (360 / data.displayed.length);
+                        if (d.id === 'TECH_FISHING') {
+                        }
                         return `rotate(${ang}) translate(0, ${(-arcBase - 2.5 - (arcSpace * r.arcRank))})`;
                       })()}
                     >
@@ -236,7 +441,7 @@ function Wheel(props) {
                       />
                     </g>
                   ))}
-                  {t.lopt.map((o, j) => (
+                  {d.lopt.map((o, j) => (
                     <g
                       className='optCircle'
                       key={`opt-circle-${j}`}
@@ -258,170 +463,34 @@ function Wheel(props) {
                 </g>
               ))}
             </g>
-          }
 
-          <g className='spokeAll'>
-            {
-              data.displayed.map((d, i) => (
-                <g
-                  className={`${d.id} spoke`}
-                  key={`spoke-${i}`}
-                  transform={`rotate(${d.pos * (360 / data.displayed.length) + angleShift})`}
-                >
-                  <line
-                    className={`spokeLine ${(notFaded.length > 0) ? 'fade' : ''}`}
-                    x1={0}
-                    y1={(!d.requires && !d.optional) ? 0 : -(arcBase + (arcSpace * d.spokeRank))}
-                    x2={0}
-                    y2={-(width / 2) + 160 - (d.unlocks.length * 14)}
-                  />
-                  <image
-                    className={`techImg ${setFade(d)}`}
-                    height={25}
-                    onMouseLeave={() => setNotFaded([])}
-                    onMouseOver={() => updateDataFade(d)}
-                    transform={(() => (d.pos > (data.displayed.length / 2)) ?
-                      `translate(10, ${(-(width / 2) + 157)}) rotate(90)` :
-                      `translate(-10, ${(-(width / 2) + 182)}) rotate(270)`)()}
-                    width={25}
-                    xlinkHref={`/${game}/${d.cat}/${d.id}.png`}
-                  />
-                  {d.unlocks.map((u, j) => (
-                    <g key={`unlock-${j}`}>
-                      {u.lreq &&
-                        <g className={`unlock ${(notUnlockFaded === u.ref.id) ? '' : 'opaque'} ${u.ref.id}${u.pos}`}>
-                          <path
-                            className='unlockArc'
-                            rank={u.rank}
-                            fill={color(u.pos)}
-                            d={unlockArc(u)}
-                          />
-                          {u.lreq.map((l, k) => (
-                            <g
-                              className='unlockSquare'
-                              key={`unlock-square-${k}`}
-                              transform={`rotate(${l.dist * (360 / data.displayed.length)}) translate(0, ${(-(width/2) + 145 - (14 * l.arcRank))})`}
-                            >
-                              <rect
-                                x={-2.5}
-                                y={-0.75}
-                                width={5}
-                                height={5}
-                                fill={color(l.pos)}
-                              />
-                            </g>
-                          ))}
-                        </g>
-                      }
-                      <image
-                        className={`unlockIcon ${setFade(d)} ${setUnlockFade(u.ref.id)}`}
-                        height={13}
-                        onMouseLeave={() => updateUnlockFade()}
-                        onMouseOver={() => updateUnlockFade(u.ref.id)}
-                        transform={(() => (u.pos > (data.displayed.length / 2)) ?
-                          `translate(6, ${(-(width / 2) + (142 - (14 * u.rank)))}) rotate(90)` :
-                          `translate(-6, ${(-(width / 2) + (153 - (14 * u.rank)))}) rotate(270)`)()}
-                        width={13}
-                        xlinkHref={(() => {
-                          let link;
-                          if ((u.ref.cat === 'units' || u.ref.cat === 'buildings') &&
-                              !(game === 'civ1' || game === 'civ2')) {
-                              if (u.ref[empire]) {
-                                  link = `${game}/${u.ref.cat}/${u.ref[empire].id}.png`;
-                              } else {
-                                  link = `${game}/${u.ref.cat}/${u.ref.CIVILIZATION_ALL.id}.png`;
-                              }
-                          } else {
-                              link = `${game}/${u.ref.cat}/${u.ref.id}.png`;
-                          }
-
-                          return link;
-                        })()}
-                      />
-                    </g>
-                  ))}
-                </g>
-              ))
-            }
+            <image
+              x={-75}
+              y={-75}
+              width={150}
+              height={150}
+              xlinkHref={`${game}/${game}-center.png`}
+            />
           </g>
-
-          <g className='reqArcs'>
-            {data.displayed.map((d, i) => (
-              <g
-                className={`${d.id} reqGroup ${(notFaded.length > 0) ? 'fade' : ''}`}
-                key={`req-arcs-${i}`}
-                transform={`rotate(${d.pos * (360 / data.displayed.length) + angleShift})`}
-              >
-                <path
-                  className='spokeArc'
-                  d={arc(d)}
-                  fill={color(d.pos)}
-                />
-                <line
-                  className='spokePin'
-                  x1={0}
-                  y1={-(arcBase + 7 + (arcSpace * d.arcRank))}
-                  x2={0}
-                  y2={-(arcBase - 5 + (arcSpace * d.arcRank))}
-                  strokeWidth={arcWidth}
-                  stroke={color(d.pos)}
-                />
-                {d.lreq.map((r, j) => (
-                  <g
-                    className='reqSquare'
-                    key={`req-square-${j}`}
-                    transform={(() => {
-
-                      const ang = r.dist * (360 / data.displayed.length);
-                      if (d.id === 'TECH_FISHING') {
-                      }
-                      return `rotate(${ang}) translate(0, ${(-arcBase - 2.5 - (arcSpace * r.arcRank))})`;
-                    })()}
-                  >
-                    <rect
-                      x={-2.5}
-                      y={-0.75}
-                      width={5}
-                      height={5}
-                      fill={color(r.pos)}
-                    />
-                  </g>
-                ))}
-                {d.lopt.map((o, j) => (
-                  <g
-                    className='optCircle'
-                    key={`opt-circle-${j}`}
-                    transform={(() => {
-                      const ang = o.dist * (360 / data.displayed.length);
-                      return `rotate(${ang}) translate(0, ${(-arcBase - 2.5 - (arcSpace * o.arcRank))})`;
-                    })()}
-                  >
-                    <circle
-                      cx={0}
-                      cy={2}
-                      r={2.5}
-                      strokeWidth={1}
-                      stroke={color(o.pos)}
-                      fill='white'
-                    />
-                  </g>
-                ))}
-              </g>
-            ))}
-          </g>
-
-
-
-          <image
-            x={-75}
-            y={-75}
-            width={150}
-            height={150}
-            xlinkHref={`${game}/${game}-center.png`}
-          />
         </g>
-      </g>
-    </svg>
+      </svg>
+
+      <Modal
+        aria-labelledby='simple-modal-title'
+        aria-describedby='simple-modal-description'
+        open={displayModal}
+        onClose={() => setDisplayModal(false)}
+      >
+        <div style={modalStyle} className={classes.paper}>
+          <Typography variant='h6' id='modal-title'>
+            {modalInfo.title}
+          </Typography>
+          <Typography variant='subtitle1' id='simple-modal-description'>
+            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          </Typography>
+        </div>
+      </Modal>
+    </div>
   );
 }
 
