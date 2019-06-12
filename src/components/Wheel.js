@@ -1,42 +1,18 @@
 import React, {useState} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
-
-import {getLeadsTo, getTechPrereqs} from '../libs/dataTools.js';
+import {
+  getLeadsTo,
+  getTechById,
+  getTechPrereqs
+} from '../libs/dataTools.js';
 
 import {scaleOrdinal as d3_scaleOrdinal} from 'd3-scale';
 import {arc as d3_arc} from 'd3-shape';
 import {schemeCategory10 as d3_schemeCategory10} from 'd3-scale-chromatic';
 
+import RequirementsModal from './RequirementsModal.js';
+
 import startSlice from '../img/startSlice.png';
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(4),
-    outline: 'none',
-  },
-}));
 
 function Wheel(props) {
   const {
@@ -192,18 +168,25 @@ function Wheel(props) {
     }
   }
 
-  const [modalStyle] = React.useState(getModalStyle);
+  function displayUnlockModal(unlock, data) {
+    console.log(data);
+    let requirements = [];
+    unlock.ref.requires.forEach((u) => {
+      requirements.push(getTechById(u, data).name);
+    });
 
-  const classes = useStyles();
-
-  function displayUnlockModal(unlock) {
+    console.log(requirements);
     console.log(unlock);
+
     if (unlock.ref.name) {
       setModalInfo({
+        requirements: requirements.join(', '),
         title: unlock.ref.name,
+
       });
     } else {
       setModalInfo({
+        requirements: requirements.join(', '),
         title: unlock.ref[empire].name,
       });
     }
@@ -369,7 +352,7 @@ function Wheel(props) {
                         <image
                           className={`unlockIcon ${setFade(d)} ${setUnlockFade(u.ref.id)}`}
                           height={13}
-                          onClick={() => displayUnlockModal(u)}
+                          onClick={() => displayUnlockModal(u, data)}
                           onMouseLeave={() => updateUnlockFade()}
                           onMouseOver={() => updateUnlockFade(u.ref.id)}
                           transform={(() => (u.pos > (data.displayed.length / 2)) ?
@@ -475,21 +458,12 @@ function Wheel(props) {
         </g>
       </svg>
 
-      <Modal
-        aria-labelledby='simple-modal-title'
-        aria-describedby='simple-modal-description'
-        open={displayModal}
-        onClose={() => setDisplayModal(false)}
-      >
-        <div style={modalStyle} className={classes.paper}>
-          <Typography variant='h6' id='modal-title'>
-            {modalInfo.title}
-          </Typography>
-          <Typography variant='subtitle1' id='simple-modal-description'>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </div>
-      </Modal>
+      <RequirementsModal
+        close={() => setDisplayModal(false)}
+        display={displayModal}
+        requirements={modalInfo.requirements}
+        title={modalInfo.title}
+      />
     </div>
   );
 }
