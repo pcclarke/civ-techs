@@ -34,6 +34,7 @@ function RequirementsModal(props) {
   const {
     close,
     display,
+    imagePath,
     requirements,
     title,
   } = props;
@@ -50,6 +51,7 @@ function RequirementsModal(props) {
       onClose={close}
     >
       <div style={modalStyle} className={classes.paper}>
+        <img alt={`${title}`} src={`/${imagePath}`} />
         <Typography variant='h5' id='modal-title'>
           {title}
         </Typography>

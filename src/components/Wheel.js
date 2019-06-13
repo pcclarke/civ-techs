@@ -14,6 +14,40 @@ import RequirementsModal from './RequirementsModal.js';
 
 import startSlice from '../img/startSlice.png';
 
+const setImageLink = function(reference, game, empire) {
+  let link = '';
+
+  if ((reference.cat === 'units' || reference.cat === 'buildings') && !(game === 'civ1' || game === 'civ2')) {
+    if (reference[empire]) {
+      link = `${game}/${reference.cat}/${reference[empire].id}.png`;
+    } else {
+      link = `${game}/${reference.cat}/${reference.CIVILIZATION_ALL.id}.png`;
+    }
+  } else {
+    link = `${game}/${reference.cat}/${reference.id}.png`;
+  }
+
+  return link;
+}
+
+const oxfordizer = function(words) {
+  let sentence = '';
+
+  if (words.length === 1) {
+    sentence = words[0];
+  } else if (words.length === 2) {
+    sentence = `${words[0]} and ${words[1]}`;
+  } else if (words.length >= 3) {
+    sentence = words[0];
+    for (let i = 1; i < words.length - 1; i++) {
+      sentence = `${sentence}, ${words[i]}`;
+    }
+    sentence = `${sentence}, and ${words[words.length - 1]}`;
+  }
+
+  return sentence;
+}
+
 function Wheel(props) {
   const {
     angleShift,
@@ -178,18 +212,11 @@ function Wheel(props) {
     console.log(requirements);
     console.log(unlock);
 
-    if (unlock.ref.name) {
-      setModalInfo({
-        requirements: requirements.join(', '),
-        title: unlock.ref.name,
-
-      });
-    } else {
-      setModalInfo({
-        requirements: requirements.join(', '),
-        title: unlock.ref[empire].name,
-      });
-    }
+    setModalInfo({
+      imagePath: setImageLink(unlock.ref, game, empire),
+      requirements: oxfordizer(requirements),
+      title: (unlock.ref.name) ? unlock.ref.name: unlock.ref[empire].name,
+    });
 
     setDisplayModal(true);
     console.log(modalInfo);
@@ -359,21 +386,7 @@ function Wheel(props) {
                             `translate(6, ${(-(width / 2) + (142 - (14 * u.rank)))}) rotate(90)` :
                             `translate(-6, ${(-(width / 2) + (153 - (14 * u.rank)))}) rotate(270)`)()}
                           width={13}
-                          xlinkHref={(() => {
-                            let link;
-                            if ((u.ref.cat === 'units' || u.ref.cat === 'buildings') &&
-                                !(game === 'civ1' || game === 'civ2')) {
-                                if (u.ref[empire]) {
-                                    link = `${game}/${u.ref.cat}/${u.ref[empire].id}.png`;
-                                } else {
-                                    link = `${game}/${u.ref.cat}/${u.ref.CIVILIZATION_ALL.id}.png`;
-                                }
-                            } else {
-                                link = `${game}/${u.ref.cat}/${u.ref.id}.png`;
-                            }
-
-                            return link;
-                          })()}
+                          xlinkHref={(() => setImageLink(u.ref, game, empire))()}
                         />
                       </g>
                     ))}
@@ -461,6 +474,7 @@ function Wheel(props) {
       <RequirementsModal
         close={() => setDisplayModal(false)}
         display={displayModal}
+        imagePath={modalInfo.imagePath}
         requirements={modalInfo.requirements}
         title={modalInfo.title}
       />
