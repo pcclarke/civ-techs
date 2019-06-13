@@ -30,19 +30,19 @@ const setImageLink = function(reference, game, empire) {
   return link;
 }
 
-const oxfordizer = function(words) {
+const oxfordizer = function(words, conjunction) {
   let sentence = '';
 
   if (words.length === 1) {
     sentence = words[0];
   } else if (words.length === 2) {
-    sentence = `${words[0]} and ${words[1]}`;
+    sentence = `${words[0]} ${conjunction} ${words[1]}`;
   } else if (words.length >= 3) {
     sentence = words[0];
     for (let i = 1; i < words.length - 1; i++) {
       sentence = `${sentence}, ${words[i]}`;
     }
-    sentence = `${sentence}, and ${words[words.length - 1]}`;
+    sentence = `${sentence}, ${conjunction} ${words[words.length - 1]}`;
   }
 
   return sentence;
@@ -202,21 +202,32 @@ function Wheel(props) {
     }
   }
 
-  function displayUnlockModal(unlock, data) {
+  function displayUnlockModal(reference, data) {
     console.log(data);
+
     let requirements = [];
-    unlock.ref.requires.forEach((u) => {
-      requirements.push(getTechById(u, data).name);
+    reference.requires.forEach((requirementId) => {
+      requirements.push(getTechById(requirementId, data).name);
     });
 
     console.log(requirements);
-    console.log(unlock);
+    console.log(reference);
 
-    setModalInfo({
-      imagePath: setImageLink(unlock.ref, game, empire),
-      requirements: oxfordizer(requirements),
-      title: (unlock.ref.name) ? unlock.ref.name: unlock.ref[empire].name,
-    });
+    let prepModalInfo = {
+      imagePath: setImageLink(reference, game, empire),
+      requirements: oxfordizer(requirements, 'and'),
+      title: (reference.name) ? reference.name: reference[empire].name,
+    };
+
+    if (reference.optional) {
+      let optionals = [];
+      reference.optional.forEach((optionalId) => {
+        optionals.push(getTechById(optionalId, data).name);
+      });
+      prepModalInfo.optionals = oxfordizer(optionals, 'or');
+    }
+
+    setModalInfo(prepModalInfo);
 
     setDisplayModal(true);
     console.log(modalInfo);
@@ -341,6 +352,7 @@ function Wheel(props) {
                     <image
                       className={`techImg ${setFade(d)}`}
                       height={25}
+                      onClick={() => displayUnlockModal(d, data)}
                       onMouseLeave={() => setNotFaded([])}
                       onMouseOver={() => updateDataFade(d)}
                       transform={(() => (d.pos > (data.displayed.length / 2)) ?
@@ -379,7 +391,7 @@ function Wheel(props) {
                         <image
                           className={`unlockIcon ${setFade(d)} ${setUnlockFade(u.ref.id)}`}
                           height={13}
-                          onClick={() => displayUnlockModal(u, data)}
+                          onClick={() => displayUnlockModal(u.ref, data)}
                           onMouseLeave={() => updateUnlockFade()}
                           onMouseOver={() => updateUnlockFade(u.ref.id)}
                           transform={(() => (u.pos > (data.displayed.length / 2)) ?
@@ -475,6 +487,7 @@ function Wheel(props) {
         close={() => setDisplayModal(false)}
         display={displayModal}
         imagePath={modalInfo.imagePath}
+        optionals={modalInfo.optionals}
         requirements={modalInfo.requirements}
         title={modalInfo.title}
       />

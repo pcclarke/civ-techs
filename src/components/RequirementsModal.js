@@ -35,6 +35,7 @@ function RequirementsModal(props) {
     close,
     display,
     imagePath,
+    optionals,
     requirements,
     title,
   } = props;
@@ -61,7 +62,15 @@ function RequirementsModal(props) {
               Requirements
             </Typography>
             <Typography variant='subtitle1' id='simple-modal-description'>
-              {requirements}
+              You must have: {requirements}
+            </Typography>
+          </div>
+        }
+        {optionals &&
+          <div>
+            <p id='tipPlusLine'>plus</p>
+            <Typography variant='subtitle1' id='simple-modal-description'>
+              You need one of: {requirements}
             </Typography>
           </div>
         }
