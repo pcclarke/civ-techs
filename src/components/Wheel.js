@@ -5,6 +5,8 @@ import {
   getTechById,
   getTechPrereqs
 } from '../libs/dataTools.js';
+import {setupData} from '../libs/setupData.js';
+import {setImageLink, oxfordizer} from '../libs/stringTools.js';
 
 import {scaleOrdinal as d3_scaleOrdinal} from 'd3-scale';
 import {arc as d3_arc} from 'd3-shape';
@@ -14,54 +16,33 @@ import RequirementsModal from './RequirementsModal.js';
 
 import startSlice from '../img/startSlice.png';
 
-const setImageLink = function(reference, game, empire) {
-  let link = '';
-
-  if ((reference.cat === 'units' || reference.cat === 'buildings') && !(game === 'civ1' || game === 'civ2')) {
-    if (reference[empire]) {
-      link = `${game}/${reference.cat}/${reference[empire].id}.png`;
-    } else {
-      link = `${game}/${reference.cat}/${reference.CIVILIZATION_ALL.id}.png`;
-    }
-  } else {
-    link = `${game}/${reference.cat}/${reference.id}.png`;
-  }
-
-  return link;
-}
-
-const oxfordizer = function(words, conjunction) {
-  let sentence = '';
-
-  if (words.length === 1) {
-    sentence = words[0];
-  } else if (words.length === 2) {
-    sentence = `${words[0]} ${conjunction} ${words[1]}`;
-  } else if (words.length >= 3) {
-    sentence = words[0];
-    for (let i = 1; i < words.length - 1; i++) {
-      sentence = `${sentence}, ${words[i]}`;
-    }
-    sentence = `${sentence}, ${conjunction} ${words[words.length - 1]}`;
-  }
-
-  return sentence;
-}
+const dataTypes = [
+  'units',
+  'buildings',
+  'religions',
+  'build',
+  'resources',
+  'projects',
+  'promotions',
+  'civics',
+];
 
 function Wheel(props) {
   const {
-    angleShift,
-    arcBase,
     arcSpace,
-    arcWidth,
-    data,
+    gameData,
     empire,
     game,
   } = props;
 
+  const angleShift = 2;
+  const arcBaseRadius = 100;
+  const arcStrokeWidth = 1.5;
   const margin = {top: 10, right: 10, bottom: 10, left: 10},
     width = 1200 - margin.left - margin.right,
     height = 1200 - margin.top - margin.bottom;
+
+  const data = setupData(gameData, +(game[3]), dataTypes);
 
   const [notFaded, setNotFaded] = useState([]);
   const [tempArcs, setTempArcs] = useState([]);
@@ -72,14 +53,14 @@ function Wheel(props) {
   const color = d3_scaleOrdinal(d3_schemeCategory10);
 
   const arc = d3_arc()
-    .innerRadius((d) => arcBase + (arcSpace * d.arcRank))
-    .outerRadius((d) => (arcBase + arcWidth) + (arcSpace * d.arcRank))
+    .innerRadius((d) => arcBaseRadius + (arcSpace * d.arcRank))
+    .outerRadius((d) => (arcBaseRadius + arcStrokeWidth) + (arcSpace * d.arcRank))
     .startAngle((d) => -1 * d.arcBack)
     .endAngle((d) => d.arcDist);
 
   const unlockArc = d3_arc()
-    .innerRadius((d) => arcBase + 342.5 + (14 * d.rank))
-    .outerRadius((d) => (arcBase + 342.6 + arcWidth) + (14 * d.rank))
+    .innerRadius((d) => arcBaseRadius + 342.5 + (14 * d.rank))
+    .outerRadius((d) => (arcBaseRadius + 342.6 + arcStrokeWidth) + (14 * d.rank))
     .startAngle((d) => -1 * d.arcBack)
     .endAngle((d) => d.arcEnd);
 
@@ -280,7 +261,7 @@ function Wheel(props) {
                     <line
                       className='spokeLine'
                       x1={0}
-                      y1={-(arcBase + (arcSpace * t.spokeRank))}
+                      y1={-(arcBaseRadius + (arcSpace * t.spokeRank))}
                       x2={0}
                       y2={-(width / 2) + 160 - (t.unlocks.length * 14)}
                     />
@@ -300,10 +281,10 @@ function Wheel(props) {
                     <line
                       className='tempSpokePin'
                       x1={0}
-                      y1={-(arcBase + 7 + (arcSpace * t.arcRank))}
+                      y1={-(arcBaseRadius + 7 + (arcSpace * t.arcRank))}
                       x2={0}
-                      y2={-(arcBase - 5 + (arcSpace * t.arcRank))}
-                      strokeWidth={arcWidth}
+                      y2={-(arcBaseRadius - 5 + (arcSpace * t.arcRank))}
+                      strokeWidth={arcStrokeWidth}
                       stroke={color(t.pos)}
                     />
                    {t.lreq.map((r, j) => (
@@ -312,7 +293,7 @@ function Wheel(props) {
                         key={`req-square-${j}`}
                         transform={(() => {
                           const ang = r.dist * (360 / data.displayed.length);
-                          return `rotate(${ang}) translate(0, ${(-arcBase - 2.5 - (arcSpace * r.arcRank))})`;
+                          return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * r.arcRank))})`;
                         })()}
                       >
                         <rect
@@ -330,7 +311,7 @@ function Wheel(props) {
                         key={`opt-circle-${j}`}
                         transform={(() => {
                           const ang = o.dist * (360 / data.displayed.length);
-                          return `rotate(${ang}) translate(0, ${(-arcBase - 2.5 - (arcSpace * o.arcRank))})`;
+                          return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * o.arcRank))})`;
                         })()}
                       >
                         <circle
@@ -359,7 +340,7 @@ function Wheel(props) {
                     <line
                       className={`spokeLine ${(notFaded.length > 0) ? 'fade' : ''}`}
                       x1={0}
-                      y1={(!d.requires && !d.optional) ? 0 : -(arcBase + (arcSpace * d.spokeRank))}
+                      y1={(!d.requires && !d.optional) ? 0 : -(arcBaseRadius + (arcSpace * d.spokeRank))}
                       x2={0}
                       y2={-(width / 2) + 160 - (d.unlocks.length * 14)}
                     />
@@ -436,10 +417,10 @@ function Wheel(props) {
                   <line
                     className='spokePin'
                     x1={0}
-                    y1={-(arcBase + 7 + (arcSpace * d.arcRank))}
+                    y1={-(arcBaseRadius + 7 + (arcSpace * d.arcRank))}
                     x2={0}
-                    y2={-(arcBase - 5 + (arcSpace * d.arcRank))}
-                    strokeWidth={arcWidth}
+                    y2={-(arcBaseRadius - 5 + (arcSpace * d.arcRank))}
+                    strokeWidth={arcStrokeWidth}
                     stroke={color(d.pos)}
                   />
                   {d.lreq.map((r, j) => (
@@ -451,7 +432,7 @@ function Wheel(props) {
                         const ang = r.dist * (360 / data.displayed.length);
                         if (d.id === 'TECH_FISHING') {
                         }
-                        return `rotate(${ang}) translate(0, ${(-arcBase - 2.5 - (arcSpace * r.arcRank))})`;
+                        return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * r.arcRank))})`;
                       })()}
                     >
                       <rect
@@ -469,7 +450,7 @@ function Wheel(props) {
                       key={`opt-circle-${j}`}
                       transform={(() => {
                         const ang = o.dist * (360 / data.displayed.length);
-                        return `rotate(${ang}) translate(0, ${(-arcBase - 2.5 - (arcSpace * o.arcRank))})`;
+                        return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * o.arcRank))})`;
                       })()}
                     >
                       <circle

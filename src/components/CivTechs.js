@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
 import Wheel from './Wheel.js';
-import {setupData} from '../libs/setupData.js';
+
 
 import arc from '../img/arc.gif';
 import arcCircle from '../img/arc_circle.gif';
@@ -38,26 +38,9 @@ const gameData = {
   civ4bts: civ4BtsData,
 };
 
-const dataTypes = [
-  'units',
-  'buildings',
-  'religions',
-  'build',
-  'resources',
-  'projects',
-  'promotions',
-  'civics'
-];
-
-const angleShift = 2;
-const arcBaseRadius = 100;
-const arcStrokeWidth = 1.5;
-
 function CivTechs() {
   const [game, setGame] = useState('civ4');
   const [empire, setEmpire] = useState('CIVILIZATION_ALL');
-
-  const arcData = setupData(gameData[game], +(game[3]), dataTypes);
 
   return (
     <div className='CivTechs'>
@@ -124,7 +107,9 @@ function CivTechs() {
                   value={empire}
                 >
                   <MenuItem value='CIVILIZATION_ALL'>Common Units &amp; Buildings</MenuItem>
-                  {arcData.civilizations.map((c, i) => (<MenuItem key={`empire-${i}`} value={c.id}>{c.name}</MenuItem>))}
+                  {gameData[game].civilizations.map((emp, i) => (
+                    <MenuItem key={`empire-${i}`} value={emp.id}>{emp.name}</MenuItem>)
+                  )}
                 </Select>
               </FormControl>
             </div>
@@ -133,11 +118,8 @@ function CivTechs() {
 
         <div id='chart'>
           <Wheel
-            angleShift={angleShift}
-            arcBase={arcBaseRadius}
             arcSpace={(+(game[3]) < 4) ? 16 : 18}
-            arcWidth={arcStrokeWidth}
-            data={arcData}
+            gameData={gameData[game]}
             empire={empire}
             game={game}
           />
