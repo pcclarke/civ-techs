@@ -6,8 +6,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
 import Wheel from './Wheel.js';
-import {orderDisplayed}  from '../libs/orderDisplayed.js';
-import {setupArcs} from '../libs/setupArcs.js';
 import {setupData} from '../libs/setupData.js';
 
 import arc from '../img/arc.gif';
@@ -29,48 +27,37 @@ import civ4Data from '../data/civ4.json';
 import civ4WarData from '../data/civ4war.json';
 import civ4BtsData from '../data/civ4bts.json';
 
+const gameData = {
+  civ1: civ1Data,
+  civ2: civ2Data,
+  civ3: civ3Data,
+  civ3ptw: civ3PtwData,
+  civ3con: civ3ConData,
+  civ4: civ4Data,
+  civ4war: civ4WarData,
+  civ4bts: civ4BtsData,
+};
+
+const dataTypes = [
+  'units',
+  'buildings',
+  'religions',
+  'build',
+  'resources',
+  'projects',
+  'promotions',
+  'civics'
+];
+
+const angleShift = 2;
+const arcBaseRadius = 100;
+const arcStrokeWidth = 1.5;
+
 function CivTechs() {
-  const dataTypes = [
-    'units',
-    'buildings',
-    'religions',
-    'build',
-    'resources',
-    'projects',
-    'promotions',
-    'civics'
-  ];
-
-  const defaults = {
-    arcBase: 100,
-    arcWidth: 1.5,
-    coords: [0, 0],
-    width: 1200,
-    height: 1200,
-    angleShift: 2
-  };
-
-  const data = {
-    civ1: civ1Data,
-    civ2: civ2Data,
-    civ3: civ3Data,
-    civ3ptw: civ3PtwData,
-    civ3con: civ3ConData,
-    civ4: civ4Data,
-    civ4war: civ4WarData,
-    civ4bts: civ4BtsData,
-  };
-
-  const margin = {top: 10, right: 10, bottom: 10, left: 10},
-    width = defaults.width - margin.left - margin.right,
-    height = defaults.width - margin.top - margin.bottom;
-
   const [game, setGame] = useState('civ4');
   const [empire, setEmpire] = useState('CIVILIZATION_ALL');
 
-  const sortedData = setupData(data[game], +(game[3]), dataTypes);
-  const orderedData = orderDisplayed(sortedData, +(game[3]));
-  const arcData = setupArcs(orderedData);
+  const arcData = setupData(gameData[game], +(game[3]), dataTypes);
 
   return (
     <div className='CivTechs'>
@@ -146,16 +133,13 @@ function CivTechs() {
 
         <div id='chart'>
           <Wheel
-            angleShift={defaults.angleShift}
-            arcBase={defaults.arcBase}
+            angleShift={angleShift}
+            arcBase={arcBaseRadius}
             arcSpace={(+(game[3]) < 4) ? 16 : 18}
-            arcWidth={defaults.arcWidth}
+            arcWidth={arcStrokeWidth}
             data={arcData}
             empire={empire}
             game={game}
-            margin={margin}
-            width={width}
-            height={height}
           />
         </div>
       </div>

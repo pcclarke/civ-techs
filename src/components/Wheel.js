@@ -57,10 +57,11 @@ function Wheel(props) {
     data,
     empire,
     game,
-    width,
-    height,
-    margin,
   } = props;
+
+  const margin = {top: 10, right: 10, bottom: 10, left: 10},
+    width = 1200 - margin.left - margin.right,
+    height = 1200 - margin.top - margin.bottom;
 
   const [notFaded, setNotFaded] = useState([]);
   const [tempArcs, setTempArcs] = useState([]);
@@ -85,6 +86,9 @@ function Wheel(props) {
   const updateDataFade = (d) => {
     let minRank = 50;
     let updateNotFaded = getTechPrereqs(d, data);
+
+    console.log(updateNotFaded);
+    console.log(data);
 
     let updateTempArcs = updateNotFaded.map((n) => {
       let tempDist;

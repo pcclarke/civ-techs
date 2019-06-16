@@ -1,7 +1,16 @@
-import {getLeadsTo} from './dataTools.js';
 import {cloneDeep} from 'lodash';
 
+import {getLeadsTo} from './dataTools.js';
+import {orderDisplayed}  from '../libs/orderDisplayed.js';
+import {setupArcs} from '../libs/setupArcs.js';
+
 export function setupData(data, installment, types) {
+  const sortedData = createUnlocks(data, installment, types);
+  const orderedData = orderDisplayed(sortedData, installment);
+  return setupArcs(orderedData);
+}
+
+function createUnlocks(data, installment, types) {
   let sortedData = cloneDeep(data);
   let displayed = [];
   let unlocksList = [];
