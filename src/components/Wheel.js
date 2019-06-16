@@ -203,15 +203,10 @@ function Wheel(props) {
   }
 
   function displayUnlockModal(reference, data) {
-    console.log(data);
-
     let requirements = [];
     reference.requires.forEach((requirementId) => {
       requirements.push(getTechById(requirementId, data).name);
     });
-
-    console.log(requirements);
-    console.log(reference);
 
     let prepModalInfo = {
       imagePath: setImageLink(reference, game, empire),
@@ -227,10 +222,25 @@ function Wheel(props) {
       prepModalInfo.optionals = oxfordizer(optionals, 'or');
     }
 
+    if (reference.lreq) {
+      let leadsRequirements = [];
+      reference.lreq.forEach((leadsReq) => {
+        leadsRequirements.push(getTechById(leadsReq.id, data).name);
+      });
+      prepModalInfo.leadsRequirements = oxfordizer(leadsRequirements, 'and');
+    }
+
+    if (reference.lopt) {
+      let leadsOptionals = [];
+      reference.lopt.forEach((leadsOpt) => {
+        leadsOptionals.push(getTechById(leadsOpt.id, data).name);
+      });
+      prepModalInfo.leadsOptionals = oxfordizer(leadsOptionals, 'and');
+    }
+
     setModalInfo(prepModalInfo);
 
     setDisplayModal(true);
-    console.log(modalInfo);
   }
 
   return (
@@ -487,6 +497,8 @@ function Wheel(props) {
         close={() => setDisplayModal(false)}
         display={displayModal}
         imagePath={modalInfo.imagePath}
+        leadsRequirements={modalInfo.leadsRequirements}
+        leadsOptionals={modalInfo.leadsOptionals}
         optionals={modalInfo.optionals}
         requirements={modalInfo.requirements}
         title={modalInfo.title}

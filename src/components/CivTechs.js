@@ -158,35 +158,6 @@ function CivTechs() {
             height={height}
           />
         </div>
-
-        <div id='tooltip' className='hidden'>
-          <div id='tipHead'>
-            <img alt='tooltip' id='tipImg'></img>
-            <p id='tipName'></p>
-            <button id='tipCloseButton' name='reset'>X</button>
-            <p id='tipKind'></p>
-            <div className='clear'></div>
-          </div>
-          <div id='tipTraits'>
-            <p id='tipCostLine' className='hidden'>Cost: <span id='tipCost'></span> <span id='tipCostType'></span></p>
-          </div>
-          <div id='tipReqs'>
-            <p className='tipSubTitle'>Requirements</p>
-            <div className='desc'>
-              <p id='tipNoLine' className='hidden'>Available at game start</p>
-              <p id='tipMandLine' className='hidden'>You must have: <span id='tipMand'></span></p>
-              <p id='tipPlusLine' className='hidden'>plus</p>
-              <p id='tipOptLine' className='hidden'>You need one of: <span id='tipOpt'></span></p>
-            </div>
-          </div>
-          <div id='tipLeads' className='hidden'>
-            <p className='tipSubTitle'>Leads to</p>
-            <div className='desc'>
-              <p id='tipMldLine' className='hidden'>Must have for: <span id='tipMld'></span></p>
-              <p id='tipOldLine' className='hidden'>Optional for: <span id='tipOld'></span></p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
