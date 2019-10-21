@@ -97,30 +97,30 @@ export function setupArcs(data) {
         for (let j = 0; j < arcDists.length; j++) {
             if (arcDists[j] < minPos) {
                 arcDists[j] = i + maxArcDist;
-                d.arcRank = j;
+                d.rank = j;
                 ranked = 1;
                 break;
             }
         }
         if (ranked === 0) {
             arcDists.push(i + maxArcDist);
-            d.arcRank = (arcDists.length - 1);
+            d.rank = (arcDists.length - 1);
         }
 
         // Add the arc rank to leads to
         d.lreq.forEach((lr) => {
-          lr.arcRank = d.arcRank;
+          lr.rank = d.rank;
         });
         d.lopt.forEach((lo) => {
-          lo.arcRank = d.arcRank;
+          lo.rank = d.rank;
         });
         // d.lobs(function (ob) {
         //    ob.arcRank = d.arcRank;
         // });
     } else if (d.requires || d.optional) {
-        d.arcRank = 499;
+        d.rank = 499;
     } else {
-        d.arcRank = 500;
+        d.rank = 500;
     }
   });
 
@@ -130,12 +130,12 @@ export function setupArcs(data) {
     let spokeRank;
     let preReqs;
 
-    if (d.arcRank > 0 && d.arcRank !== 500) {
-      spokeRank = d.arcRank;
+    if (d.rank > 0 && d.rank !== 500) {
+      spokeRank = d.rank;
       preReqs = getTechPrereqs(d, arcData);
       preReqs.forEach((p) => {
-          if (p.arcRank < spokeRank) {
-            spokeRank = p.arcRank;
+          if (p.rank < spokeRank) {
+            spokeRank = p.rank;
           }
       });
       d.spokeRank = spokeRank;
@@ -172,7 +172,7 @@ export function setupArcs(data) {
                   id: unlockReq.id,
                   dist: (unlockReq.pos - d.pos),
                   pos: u.pos,
-                  arcRank: u.rank
+                  rank: u.rank
                 };
                 u.lreq.push(req);
             }
@@ -182,7 +182,7 @@ export function setupArcs(data) {
           if (maxPos > d.pos) {
               endDist = maxPos - d.pos;
           }
-          u.arcEnd = ((2 * Math.PI) / arcData.displayed.length) * endDist;
+          u.arcDist = ((2 * Math.PI) / arcData.displayed.length) * endDist;
           baseDist = 0;
           if (minPos < d.pos) {
             baseDist = d.pos - minPos;

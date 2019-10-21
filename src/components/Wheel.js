@@ -9,7 +9,6 @@ import {setupData} from '../libs/setupData.js';
 import {setImageLink, oxfordizer} from '../libs/stringTools.js';
 
 import {scaleOrdinal as d3_scaleOrdinal} from 'd3-scale';
-import {arc as d3_arc} from 'd3-shape';
 import {schemeCategory10 as d3_schemeCategory10} from 'd3-scale-chromatic';
 
 import Arc from './Arc';
@@ -51,7 +50,6 @@ function Wheel(props) {
       });
     }
   }
-  console.log(nonTechnologies);
 
   const data = setupData(gameData, nonTechnologies, +(game[3]), dataTypes);
 
@@ -62,12 +60,6 @@ function Wheel(props) {
   const [modalInfo, setModalInfo] = React.useState({});
 
   const color = d3_scaleOrdinal(d3_schemeCategory10);
-
-  const unlockArc = d3_arc()
-    .innerRadius((d) => arcBaseRadius + 342.5 + (14 * d.rank))
-    .outerRadius((d) => (arcBaseRadius + 342.6 + arcStrokeWidth) + (14 * d.rank))
-    .startAngle((d) => -1 * d.arcBack)
-    .endAngle((d) => d.arcEnd);
 
   const updateDataFade = (d) => {
     let minRank = 50;
@@ -115,13 +107,13 @@ function Wheel(props) {
         spokeRank = minRank;
       } else {
         lopt.forEach((o) => {
-          if (o.arcRank < spokeRank) {
-            spokeRank = o.arcRank;
+          if (o.rank < spokeRank) {
+            spokeRank = o.rank;
           }
         });
         lreq.forEach((r) => {
-          if (r.arcRank < spokeRank) {
-            spokeRank = r.arcRank;
+          if (r.rank < spokeRank) {
+            spokeRank = r.rank;
           }
         });
       }
@@ -132,7 +124,7 @@ function Wheel(props) {
       return {
         arcBack: tempBack,
         arcDist: tempDist,
-        arcRank: n.arcRank,
+        rank: n.rank,
         id: n.id,
         lopt: lopt,
         lreq: lreq,
@@ -149,12 +141,12 @@ function Wheel(props) {
       updateTempArcs.push({
         arcBack: 0,
         arcDist: 0,
-        arcRank: 0,
+        rank: 0,
         id: l.id,
         lopt: [],
         lreq: [],
         pos: l.pos,
-        spokeRank: d.arcRank,
+        spokeRank: d.rank,
         unlocks: l.unlocks,
       });
     });
@@ -276,17 +268,18 @@ function Wheel(props) {
                     transform={`rotate(${t.pos * (360 / data.displayed.length) + angleShift})`}
                   >
                     <Arc
-                      arcSpace={arcSpace}
-                      classed={'tempArc'}
+                      baseRadius={100}
+                      className={'tempArc'}
                       colour={color}
                       data={t}
+                      space={arcSpace}
                     />
                     <line
                       className='tempSpokePin'
                       x1={0}
-                      y1={-(arcBaseRadius + 7 + (arcSpace * t.arcRank))}
+                      y1={-(arcBaseRadius + 7 + (arcSpace * t.rank))}
                       x2={0}
-                      y2={-(arcBaseRadius - 5 + (arcSpace * t.arcRank))}
+                      y2={-(arcBaseRadius - 5 + (arcSpace * t.rank))}
                       strokeWidth={arcStrokeWidth}
                       stroke={color(t.pos)}
                     />
@@ -296,7 +289,7 @@ function Wheel(props) {
                         key={`req-square-${j}`}
                         transform={(() => {
                           const ang = r.dist * (360 / data.displayed.length);
-                          return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * r.arcRank))})`;
+                          return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * r.rank))})`;
                         })()}
                       >
                         <rect
@@ -314,7 +307,7 @@ function Wheel(props) {
                         key={`opt-circle-${j}`}
                         transform={(() => {
                           const ang = o.dist * (360 / data.displayed.length);
-                          return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * o.arcRank))})`;
+                          return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * o.rank))})`;
                         })()}
                       >
                         <circle
@@ -363,17 +356,18 @@ function Wheel(props) {
                       <g key={`unlock-${j}`}>
                         {u.lreq &&
                           <g className={`unlock ${(notUnlockFaded === u.ref.id) ? '' : 'opaque'} ${u.ref.id}${u.pos}`}>
-                            <path
+                            <Arc
+                              baseRadius={442.5}
                               className='unlockArc'
-                              rank={u.rank}
-                              fill={color(u.pos)}
-                              d={unlockArc(u)}
+                              colour={color}
+                              data={u}
+                              space={14}
                             />
                             {u.lreq.map((l, k) => (
                               <g
                                 className='unlockSquare'
                                 key={`unlock-square-${k}`}
-                                transform={`rotate(${l.dist * (360 / data.displayed.length)}) translate(0, ${(-(width/2) + 145 - (14 * l.arcRank))})`}
+                                transform={`rotate(${l.dist * (360 / data.displayed.length)}) translate(0, ${(-(width/2) + 145 - (14 * l.rank))})`}
                               >
                                 <rect
                                   x={-2.5}
@@ -413,17 +407,18 @@ function Wheel(props) {
                   transform={`rotate(${d.pos * (360 / data.displayed.length) + angleShift})`}
                 >
                   <Arc
-                    arcSpace={arcSpace}
-                    classed={'spokeArc'}
+                    baseRadius={100}
+                    className={'spokeArc'}
                     colour={color}
                     data={d}
+                    space={arcSpace}
                   />
                   <line
                     className='spokePin'
                     x1={0}
-                    y1={-(arcBaseRadius + 7 + (arcSpace * d.arcRank))}
+                    y1={-(arcBaseRadius + 7 + (arcSpace * d.rank))}
                     x2={0}
-                    y2={-(arcBaseRadius - 5 + (arcSpace * d.arcRank))}
+                    y2={-(arcBaseRadius - 5 + (arcSpace * d.rank))}
                     strokeWidth={arcStrokeWidth}
                     stroke={color(d.pos)}
                   />
@@ -436,7 +431,7 @@ function Wheel(props) {
                         const ang = r.dist * (360 / data.displayed.length);
                         if (d.id === 'TECH_FISHING') {
                         }
-                        return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * r.arcRank))})`;
+                        return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * r.rank))})`;
                       })()}
                     >
                       <rect
@@ -454,7 +449,7 @@ function Wheel(props) {
                       key={`opt-circle-${j}`}
                       transform={(() => {
                         const ang = o.dist * (360 / data.displayed.length);
-                        return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * o.arcRank))})`;
+                        return `rotate(${ang}) translate(0, ${(-arcBaseRadius - 2.5 - (arcSpace * o.rank))})`;
                       })()}
                     >
                       <circle

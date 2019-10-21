@@ -1,27 +1,27 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {arc as d3_arc} from 'd3-shape';
 
-const arcBaseRadius = 100;
-const arcStrokeWidth = 1.5;
+const strokeWidth = 1.5;
 
 function Arc(props) {
   const {
-    arcSpace,
-    classed,
+    baseRadius,
+    className,
     colour,
-    data
+    data,
+    space,
   } = props;
 
   const arc = d3_arc()
-    .innerRadius((d) => arcBaseRadius + (arcSpace * d.arcRank))
-    .outerRadius((d) => (arcBaseRadius + arcStrokeWidth) + (arcSpace * d.arcRank))
+    .innerRadius((d) => baseRadius + (space * d.rank))
+    .outerRadius((d) => (baseRadius + strokeWidth) + (space * d.rank))
     .startAngle((d) => -1 * d.arcBack)
     .endAngle((d) => d.arcDist);
 
   return (
     <path
-      className={classed}
+      className={className}
       d={arc(data)}
       fill={colour(data.pos)}
     />
