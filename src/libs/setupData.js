@@ -4,13 +4,13 @@ import {getLeadsTo} from './dataTools.js';
 import {orderDisplayed}  from '../libs/orderDisplayed.js';
 import {setupArcs} from '../libs/setupArcs.js';
 
-export function setupData(data, installment, types) {
-  const sortedData = createUnlocks(data, installment, types);
+export function setupData(data, nonTechnologies, installment, types) {
+  const sortedData = createUnlocks(data, nonTechnologies, installment, types);
   const orderedData = orderDisplayed(sortedData, installment);
   return setupArcs(orderedData);
 }
 
-function createUnlocks(data, installment, types) {
+function createUnlocks(data, nonTechnologies, installment, types) {
   let sortedData = cloneDeep(data);
   let displayed = [];
   let unlocksList = [];

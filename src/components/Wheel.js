@@ -12,7 +12,8 @@ import {scaleOrdinal as d3_scaleOrdinal} from 'd3-scale';
 import {arc as d3_arc} from 'd3-shape';
 import {schemeCategory10 as d3_schemeCategory10} from 'd3-scale-chromatic';
 
-import RequirementsModal from './RequirementsModal.js';
+import Arc from './Arc';
+import RequirementsModal from './RequirementsModal';
 
 import startSlice from '../img/startSlice.png';
 
@@ -42,7 +43,17 @@ function Wheel(props) {
     width = 1200 - margin.left - margin.right,
     height = 1200 - margin.top - margin.bottom;
 
-  const data = setupData(gameData, +(game[3]), dataTypes);
+  const nonTechnologies = {};
+  for (let category in gameData) {
+    if (category !== 'technologies') {
+      gameData[category].forEach((reference) => {
+        nonTechnologies[reference.id] = reference;
+      });
+    }
+  }
+  console.log(nonTechnologies);
+
+  const data = setupData(gameData, nonTechnologies, +(game[3]), dataTypes);
 
   const [notFaded, setNotFaded] = useState([]);
   const [tempArcs, setTempArcs] = useState([]);
@@ -51,12 +62,6 @@ function Wheel(props) {
   const [modalInfo, setModalInfo] = React.useState({});
 
   const color = d3_scaleOrdinal(d3_schemeCategory10);
-
-  const arc = d3_arc()
-    .innerRadius((d) => arcBaseRadius + (arcSpace * d.arcRank))
-    .outerRadius((d) => (arcBaseRadius + arcStrokeWidth) + (arcSpace * d.arcRank))
-    .startAngle((d) => -1 * d.arcBack)
-    .endAngle((d) => d.arcDist);
 
   const unlockArc = d3_arc()
     .innerRadius((d) => arcBaseRadius + 342.5 + (14 * d.rank))
@@ -67,9 +72,6 @@ function Wheel(props) {
   const updateDataFade = (d) => {
     let minRank = 50;
     let updateNotFaded = getTechPrereqs(d, data);
-
-    console.log(updateNotFaded);
-    console.log(data);
 
     let updateTempArcs = updateNotFaded.map((n) => {
       let tempDist;
@@ -273,10 +275,11 @@ function Wheel(props) {
                     key={`temp-arcs-${i}`}
                     transform={`rotate(${t.pos * (360 / data.displayed.length) + angleShift})`}
                   >
-                    <path
-                      className='tempArc'
-                      d={arc(t)}
-                      fill={color(t.pos)}
+                    <Arc
+                      arcSpace={arcSpace}
+                      classed={'tempArc'}
+                      colour={color}
+                      data={t}
                     />
                     <line
                       className='tempSpokePin'
@@ -409,10 +412,11 @@ function Wheel(props) {
                   key={`req-arcs-${i}`}
                   transform={`rotate(${d.pos * (360 / data.displayed.length) + angleShift})`}
                 >
-                  <path
-                    className='spokeArc'
-                    d={arc(d)}
-                    fill={color(d.pos)}
+                  <Arc
+                    arcSpace={arcSpace}
+                    classed={'spokeArc'}
+                    colour={color}
+                    data={d}
                   />
                   <line
                     className='spokePin'
