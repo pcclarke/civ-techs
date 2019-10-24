@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.24d1a911.chunk.css",
-    "main.js": "/static/js/main.94830f9d.chunk.js",
-    "main.js.map": "/static/js/main.94830f9d.chunk.js.map",
-    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
-    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
-    "static/js/2.8be16f39.chunk.js": "/static/js/2.8be16f39.chunk.js",
-    "static/js/2.8be16f39.chunk.js.map": "/static/js/2.8be16f39.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.6ff269d077d1b5561541f5c49afd7572.js": "/precache-manifest.6ff269d077d1b5561541f5c49afd7572.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/main.24d1a911.chunk.css.map": "/static/css/main.24d1a911.chunk.css.map",
-    "static/media/CivTechs.css": "/static/media/goudytrajan-regular-trial.84628337.woff2",
-    "static/media/startSlice.png": "/static/media/startSlice.ab4a0499.png"
+    "main.css": "/civ-techs/static/css/main.899bf983.chunk.css",
+    "main.js": "/civ-techs/static/js/main.0535e440.chunk.js",
+    "main.js.map": "/civ-techs/static/js/main.0535e440.chunk.js.map",
+    "runtime~main.js": "/civ-techs/static/js/runtime~main.6978d989.js",
+    "runtime~main.js.map": "/civ-techs/static/js/runtime~main.6978d989.js.map",
+    "static/js/2.8be16f39.chunk.js": "/civ-techs/static/js/2.8be16f39.chunk.js",
+    "static/js/2.8be16f39.chunk.js.map": "/civ-techs/static/js/2.8be16f39.chunk.js.map",
+    "index.html": "/civ-techs/index.html",
+    "precache-manifest.3f77775a720e0ffa89bf0e003546f0e8.js": "/civ-techs/precache-manifest.3f77775a720e0ffa89bf0e003546f0e8.js",
+    "service-worker.js": "/civ-techs/service-worker.js",
+    "static/css/main.899bf983.chunk.css.map": "/civ-techs/static/css/main.899bf983.chunk.css.map",
+    "static/media/CivTechs.css": "/civ-techs/static/media/goudytrajan-regular-trial.84628337.woff2",
+    "static/media/startSlice.png": "/civ-techs/static/media/startSlice.ab4a0499.png"
   }
 }
