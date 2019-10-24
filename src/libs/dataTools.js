@@ -3,19 +3,12 @@ export function getReqTechPreReqs(examine, data) {
   let preReqs = [];
 
   if (examine.requires) {
-    data.technologies.forEach((t) => {
-      if (Array.isArray(examine.requires)) {
-        examine.requires.forEach((r) => {
-            if (r === t.id) {
-              preReqs.push(t);
-            }
-        });
-      } else {
-        if (examine.requires === t.id) {
-          preReqs.push(t);
-        }
+    for (let i = 0; i < data.technologies.length; i++) {
+      if ((Array.isArray(examine.requires) && examine.requires.indexOf(data.technologies[i].id) !== -1) ||
+        (examine.requires === data.technologies[i].id)) {
+        preReqs.push(data.technologies[i]);
       }
-    });
+    }
   }
 
   return preReqs;
@@ -25,21 +18,13 @@ export function getReqTechPreReqs(examine, data) {
  export function getLeadsToReq(examine, compareData) {
   let leads = [];
 
-  compareData.forEach((d) => {
-    if (d.requires) {
-      if (Array.isArray(d.requires)) {
-        d.requires.forEach((r) => {
-            if(r === examine.id) {
-              leads.push(d);
-            }
-        });
-      } else {
-        if (d.requires === examine.id) {
-          leads.push(d);
-        }
-      }
+  for (let i = 0; i < compareData.length; i++) {
+    if (compareData[i].requires &&
+      ((Array.isArray(compareData[i].requires) && compareData[i].requires.indexOf(examine.id) !== -1) ||
+      (compareData[i].requires === examine.id))) {
+      leads.push(compareData[i]);
     }
-  });
+  }
 
   return leads;
 };
@@ -49,19 +34,12 @@ export function getOptTechPreReqs (examine, data) {
   let preReqs = [];
 
   if (examine.optional) {
-    data.technologies.forEach((t) => {
-      if (Array.isArray(examine.optional)) {
-        examine.optional.forEach((o) => {
-          if (o === t.id) {
-            preReqs.push(t);
-          }
-        });
-      } else {
-        if (examine.optional === t.id) {
-          preReqs.push(t);
-        }
+    for (let i = 0; i < data.technologies.length; i++) {
+      if ((Array.isArray(examine.optional) && examine.optional.indexOf(data.technologies[i].id) !== -1) ||
+        (examine.optional === data.technologies[i].id)) {
+        preReqs.push(data.technologies[i]);
       }
-    });
+    }
   }
 
   return preReqs;
@@ -71,23 +49,15 @@ export function getOptTechPreReqs (examine, data) {
 export function getLeadsToOpt(examine, compareData) {
   let leads = [];
 
-  compareData.forEach((c) => {
-    if (c.optional) {
-      if (Array.isArray(c.optional)) {
-        c.optional.forEach((o) => {
-          if (o === examine.id) {
-            leads.push(c);
-          }
-        });
-      } else {
-        if (c.optional === examine.id) {
-          leads.push(c);
-        }
-      }
+  for (let i = 0; i < compareData.length; i++) {
+    if (compareData[i].optional &&
+      ((Array.isArray(compareData[i].optional) && compareData[i].optional.indexOf(examine.id) !== -1) ||
+      (compareData[i].optional === examine.id))) {
+      leads.push(compareData[i]);
     }
-  });
+  }
 
-    return leads;
+  return leads;
 };
 
 // Get a list of the technology prerequsites (required and optional) for a given thing (techs, units, whatever)
@@ -95,34 +65,20 @@ export function getTechPrereqs(examine, data) {
   let preReqs = [];
 
   if (examine.requires) {
-    data.technologies.forEach((t) => {
-      if (Array.isArray(examine.requires)) {
-        examine.requires.forEach((r) => {
-          if (r === t.id) {
-            preReqs.push(t);
-          }
-        });
-      } else {
-        if (examine.requires === t.id) {
-          preReqs.push(t);
-        }
+    for (let i = 0; i < data.technologies.length; i++) {
+      if ((Array.isArray(examine.requires) && examine.requires.indexOf(data.technologies[i].id) !== -1) ||
+        (examine.requires === data.technologies[i].id)) {
+        preReqs.push(data.technologies[i]);
       }
-    });
+    }
   }
   if (examine.optional) {
-    data.technologies.forEach((t) => {
-      if (Array.isArray(examine.optional)) {
-        examine.optional.forEach((o) => {
-          if (o === t.id) {
-            preReqs.push(t);
-          }
-        });
-      } else {
-        if (examine.optional === t.id) {
-          preReqs.push(t);
-        }
+    for (let i = 0; i < data.technologies.length; i++) {
+      if ((Array.isArray(examine.optional) && examine.optional.indexOf(data.technologies[i].id) !== -1) ||
+        (examine.optional === data.technologies[i].id)) {
+        preReqs.push(data.technologies[i]);
       }
-    });
+    }
   }
 
   return preReqs;
@@ -132,34 +88,18 @@ export function getTechPrereqs(examine, data) {
 export function getLeadsTo(examine, compareData) {
   let leads = [];
 
-  compareData.forEach((c) => {
-    if (c.requires) {
-      if (Array.isArray(c.requires)) {
-        c.requires.forEach((r) => {
-          if (r === examine.id) {
-            leads.push(c);
-          }
-        });
-      } else {
-        if (c.requires === examine.id) {
-          leads.push(c);
-        }
-      }
+  for (let i = 0; i < compareData.length; i++) {
+    if (compareData[i].requires &&
+      ((Array.isArray(compareData[i].requires) && compareData[i].requires.indexOf(examine.id) !== -1) ||
+      (compareData[i].requires === examine.id))) {
+      leads.push(compareData[i]);
     }
-    if (c.optional) {
-      if (Array.isArray(c.optional)) {
-        c.optional.forEach((o) => {
-          if (o === examine.id) {
-            leads.push(c);
-          }
-        });
-      } else {
-        if (c.optional === examine.id) {
-          leads.push(c);
-        }
-      }
+    if (compareData[i].optional &&
+      ((Array.isArray(compareData[i].optional) && compareData[i].optional.indexOf(examine.id) !== -1) ||
+      (compareData[i].optional === examine.id))) {
+      leads.push(compareData[i]);
     }
-  });
+  }
 
   return leads;
 };
@@ -168,11 +108,11 @@ export function getLeadsTo(examine, compareData) {
 export function getTechById(examineId, data) {
   let tech = 'BAD_ID';
 
-  data.technologies.forEach((t) => {
-    if (t.id === examineId) {
-      tech = t;
+  for (let i = 0; i < data.technologies.length; i++) {
+    if (data.technologies[i].id === examineId) {
+      tech = data.technologies[i];
     }
-  });
+  }
 
   return tech;
 };
@@ -199,15 +139,15 @@ export function findNearby(origin, data) {
   nearbyList = nearbyList.concat(getLeadsTo(origin, data.resources));
   nearbyList = nearbyList.concat(getLeadsTo(origin, data.units));
 
-  nearbyList.forEach((n) => {
-    otherReqs = getTechPrereqs(n, data);
+  for (let i = 0; i < nearbyList.length; i++) {
+    otherReqs = getTechPrereqs(nearbyList[i], data);
 
-    otherReqs.forEach((o) => {
-      if (o.id !== origin.id) {
-        fartherList.push(o);
+    for (let j = 0; j < otherReqs.length; j++) {
+      if (otherReqs[j].id !== origin.id) {
+        fartherList.push(otherReqs[j]);
       }
-    });
-  });
+    }
+  }
 
   nearbyList = nearbyList.concat(fartherList);
   nearbyList.push(origin);
@@ -225,12 +165,12 @@ export function convertSpecial(examine) {
   let specials = [];
 
   if (examine.special) {
-    examine.special.forEach((s) => {
-      s.requires = [];
-      s.requires.push(examine.id);
-      s.cat = 'specials';
-      specials.push(s);
-    });
+    for (let i = 0; i < examine.special.length; i++) {
+      examine.special[i].requires = [];
+      examine.special[i].requires.push(examine.id);
+      examine.special[i].cat = 'specials';
+      specials.push(examine.special[i]);
+    }
   }
 
   return specials;

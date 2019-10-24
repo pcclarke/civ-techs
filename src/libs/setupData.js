@@ -7,7 +7,9 @@ import {setupArcs} from '../libs/setupArcs.js';
 export function setupData(data, nonTechnologies, installment, types) {
   const sortedData = createUnlocks(data, nonTechnologies, installment, types);
   const orderedData = orderDisplayed(sortedData, installment);
-  return setupArcs(orderedData);
+  const setupArc = setupArcs(orderedData);
+
+  return setupArc;
 }
 
 function createUnlocks(data, nonTechnologies, installment, types) {
@@ -23,32 +25,29 @@ function createUnlocks(data, nonTechnologies, installment, types) {
   // Scoop up all the things each technology leads to and put it in the unlocks object
   sortedData.technologies.forEach((d) => {
     let uniqueUnlocks = [];
-    let unlocks;
+    let unlocks = [];
 
     d.cat = 'technologies';
     displayed.push(d);
 
-    unlocks = getLeadsTo(d, sortedData.units);
-    unlocks = unlocks.concat(getLeadsTo(d, sortedData.buildings));
-    unlocks = unlocks.concat(getLeadsTo(d, sortedData.build));
-    if (sortedData.civics) {
-        unlocks = unlocks.concat(getLeadsTo(d, sortedData.civics));
-    }
-    if (sortedData.projects) {
-        unlocks = unlocks.concat(getLeadsTo(d, sortedData.projects));
-    }
-    if (sortedData.promotions) {
-        unlocks = unlocks.concat(getLeadsTo(d, sortedData.promotions));
-    }
-    if (sortedData.religions) {
-        unlocks = unlocks.concat(getLeadsTo(d, sortedData.religions));
-    }
-    if (sortedData.resources) {
-        unlocks = unlocks.concat(getLeadsTo(d, sortedData.resources));
+    const dataTypes = [
+      'buildings',
+      'build',
+      'civics',
+      'projects',
+      'promotions',
+      'religions',
+      'resources',
+      'units'
+    ]
+    for (let i = 0; i < dataTypes.length; i++) {
+      if (sortedData[dataTypes[i]]) {
+        unlocks = unlocks.concat(getLeadsTo(d, sortedData[dataTypes[i]]));
+      }
     }
 
     if (d.special) {
-      d.special.forEach(function (s) {
+      d.special.forEach((s) => {
         s.cat = 'specials';
         s.requires = [];
         s.requires.push(d.id);
@@ -56,9 +55,9 @@ function createUnlocks(data, nonTechnologies, installment, types) {
       });
     }
 
-    unlocks.forEach(function (u, j) {
+    unlocks.forEach((u, j) => {
       let matchFound = 0;
-      unlocksList.forEach(function (l, k) {
+      unlocksList.forEach((l, k) => {
         if (u.id === l.id) {
           matchFound = 1;
         }
@@ -70,7 +69,7 @@ function createUnlocks(data, nonTechnologies, installment, types) {
     unlocksList = unlocksList.concat(uniqueUnlocks);
 
     let unlocksHandler = [];
-    uniqueUnlocks.forEach(function (u, j) {
+    uniqueUnlocks.forEach((u, j) => {
       let unlocksItem = {};
       unlocksItem.rank = j;
       unlocksItem.ref = u;
@@ -82,9 +81,9 @@ function createUnlocks(data, nonTechnologies, installment, types) {
   sortedData.displayed = displayed;
 
   // Label data categories
-  types.forEach(function (t) {
+  types.forEach((t) => {
     if (sortedData[t]) {
-      sortedData[t].forEach(function (d) {
+      sortedData[t].forEach((d) => {
         d.cat = t;
       });
     }
