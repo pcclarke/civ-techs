@@ -12,6 +12,7 @@ import {scaleOrdinal as d3_scaleOrdinal} from 'd3-scale';
 import {schemeCategory10 as d3_schemeCategory10} from 'd3-scale-chromatic';
 
 import Arc from './Arc';
+import LeadsTo from './LeadsTo';
 import Relationship from './Relationship';
 import RequirementsModal from './RequirementsModal';
 
@@ -241,6 +242,7 @@ function Wheel(props) {
             height={height/2}
             xlinkHref={startSlice}
           />
+
           {(notFaded.length > 0 && tempArcs.length > 0) &&
             <g className='tempArcs'>
               {tempArcs.map((t, i) => (
@@ -259,51 +261,16 @@ function Wheel(props) {
                 </g>
               ))}
               {tempArcs.filter((t) => t.lopt.length > 0 || t.lreq.length > 0).map((t, i) => (
-                <g
-                  className='tempGroup'
+                <LeadsTo
+                  angleShift={angleShift}
+                  arcBaseRadius={arcBaseRadius}
+                  arcSpace={arcSpace}
+                  arcStrokeWidth={arcStrokeWidth}
+                  colour={color}
+                  data={t}
                   key={`temp-arcs-${i}`}
-                  transform={`rotate(${t.pos * (360 / data.displayed.length) + angleShift})`}
-                >
-                  <Arc
-                    baseRadius={100}
-                    className={'tempArc'}
-                    colour={color}
-                    data={t}
-                    space={arcSpace}
-                    strokeWidth={arcStrokeWidth}
-                  />
-                  <line
-                    className='tempSpokePin'
-                    x1={0}
-                    y1={-(arcBaseRadius + 7 + (arcSpace * t.rank))}
-                    x2={0}
-                    y2={-(arcBaseRadius - 5 + (arcSpace * t.rank))}
-                    strokeWidth={arcStrokeWidth}
-                    stroke={color(t.pos)}
-                  />
-                  {t.lreq.map((r, j) => (
-                    <Relationship
-                      baseRadius={arcBaseRadius}
-                      colour={color}
-                      data={r}
-                      key={`req-square-${j}`}
-                      shape={'square'}
-                      space={arcSpace}
-                      totalTechnologies={data.displayed.length}
-                    />
-                  ))}
-                  {t.lopt.map((o, j) => (
-                    <Relationship
-                      baseRadius={arcBaseRadius}
-                      colour={color}
-                      data={o}
-                      key={`opt-circle-${j}`}
-                      shape={'circle'}
-                      space={arcSpace}
-                      totalTechnologies={data.displayed.length}
-                    />
-                  ))}
-                </g>
+                  totalTechnologies={data.displayed.length}
+                />
               ))}
             </g>
           }
@@ -381,51 +348,17 @@ function Wheel(props) {
 
           <g className='reqArcs'>
             {data.displayed.map((d, i) => (
-              <g
-                className={`${d.id} reqGroup ${(notFaded.length > 0) ? 'fade' : ''}`}
+              <LeadsTo
+                angleShift={angleShift}
+                arcBaseRadius={arcBaseRadius}
+                arcSpace={arcSpace}
+                arcStrokeWidth={arcStrokeWidth}
+                colour={color}
+                data={d}
+                fade={` ${(notFaded.length > 0) ? 'fade' : ''}`}
                 key={`req-arcs-${i}`}
-                transform={`rotate(${d.pos * (360 / data.displayed.length) + angleShift})`}
-              >
-                <Arc
-                  baseRadius={100}
-                  className={'spokeArc'}
-                  colour={color}
-                  data={d}
-                  space={arcSpace}
-                  strokeWidth={arcStrokeWidth}
-                />
-                <line
-                  className='spokePin'
-                  x1={0}
-                  y1={-(arcBaseRadius + 7 + (arcSpace * d.rank))}
-                  x2={0}
-                  y2={-(arcBaseRadius - 5 + (arcSpace * d.rank))}
-                  strokeWidth={arcStrokeWidth}
-                  stroke={color(d.pos)}
-                />
-                {d.lreq.map((r, j) => (
-                  <Relationship
-                    baseRadius={arcBaseRadius}
-                    colour={color}
-                    data={r}
-                    key={`req-square-${j}`}
-                    shape={'square'}
-                    space={arcSpace}
-                    totalTechnologies={data.displayed.length}
-                  />
-                ))}
-                {d.lopt.map((o, j) => (
-                  <Relationship
-                    baseRadius={arcBaseRadius}
-                    colour={color}
-                    data={o}
-                    key={`opt-circle-${j}`}
-                    shape={'circle'}
-                    space={arcSpace}
-                    totalTechnologies={data.displayed.length}
-                  />
-                ))}
-              </g>
+                totalTechnologies={data.displayed.length}
+              />
             ))}
           </g>
 
