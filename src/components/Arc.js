@@ -2,8 +2,6 @@ import React from 'react';
 
 import {arc as d3_arc} from 'd3-shape';
 
-const strokeWidth = 1.5;
-
 function Arc(props) {
   const {
     baseRadius,
@@ -11,6 +9,7 @@ function Arc(props) {
     colour,
     data,
     space,
+    strokeWidth,
   } = props;
 
   const arc = d3_arc()
