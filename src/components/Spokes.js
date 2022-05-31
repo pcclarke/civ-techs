@@ -52,7 +52,7 @@ function Spokes(props) {
                 `translate(10, ${(-(width / 2) + 157)}) rotate(90)` :
                 `translate(-10, ${(-(width / 2) + 182)}) rotate(270)`)()}
               width={25}
-              xlinkHref={`${game}/${d.cat}/${d.id}.png`}
+              href={`${game}/${d.cat}/${d.id}.png`}
             />
             {d.unlocks.map((u, j) => (
               <g key={`unlock-${j}`}>
@@ -89,7 +89,7 @@ function Spokes(props) {
                     `translate(6, ${(-(width / 2) + (142 - (14 * u.rank)))}) rotate(90)` :
                     `translate(-6, ${(-(width / 2) + (153 - (14 * u.rank)))}) rotate(270)`)()}
                   width={13}
-                  xlinkHref={(() => setImageLink(u.ref, game, empire))()}
+                  href={(() => setImageLink(u.ref, game, empire))()}
                 />
               </g>
             ))}
