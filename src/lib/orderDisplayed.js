@@ -1,5 +1,5 @@
-import {getTechPrereqs} from './dataTools.js';
-import {cloneDeep} from 'lodash';
+import { getTechPrereqs } from './dataTools.js';
+import { cloneDeep } from 'lodash';
 
 export function orderDisplayed(data, installment) {
   let orderedData = cloneDeep(data);

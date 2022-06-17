@@ -106,7 +106,7 @@ export function getLeadsTo(examine, compareData) {
 
 // Returns a technology item by its Id
 export function getTechById(examineId, data) {
-  let tech = 'BAD_ID';
+  let tech = {};
 
   for (let i = 0; i < data.technologies.length; i++) {
     if (data.technologies[i].id === examineId) {

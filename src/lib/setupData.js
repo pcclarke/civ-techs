@@ -1,8 +1,8 @@
 import {cloneDeep} from 'lodash';
 
 import {getLeadsTo} from './dataTools.js';
-import {orderDisplayed}  from '../libs/orderDisplayed.js';
-import {setupArcs} from '../libs/setupArcs.js';
+import {orderDisplayed}  from './orderDisplayed.js';
+import {setupArcs} from './setupArcs.js';
 
 export function setupData(data, nonTechnologies, installment, types) {
   const sortedData = createUnlocks(data, nonTechnologies, installment, types);
@@ -16,6 +16,8 @@ function createUnlocks(data, nonTechnologies, installment, types) {
   let sortedData = cloneDeep(data);
   let displayed = [];
   let unlocksList = [];
+
+  console.log(sortedData);
 
   // First, arrange the technologies by cost
   if (installment > 3) {
