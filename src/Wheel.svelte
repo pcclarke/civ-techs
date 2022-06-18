@@ -221,6 +221,36 @@
       href={startSlice}
     />
 
+  {#if notFaded.length > 0 && tempArcs.length > 0}
+    <g class='tempArcs'>
+      {#each tempArcs as tempArc}
+        <g
+          class='temp-spokes'
+          transform={`rotate(${tempArc.pos * (360 / data.displayed.length) + angleShift})`}
+        >
+          <line
+            class='spokeLine'
+            x1={0}
+            y1={-(arcBaseRadius + (arcSpace * tempArc.spokeRank))}
+            x2={0}
+            y2={-(width / 2) + 160 - (tempArc.unlocks.length * 14)}
+          />
+        </g>
+      {/each}
+      {#each tempArcs.filter((t) => t.lopt.length > 0 || t.lreq.length > 0) as tempArc}
+        <LeadsTo
+          angleShift={angleShift}
+          arcBaseRadius={arcBaseRadius}
+          arcSpace={arcSpace}
+          arcStrokeWidth={arcStrokeWidth}
+          colour={color}
+          data={tempArc}
+          totalTechnologies={data.displayed.length}
+        />
+      {/each}
+    </g>
+  {/if}
+
     <Spokes
       angleShift={angleShift}
       arcBaseRadius={arcBaseRadius}
@@ -238,35 +268,7 @@
       width={width}
     />
 
-    {#if notFaded.length > 0 && tempArcs.length > 0}
-      <g class='tempArcs'>
-        {#each tempArcs as tempArc}
-          <g
-            class='temp-spokes'
-            transform={`rotate(${tempArc.pos * (360 / data.displayed.length) + angleShift})`}
-          >
-            <line
-              class='spokeLine'
-              x1={0}
-              y1={-(arcBaseRadius + (arcSpace * tempArc.spokeRank))}
-              x2={0}
-              y2={-(width / 2) + 160 - (tempArc.unlocks.length * 14)}
-            />
-          </g>
-        {/each}
-        {#each tempArcs.filter((t) => t.lopt.length > 0 || t.lreq.length > 0) as tempArc}
-          <LeadsTo
-            angleShift={angleShift}
-            arcBaseRadius={arcBaseRadius}
-            arcSpace={arcSpace}
-            arcStrokeWidth={arcStrokeWidth}
-            colour={color}
-            data={tempArc}
-            totalTechnologies={data.displayed.length}
-          />
-        {/each}
-      </g>
-    {/if}
+
 
     <g class='reqArcs'>
       {#each data.displayed as d}
