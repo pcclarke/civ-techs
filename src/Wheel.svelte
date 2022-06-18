@@ -160,11 +160,15 @@
 
   function displayUnlockModal(reference, data) {
     let requirements = [];
-    console.log(reference);
+
     if (reference.requires) {
-      reference.requires.forEach((requirementId) => {
-        requirements.push(getTechById(requirementId, data).name);
-      });
+      if (typeof reference.requires === 'string') {
+        requirements.push(getTechById(reference.requires, data).name);
+      } else {
+        reference.requires.forEach((requirementId) => {
+          requirements.push(getTechById(requirementId, data).name);
+        });
+      }
     }
 
     let prepModalInfo = {
@@ -200,7 +204,6 @@
     modalInfo = prepModalInfo;
 
     displayModal = true;
-    console.log(displayModal);
   }
 </script>
 
