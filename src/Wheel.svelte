@@ -298,15 +298,17 @@
   </g>
 </svg>
 
-<RequirementsModal
-  bind:display={displayModal}
-  imagePath={modalInfo.imagePath}
-  leadsRequirements={modalInfo.leadsRequirements}
-  leadsOptionals={modalInfo.leadsOptionals}
-  optionals={modalInfo.optionals}
-  requirements={modalInfo.requirements}
-  title={modalInfo.title}
-/>
+{#if displayModal}
+  <RequirementsModal
+    bind:display={displayModal}
+    imagePath={modalInfo.imagePath}
+    leadsRequirements={modalInfo.leadsRequirements}
+    leadsOptionals={modalInfo.leadsOptionals}
+    optionals={modalInfo.optionals}
+    requirements={modalInfo.requirements}
+    title={modalInfo.title}
+  />
+{/if}
 
 <style>
   .spokeLine {

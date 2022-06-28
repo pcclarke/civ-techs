@@ -4,51 +4,28 @@
   import Instructions from './Instructions.svelte';
   import Wheel from './Wheel.svelte';
 
-  const games = [
-    {id: 'civ1', base: 1, name: 'Civilization'},
-    {id: 'civ2', base: 2, name: 'Civilization II'},
-    {id: 'civ3', base: 3, name: 'Civilization III'},
-    {id: 'civ3ptw', base: 3, name: 'Civilization III: Play the World'},
-    {id: 'civ3con', base: 3, name: 'Civilization III: Conquests'},
-    {id: 'civ4', base: 4, name: 'Civilization IV'},
-    {id: 'civ4war', base: 4, name: 'Civilization IV: Warlords'},
-    {id: 'civ4bts', base: 4, name: 'Civilization IV: Beyond the Sword'},
-  ];
-  let empires = [];
-
-  let data;
-
-  let selectedGame = games[0];
-  let selectedEmpire;
-  let loadingGame = true;
+  import { games } from './constants.js';
+  import {
+    data,
+    empires,
+    game,
+    selectedEmpire
+  } from './stores.js';
 
   function updateGame(event) {
     setGame(event.target.value);
   }
 
-  async function setGame(gameId) {
-    loadingGame = true;
-    const response = await fetch(`./data/${gameId}.json`);
-    data = await response.json();
-    console.log(data);
-    selectedGame = games.find(g => g.id === gameId);
-
-    if (selectedGame.base >= 3) {
-      empires = [{id: 'any', name: 'Default'}, ...data.civilizations];
-      selectedEmpire = empires[0];
-    } else {
-      empires = [];
-    }
-
-    loadingGame = false;
+  function setGame(gameId) {
+    game.set(games.find(g => g.id === gameId));
   }
 
   function setEmpire(event) {
-    selectedEmpire = empires.find(e => e.id === event.target.value);
+    selectedEmpire.set($empires.find(e => e.id === event.target.value));
   }
 
   onMount(() => {
-		setGame(selectedGame.id);
+		setGame('civ1');
 	});
 </script>
 
@@ -67,12 +44,12 @@
             id="selectGame"
             on:change={updateGame}
           >
-            {#each games as game}
-              <option selected={game.id === selectedGame.id} value={game.id}>{game.name}</option>
+            {#each games as gameOption}
+              <option selected={gameOption.id === $game.id} value={gameOption.id}>{gameOption.name}</option>
             {/each}
           </select>
         </div>
-        {#if !loadingGame && selectedGame.base >= 3}
+        {#if $empires.length > 0}
           <div class='selectBox'>
             <label for="selectEmp">Empire</label>
             <select
@@ -80,8 +57,8 @@
               id="selectEmp"
               on:change={setEmpire}
             >
-              {#each empires as empire}
-                <option selected={empire.id === selectedEmpire.id} value={empire.id}>{empire.name}</option>
+              {#each $empires as empire}
+                <option selected={empire.id === $selectedEmpire.id} value={empire.id}>{empire.name}</option>
               {/each}
             </select>
           </div>
@@ -89,16 +66,18 @@
       </div>
 
       <div id='chart'>
-        {#if loadingGame}
-          <p>Loading</p>
-        {:else}
+        {#await $data}
+          <p>Waiting...</p>
+        {:then gotData}
           <Wheel
-            arcSpace={(selectedGame.base < 4) ? 16 : 18}
-            gameData={data}
-            empire={selectedEmpire}
-            game={selectedGame}
+            arcSpace={($game.base < 4) ? 16 : 18}
+            gameData={gotData}
+            empire={$selectedEmpire.id}
+            game={$game}
           />
-        {/if}
+        {:catch error}
+          <p>Oh no!</p>
+        {/await}
       </div>
     </div>
   </div>

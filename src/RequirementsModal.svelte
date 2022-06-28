@@ -8,7 +8,6 @@
   export let title;
 </script>
 
-{#if display}
   <div class="modal" id="modal">
     <img alt={`${title}`} src={`/${imagePath}`} />
     <h5>{title}</h5>
@@ -41,7 +40,6 @@
     on:click={() => display = false}
   >
   </div>
-{/if}
 
 <style>
   .modal {
