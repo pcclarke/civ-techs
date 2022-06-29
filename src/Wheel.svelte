@@ -13,13 +13,15 @@
   import LeadsTo from './LeadsTo.svelte';
   import RequirementsModal from './RequirementsModal.svelte';
   import Spokes from './Spokes.svelte';
+  import {
+    arcSpace,
+    empire,
+    game,
+  } from './stores.js';
 
   import startSlice from './assets/img/startSlice.png';
 
-  export let arcSpace;
   export let gameData;
-  export let empire;
-  export let game;
 
   const angleShift = 2;
   const arcBaseRadius = 100;
@@ -48,7 +50,7 @@
     'civics',
   ];
 
-  const data = setupData(gameData, nonTechnologies, game.base, dataTypes);
+  const data = setupData(gameData, nonTechnologies, $game.base, dataTypes);
 
   console.log(data);
 
@@ -172,9 +174,9 @@
     }
 
     let prepModalInfo = {
-      imagePath: setImageLink(reference, game.id, empire),
+      imagePath: setImageLink(reference, $game.id, $empire.id),
       requirements: oxfordizer(requirements, 'and'),
-      title: (reference.name) ? reference.name: reference[empire].name,
+      title: (reference.name) ? reference.name: reference[$empire.id].name,
     };
 
     if (reference.optional) {
@@ -234,7 +236,7 @@
           <line
             class='spokeLine'
             x1={0}
-            y1={-(arcBaseRadius + (arcSpace * tempArc.spokeRank))}
+            y1={-(arcBaseRadius + ($arcSpace * tempArc.spokeRank))}
             x2={0}
             y2={-(width / 2) + 160 - (tempArc.unlocks.length * 14)}
           />
@@ -244,7 +246,6 @@
         <LeadsTo
           angleShift={angleShift}
           arcBaseRadius={arcBaseRadius}
-          arcSpace={arcSpace}
           arcStrokeWidth={arcStrokeWidth}
           colour={color}
           data={tempArc}
@@ -257,13 +258,10 @@
     <Spokes
       angleShift={angleShift}
       arcBaseRadius={arcBaseRadius}
-      arcSpace={arcSpace}
       arcStrokeWidth={arcStrokeWidth}
       colour={color}
       data={data}
       displayUnlockModal={displayUnlockModal}
-      game={game.id}
-      empire={empire}
       bind:notFaded={notFaded}
       notUnlockFaded={notUnlockFaded}
       updateDataFade={updateDataFade}
@@ -271,14 +269,11 @@
       width={width}
     />
 
-
-
     <g class='reqArcs'>
       {#each data.displayed as d}
         <LeadsTo
           angleShift={angleShift}
           arcBaseRadius={arcBaseRadius}
-          arcSpace={arcSpace}
           arcStrokeWidth={arcStrokeWidth}
           colour={color}
           data={d}
@@ -293,7 +288,7 @@
       y={-75}
       width={150}
       height={150}
-      href={`${game.id}/${game.id}-center.png`}
+      href={`${$game.id}/${$game.id}-center.png`}
     />
   </g>
 </svg>

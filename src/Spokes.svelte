@@ -3,16 +3,18 @@
 
   import Arc from './Arc.svelte';
   import Relationship from './Relationship.svelte';
+  import {
+    arcSpace,
+    empire,
+    game
+  } from './stores.js';
 
   export let angleShift;
   export let arcBaseRadius;
-  export let arcSpace;
   export let arcStrokeWidth;
   export let colour;
   export let data;
   export let displayUnlockModal;
-  export let game;
-  export let empire;
   export let notFaded;
   export let notUnlockFaded;
   export let updateDataFade;
@@ -41,7 +43,7 @@
       <line
         class={`spokeLine ${(notFaded.length > 0) ? 'fade' : ''}`}
         x1={0}
-        y1={(!d.requires && !d.optional) ? 0 : -(arcBaseRadius + (arcSpace * d.spokeRank))}
+        y1={(!d.requires && !d.optional) ? 0 : -(arcBaseRadius + ($arcSpace * d.spokeRank))}
         x2={0}
         y2={-(width / 2) + 160 - (d.unlocks.length * 14)}
       />
@@ -55,7 +57,7 @@
           `translate(10, ${(-(width / 2) + 157)}) rotate(90)` :
           `translate(-10, ${(-(width / 2) + 182)}) rotate(270)`)()}
         width={25}
-        href={`${game}/${d.cat}/${d.id}.png`}
+        href={`${$game.id}/${d.cat}/${d.id}.png`}
       />
       {#each d.unlocks as u}
         <g>
@@ -91,7 +93,7 @@
               `translate(6, ${(-(width / 2) + (142 - (14 * u.rank)))}) rotate(90)` :
               `translate(-6, ${(-(width / 2) + (153 - (14 * u.rank)))}) rotate(270)`)()}
             width={13}
-            href={(() => setImageLink(u.ref, game, empire))()}
+            href={(() => setImageLink(u.ref, $game.id, $empire.id))()}
           />
         </g>
       {/each}

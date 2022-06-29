@@ -7,9 +7,9 @@
   import { games } from './constants.js';
   import {
     data,
+    empire,
     empires,
-    game,
-    selectedEmpire
+    game
   } from './stores.js';
 
   function updateGame(event) {
@@ -21,7 +21,7 @@
   }
 
   function setEmpire(event) {
-    selectedEmpire.set($empires.find(e => e.id === event.target.value));
+    empire.set($empires.find(e => e.id === event.target.value));
   }
 
   onMount(() => {
@@ -57,8 +57,8 @@
               id="selectEmp"
               on:change={setEmpire}
             >
-              {#each $empires as empire}
-                <option selected={empire.id === $selectedEmpire.id} value={empire.id}>{empire.name}</option>
+              {#each $empires as e}
+                <option selected={e.id === $empire.id} value={e.id}>{e.name}</option>
               {/each}
             </select>
           </div>
@@ -69,12 +69,7 @@
         {#await $data}
           <p>Waiting...</p>
         {:then gotData}
-          <Wheel
-            arcSpace={($game.base < 4) ? 16 : 18}
-            gameData={gotData}
-            empire={$selectedEmpire.id}
-            game={$game}
-          />
+          <Wheel gameData={gotData}/>
         {:catch error}
           <p>Oh no!</p>
         {/await}

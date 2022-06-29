@@ -2,9 +2,10 @@
   import Arc from './Arc.svelte';
   import Relationship from './Relationship.svelte';
 
+  import { arcSpace } from './stores.js';
+
   export let angleShift;
   export let arcBaseRadius;
-  export let arcSpace;
   export let arcStrokeWidth;
   export let colour;
   export let data;
@@ -21,15 +22,15 @@
     className={'spokeArc'}
     colour={colour}
     data={data}
-    space={arcSpace}
+    space={$arcSpace}
     strokeWidth={arcStrokeWidth}
   />
   <line
     class='spokePin'
     x1={0}
-    y1={-(arcBaseRadius + 7 + (arcSpace * data.rank))}
+    y1={-(arcBaseRadius + 7 + ($arcSpace * data.rank))}
     x2={0}
-    y2={-(arcBaseRadius - 5 + (arcSpace * data.rank))}
+    y2={-(arcBaseRadius - 5 + ($arcSpace * data.rank))}
     stroke-width={arcStrokeWidth}
     stroke={colour(data.pos)}
   />
@@ -39,7 +40,7 @@
       colour={colour}
       data={r}
       shape={'square'}
-      space={arcSpace}
+      space={$arcSpace}
       totalTechnologies={totalTechnologies}
     />
   {/each}
@@ -49,7 +50,7 @@
       colour={colour}
       data={o}
       shape={'circle'}
-      space={arcSpace}
+      space={$arcSpace}
       totalTechnologies={totalTechnologies}
     />
   {/each}

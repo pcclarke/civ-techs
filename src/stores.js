@@ -4,6 +4,8 @@ import { games } from './constants.js';
 
 export const game = writable(games[0]);
 
+export const arcSpace = derived(game, ($game) => ($game.base < 4) ? 16 : 18);
+
 export const data = derived(
   game,
   ($game) => {
@@ -18,7 +20,7 @@ async function loadData(gameId) {
   if (get(game).base >= 3) {
     const defaultEmpire = {id: 'any', name: 'Default'};
     empires.set([defaultEmpire, ...responseJson.civilizations]);
-    selectedEmpire.set(defaultEmpire);
+    empire.set(defaultEmpire);
   } else {
     empires.set([]);
   }
@@ -28,16 +30,4 @@ async function loadData(gameId) {
 
 export const empires = writable([]);
 
-export const selectedEmpire = writable({id: null, name: null});
-
-// export const empire = derived(
-//   [game, data],
-//   ([$game, $data]) => {
-//     if ($game.base >= 3) {
-//       empires = [{id: 'any', name: 'Default'}, ...data.civilizations];
-//       selectedEmpire = empires[0];
-//     } else {
-//       empires = [];
-//     }
-//   }
-// )
+export const empire = writable({id: null, name: null});
