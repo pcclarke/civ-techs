@@ -69,7 +69,7 @@
         {#await $data}
           <p>Waiting...</p>
         {:then gotData}
-          <Wheel gameData={gotData}/>
+          <Wheel data={gotData}/>
         {:catch error}
           <p>Oh no!</p>
         {/await}

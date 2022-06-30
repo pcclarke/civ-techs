@@ -1,18 +1,19 @@
-import {cloneDeep} from 'lodash';
+import { cloneDeep } from 'lodash';
 
-import {getLeadsTo} from './dataTools.js';
-import {orderDisplayed}  from './orderDisplayed.js';
-import {setupArcs} from './setupArcs.js';
+import { dataTypes } from '../constants.js';
+import { getLeadsTo } from './dataTools.js';
+import { orderDisplayed }  from './orderDisplayed.js';
+import { setupArcs } from './setupArcs.js';
 
-export function setupData(data, nonTechnologies, installment, types) {
-  const sortedData = createUnlocks(data, nonTechnologies, installment, types);
+export function setupData(data, installment) {
+  const sortedData = createUnlocks(data, installment);
   const orderedData = orderDisplayed(sortedData, installment);
   const setupArc = setupArcs(orderedData);
 
   return setupArc;
 }
 
-function createUnlocks(data, nonTechnologies, installment, types) {
+function createUnlocks(data, installment) {
   let sortedData = cloneDeep(data);
   let displayed = [];
   let unlocksList = [];
@@ -32,16 +33,6 @@ function createUnlocks(data, nonTechnologies, installment, types) {
     d.cat = 'technologies';
     displayed.push(d);
 
-    const dataTypes = [
-      'buildings',
-      'build',
-      'civics',
-      'projects',
-      'promotions',
-      'religions',
-      'resources',
-      'units'
-    ]
     for (let i = 0; i < dataTypes.length; i++) {
       if (sortedData[dataTypes[i]]) {
         unlocks = unlocks.concat(getLeadsTo(d, sortedData[dataTypes[i]]));
@@ -83,7 +74,7 @@ function createUnlocks(data, nonTechnologies, installment, types) {
   sortedData.displayed = displayed;
 
   // Label data categories
-  types.forEach((t) => {
+  dataTypes.forEach((t) => {
     if (sortedData[t]) {
       sortedData[t].forEach((d) => {
         d.cat = t;

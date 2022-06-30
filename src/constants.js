@@ -1,3 +1,14 @@
+export const dataTypes = [
+  'units',
+  'buildings',
+  'religions',
+  'build',
+  'resources',
+  'projects',
+  'promotions',
+  'civics',
+];
+
 export const games = [
   {id: 'civ1', base: 1, name: 'Civilization'},
   {id: 'civ2', base: 2, name: 'Civilization II'},

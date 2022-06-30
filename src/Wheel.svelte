@@ -4,7 +4,6 @@
     getTechById,
     getTechPrereqs
   } from './lib/dataTools.js';
-  import {setupData} from './lib/setupData.js';
   import { setImageLink, oxfordizer } from './lib/stringTools.js';
 
   import { scaleOrdinal } from 'd3-scale';
@@ -21,7 +20,7 @@
 
   import startSlice from './assets/img/startSlice.png';
 
-  export let gameData;
+  export let data;
 
   const angleShift = 2;
   const arcBaseRadius = 100;
@@ -29,28 +28,6 @@
   const margin = {top: 10, right: 10, bottom: 10, left: 10},
     width = 1200 - margin.left - margin.right,
     height = 1200 - margin.top - margin.bottom;
-
-  let nonTechnologies = {};
-  for (let category in gameData) {
-    if (category !== 'technologies') {
-      gameData[category].forEach((reference) => {
-        nonTechnologies[reference.id] = reference;
-      });
-    }
-  }
-
-  const dataTypes = [
-    'units',
-    'buildings',
-    'religions',
-    'build',
-    'resources',
-    'projects',
-    'promotions',
-    'civics',
-  ];
-
-  const data = setupData(gameData, nonTechnologies, $game.base, dataTypes);
 
   console.log(data);
 
