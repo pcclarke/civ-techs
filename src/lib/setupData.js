@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash';
+import { object_without_properties } from 'svelte/internal';
 
 import { dataTypes } from '../constants.js';
 import { getLeadsTo } from './dataTools.js';
@@ -13,12 +14,165 @@ export function setupData(data, installment) {
   return setupArc;
 }
 
+export function buildRelationships(data) {
+  let requirementData = data.technologies.map(d => {
+    let obj = { id: d.id };
+    let prerequisites = [];
+
+    if (d.requires) {
+      const reqs = d.requires.map(r => ({id: r, type: 'requires'}));
+      prerequisites = prerequisites.concat(reqs);
+    }
+    if (d.optional) {
+      const opts = d.optional.map(o => ({id: o, type: 'optional'}));
+      prerequisites = prerequisites.concat(opts);
+    }
+    if (prerequisites.length > 0) {
+      obj.prerequisites = prerequisites;
+    }
+
+    return obj;
+  });
+
+  const orderedData = requirementData.map(d => {
+    d.depth = [...new Set(getAllPrerequisites(d, requirementData))].length;
+    return d;
+  }).sort((a, b) => a.depth - b.depth)
+    .map((d, i) => {
+      let {depth, ...rel} = d;
+      rel.pos = i;
+      return rel
+    });
+
+  console.log(orderedData);
+
+  return orderedData;
+}
+
+// Returns the tree depth from the earliest requirement to a given technology
+function getAllPrerequisites(tech, data) {
+  let prerequisites = [];
+
+  if (tech.prerequisites) {
+    prerequisites = prerequisites.concat(tech.prerequisites.map(p => p.id));
+
+    tech.prerequisites.forEach(pre => {
+      const t = data.find(d => d.id === pre.id);
+      prerequisites = prerequisites.concat(getAllPrerequisites(t, data));
+    });
+  }
+
+  return prerequisites;
+}
+
+export function buildArcs(data) {
+  let arcs = [];
+  let arcOrbitEnds = [];
+
+  for (const techArc of data) {
+    let leadsTo = [];
+
+    for (const techCompare of data) {
+      if (techCompare.prerequisites) {
+        const rel = techCompare.prerequisites.find(p => p.id === techArc.id);
+        if (rel) {
+          leadsTo.push({
+            id: techCompare.id,
+            pos: techCompare.pos,
+            type: rel.type
+          });
+        }
+      }
+    }
+
+    if (leadsTo.length > 0) {
+      leadsTo.push({
+        id: techArc.id,
+        pos: techArc.pos,
+        type: 'origin'
+      });
+
+      const start = Math.min(...leadsTo.map(l => l.pos));
+      const end = Math.max(...leadsTo.map(l => l.pos));
+      const orbit = (() => {
+        let orbitIndex = arcOrbitEnds.findIndex(e => e < start);
+        if (orbitIndex >= 0) {
+          arcOrbitEnds[orbitIndex] = end;
+          return orbitIndex;
+        } else {
+          arcOrbitEnds.push(end);
+          return arcOrbitEnds.length - 1;
+        }
+      })();
+
+      arcs.push({
+        start: start,
+        end: end,
+        orbit: orbit,
+        leads: leadsTo.sort((a, b) => a.pos - b.pos)
+      });
+    }
+  }
+  
+  return arcs;
+}
+
+export function buildSpokes(data, relationships) {
+  let spokes = [];
+
+  for (const tech of relationships) {
+    let obj = {};
+
+    obj.pos = tech.pos;
+
+    obj.orbit = (() => {
+      if (tech.prerequisites) {
+        let minOrbit = 500;
+
+        for (const arc of data.arcs) {
+          if (arc.leads.find(l => l.id === tech.id) && arc.orbit < minOrbit) {
+            minOrbit = arc.orbit;
+          }
+        }
+
+        return minOrbit;
+      } else {
+        return -1;
+      }
+    })();
+
+    obj.unlocks = (() => {
+      let found = [];
+
+      Object.keys(data)
+        .filter(d => d !== "technologies" && d !== "civilizations" && d !== "displayed")
+        .forEach(type => {
+        for (const unlock of data[type]) {
+          if (unlock.requires && (
+            (Array.isArray(unlock.requires) && unlock.requires.find(u => u === tech.id)) ||
+            (unlock.requires === tech.id)
+          )) {
+            found.push(unlock);
+          }
+        }
+      });
+
+      return found;
+    })();
+
+    obj.id = tech.id;
+    obj.properties = tech;
+
+    spokes.push(obj);
+  }
+
+  return spokes;
+}
+
 function createUnlocks(data, installment) {
   let sortedData = cloneDeep(data);
   let displayed = [];
   let unlocksList = [];
-
-  console.log(sortedData);
 
   // First, arrange the technologies by cost
   if (installment > 3) {

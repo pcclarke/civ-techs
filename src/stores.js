@@ -1,7 +1,12 @@
 import { derived, get, writable } from 'svelte/store';
 
 import { games } from './constants.js';
-import { setupData } from './lib/setupData.js'; 
+import {
+  buildArcs,
+  buildRelationships,
+  buildSpokes,
+  setupData
+} from './lib/setupData.js'; 
 
 export const game = writable(games[0]);
 
@@ -26,7 +31,13 @@ async function loadData(game) {
     empires.set([]);
   }
 
-  return setupData(responseJson, game.base);
+  let d = setupData(responseJson, game.base);
+
+  const relationships = buildRelationships(d);
+  d.arcs = buildArcs(relationships);
+  d.spokes = buildSpokes(d, relationships)
+
+  return d;
 }
 
 export const empires = writable([]);
