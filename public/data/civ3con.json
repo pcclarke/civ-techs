@@ -446,7 +446,7 @@
       "kind": "Civilization Advance",
       "name": "The Corporation",
       "id": "TECH_THE_CORPORATION",
-      "requires": ["TECH_INDUSTRIALISATION"]
+      "requires": ["TECH_INDUSTRIALIZATION"]
     },
     {
       "era": "Industrial Ages",
