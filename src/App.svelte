@@ -1,32 +1,44 @@
 <script>
-  import { onMount } from 'svelte';
-
   import Instructions from './Instructions.svelte';
   import Wheel from './Wheel.svelte';
 
   import { games } from './constants.js';
   import {
-    data,
     empire,
     empires,
     game
   } from './stores.js';
 
+  let rawData = setGame('civ1');
+
   function updateGame(event) {
-    setGame(event.target.value);
+    rawData = setGame(event.target.value);
   }
 
   function setGame(gameId) {
-    game.set(games.find(g => g.id === gameId));
+    const matchedGame = games.find(g => g.id === gameId);
+    game.set(matchedGame);
+    return loadData(matchedGame);
+  }
+
+  async function loadData(game) {
+    const response = await fetch(`./data/${game.id}.json`);
+    const responseJson = await response.json();
+
+    if (game.base >= 3) {
+      const defaultEmpire = {id: 'any', name: 'Default'};
+      empires.set([defaultEmpire, ...responseJson.civilizations]);
+      empire.set(defaultEmpire);
+    } else {
+      empires.set([]);
+    }
+
+    return responseJson;
   }
 
   function setEmpire(event) {
     empire.set($empires.find(e => e.id === event.target.value));
   }
-
-  onMount(() => {
-		setGame('civ1');
-	});
 </script>
 
 <main>
@@ -66,10 +78,10 @@
       </div>
 
       <div id='chart'>
-        {#await $data}
+        {#await rawData}
           <p>Waiting...</p>
         {:then gotData}
-          <Wheel data={gotData}/>
+          <Wheel rawData={gotData}/>
         {:catch error}
           <p>Oh no!</p>
         {/await}

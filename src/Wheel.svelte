@@ -11,131 +11,79 @@
 
   import LeadsTo from './LeadsTo.svelte';
   import RequirementsModal from './RequirementsModal.svelte';
-  import Spokes from './Spokes.svelte';
+  import {
+    buildArcs,
+    buildRelationships,
+    buildSpokes,
+    setupData
+} from './lib/setupData.js'; 
   import {
     arcSpace,
     empire,
-    game,
+    game
   } from './stores.js';
 
   import startSlice from './assets/img/startSlice.png';
+  import Arcs from './Arcs.svelte';
+  import Spokes from './Spokes.svelte';
 
-  export let data;
+  export let rawData;
+
+  console.log(rawData);
+
+  const data = setupData(rawData, $game.base);
+  const relationships = buildRelationships(data);
+  const arcs = buildArcs(relationships);
+  const spokes = buildSpokes(arcs, data, relationships);
+
+  let hovered = '';
+  let hoverArcs = [];
+  let hoverSpokes = [];
+  
+  $: {
+    if (hovered.length > 0) {
+      const hoverRelationship = relationships.find(r => r.id === hovered);
+      const relatedTechs = relationships.filter(r => {
+        return r.id === hovered ||
+          r?.prerequisites?.find(p => p.id === hovered) ||
+          hoverRelationship?.prerequisites?.find(p => p.id === r.id);
+      }).map(r => r.id);
+
+      hoverArcs = arcs.filter(a => a.leads.some(l => l.id === hovered))
+        .map(a => {
+          const newLeads = a.leads.filter(l => relatedTechs.includes(l.id));
+          return {
+            start: Math.min(...newLeads.map(l => l.pos)),
+            end: Math.max(...newLeads.map(l => l.pos)),
+            orbit: a.orbit,
+            leads: newLeads
+          };
+        });
+      hoverSpokes = spokes.filter(s => relatedTechs.includes(s.id))
+        .map(s => {
+          const relatedArcs = hoverArcs.filter(a => a.leads.some(l => l.id === s.id));
+          if (relatedArcs.length > 0) {
+            s.orbit = Math.min(...relatedArcs.map(l => l.orbit));
+          }
+          return s;
+        });
+    } else {
+      hoverArcs = [];
+      hoverSpokes = [];
+    }
+  };
 
   const angleShift = 2;
-  const arcBaseRadius = 100;
-  const arcStrokeWidth = 1.5;
+  const arcBaseRadius = 95;
+  const arcStrokeWidth = 1;
   const margin = {top: 10, right: 10, bottom: 10, left: 10},
     width = 1200 - margin.left - margin.right,
     height = 1200 - margin.top - margin.bottom;
 
-  console.log(data);
-
-  let notFaded = [];
-  let tempArcs = [];
-  let notUnlockFaded = null;
   let displayModal = false;
   let modalInfo = {};
 
   const color = scaleOrdinal(schemeCategory10);
-
-  const updateDataFade = (d) => {
-    let minRank = 50;
-    let updateNotFaded = getTechPrereqs(d, data);
-
-    let updateTempArcs = updateNotFaded.map((n) => {
-      let tempDist;
-      let tempBack;
-      if (d.pos > n.pos) {
-        tempDist = (d.pos - n.pos) * ((2 * Math.PI) / data.displayed.length);
-        tempBack = 0;
-      } else if (d.pos < n.pos) {
-        tempDist = 0;
-        tempBack = (d.pos - n.pos) * ((2 * Math.PI) / data.displayed.length);
-      } else if (d.pos === n.pos) {
-        tempDist = n.arcDist;
-        tempBack = n.arcBack;
-      }
-
-      let lopt = [];
-      if (n.id === d.id) {
-        lopt = d.lopt;
-      } else {
-        n.lopt.forEach((o) => {
-          if (o.id === d.id) {
-            lopt.push(o);
-          }
-        });
-      }
-
-      let lreq = [];
-      if (n.id === d.id) {
-        lreq = d.lreq;
-      } else {
-        n.lreq.forEach((r) => {
-          if (r.id === d.id) {
-            lreq.push(r);
-          }
-        });
-      }
-
-      let spokeRank = 50;
-
-      if (d.pos === n.pos) {
-        spokeRank = minRank;
-      } else {
-        lopt.forEach((o) => {
-          if (o.rank < spokeRank) {
-            spokeRank = o.rank;
-          }
-        });
-        lreq.forEach((r) => {
-          if (r.rank < spokeRank) {
-            spokeRank = r.rank;
-          }
-        });
-      }
-      if (spokeRank < minRank) {
-        minRank = spokeRank;
-      }
-
-      return {
-        arcBack: tempBack,
-        arcDist: tempDist,
-        rank: n.rank,
-        id: n.id,
-        lopt: lopt,
-        lreq: lreq,
-        pos: n.pos,
-        spokeRank: spokeRank,
-        unlocks: n.unlocks,
-      };
-    });
-    updateNotFaded = updateNotFaded.concat(d);
-    updateNotFaded = updateNotFaded.concat(getLeadsTo(d, data.displayed));
-
-    updateTempArcs.push(d);
-    getLeadsTo(d, data.displayed).forEach((l) => {
-      updateTempArcs.push({
-        arcBack: 0,
-        arcDist: 0,
-        rank: 0,
-        id: l.id,
-        lopt: [],
-        lreq: [],
-        pos: l.pos,
-        spokeRank: d.rank,
-        unlocks: l.unlocks,
-      });
-    });
-
-    notFaded = updateNotFaded;
-    tempArcs = updateTempArcs;
-  };
-
-  const updateUnlockFade = (u) => {
-    notUnlockFaded = (u) ? u : null;
-  }
 
   function displayUnlockModal(reference, data) {
     let requirements = [];
@@ -190,12 +138,25 @@
   width={width + margin.left + margin.right}
   height={height + margin.top + margin.bottom}
 >
+<g>
   <g
     class="civTechs"
     transform={`translate(${margin.left + width / 2}, ${margin.top + height / 2})`}
   >
+    <circle
+      id="bg-circle-1"
+      r={width / 4 + 230}
+      fill="#faf9f4"
+    />
+    <circle
+      id="bg-circle-2"
+      cx=0
+      cy=0
+      r={width / 4 + 120}
+      fill="#ffffff"
+    />
     <image
-      id="startSlice"
+      id="start-slice"
       x={0}
       y={-(height/2)}
       width={167}
@@ -203,64 +164,45 @@
       href={startSlice}
     />
 
-  {#if notFaded.length > 0 && tempArcs.length > 0}
-    <g class='tempArcs'>
-      {#each tempArcs as tempArc}
-        <g
-          class='temp-spokes'
-          transform={`rotate(${tempArc.pos * (360 / data.displayed.length) + angleShift})`}
-        >
-          <line
-            class='spokeLine'
-            x1={0}
-            y1={-(arcBaseRadius + ($arcSpace * tempArc.spokeRank))}
-            x2={0}
-            y2={-(width / 2) + 160 - (tempArc.unlocks.length * 14)}
-          />
-        </g>
-      {/each}
-      {#each tempArcs.filter((t) => t.lopt.length > 0 || t.lreq.length > 0) as tempArc}
-        <LeadsTo
-          angleShift={angleShift}
-          arcBaseRadius={arcBaseRadius}
-          arcStrokeWidth={arcStrokeWidth}
-          colour={color}
-          data={tempArc}
-          totalTechnologies={data.displayed.length}
-        />
-      {/each}
-    </g>
-  {/if}
+    {#if hoverSpokes.length > 0}
+      <Spokes
+        angleShift={angleShift}
+        arcBaseRadius={arcBaseRadius}
+        length={spokes.length}
+        spokeData={hoverSpokes}
+        width={width}
+      />
+      <Arcs
+        arcData={hoverArcs}
+        angleShift={angleShift}
+        arcBaseRadius={arcBaseRadius}
+        arcStrokeWidth={arcStrokeWidth}
+        colour={color}
+        techCount={spokes.length}
+      />
+    {/if}
 
-    <Spokes
-      angleShift={angleShift}
-      arcBaseRadius={arcBaseRadius}
-      arcStrokeWidth={arcStrokeWidth}
-      colour={color}
-      data={data}
-      displayUnlockModal={displayUnlockModal}
-      bind:notFaded={notFaded}
-      notUnlockFaded={notUnlockFaded}
-      updateDataFade={updateDataFade}
-      updateUnlockFade={updateUnlockFade}
-      width={width}
-    />
-
-    <g class='reqArcs'>
-      {#each data.displayed as d}
-        <LeadsTo
-          angleShift={angleShift}
-          arcBaseRadius={arcBaseRadius}
-          arcStrokeWidth={arcStrokeWidth}
-          colour={color}
-          data={d}
-          fade={` ${(notFaded.length > 0) ? 'fade' : ''}`}
-          totalTechnologies={data.displayed.length}
-        />
-      {/each}
+    <g class={(hovered.length > 0) ? 'fade' : ''}>
+      <Spokes
+        angleShift={angleShift}
+        arcBaseRadius={arcBaseRadius}
+        length={spokes.length}
+        spokeData={spokes}
+        width={width}
+        bind:hovered={hovered}
+      />
+      <Arcs
+        arcData={arcs}
+        angleShift={angleShift}
+        arcBaseRadius={arcBaseRadius}
+        arcStrokeWidth={arcStrokeWidth}
+        colour={color}
+        techCount={spokes.length}
+      />
     </g>
 
     <image
+      id="game-image"
       x={-75}
       y={-75}
       width={150}
@@ -283,8 +225,8 @@
 {/if}
 
 <style>
-  .spokeLine {
-    stroke: #bcbec0;
-    stroke-width: 0.5px;
+  .fade {
+    opacity: 0.05;
+    transition: all 0.5s ease;
   }
 </style>

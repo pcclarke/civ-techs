@@ -16,7 +16,7 @@ export function setupData(data, installment) {
 
 export function buildRelationships(data) {
   let requirementData = data.technologies.map(d => {
-    let obj = { id: d.id };
+    let obj = { id: d.id, name: d.name };
     let prerequisites = [];
 
     if (d.requires) {
@@ -117,7 +117,7 @@ export function buildArcs(data) {
   return arcs;
 }
 
-export function buildSpokes(data, relationships) {
+export function buildSpokes(arcs, data, relationships) {
   let spokes = [];
 
   for (const tech of relationships) {
@@ -129,7 +129,7 @@ export function buildSpokes(data, relationships) {
       if (tech.prerequisites) {
         let minOrbit = 500;
 
-        for (const arc of data.arcs) {
+        for (const arc of arcs) {
           if (arc.leads.find(l => l.id === tech.id) && arc.orbit < minOrbit) {
             minOrbit = arc.orbit;
           }
@@ -161,7 +161,7 @@ export function buildSpokes(data, relationships) {
     })();
 
     obj.id = tech.id;
-    obj.properties = tech;
+    obj.name = tech.name;
 
     spokes.push(obj);
   }
