@@ -1,15 +1,10 @@
 <script>
-  import {
-    getLeadsTo,
-    getTechById,
-    getTechPrereqs
-  } from './lib/dataTools.js';
+  import { getTechById } from './lib/dataTools.js';
   import { setImageLink, oxfordizer } from './lib/stringTools.js';
 
   import { scaleOrdinal } from 'd3-scale';
   import { schemeCategory10 } from 'd3-scale-chromatic';
 
-  import LeadsTo from './LeadsTo.svelte';
   import RequirementsModal from './RequirementsModal.svelte';
   import {
     buildArcs,
@@ -17,11 +12,7 @@
     buildSpokes,
     setupData
 } from './lib/setupData.js'; 
-  import {
-    arcSpace,
-    empire,
-    game
-  } from './stores.js';
+  import { empire, game } from './stores.js';
 
   import startSlice from './assets/img/startSlice.png';
   import Arcs from './Arcs.svelte';
