@@ -9,6 +9,7 @@
 
   export let angleShift;
   export let arcBaseRadius;
+  export let modal = {};
   export let hovered = '';
   export let length;
   export let spokeData;
@@ -17,6 +18,21 @@
   const iconWidth = 20;
 
   const setHover = (id) => hovered = id;
+  const setModal = (spoke) => {
+    if (Object.keys(modal).length === 0) {
+      const {
+        id,
+        name
+      } = spoke;
+
+      modal = {
+        cat: 'technologies',
+        id: id,
+        name: name
+      };
+    }
+  }
+    
 </script>
 
 {#each spokeData as spoke}
@@ -36,6 +52,7 @@
     <image
       class="tech-icon"
       height={iconWidth}
+      on:click={() => setModal(spoke)}
       on:focus={() => setHover(spoke.id)}
       on:mouseleave={() => setHover('')}
       on:mouseover={() => setHover(spoke.id)}

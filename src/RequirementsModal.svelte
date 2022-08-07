@@ -1,11 +1,15 @@
 <script>
   export let display;
-  export let imagePath;
-  export let leadsRequirements;
-  export let leadsOptionals;
-  export let optionals;
-  export let requirements;
-  export let title;
+  export let info;
+
+  const {
+    imagePath,
+    leadsRequirements,
+    leadsOptionals,
+    optionals,
+    requirements,
+    title
+  } = info;
 </script>
 
   <div class="modal" id="modal">
@@ -32,12 +36,12 @@
     {#if leadsOptionals}
       <p>Optional for: {leadsOptionals}</p>
     {/if}
-    <button on:click={() => display = false}>Close</button>
+    <button on:click={() => display = {}}>Close</button>
   </div>
   <div
     class="modal-overlay"
     id="modal-overlay"
-    on:click={() => display = false}
+    on:click={() => display = {}}
   >
   </div>
 

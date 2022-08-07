@@ -1,5 +1,4 @@
 import { cloneDeep } from 'lodash';
-import { object_without_properties } from 'svelte/internal';
 
 import { dataTypes } from '../constants.js';
 import { getLeadsTo } from './dataTools.js';
@@ -41,7 +40,7 @@ export function buildRelationships(data) {
     .map((d, i) => {
       let {depth, ...rel} = d;
       rel.pos = i;
-      return rel
+      return rel;
     });
 
   console.log(orderedData);

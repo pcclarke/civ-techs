@@ -11,7 +11,7 @@
     buildRelationships,
     buildSpokes,
     setupData
-} from './lib/setupData.js'; 
+  } from './lib/setupData.js'; 
   import { empire, game } from './stores.js';
 
   import startSlice from './assets/img/startSlice.png';
@@ -22,11 +22,24 @@
 
   console.log(rawData);
 
+  // Data for drawing elements
   const data = setupData(rawData, $game.base);
   const relationships = buildRelationships(data);
   const arcs = buildArcs(relationships);
   const spokes = buildSpokes(arcs, data, relationships);
 
+  console.log(arcs, spokes);
+
+  // Presentation values
+  const angleShift = 2;
+  const arcBaseRadius = 95;
+  const arcStrokeWidth = 1;
+  const color = scaleOrdinal(schemeCategory10);
+  const margin = {top: 10, right: 10, bottom: 10, left: 10},
+    width = 1200 - margin.left - margin.right,
+    height = 1200 - margin.top - margin.bottom;
+
+  // Fade out/in on hover setup
   let hovered = '';
   let hoverArcs = [];
   let hoverSpokes = [];
@@ -64,65 +77,65 @@
     }
   };
 
-  const angleShift = 2;
-  const arcBaseRadius = 95;
-  const arcStrokeWidth = 1;
-  const margin = {top: 10, right: 10, bottom: 10, left: 10},
-    width = 1200 - margin.left - margin.right,
-    height = 1200 - margin.top - margin.bottom;
-
-  let displayModal = false;
+  let displayModal = {};
   let modalInfo = {};
 
-  const color = scaleOrdinal(schemeCategory10);
+  $: modalInfo = (() => {
+    console.log(displayModal);
+    if (displayModal.id) {
+      let modalSetup = {};
 
-  function displayUnlockModal(reference, data) {
-    let requirements = [];
+      const modalRelationship = relationships.find(r => r.id === displayModal.id);
 
-    if (reference.requires) {
-      if (typeof reference.requires === 'string') {
-        requirements.push(getTechById(reference.requires, data).name);
-      } else {
-        reference.requires.forEach((requirementId) => {
-          requirements.push(getTechById(requirementId, data).name);
-        });
+      if (modalRelationship.prerequisites) {
+        const prerequisites = modalRelationship.prerequisites
+          .map(p => {
+            return {
+              name: relationships.find(r => r.id === p.id).name,
+              type: p.type
+            };
+          });
+
+        modalSetup.requirements = oxfordizer(
+          prerequisites.filter(p => p.type === 'requires').map(p => p.name),
+        'and');
+
+        const optionals = prerequisites.filter(p => p.type === 'optional');
+        if (optionals.length > 0) {
+          modalSetup.optionals = oxfordizer(optionals, 'and');
+        }
       }
-    }
 
-    let prepModalInfo = {
-      imagePath: setImageLink(reference, $game.id, $empire.id),
-      requirements: oxfordizer(requirements, 'and'),
-      title: (reference.name) ? reference.name: reference[$empire.id].name,
-    };
+      modalSetup.imagePath = setImageLink(displayModal, $game.id, $empire.id);
 
-    if (reference.optional) {
-      let optionals = [];
-      reference.optional.forEach((optionalId) => {
-        optionals.push(getTechById(optionalId, data).name);
+      modalSetup.title = (displayModal.name) ? displayModal.name : displayModal[$empire.id].name;
+
+      const leadsTechs = relationships.filter(r => {
+        return r?.prerequisites?.find(p => p.id === displayModal.id);
+      }).map(r => {
+        const rel = r.prerequisites.find(p => p.id === displayModal.id);
+
+        return {
+          name: r.name,
+          type: rel.type
+        };
       });
-      prepModalInfo.optionals = oxfordizer(optionals, 'or');
+
+      const leadsRequired = leadsTechs.filter(t => t.type === 'requires');
+      if (leadsRequired.length > 0) {
+        modalSetup.leadsRequirements = oxfordizer(leadsRequired.map(l => l.name), 'and');
+      }
+
+      const leadsOptional = leadsTechs.filter(t => t.type === 'optional');
+      if (leadsOptional.length > 0) {
+        modalSetup.leadsOptionals = oxfordizer(leadsOptional.map(l => l.name), 'and');
+      }
+
+      return modalSetup;
+    } else {
+      return {};
     }
-
-    if (reference.lreq) {
-      let leadsRequirements = [];
-      reference.lreq.forEach((leadsReq) => {
-        leadsRequirements.push(getTechById(leadsReq.id, data).name);
-      });
-      prepModalInfo.leadsRequirements = oxfordizer(leadsRequirements, 'and');
-    }
-
-    if (reference.lopt) {
-      let leadsOptionals = [];
-      reference.lopt.forEach((leadsOpt) => {
-        leadsOptionals.push(getTechById(leadsOpt.id, data).name);
-      });
-      prepModalInfo.leadsOptionals = oxfordizer(leadsOptionals, 'and');
-    }
-
-    modalInfo = prepModalInfo;
-
-    displayModal = true;
-  }
+  })();
 </script>
 
 <svg
@@ -181,6 +194,7 @@
         spokeData={spokes}
         width={width}
         bind:hovered={hovered}
+        bind:modal={displayModal}
       />
       <Arcs
         arcData={arcs}
@@ -203,15 +217,10 @@
   </g>
 </svg>
 
-{#if displayModal}
+{#if Object.keys(modalInfo).length > 0}
   <RequirementsModal
+    info={modalInfo}
     bind:display={displayModal}
-    imagePath={modalInfo.imagePath}
-    leadsRequirements={modalInfo.leadsRequirements}
-    leadsOptionals={modalInfo.leadsOptionals}
-    optionals={modalInfo.optionals}
-    requirements={modalInfo.requirements}
-    title={modalInfo.title}
   />
 {/if}
 
