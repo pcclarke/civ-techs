@@ -46,7 +46,7 @@
       x1=0
       y1={(spoke.orbit === -1) ? 0 : ($arcSpace * spoke.orbit) + arcBaseRadius}
       x2=0
-      y2={(width / 2) - 160 + (spoke.unlocks.length * 14)}
+      y2={(width / 4) + ((spoke.unlocks.length > 0) ? spoke.unlocks.length * 14 + 120 : 0)}
       stroke-width=0.5
     />
     <image
