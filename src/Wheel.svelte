@@ -20,15 +20,11 @@
 
   export let rawData;
 
-  console.log(rawData);
-
   // Data for drawing elements
   const data = setupData(rawData, $game.base);
   const relationships = buildRelationships(data);
   const arcs = buildArcs(relationships);
   const spokes = buildSpokes(arcs, data, relationships);
-
-  console.log(arcs, spokes);
 
   // Presentation values
   const angleShift = 2;
@@ -81,7 +77,6 @@
   let modalInfo = {};
 
   $: modalInfo = (() => {
-    console.log(displayModal);
     if (displayModal.id) {
       let modalSetup = {};
 
@@ -102,7 +97,7 @@
 
         const optionals = prerequisites.filter(p => p.type === 'optional');
         if (optionals.length > 0) {
-          modalSetup.optionals = oxfordizer(optionals, 'and');
+          modalSetup.optionals = oxfordizer(optionals.map(o => o.name), 'and');
         }
       }
 

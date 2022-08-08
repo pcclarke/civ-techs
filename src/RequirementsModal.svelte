@@ -23,7 +23,9 @@
     {/if}
     {#if optionals}
       <div>
-        <p id='tipPlusLine'>plus</p>
+        {#if requirements}
+          <p id='tipPlusLine'>plus</p>
+        {/if}
         <p>You need one of: {optionals}</p>
       </div>
     {/if}
