@@ -1,18 +1,6 @@
 // Determine the image path for an icon link
-export function setImageLink(reference, game, empire) {
-  let link = '';
-
-  if ((reference.cat === 'units' || reference.cat === 'buildings') && !(game === 'civ1' || game === 'civ2')) {
-    if (reference[empire]) {
-      link = `${game}/${reference.cat}/${reference[empire].id}.png`;
-    } else {
-      link = `${game}/${reference.cat}/${reference.CIVILIZATION_ALL.id}.png`;
-    }
-  } else {
-    link = `${game}/${reference.cat}/${reference.id}.png`;
-  }
-
-  return link;
+export function setImageLink(reference, game) {
+  return `${game}/${reference.cat}/${reference.id}.png`;
 }
 
 // Turn an array of strings into an oxford comma sentence

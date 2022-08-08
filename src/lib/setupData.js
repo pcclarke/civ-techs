@@ -13,6 +13,7 @@ export function setupData(data, installment) {
   return setupArc;
 }
 
+// Get technologies with prerequisites by order of tree depth
 export function buildRelationships(data) {
   let requirementData = data.technologies.map(d => {
     let obj = { id: d.id, name: d.name };
@@ -43,8 +44,6 @@ export function buildRelationships(data) {
       return rel;
     });
 
-  console.log(orderedData);
-
   return orderedData;
 }
 
@@ -64,6 +63,7 @@ function getAllPrerequisites(tech, data) {
   return prerequisites;
 }
 
+// Assemble data required to draw the arcs
 export function buildArcs(data) {
   let arcs = [];
   let arcOrbitEnds = [];
@@ -116,7 +116,8 @@ export function buildArcs(data) {
   return arcs;
 }
 
-export function buildSpokes(arcs, data, relationships) {
+// Assemble data required to draw the spokes
+export function buildSpokes(arcs, data, empire, game, relationships) {
   let spokes = [];
 
   for (const tech of relationships) {
@@ -144,17 +145,44 @@ export function buildSpokes(arcs, data, relationships) {
       let found = [];
 
       Object.keys(data)
-        .filter(d => d !== "technologies" && d !== "civilizations" && d !== "displayed")
+        .filter(d => d !== "technologies" && d !== "civilizations")
         .forEach(type => {
-        for (const unlock of data[type]) {
-          if (unlock.requires && (
-            (Array.isArray(unlock.requires) && unlock.requires.find(u => u === tech.id)) ||
-            (unlock.requires === tech.id)
-          )) {
-            found.push(unlock);
+          for (const unlock of data[type]) {
+            if (unlock.requires && (
+              (Array.isArray(unlock.requires) && unlock.requires.find(u => u === tech.id)) ||
+              (unlock.requires === tech.id)
+            )) {
+              if(unlock[empire.id]) {
+                found.push({
+                  cat: type,
+                  id: unlock[empire.id].id,
+                  name: unlock[empire.id].name,
+                  requires: unlock.requires
+                });
+              } else if (unlock['CIVILIZATION_ALL']) {
+                found.push({
+                  cat: type,
+                  id: unlock['CIVILIZATION_ALL'].id,
+                  name: unlock['CIVILIZATION_ALL'].name,
+                  requires: unlock.requires
+                });
+              } else {
+                found.push({
+                  cat: type,
+                  id: unlock.id,
+                  name: unlock.name,
+                  requires: unlock.requires
+                });
+              }
+            }
           }
-        }
-      });
+        });
+
+      const techItem = data.technologies.find(d => d.id === tech.id);
+      if (techItem.specials) {
+        found = found.concat(techItem.specials);
+      }
+
 
       return found;
     })();

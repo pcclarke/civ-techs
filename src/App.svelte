@@ -26,7 +26,7 @@
     const responseJson = await response.json();
 
     if (game.base >= 3) {
-      const defaultEmpire = {id: 'any', name: 'Default'};
+      const defaultEmpire = {id: 'CIVILIZATION_ALL', name: 'Default'};
       empires.set([defaultEmpire, ...responseJson.civilizations]);
       empire.set(defaultEmpire);
     } else {

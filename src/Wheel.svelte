@@ -21,10 +21,11 @@
   export let rawData;
 
   // Data for drawing elements
-  const data = setupData(rawData, $game.base);
-  const relationships = buildRelationships(data);
+  const relationships = buildRelationships(rawData);
   const arcs = buildArcs(relationships);
-  const spokes = buildSpokes(arcs, data, relationships);
+  $: spokes = buildSpokes(arcs, rawData, $empire, $game, relationships);
+
+  console.log(spokes, rawData);
 
   // Presentation values
   const angleShift = 2;
@@ -101,7 +102,7 @@
         }
       }
 
-      modalSetup.imagePath = setImageLink(displayModal, $game.id, $empire.id);
+      modalSetup.imagePath = setImageLink(displayModal, $game.id);
 
       modalSetup.title = (displayModal.name) ? displayModal.name : displayModal[$empire.id].name;
 

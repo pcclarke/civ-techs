@@ -1,9 +1,5 @@
 <script>
-  import {
-    arcSpace,
-    empire,
-    game
-  } from './stores.js';
+  import { arcSpace, game } from './stores.js';
   import { setImageLink } from './lib/stringTools.js';
   import SpokeText from './SpokeText.svelte';
 
@@ -77,7 +73,7 @@
             `translate(-6, ${(width / 4) + 136.5 + (14 * j)}) rotate(-90)` :
             `translate(6, ${(width / 4) + 123.5 + (14 * j)}) rotate(-270)`}
           width={13}
-          href={(() => setImageLink(unlock, $game.id, $empire.id))()}
+          href={(() => setImageLink(unlock, $game.id))()}
         />
       {/each}
     {/if}
