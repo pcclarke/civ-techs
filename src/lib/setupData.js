@@ -119,8 +119,9 @@ export function buildArcs(data) {
 // Assemble data required to draw the spokes
 export function buildSpokes(arcs, data, empire, relationships) {
   let spokes = [];
+  let assignedUnlocks = [];
 
-  for (const tech of relationships) {
+  for (const tech of relationships.reverse()) {
     let obj = {};
 
     obj.pos = tech.pos;
@@ -153,33 +154,41 @@ export function buildSpokes(arcs, data, empire, relationships) {
               (unlock.requires === tech.id)
             )) {
               if(unlock[empire.id]) {
-                found.push({
-                  cat: type,
-                  id: unlock[empire.id].id,
-                  name: unlock[empire.id].name,
-                  requires: unlock.requires
-                });
+                if (!assignedUnlocks.includes(unlock[empire.id].id)) {
+                  found.push({
+                    cat: type,
+                    id: unlock[empire.id].id,
+                    name: unlock[empire.id].name,
+                    requires: unlock.requires
+                  });
+                  assignedUnlocks.push(unlock[empire.id].id);
+                }
               } else if (unlock['CIVILIZATION_ALL']) {
-                found.push({
-                  cat: type,
-                  id: unlock['CIVILIZATION_ALL'].id,
-                  name: unlock['CIVILIZATION_ALL'].name,
-                  requires: unlock.requires
-                });
+                if (!assignedUnlocks.includes(unlock['CIVILIZATION_ALL'].id)) {
+                  found.push({
+                    cat: type,
+                    id: unlock['CIVILIZATION_ALL'].id,
+                    name: unlock['CIVILIZATION_ALL'].name,
+                    requires: unlock.requires
+                  });
+                  assignedUnlocks.push(unlock['CIVILIZATION_ALL'].id);
+                }
               } else {
-                found.push({
-                  cat: type,
-                  id: unlock.id,
-                  name: unlock.name,
-                  requires: unlock.requires
-                });
+                if (!assignedUnlocks.includes(unlock.id)) {
+                  found.push({
+                    cat: type,
+                    id: unlock.id,
+                    name: unlock.name,
+                    requires: unlock.requires
+                  });
+                  assignedUnlocks.push(unlock.id);
+                }
               }
             }
           }
         });
 
       const techItem = data.technologies.find(d => d.id === tech.id);
-      console.log(techItem);
       if (techItem.special) {
         techItem.special.forEach(s => {
           found.push({
