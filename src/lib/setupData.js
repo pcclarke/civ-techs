@@ -117,7 +117,7 @@ export function buildArcs(data) {
 }
 
 // Assemble data required to draw the spokes
-export function buildSpokes(arcs, data, empire, game, relationships) {
+export function buildSpokes(arcs, data, empire, relationships) {
   let spokes = [];
 
   for (const tech of relationships) {
@@ -179,10 +179,17 @@ export function buildSpokes(arcs, data, empire, game, relationships) {
         });
 
       const techItem = data.technologies.find(d => d.id === tech.id);
-      if (techItem.specials) {
-        found = found.concat(techItem.specials);
+      console.log(techItem);
+      if (techItem.special) {
+        techItem.special.forEach(s => {
+          found.push({
+            cat: 'specials',
+            id: s.id,
+            name: s.id,
+            requires: techItem.id
+          });
+        });
       }
-
 
       return found;
     })();

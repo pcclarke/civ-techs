@@ -23,9 +23,7 @@
   // Data for drawing elements
   const relationships = buildRelationships(rawData);
   const arcs = buildArcs(relationships);
-  $: spokes = buildSpokes(arcs, rawData, $empire, $game, relationships);
-
-  console.log(spokes, rawData);
+  $: spokes = buildSpokes(arcs, rawData, $empire, relationships);
 
   // Presentation values
   const angleShift = 2;

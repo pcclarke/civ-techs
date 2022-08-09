@@ -28,7 +28,6 @@
       };
     }
   }
-    
 </script>
 
 {#each spokeData as spoke}
