@@ -42,8 +42,6 @@
 </script>
 
 <main>
-  <link rel="stylesheet" href="node_modules/svelte-material-ui/bare.css" />
-
   <div class='CivTechs'>
     <div id='container'>
       <Instructions/>
