@@ -16,16 +16,7 @@
   const setHover = (id) => hovered = id;
   const setModal = (spoke) => {
     if (Object.keys(modal).length === 0) {
-      const {
-        id,
-        name
-      } = spoke;
-
-      modal = {
-        cat: 'technologies',
-        id: id,
-        name: name
-      };
+      modal = spoke.modal;
     }
   }
 </script>

@@ -1,5 +1,4 @@
 <script>
-  import { getTechById } from './lib/dataTools.js';
   import { setImageLink, oxfordizer } from './lib/stringTools.js';
 
   import { scaleOrdinal } from 'd3-scale';
@@ -9,8 +8,7 @@
   import {
     buildArcs,
     buildRelationships,
-    buildSpokes,
-    setupData
+    buildSpokes
   } from './lib/setupData.js'; 
   import { empire, game } from './stores.js';
 
@@ -23,7 +21,7 @@
   // Data for drawing elements
   const relationships = buildRelationships(rawData);
   const arcs = buildArcs(relationships);
-  $: spokes = buildSpokes(arcs, rawData, $empire, relationships);
+  $: spokes = buildSpokes(arcs, rawData, $game, $empire, relationships);
 
   // Presentation values
   const angleShift = 2;
@@ -33,6 +31,8 @@
   const margin = {top: 10, right: 10, bottom: 10, left: 10},
     width = 1200 - margin.left - margin.right,
     height = 1200 - margin.top - margin.bottom;
+
+  let displayModal = {};
 
   // Fade out/in on hover setup
   let hovered = '';
@@ -71,72 +71,12 @@
       hoverSpokes = [];
     }
   };
-
-  let displayModal = {};
-  let modalInfo = {};
-
-  $: modalInfo = (() => {
-    if (displayModal.id) {
-      let modalSetup = {};
-
-      const modalRelationship = relationships.find(r => r.id === displayModal.id);
-
-      if (modalRelationship.prerequisites) {
-        const prerequisites = modalRelationship.prerequisites
-          .map(p => {
-            return {
-              name: relationships.find(r => r.id === p.id).name,
-              type: p.type
-            };
-          });
-
-        modalSetup.requirements = oxfordizer(
-          prerequisites.filter(p => p.type === 'requires').map(p => p.name),
-        'and');
-
-        const optionals = prerequisites.filter(p => p.type === 'optional');
-        if (optionals.length > 0) {
-          modalSetup.optionals = oxfordizer(optionals.map(o => o.name), 'and');
-        }
-      }
-
-      modalSetup.imagePath = setImageLink(displayModal, $game.id);
-
-      modalSetup.title = (displayModal.name) ? displayModal.name : displayModal[$empire.id].name;
-
-      const leadsTechs = relationships.filter(r => {
-        return r?.prerequisites?.find(p => p.id === displayModal.id);
-      }).map(r => {
-        const rel = r.prerequisites.find(p => p.id === displayModal.id);
-
-        return {
-          name: r.name,
-          type: rel.type
-        };
-      });
-
-      const leadsRequired = leadsTechs.filter(t => t.type === 'requires');
-      if (leadsRequired.length > 0) {
-        modalSetup.leadsRequirements = oxfordizer(leadsRequired.map(l => l.name), 'and');
-      }
-
-      const leadsOptional = leadsTechs.filter(t => t.type === 'optional');
-      if (leadsOptional.length > 0) {
-        modalSetup.leadsOptionals = oxfordizer(leadsOptional.map(l => l.name), 'and');
-      }
-
-      return modalSetup;
-    } else {
-      return {};
-    }
-  })();
 </script>
 
 <svg
   width={width + margin.left + margin.right}
   height={height + margin.top + margin.bottom}
 >
-<g>
   <g
     class="civTechs"
     transform={`translate(${margin.left + width / 2}, ${margin.top + height / 2})`}
@@ -211,9 +151,9 @@
   </g>
 </svg>
 
-{#if Object.keys(modalInfo).length > 0}
+{#if Object.keys(displayModal).length > 0}
   <RequirementsModal
-    info={modalInfo}
+    info={displayModal}
     bind:display={displayModal}
   />
 {/if}

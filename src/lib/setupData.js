@@ -4,6 +4,7 @@ import { dataTypes } from '../constants.js';
 import { getLeadsTo } from './dataTools.js';
 import { orderDisplayed }  from './orderDisplayed.js';
 import { setupArcs } from './setupArcs.js';
+import { oxfordizer, setImageLink } from './stringTools.js';
 
 export function setupData(data, installment) {
   const sortedData = createUnlocks(data, installment);
@@ -117,7 +118,7 @@ export function buildArcs(data) {
 }
 
 // Assemble data required to draw the spokes
-export function buildSpokes(arcs, data, empire, relationships) {
+export function buildSpokes(arcs, data, game, empire, relationships) {
   let spokes = [];
   let assignedUnlocks = [];
 
@@ -205,6 +206,59 @@ export function buildSpokes(arcs, data, empire, relationships) {
 
     obj.id = tech.id;
     obj.name = tech.name;
+
+    // Add info to set up modal box
+    obj.modal = {};
+
+    const modalRelationship = relationships.find(r => r.id === tech.id);
+
+    if (modalRelationship.prerequisites) {
+      const prerequisites = modalRelationship.prerequisites
+        .map(p => {
+          return {
+            name: relationships.find(r => r.id === p.id).name,
+            type: p.type
+          };
+        });
+
+        obj.modal.requirements = oxfordizer(
+        prerequisites.filter(p => p.type === 'requires').map(p => p.name),
+      'and');
+
+      const optionals = prerequisites.filter(p => p.type === 'optional');
+      if (optionals.length > 0) {
+        obj.modal.optionals = oxfordizer(optionals.map(o => o.name), 'and');
+      }
+    }
+
+    obj.modal.imagePath = setImageLink({
+      cat: 'technologies',
+      id: tech.id,
+      name: tech.name
+    }, game.id);
+
+    obj.modal.title = tech.name;
+
+    const leadsTechs = relationships.filter(r => {
+      return r?.prerequisites?.find(p => p.id === tech.id);
+    }).map(r => {
+      const rel = r.prerequisites.find(p => p.id === tech.id);
+
+      return {
+        name: r.name,
+        type: rel.type
+      };
+    });
+
+    const leadsRequired = leadsTechs.filter(t => t.type === 'requires');
+    if (leadsRequired.length > 0) {
+      obj.modal.leadsRequirements = oxfordizer(leadsRequired.map(l => l.name), 'and');
+    }
+
+    const leadsOptional = leadsTechs.filter(t => t.type === 'optional');
+    if (leadsOptional.length > 0) {
+      obj.modal.leadsOptionals = oxfordizer(leadsOptional.map(l => l.name), 'and');
+    }
 
     spokes.push(obj);
   }
