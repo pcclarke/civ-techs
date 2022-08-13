@@ -1,10 +1,13 @@
+import { game } from '../stores.js';
+import { get } from 'svelte/store';
+
 // Determine the image path for an icon link
-export function setImageLink(reference, game) {
-  return `${game}/${reference.cat}/${reference.id}.png`;
+export function setImageLink(category, id) {
+  return `${get(game).id}/${category}/${id}.png`;
 }
 
 // Turn an array of strings into an oxford comma sentence
-export function oxfordizer(words, conjunction) {
+export function oxfordizer(words = [], conjunction = 'and') {
   let sentence = '';
 
   if (words.length === 1) {

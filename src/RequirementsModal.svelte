@@ -8,13 +8,13 @@
     leadsOptionals,
     optionals,
     requirements,
-    title
+    name
   } = info;
 </script>
 
   <div class="modal" id="modal">
-    <img alt={`${title}`} src={`/${imagePath}`} />
-    <h5>{title}</h5>
+    <img alt={`${name}`} src={`/${imagePath}`} />
+    <h5>{name}</h5>
     {#if requirements}
       <div>
         <h6>Requirements</h6>

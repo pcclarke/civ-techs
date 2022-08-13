@@ -1,6 +1,5 @@
 <script>
-  import { arcSpace, game } from './stores.js';
-  import { setImageLink } from './lib/stringTools.js';
+  import { arcSpace } from './stores.js';
   import SpokeText from './SpokeText.svelte';
 
   export let angleShift;
@@ -14,9 +13,9 @@
   const iconWidth = 20;
 
   const setHover = (id) => hovered = id;
-  const setModal = (spoke) => {
+  const setModal = (info) => {
     if (Object.keys(modal).length === 0) {
-      modal = spoke.modal;
+      modal = info;
     }
   }
 </script>
@@ -46,7 +45,7 @@
         `translate(-10, ${(width / 4) + (iconWidth / 2)}) rotate(-90)` :
         `translate(10, ${(width / 4) - (iconWidth / 2)}) rotate(-270)`}
       width={iconWidth}
-      href={`${$game.id}/technologies/${spoke.id}.png`}
+      href={spoke.imagePath}
     />
     <SpokeText
       iconEnd={(width / 4) + (iconWidth / 2)}
@@ -59,11 +58,12 @@
         <image
           class="unlock-icon"
           height=13
+          on:click={() => setModal(unlock)}
           transform={(spoke.pos > (length / 2)) ?
             `translate(-6, ${(width / 4) + 136.5 + (14 * j)}) rotate(-90)` :
             `translate(6, ${(width / 4) + 123.5 + (14 * j)}) rotate(-270)`}
           width={13}
-          href={(() => setImageLink(unlock, $game.id))()}
+          href={unlock.imagePath}
         />
       {/each}
     {/if}

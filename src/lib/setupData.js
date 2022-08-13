@@ -140,36 +140,29 @@ export function buildSpokes(arcs, data, game, empire, relationships) {
               (Array.isArray(unlock.requires) && unlock.requires.find(u => u === tech.id)) ||
               (unlock.requires === tech.id)
             )) {
+              let u = {cat: type};
+
+              u.requirements = (() => {
+                const reqArr = (Array.isArray(unlock.requires)) ? unlock.requires : [unlock.requires];
+                const reqNames = reqArr.map(q => relationships.find(r => r.id === q).name);
+                return oxfordizer(reqNames);
+              })();
+
               if(unlock[empire.id]) {
-                if (!assignedUnlocks.includes(unlock[empire.id].id)) {
-                  found.push({
-                    cat: type,
-                    id: unlock[empire.id].id,
-                    name: unlock[empire.id].name,
-                    requires: unlock.requires
-                  });
-                  assignedUnlocks.push(unlock[empire.id].id);
-                }
+                u.id = unlock[empire.id].id;
+                u.name = unlock[empire.id].name;
               } else if (unlock['CIVILIZATION_ALL']) {
-                if (!assignedUnlocks.includes(unlock['CIVILIZATION_ALL'].id)) {
-                  found.push({
-                    cat: type,
-                    id: unlock['CIVILIZATION_ALL'].id,
-                    name: unlock['CIVILIZATION_ALL'].name,
-                    requires: unlock.requires
-                  });
-                  assignedUnlocks.push(unlock['CIVILIZATION_ALL'].id);
-                }
+                u.id = unlock['CIVILIZATION_ALL'].id;
+                u.name = unlock['CIVILIZATION_ALL'].name;
               } else {
-                if (!assignedUnlocks.includes(unlock.id)) {
-                  found.push({
-                    cat: type,
-                    id: unlock.id,
-                    name: unlock.name,
-                    requires: unlock.requires
-                  });
-                  assignedUnlocks.push(unlock.id);
-                }
+                u.id = unlock.id;
+                u.name = unlock.name;
+              }
+              
+              if (!assignedUnlocks.includes(u.id)) {
+                u.imagePath = setImageLink(type, u.id);
+                found.push(u);
+                assignedUnlocks.push(u.id);
               }
             }
           }
@@ -181,8 +174,9 @@ export function buildSpokes(arcs, data, game, empire, relationships) {
           found.push({
             cat: 'specials',
             id: s.id,
-            name: s.id,
-            requires: techItem.id
+            imagePath: setImageLink('specials', s.id),
+            name: s.name,
+            requirements: techItem.name
           });
         });
       }
@@ -193,9 +187,9 @@ export function buildSpokes(arcs, data, game, empire, relationships) {
     obj.id = tech.id;
     obj.name = tech.name;
 
-    // Add info to set up modal box
-    obj.modal = {};
+    obj.imagePath = setImageLink('technologies', tech.id);
 
+    // Add info to set up modal box
     const modalRelationship = relationships.find(r => r.id === tech.id);
 
     if (modalRelationship.prerequisites) {
@@ -207,23 +201,15 @@ export function buildSpokes(arcs, data, game, empire, relationships) {
           };
         });
 
-        obj.modal.requirements = oxfordizer(
+        obj.requirements = oxfordizer(
         prerequisites.filter(p => p.type === 'requires').map(p => p.name),
       'and');
 
       const optionals = prerequisites.filter(p => p.type === 'optional');
       if (optionals.length > 0) {
-        obj.modal.optionals = oxfordizer(optionals.map(o => o.name), 'and');
+        obj.optionals = oxfordizer(optionals.map(o => o.name), 'or');
       }
     }
-
-    obj.modal.imagePath = setImageLink({
-      cat: 'technologies',
-      id: tech.id,
-      name: tech.name
-    }, game.id);
-
-    obj.modal.title = tech.name;
 
     const leadsTechs = relationships.filter(r => {
       return r?.prerequisites?.find(p => p.id === tech.id);
@@ -238,12 +224,12 @@ export function buildSpokes(arcs, data, game, empire, relationships) {
 
     const leadsRequired = leadsTechs.filter(t => t.type === 'requires');
     if (leadsRequired.length > 0) {
-      obj.modal.leadsRequirements = oxfordizer(leadsRequired.map(l => l.name), 'and');
+      obj.leadsRequirements = oxfordizer(leadsRequired.map(l => l.name), 'and');
     }
 
     const leadsOptional = leadsTechs.filter(t => t.type === 'optional');
     if (leadsOptional.length > 0) {
-      obj.modal.leadsOptionals = oxfordizer(leadsOptional.map(l => l.name), 'and');
+      obj.leadsOptionals = oxfordizer(leadsOptional.map(l => l.name), 'and');
     }
 
     spokes.push(obj);
