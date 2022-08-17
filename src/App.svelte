@@ -1,4 +1,6 @@
 <script>
+  import Select, { Option } from '@smui/select';
+
   import Instructions from './Instructions.svelte';
   import Wheel from './Wheel.svelte';
 
@@ -12,7 +14,7 @@
   let rawData = setGame('civ1');
 
   function updateGame(event) {
-    rawData = setGame(event.target.value);
+    rawData = setGame(event.detail.value.id);
   }
 
   function setGame(gameId) {
@@ -37,7 +39,7 @@
   }
 
   function setEmpire(event) {
-    empire.set($empires.find(e => e.id === event.target.value));
+    empire.set(event.detail.value);
   }
 </script>
 
@@ -46,32 +48,30 @@
     <div id='container'>
       <Instructions/>
 
-      <div id='selectOptions'>
-        <div class='selectBox'>
-          <label for="selectGame">Game</label>
-          <select
-            name="games"
-            id="selectGame"
-            on:change={updateGame}
-          >
-            {#each games as gameOption}
-              <option selected={gameOption.id === $game.id} value={gameOption.id}>{gameOption.name}</option>
-            {/each}
-          </select>
-        </div>
+      <div>
+        <Select
+          key={(gameOption) => `${(gameOption && gameOption.id) || ''}`}
+          value={$game}
+          label="Game"
+          on:SMUISelect:change={updateGame}
+          style="width:300px"
+        >
+          {#each games as gameOption (gameOption.name)}
+            <Option value={gameOption}>{gameOption.name}</Option>
+          {/each}
+        </Select>
         {#if $empires.length > 0}
-          <div class='selectBox'>
-            <label for="selectEmp">Empire</label>
-            <select
-              name="empires"
-              id="selectEmp"
-              on:change={setEmpire}
-            >
-              {#each $empires as e}
-                <option selected={e.id === $empire.id} value={e.id}>{e.name}</option>
-              {/each}
-            </select>
-          </div>
+          <Select
+            key={(empireOption) => `${(empireOption && empireOption.id) || ''}`}
+            value={$empire}
+            label="Empire"
+            on:SMUISelect:change={setEmpire}
+            style="width:300px"
+          >
+            {#each $empires as empireOption (empireOption.name)}
+              <Option value={empireOption}>{empireOption.name}</Option>
+            {/each}
+          </Select>
         {/if}
       </div>
 
@@ -92,10 +92,5 @@
   #container {
       margin: 0 auto;
       width: 1200px;
-  }
-
-  .selectBox {
-    display: inline-block;
-    margin-right: 15px;
   }
 </style>
