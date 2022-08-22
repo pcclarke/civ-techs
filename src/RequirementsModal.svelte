@@ -1,25 +1,39 @@
 <script>
+  import Button, { Label } from '@smui/button';
+  import Dialog, { Header, Title, Content, Actions } from '@smui/dialog';
+
   export let display;
   export let info;
 
-  const {
+  $: ({
     imagePath,
     leadsRequirements,
     leadsOptionals,
     optionals,
     requirements,
     name
-  } = info;
+  } = info);
 </script>
 
-  <div class="modal" id="modal">
+<Button on:click={() => (display = true)}>
+  <Label>Open Dialog</Label>
+</Button>
+
+<Dialog
+  bind:open={display}
+  aria-labelledby="simple-title"
+  aria-describedby="simple-content"
+>
+  <Title style="margin-top: 16px">
     <img alt={`${name}`} src={`/${imagePath}`} />
-    <h5>{name}</h5>
+    {name}
+  </Title>
+  <Content id="simple-content">
+    {#if requirements || optionals}
+      <h6>Requirements</h6>
+    {/if}
     {#if requirements}
-      <div>
-        <h6>Requirements</h6>
-        <p>You must have: {requirements}</p>
-      </div>
+      <p>You must have: {requirements}</p>
     {/if}
     {#if optionals}
       <div>
@@ -38,37 +52,24 @@
     {#if leadsOptionals}
       <p>Optional for: {leadsOptionals}</p>
     {/if}
-    <button on:click={() => display = {}}>Close</button>
-  </div>
-  <div
-    class="modal-overlay"
-    id="modal-overlay"
-    on:click={() => display = {}}
-  >
-  </div>
+  </Content>
+  <Actions>
+    <Button>
+      <Label>Close</Label>
+    </Button>
+  </Actions>
+</Dialog>
 
 <style>
-  .modal {
-    background-color: #fff;
-    border: 1px solid #808080;
-    padding: 16px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    max-width: 100%;
-    max-height: 100%;
-    z-index: 1010;
+  h6 {
+    margin-bottom: 2px;
   }
 
-  .modal-overlay {
-    background-color: rgba(0, 0, 0, .5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
+  img {
+    vertical-align: middle;
+  }
+
+  p {
+    margin: 0;
   }
 </style>

@@ -4,6 +4,7 @@
 
   export let angleShift;
   export let arcBaseRadius;
+  export let display = false;
   export let modal = {};
   export let hovered = '';
   export let length;
@@ -14,9 +15,8 @@
 
   const setHover = (id) => hovered = id;
   const setModal = (info) => {
-    if (Object.keys(modal).length === 0) {
-      modal = info;
-    }
+    modal = info;
+    display = true;
   }
 </script>
 

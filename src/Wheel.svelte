@@ -30,7 +30,8 @@
     width = 1200 - margin.left - margin.right,
     height = 1200 - margin.top - margin.bottom;
 
-  let displayModal = {};
+  let displayModal = false;
+  let modalInfo = {};
 
   // Fade out/in on hover setup
   let hovered = '';
@@ -125,8 +126,9 @@
         length={spokes.length}
         spokeData={spokes}
         width={width}
+        bind:display={displayModal}
         bind:hovered={hovered}
-        bind:modal={displayModal}
+        bind:modal={modalInfo}
       />
       <Arcs
         arcData={arcs}
@@ -149,12 +151,10 @@
   </g>
 </svg>
 
-{#if Object.keys(displayModal).length > 0}
-  <RequirementsModal
-    info={displayModal}
-    bind:display={displayModal}
-  />
-{/if}
+<RequirementsModal
+  bind:display={displayModal}
+  bind:info={modalInfo}
+/>
 
 <style>
   .fade {
