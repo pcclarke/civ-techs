@@ -15,10 +15,6 @@
   } = info);
 </script>
 
-<Button on:click={() => (display = true)}>
-  <Label>Open Dialog</Label>
-</Button>
-
 <Dialog
   bind:open={display}
   aria-labelledby="simple-title"
