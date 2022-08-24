@@ -108,7 +108,7 @@ export function buildSpokes(arcs, data, game, empire, relationships) {
   let spokes = [];
   let assignedUnlocks = [];
 
-  for (const tech of relationships.reverse()) {
+  for (const tech of [...relationships].reverse()) {
     let obj = {};
 
     obj.pos = tech.pos;
