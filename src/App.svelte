@@ -44,53 +44,56 @@
 </script>
 
 <main>
-  <div class='CivTechs'>
-    <div id='container'>
-      <Instructions/>
+  <div id="container">
+    <Instructions/>
 
-      <div>
+    <div id="game-selectors">
+      <Select
+        key={(gameOption) => `${(gameOption && gameOption.id) || ''}`}
+        value={$game}
+        label="Game"
+        on:SMUISelect:change={updateGame}
+        style="width:300px"
+      >
+        {#each games as gameOption (gameOption.name)}
+          <Option value={gameOption}>{gameOption.name}</Option>
+        {/each}
+      </Select>
+      {#if $empires.length > 0}
         <Select
-          key={(gameOption) => `${(gameOption && gameOption.id) || ''}`}
-          value={$game}
-          label="Game"
-          on:SMUISelect:change={updateGame}
+          key={(empireOption) => `${(empireOption && empireOption.id) || ''}`}
+          value={$empire}
+          label="Empire"
+          on:SMUISelect:change={setEmpire}
           style="width:300px"
         >
-          {#each games as gameOption (gameOption.name)}
-            <Option value={gameOption}>{gameOption.name}</Option>
+          {#each $empires as empireOption (empireOption.name)}
+            <Option value={empireOption}>{empireOption.name}</Option>
           {/each}
         </Select>
-        {#if $empires.length > 0}
-          <Select
-            key={(empireOption) => `${(empireOption && empireOption.id) || ''}`}
-            value={$empire}
-            label="Empire"
-            on:SMUISelect:change={setEmpire}
-            style="width:300px"
-          >
-            {#each $empires as empireOption (empireOption.name)}
-              <Option value={empireOption}>{empireOption.name}</Option>
-            {/each}
-          </Select>
-        {/if}
-      </div>
+      {/if}
+    </div>
 
-      <div id='chart'>
-        {#await rawData}
-          <p>Waiting...</p>
-        {:then gotData}
-          <Wheel rawData={gotData}/>
-        {:catch error}
-          <p>Oh no!</p>
-        {/await}
-      </div>
+    <div id="chart">
+      {#await rawData}
+        <p>Waiting...</p>
+      {:then gotData}
+        <Wheel rawData={gotData}/>
+      {:catch error}
+        <p>Civilization error</p>
+      {/await}
     </div>
   </div>
 </main>
 
 <style>
   #container {
-      margin: 0 auto;
-      width: 1200px;
+    margin: 0 auto;
+    width: 1200px;
+  }
+
+  #game-selectors {
+    margin: 0 auto;
+    width: 960px;
   }
 </style>
