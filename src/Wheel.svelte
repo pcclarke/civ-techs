@@ -3,11 +3,8 @@
   import { schemeCategory10 } from 'd3-scale-chromatic';
 
   import RequirementsModal from './RequirementsModal.svelte';
-  import {
-    buildArcs,
-    buildRelationships,
-    buildSpokes
-  } from './lib/setupData.js'; 
+  import { buildSpokes } from './lib/buildSpokes';
+  import { buildArcs, buildRelationships } from './lib/setupData.js'; 
   import { empire, game } from './stores.js';
 
   import startSlice from './assets/img/startSlice.png';
