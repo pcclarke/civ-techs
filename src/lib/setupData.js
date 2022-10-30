@@ -194,20 +194,19 @@ export function buildSpokes(arcs, data, game, empire, relationships) {
 
     if (modalRelationship.prerequisites) {
       const prerequisites = modalRelationship.prerequisites
-        .map(p => {
-          return {
-            name: relationships.find(r => r.id === p.id).name,
-            type: p.type
-          };
-        });
+        .map(({id, type}) => ({
+          name: relationships.find(r => r.id === id).name,
+          type: type
+        }));
 
-        obj.requirements = oxfordizer(
-        prerequisites.filter(p => p.type === 'requires').map(p => p.name),
-      'and');
+      const requirements = prerequisites.filter(({type}) => type === 'requires');
+      if (requirements.length > 0) {
+        obj.requirements = requirements.map(({name}) => name);
+      }
 
-      const optionals = prerequisites.filter(p => p.type === 'optional');
+      const optionals = prerequisites.filter(({type}) => type === 'optional');
       if (optionals.length > 0) {
-        obj.optionals = oxfordizer(optionals.map(o => o.name), 'or');
+        obj.optionals = oxfordizer(optionals.map(({name}) => name), 'or');
       }
     }
 
