@@ -7,12 +7,9 @@
   import { onMount } from 'svelte';
 
   let rectWidth = 100;
+  let text;
 
-	onMount(() => {
-    const textElem = document.querySelector(`#${textId}-label`);
-    const bbox = textElem.getBBox();
-    rectWidth = bbox.width + 10;
-  });
+	onMount(() => rectWidth = text.getBBox().width + 10);
 </script>
 
 <rect
@@ -26,6 +23,7 @@
   rx=2
 />
 <text
+  bind:this={text}
   id={`${textId}-label`}
   transform={(leftSide) ?
     `translate(3, ${iconEnd + 10}) rotate(-90)` :
