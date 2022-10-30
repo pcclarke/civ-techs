@@ -8,19 +8,17 @@ export function setImageLink(category, id) {
 
 // Turn an array of strings into an oxford comma sentence
 export function oxfordizer(words = [], conjunction = 'and') {
-  let sentence = '';
+  if (words.length <= 0) {
+    console.warn('Oxfordizer passed empty array');
+    return null;
+  };
+  if (words.length === 1) return words[0];
+  if (words.length === 2) return `${words[0]} ${conjunction} ${words[1]}`;
 
-  if (words.length === 1) {
-    sentence = words[0];
-  } else if (words.length === 2) {
-    sentence = `${words[0]} ${conjunction} ${words[1]}`;
-  } else if (words.length >= 3) {
-    sentence = words[0];
-    for (let i = 1; i < words.length - 1; i++) {
-      sentence = `${sentence}, ${words[i]}`;
-    }
-    sentence = `${sentence}, ${conjunction} ${words[words.length - 1]}`;
+  let sentence = words[0];
+  for (let i = 1; i < words.length - 1; i++) {
+    sentence = `${sentence}, ${words[i]}`;
   }
-
+  sentence = `${sentence}, ${conjunction} ${words[words.length - 1]}`;
   return sentence;
 }
