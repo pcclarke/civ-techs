@@ -20,13 +20,13 @@
   aria-labelledby="simple-title"
   aria-describedby="simple-content"
 >
-  <Title style="margin-top: 16px">
+  <Title style="font-family: 'Goudy Trajan Regular'; margin-top: 16px">
     <img alt={`${name}`} src={`/${imagePath}`} />
     {name}
   </Title>
   <Content id="simple-content">
     {#if requirements || optionals}
-      <h6>Requirements</h6>
+      <h3>Requirements</h3>
     {/if}
     {#if requirements}
       <p>You must have: {requirements}</p>
@@ -34,13 +34,13 @@
     {#if optionals}
       <div>
         {#if requirements}
-          <p id='tipPlusLine'>plus</p>
+          <p id="tip-plus-line">plus</p>
         {/if}
         <p>You need one of: {optionals}</p>
       </div>
     {/if}
     {#if (leadsRequirements || leadsOptionals)}
-      <h6>Leads to</h6>
+      <h3>Leads to</h3>
     {/if}
     {#if leadsRequirements}
       <p>Must have for: {leadsRequirements}</p>
@@ -51,14 +51,18 @@
   </Content>
   <Actions>
     <Button>
-      <Label>Close</Label>
+      <Label style="font-family: 'Helvetica Neue'">Close</Label>
     </Button>
   </Actions>
 </Dialog>
 
 <style>
-  h6 {
+  h3 {
     margin-bottom: 2px;
+  }
+
+  h3, p {
+    font-family: 'Helvetica Neue';
   }
 
   img {
@@ -67,5 +71,9 @@
 
   p {
     margin: 0;
+  }
+
+  #tip-plus-line {
+    font-style: italic;
   }
 </style>
