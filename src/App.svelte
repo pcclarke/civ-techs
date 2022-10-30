@@ -76,7 +76,7 @@
 
     <div id="chart">
       {#await rawData}
-        <p>Waiting...</p>
+        <p id="loading-text">Building civilization...</p>
       {:then gotData}
         <Wheel rawData={gotData}/>
       {:catch error}
@@ -95,5 +95,14 @@
   #game-selectors {
     margin: 0 auto;
     width: 960px;
+  }
+
+  #chart {
+    min-height: 1200px;
+  }
+
+  #loading-text {
+    margin: 50px 0;
+    text-align: center;
   }
 </style>
