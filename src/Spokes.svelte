@@ -1,5 +1,5 @@
 <script>
-  import { arcSpace } from './stores.js';
+  import { arcSpace, spokesLoaded } from './stores.js';
   import SpokeText from './SpokeText.svelte';
 
   export let angleShift;
@@ -12,11 +12,19 @@
   export let width;
 
   const iconWidth = 20;
+  let loaded = 0;
 
   const setHover = (id) => hovered = id;
   const setModal = (info) => {
     modal = info;
     display = true;
+  }
+
+  function checkLoading() {
+    ++loaded;
+    if (loaded === spokeData.length) {
+      spokesLoaded.set(true);
+    }
   }
 </script>
 
@@ -39,6 +47,7 @@
       height={iconWidth}
       on:click={() => setModal(spoke)}
       on:focus={() => setHover(spoke.id)}
+      on:load={() => checkLoading()}
       on:mouseleave={() => setHover('')}
       on:mouseover={() => setHover(spoke.id)}
       transform={(spoke.pos > (length / 2)) ?

@@ -1,5 +1,6 @@
 <script>
   import Select, { Option } from '@smui/select';
+  import { fade } from 'svelte/transition';
 
   import Instructions from './Instructions.svelte';
   import Wheel from './Wheel.svelte';
@@ -8,12 +9,14 @@
   import {
     empire,
     empires,
-    game
+    game,
+    spokesLoaded
   } from './stores.js';
 
   let rawData = setGame('civ1');
 
   function updateGame(event) {
+    spokesLoaded.set(false);
     rawData = setGame(event.detail.value.id);
   }
 
@@ -76,9 +79,12 @@
 
     <div id="chart">
       {#await rawData}
-        <p id="loading-text">Building civilization...</p>
+        <p id="loading-text" out:fade>Building civilization...</p>
       {:then gotData}
         <Wheel rawData={gotData}/>
+        {#if !$spokesLoaded}
+          <div id="overlay" out:fade></div>
+        {/if}
       {:catch error}
         <p>Civilization error</p>
       {/await}
@@ -99,10 +105,20 @@
 
   #chart {
     min-height: 1200px;
+    position: relative;
   }
 
   #loading-text {
     margin: 50px 0;
     text-align: center;
+  }
+
+  #overlay {
+    background: #fff9e2;
+    z-index: 5000;
+    width: 1200px;
+    height: 1200px;
+    position: absolute;
+    top: 0;
   }
 </style>

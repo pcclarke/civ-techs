@@ -10,3 +10,5 @@ export const arcSpace = derived(game, ($game) => ($game.base < 4) ? 10 : 10);
 export const empires = writable([]);
 
 export const empire = writable({id: null, name: null});
+
+export const spokesLoaded = writable(false);
