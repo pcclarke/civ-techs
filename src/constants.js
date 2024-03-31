@@ -20,4 +20,5 @@ export const games = [
   {id: 'civ4bts', base: 4, name: 'Civilization IV: Beyond the Sword'},
   {id: 'civ5', base: 5, name: 'Civilization V'},
   {id: 'civ5gnk', base: 5, name: 'Civilization V: Gods and Kings'},
+  {id: 'civ5bnw', base: 5, name: 'Civilization V: Brave New World'}
 ];
