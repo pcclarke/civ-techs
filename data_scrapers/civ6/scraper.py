@@ -163,7 +163,10 @@ def prep_buildings(game: str):
 	buildings_dict = {}
 	for building in buildings_root.find('Buildings'):
 		id = building.attrib['BuildingType']
+	
 		if id in replaces_list:
+			continue
+		if 'PrereqTech' not in building.attrib:
 			continue
 
 		buildings_dict[id] = {
@@ -171,7 +174,7 @@ def prep_buildings(game: str):
 			'cost': building.attrib['Cost'],
 		}
 
-		buildings_dict[id]['requires'] = [building.attrib['PrereqTech']] if 'PrereqTech' in building.attrib else []
+		buildings_dict[id]['requires'] = [building.attrib['PrereqTech']]
 		buildings_dict[id]['maintenance'] = building.attrib['Maintenance'] if 'Maintenance' in building.attrib else None
 		buildings_dict[id]['CIVILIZATION_ALL'] = {
 			'id': id,
@@ -194,13 +197,27 @@ def prep_buildings(game: str):
 	
 	return list(buildings_dict.values())	
 
-	
+
+def prep_resources(game):
+	resources_root = get_root(game, '', 'Resources')
+	resources_list = []
+
+	for resource in resources_root.find('Resources'):
+		if 'PrereqTech' in resource.attrib:
+			resources_list.append({
+				'id': resource.attrib['ResourceType'],
+				'requires': [resource.attrib['PrereqTech']],
+				'name': types_text[resource.attrib['Name']]
+			})
+
+	return resources_list
 
 
 civ_data['technologies'] = prep_technologies(game)
 civ_data['projects'] = prep_projects(game)
 civ_data['improvements'] = prep_improvements(game)
 civ_data['buildings'] = prep_buildings(game)
+civ_data['resources'] = prep_resources(game)
 
 # Save to JSON
 
