@@ -195,10 +195,12 @@ def prep_buildings(game: str):
 				'name': name
 			}
 	
-	return list(buildings_dict.values())	
+	return list(buildings_dict.values())
 
 
 def prep_resources(game):
+	''' Resources'''
+
 	resources_root = get_root(game, '', 'Resources')
 	resources_list = []
 
@@ -212,12 +214,91 @@ def prep_resources(game):
 
 	return resources_list
 
+def prep_units(game):
+	''' Units '''
+
+	units_root = get_root(game, '', 'Units')
+
+	# Units to be replaced
+	replaces_dict = {}
+	for replaced in units_root.find('UnitReplaces'):
+		if replaced.attrib['ReplacesUnitType'] in replaces_dict:
+			replaces_dict[replaced.attrib['ReplacesUnitType']]['replaces'].append(replaced.attrib['CivUniqueUnitType'])
+		else:
+			replaces_dict[replaced.attrib['ReplacesUnitType']] = {
+				'replaces': [replaced.attrib['CivUniqueUnitType']]
+			}
+	
+	replaces_list = [
+		replaced.attrib['CivUniqueUnitType']
+		for replaced in units_root.find('UnitReplaces')	
+	]
+
+	for unit_class in replaces_dict:
+		for override in replaces_dict[unit_class]['replaces']:
+			if 'override' not in replaces_dict[unit_class]:
+				replaces_dict[unit_class]['override'] = []
+			if override == 'UNIT_NORWEGIAN_LONGSHIP':
+				replaces_dict[unit_class]['override'].append([
+					'CIVILIZATION_NORWAY', override
+				])
+			elif override == 'UNIT_ENGLISH_REDCOAT':
+				replaces_dict[unit_class]['override'].append([
+					'CIVILIZATION_ENGLAND', override
+				])	
+			else:
+				for civ in civ_traits_dict:
+					for trait in civ_traits_dict[civ]:
+						if trait.split('TRAIT_CIVILIZATION_')[1] == override:
+							replaces_dict[unit_class]['override'].append([
+								civ, override
+							])	
+
+	# Populate units
+	units_dict = {}
+	for unit in units_root.find('Units'):
+		id = unit.attrib['UnitType']
+	
+		if id in replaces_list:
+			continue
+		if 'PrereqTech' not in unit.attrib:
+			continue
+
+		units_dict[id] = {
+			'id': id,
+			'cost': unit.attrib['Cost'],
+		}
+
+		units_dict[id]['requires'] = [unit.attrib['PrereqTech']]
+		units_dict[id]['CIVILIZATION_ALL'] = {
+			'id': id,
+			'name': types_text[unit.attrib['Name']],
+		}
+
+		if id in replaces_dict:
+			for civ_override in replaces_dict[id]['override']:
+				civ = civ_override[0]
+				override_id = civ_override[1]
+
+				for bd in units_root.find('Units'):
+					bd_id = bd.attrib['UnitType']
+					if bd_id == override_id:
+						name = types_text[bd.attrib['Name']]
+				
+				units_dict[id][civ] = {
+					'id': override_id,
+					'name': name
+				}
+	
+	return list(units_dict.values())
+
 
 civ_data['technologies'] = prep_technologies(game)
 civ_data['projects'] = prep_projects(game)
 civ_data['improvements'] = prep_improvements(game)
 civ_data['buildings'] = prep_buildings(game)
 civ_data['resources'] = prep_resources(game)
+civ_data['units'] = prep_units(game)
 
 # Save to JSON
 
