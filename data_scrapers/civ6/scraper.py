@@ -59,12 +59,15 @@ types_text = map_text(game, 'Text/en_US', 'Types_Text')
 
 civilizations = get_root(game, '', 'Civilizations')
 
-civ_types = civilizations.find('CivilizationTraits')
-civ_types_dict = {}
-for row in civ_types:
-	civ_types_dict[row.attrib['TraitType']] = row.attrib['CivilizationType']
-
-print(civ_types_dict)
+civ_traits = civilizations.find('CivilizationTraits')
+civ_traits_dict = {}
+for row in civ_traits:
+	if row.attrib['CivilizationType'] == 'CIVILIZATION_BARBARIAN':
+		continue
+	if row.attrib['CivilizationType'] in civ_traits_dict:
+		civ_traits_dict[row.attrib['CivilizationType']].append(row.attrib['TraitType'])
+	else:
+		civ_traits_dict[row.attrib['CivilizationType']] = [row.attrib['TraitType']]
 
 def prep_technologies(game: str):
 	"""
@@ -136,32 +139,68 @@ def prep_buildings(game: str):
 	'''Buildings'''
 
 	buildings_root = get_root(game, '', 'Buildings')
+
+	# Buildings to be replaced
+	replaces_dict = {
+		replaced.attrib['ReplacesBuildingType']: {
+			'override': replaced.attrib['CivUniqueBuildingType']
+		}
+		for replaced in buildings_root.find('BuildingReplaces')
+	}
+	
+	replaces_list = [
+		replaced.attrib['CivUniqueBuildingType']
+		for replaced in buildings_root.find('BuildingReplaces')	
+	]
+
+	for civ in civ_traits_dict:
+		for trait in civ_traits_dict[civ]:
+			for building_class in replaces_dict:
+				if trait.split('TRAIT_CIVILIZATION_')[1] == replaces_dict[building_class]['override']:
+					replaces_dict[building_class]['civilization'] = civ
+				
+	# How to add replaced buildings? Here or later?
 	buildings_dict = {}
-
-
-	# Need to support civ-specific buildings
-
-	#
 	for building in buildings_root.find('Buildings'):
 		id = building.attrib['BuildingType']
+		if id in replaces_list:
+			continue
+
 		buildings_dict[id] = {
 			'id': id,
 			'cost': building.attrib['Cost'],
-			'maintentance': building.attrib['Maintenance'],
-			'name': types_text[building.attrib['Name']],
-			'requires': [building.attrib['PrereqTech']]
 		}
 
+		buildings_dict[id]['requires'] = [building.attrib['PrereqTech']] if 'PrereqTech' in building.attrib else []
+		buildings_dict[id]['maintenance'] = building.attrib['Maintenance'] if 'Maintenance' in building.attrib else None
+		buildings_dict[id]['CIVILIZATION_ALL'] = {
+			'id': id,
+			'name': types_text[building.attrib['Name']],
+		}
+
+		if id in replaces_dict:
+			civ = replaces_dict[id]['civilization']
+			override = replaces_dict[id]['override']
+
+			for bd in buildings_root.find('Buildings'):
+				bd_id = bd.attrib['BuildingType']
+				if bd_id == override:
+					name = types_text[bd.attrib['Name']]
+			
+			buildings_dict[id][civ] = {
+				'id': override,
+				'name': name
+			}
 	
+	return list(buildings_dict.values())	
 
 	
-
-
 
 
 civ_data['technologies'] = prep_technologies(game)
 civ_data['projects'] = prep_projects(game)
 civ_data['improvements'] = prep_improvements(game)
+civ_data['buildings'] = prep_buildings(game)
 
 # Save to JSON
 
