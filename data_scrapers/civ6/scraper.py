@@ -55,6 +55,7 @@ def map_text(game, path, filename):
 
 	return text_obj
 
+civ_text = map_text(game, 'Text/en_US', 'Civilizations_Text')
 types_text = map_text(game, 'Text/en_US', 'Types_Text')
 
 civilizations = get_root(game, '', 'Civilizations')
@@ -292,6 +293,22 @@ def prep_units(game):
 	
 	return list(units_dict.values())
 
+def prep_civilizations(civilizations):
+	'''Civilizations'''
+
+	civ_types = civilizations.find('Civilizations')
+	civ_list = []
+
+	for civ in civ_types:
+		if civ.attrib['StartingCivilizationLevelType'] != 'CIVILIZATION_LEVEL_FULL_CIV':
+			continue
+
+		civ_list.append({
+			'id': civ.attrib['CivilizationType'],
+			'name': civ_text[civ.attrib['Description']]
+		})
+
+	return civ_list
 
 civ_data['technologies'] = prep_technologies(game)
 civ_data['projects'] = prep_projects(game)
@@ -299,6 +316,7 @@ civ_data['improvements'] = prep_improvements(game)
 civ_data['buildings'] = prep_buildings(game)
 civ_data['resources'] = prep_resources(game)
 civ_data['units'] = prep_units(game)
+civ_data['civilizations'] = prep_civilizations(civilizations)
 
 # Save to JSON
 
