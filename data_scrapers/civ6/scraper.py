@@ -4,18 +4,26 @@ import xml.etree.ElementTree as ET
 
 parser = argparse.ArgumentParser(
     prog='top',
-    description='Select a game to scrape: "base" (no expansions), "gnk" (Gods and Kings), or "bnw" (Brave New World)')
+    description='Select a game to scrape: "base" (no expansions), "raf" (Rise and Fall), or "gs" (Gathering Storm)')
 parser.add_argument('-g', '--game', type=str, default='base')
 parser.add_argument('-f', '--filename', type=str, default='civdata')
 args = parser.parse_args()
 game = args.game
 filename = args.filename
 
+games = {
+	"base": "base game (no expansions)",
+	"raf": "Rise & Fall",
+	"gs": "Gatering Storm"
+}
+
 # Set up data structure
 data_categories = [
 	'technologies'
 ]
 civ_data = {k: [] for k in data_categories}
+
+print(f'\nScraping Civilization 6 data for {games[game]} into JSON...')
 
 def get_root(game: str, path: str, filename: str):
 	"""
@@ -42,33 +50,36 @@ def get_root(game: str, path: str, filename: str):
 
 	return root
 
-def map_text(game, path, filename):
+def map_text(game, path, filename, parent = 'BaseGameText'):
 	'''Get descriptive text from an XML file and return a dict.'''
 	root = get_root(game, path, filename)
 
 	text_obj = {}
 
-	for text in root.find('BaseGameText'):
+	for text in root.find(parent):
 		tag = text.get('Tag')
 		name = text.find('Text').text
 		text_obj[tag] = name
 
 	return text_obj
 
-civ_text = map_text(game, 'Text/en_US', 'Civilizations_Text')
-types_text = map_text(game, 'Text/en_US', 'Types_Text')
+def get_civ_traits(civilizations):
+	civ_traits = civilizations.find('CivilizationTraits')
 
-civilizations = get_root(game, '', 'Civilizations')
+	civ_traits_dict = {}
+	for row in civ_traits:
+		if row.attrib['CivilizationType'] == 'CIVILIZATION_BARBARIAN':
+			continue
+		if row.attrib['CivilizationType'] in civ_traits_dict:
+			civ_traits_dict[row.attrib['CivilizationType']].append(row.attrib['TraitType'])
+		else:
+			civ_traits_dict[row.attrib['CivilizationType']] = [row.attrib['TraitType']]
 
-civ_traits = civilizations.find('CivilizationTraits')
-civ_traits_dict = {}
-for row in civ_traits:
-	if row.attrib['CivilizationType'] == 'CIVILIZATION_BARBARIAN':
-		continue
-	if row.attrib['CivilizationType'] in civ_traits_dict:
-		civ_traits_dict[row.attrib['CivilizationType']].append(row.attrib['TraitType'])
-	else:
-		civ_traits_dict[row.attrib['CivilizationType']] = [row.attrib['TraitType']]
+	return civ_traits_dict
+
+##############################
+# Data preparation functions #
+##############################
 
 def prep_technologies(game: str):
 	"""
@@ -77,9 +88,15 @@ def prep_technologies(game: str):
 	Parameters
 	game (str): The game version.
 	"""
+
+	print('Scraping technologies')
+
+	gameLoad = game if game != 'raf' else 'base'
 	
-	tech_root = get_root(game, '', 'Technologies')
+	tech_root = get_root(gameLoad, '', 'Technologies')
 	tech_dict = {}
+
+	print(tech_root)
 
 	# Get basic techology info
 	for tech_cost in tech_root.find('Technologies'):
@@ -136,7 +153,7 @@ def prep_improvements(game: str):
 	
 	return improvements_list
 
-def prep_buildings(game: str):
+def prep_buildings(game: str, civ_traits, buiding_names):
 	'''Buildings'''
 
 	buildings_root = get_root(game, '', 'Buildings')
@@ -154,8 +171,8 @@ def prep_buildings(game: str):
 		for replaced in buildings_root.find('BuildingReplaces')	
 	]
 
-	for civ in civ_traits_dict:
-		for trait in civ_traits_dict[civ]:
+	for civ in civ_traits:
+		for trait in civ_traits[civ]:
 			for building_class in replaces_dict:
 				if trait.split('TRAIT_CIVILIZATION_')[1] == replaces_dict[building_class]['override']:
 					replaces_dict[building_class]['civilization'] = civ
@@ -179,7 +196,7 @@ def prep_buildings(game: str):
 		buildings_dict[id]['maintenance'] = building.attrib['Maintenance'] if 'Maintenance' in building.attrib else None
 		buildings_dict[id]['CIVILIZATION_ALL'] = {
 			'id': id,
-			'name': types_text[building.attrib['Name']],
+			'name': buiding_names[building.attrib['Name']],
 		}
 
 		if id in replaces_dict:
@@ -189,7 +206,7 @@ def prep_buildings(game: str):
 			for bd in buildings_root.find('Buildings'):
 				bd_id = bd.attrib['BuildingType']
 				if bd_id == override:
-					name = types_text[bd.attrib['Name']]
+					name = buiding_names[bd.attrib['Name']]
 			
 			buildings_dict[id][civ] = {
 				'id': override,
@@ -199,7 +216,7 @@ def prep_buildings(game: str):
 	return list(buildings_dict.values())
 
 
-def prep_resources(game):
+def prep_resources(game, resource_names):
 	''' Resources'''
 
 	resources_root = get_root(game, '', 'Resources')
@@ -210,12 +227,12 @@ def prep_resources(game):
 			resources_list.append({
 				'id': resource.attrib['ResourceType'],
 				'requires': [resource.attrib['PrereqTech']],
-				'name': types_text[resource.attrib['Name']]
+				'name': resource_names[resource.attrib['Name']]
 			})
 
 	return resources_list
 
-def prep_units(game):
+def prep_units(game, civ_traits, unit_names):
 	''' Units '''
 
 	units_root = get_root(game, '', 'Units')
@@ -248,8 +265,8 @@ def prep_units(game):
 					'CIVILIZATION_ENGLAND', override
 				])	
 			else:
-				for civ in civ_traits_dict:
-					for trait in civ_traits_dict[civ]:
+				for civ in civ_traits:
+					for trait in civ_traits[civ]:
 						if trait.split('TRAIT_CIVILIZATION_')[1] == override:
 							replaces_dict[unit_class]['override'].append([
 								civ, override
@@ -273,7 +290,7 @@ def prep_units(game):
 		units_dict[id]['requires'] = [unit.attrib['PrereqTech']]
 		units_dict[id]['CIVILIZATION_ALL'] = {
 			'id': id,
-			'name': types_text[unit.attrib['Name']],
+			'name': unit_names[unit.attrib['Name']],
 		}
 
 		if id in replaces_dict:
@@ -284,7 +301,7 @@ def prep_units(game):
 				for bd in units_root.find('Units'):
 					bd_id = bd.attrib['UnitType']
 					if bd_id == override_id:
-						name = types_text[bd.attrib['Name']]
+						name = unit_names[bd.attrib['Name']]
 				
 				units_dict[id][civ] = {
 					'id': override_id,
@@ -293,7 +310,7 @@ def prep_units(game):
 	
 	return list(units_dict.values())
 
-def prep_civilizations(civilizations):
+def prep_civilizations(civilizations, text):
 	'''Civilizations'''
 
 	civ_types = civilizations.find('Civilizations')
@@ -305,20 +322,47 @@ def prep_civilizations(civilizations):
 
 		civ_list.append({
 			'id': civ.attrib['CivilizationType'],
-			'name': civ_text[civ.attrib['Description']]
+			'name': text[civ.attrib['Description']]
 		})
 
 	return civ_list
 
-civ_data['technologies'] = prep_technologies(game)
-civ_data['projects'] = prep_projects(game)
-civ_data['improvements'] = prep_improvements(game)
-civ_data['buildings'] = prep_buildings(game)
-civ_data['resources'] = prep_resources(game)
-civ_data['units'] = prep_units(game)
-civ_data['civilizations'] = prep_civilizations(civilizations)
 
+base_civ_text = map_text('base', 'Text/en_US', 'Civilizations_Text')
+base_types_text = map_text('base', 'Text/en_US', 'Types_Text')
+
+raf_units_text = map_text('raf', 'Text/en_US', 'Expansion1_Units_text', 'EnglishText')
+raf_config_text = map_text('raf', 'Text/en_US', 'Expansion1_ConfigText', 'EnglishText')
+
+print(raf_units_text)
+
+base_civilizations = get_root('base', '', 'Civilizations')
+raf_civilizations = get_root('raf', '', 'Expansion1_Civilizations_Major')
+
+base_civ_traits = get_civ_traits(base_civilizations)
+raf_civ_traits = get_civ_traits(raf_civilizations)
+
+if game == 'base':
+
+	civ_data['technologies'] = prep_technologies(game)
+	civ_data['projects'] = prep_projects(game)
+	civ_data['improvements'] = prep_improvements(game)
+	civ_data['buildings'] = prep_buildings(game, base_civ_traits, base_types_text)
+	civ_data['resources'] = prep_resources(game, base_types_text)
+	civ_data['units'] = prep_units(game, base_civ_traits, base_types_text)
+	civ_data['civilizations'] = prep_civilizations(base_civilizations, base_civ_text)
+
+elif game == 'raf':
+	civs = base_civ_traits | raf_civ_traits
+	types_text = base_types_text | raf_units_text | raf_config_text
+
+	civ_data['technologies'] = prep_technologies(game)
+	civ_data['projects'] = prep_projects(game)
+	civ_data['improvements'] = prep_improvements(game)
+	civ_data['buildings'] = prep_buildings(game, civs, types_text)
+
+print(civ_data)
 # Save to JSON
 
-with open(f'{filename}.json', 'w') as fp:
-	json.dump(civ_data, fp)
+# with open(f'{filename}.json', 'w') as fp:
+# 	json.dump(civ_data, fp)
