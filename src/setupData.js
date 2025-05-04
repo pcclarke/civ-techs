@@ -1,14 +1,15 @@
+import { dataTypes } from "./constants";
+import { getLeadsTo } from "./dataTools";
+
 // Append technologies to displayed & the things they unlock
-function setupData(data) {
+export default function setupData(data) {
     data.displayed = [];
-    var unlocksList = [];
+    let unlocksList = [];
 
     // First, arrange the technologies by cost
-    if ((+(CIV.game[3])) > 3) {
-        data.technologies.sort(function(a, b) {
-            return b.cost - a.cost;
-        });
-    }
+    data.technologies.sort(function(a, b) {
+        return b.cost - a.cost;
+    });
 
     // Scoop up all the things each technology leads to and put it in the unlocks object
     data.technologies.forEach(function(d) {
@@ -71,7 +72,7 @@ function setupData(data) {
     });
 
     // Label data categories
-    CIV.dataTypes.forEach(function (t) {
+    dataTypes.forEach(function (t) {
         if (data[t]) {
             data[t].forEach(function (d) {
                 d.cat = t;

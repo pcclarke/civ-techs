@@ -1,5 +1,5 @@
 // Get a list of the required technology prerequisites for a given thing
-var getReqTechPreReqs = function (examine, data) {
+export function getReqTechPreReqs(examine, data) {
     var preReqs = [];
 
     if (examine.requires) {
@@ -22,7 +22,7 @@ var getReqTechPreReqs = function (examine, data) {
 };
 
 // Get a list of the displayed things this technology leads to that require it
- var getLeadsToReq = function (examine, compareData) {
+ export function getLeadsToReq(examine, compareData) {
     var leads = [];
     
     compareData.forEach(function (d) {
@@ -45,7 +45,7 @@ var getReqTechPreReqs = function (examine, data) {
 };
 
 // Get a list of the optional technology prerequisites for a given thing
-var getOptTechPreReqs = function (examine, data) {
+export function getOptTechPreReqs(examine, data) {
     var preReqs = [];
 
     if (examine.optional) {
@@ -68,7 +68,7 @@ var getOptTechPreReqs = function (examine, data) {
 };
 
 // Get a list of the displayed things this technology leads to that optionally require it
-var getLeadsToOpt = function (examine, compareData) {
+export function getLeadsToOpt(examine, compareData) {
     var leads = [];
     
     compareData.forEach(function (c) {
@@ -91,7 +91,7 @@ var getLeadsToOpt = function (examine, compareData) {
 };
 
 // Get a list of the technology prerequsites (required and optional) for a given thing (techs, units, whatever)
-var getTechPrereqs = function (examine, data) {
+export function getTechPrereqs(examine, data) {
     var preReqs = [];
 
     if (examine.requires) {
@@ -129,7 +129,7 @@ var getTechPrereqs = function (examine, data) {
 };
 
 // Get a list of the displayed things this technology leads to (required and optional)
-var getLeadsTo = function (examine, compareData) {
+export function getLeadsTo(examine, compareData) {
     var leads = [];
     
     compareData.forEach(function (c) {
@@ -166,7 +166,7 @@ var getLeadsTo = function (examine, compareData) {
 };
 
 // Returns a technology item by its Id
-var getTechById = function (examineId, data) {
+export function getTechById(examineId, data) {
     var tech = "BAD_ID";
 
     data.technologies.forEach(function (t) {
@@ -182,7 +182,7 @@ var getTechById = function (examineId, data) {
 // technologies that it requires (optional & mandatory)
 // technologies it leads to
 // anything else it leads to and the other technologies they require
-var findNearby = function (origin, data) {
+export function findNearby(origin, data) {
     var nearbyList;
     var fartherList = [];
     var obsoleteTech;
@@ -222,7 +222,7 @@ var findNearby = function (origin, data) {
 };
 
 // Converts the specials in a technology into prereq objects
-var convertSpecial = function (examine) {
+export function convertSpecial(examine) {
     var specials = [];
     var specialItem;
 

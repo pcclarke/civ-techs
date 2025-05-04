@@ -3,22 +3,23 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="css/techs.css">
+        <title>Civilization 4 Technologies Wheel</title>
     </head>
     
     <body>
-
-
         <div id="container">
+            <h1 class="title">Civilization Technologies Wheel</h1>
+
             <div id="intro">
-                <h1 class="title">Civilization Technologies Wheel</h1>
-                <div id="leftIntro" class="col">
+                <div class="col">
                     <h2>The Challenge of History</h2>
-                    <p>In the Sid Meier’s Civilization series of games, the objective is to build an empire that will stand the test of time. Advances in knowledge are represented by the technology tree, a diagram that shows the progression of advances and what things they enable for the player. For example, a tank might require the technology industrialism, which requires electricity and assembly line. This tree of relationships spans the whole of human history, from agriculture to space flight.</p>
+                    <p>In the Sid Meier's Civilization series of games, the objective is to build an empire that will stand the test of time. Advances in knowledge are represented by the technology tree, a diagram that shows the progression of advances and what things they enable for the player. For example, a tank might require the technology industrialism, which requires electricity and assembly line. This tree of relationships spans the whole of human history, from agriculture to space flight.</p>
                     <p>However, representing so much history and culture in one tree has made for some very complex, albeit attractive, diagrams. The goal of this project was to make the encoding of information in the technology tree consistent, explicit, and as much as possible, condensed on to one screen. Where the trees in the other Civilization games left relationships unclear and spread out, the Technologies wheel puts it all in one place.</p>
                 </div>
-                <div id="rightIntro" class="col">
+                <div class="col">
                     <h2>How to Read the Wheel</h2>
                     <p>The wheel is divided into two components, spokes and arcs:</p>
+
                     <h3>Spokes</h3>
                     <ul>
                         <li><img src="img/spoke.gif" /> <p>There is one spoke for every advance in Civilization</p></li>
@@ -35,23 +36,19 @@
                 </div>
             </div>
 
-            <div id="selectOptions">
-                <div class="selectBox">
-                    <p>Select a Civilization Game:</p>
-                    <select id="selectGame">
-                        <option value="civ1">Civilization</option>
-                        <option value="civ2">Civilization II</option>
-                        <option value="civ3">Civilization III</option>
-                        <option value="civ3ptw">Civilization III: Play the World</option>
-                        <option value="civ3con">Civilization III: Conquests</option>
-                        <option value="civ4">Civilization IV</option>
-                        <option value="civ4war">Civilization IV: Warlords</option>
-                        <option value="civ4bts" selected="selected">Civilization IV: Beyond the Sword</option>
+            <div id="select-options">
+                <div>
+                    <h3>Expansion</h3>
+                    <select id="select-expansion">
+                        <option value="civ4">Base game</option>
+                        <option value="civ4war">Warlords</option>
+                        <option value="civ4bts" selected="selected">Beyond the Sword</option>
                     </select>
                 </div>
-                <div class="selectBox" id="selectCivBox">
-                    <p>Select a Civilization's Unique Units (and if available, buildings):</p>
-                    <select id="selectCiv">
+        
+                <div>
+                    <h3>Empire</h3>
+                    <select id="select-empire">
                         <option value="CIVILIZATION_ALL" selected="selected">Common Units &amp; Buildings</option>
                     </select>
                 </div>
@@ -89,7 +86,8 @@
             </div>
         </div>
 
-        <script language="javascript" type="text/javascript" src="js/d3.v4.min.js"></script>
+        <script type="module" src="/src/main.js"></script>
+        <!-- <script language="javascript" type="text/javascript" src="js/d3.v4.min.js"></script>
         <script language="javascript" type="text/javascript" src="js/dataTools.js"></script>
         <script language="javascript" type="text/javascript" src="js/wheelInteraction.js"></script>
         <script language="javascript" type="text/javascript" src="js/displayDetailsBox.js"></script>
@@ -97,6 +95,6 @@
         <script language="javascript" type="text/javascript" src="js/orderDisplayed.js"></script>
         <script language="javascript" type="text/javascript" src="js/setupData.js"></script>
         <script language="javascript" type="text/javascript" src="js/makeWheel.js"></script>
-        <script language="javascript" type="text/javascript" src="js/civ-techs.js"></script>
+        <script language="javascript" type="text/javascript" src="js/civ-techs.js"></script> -->
     </body>
 </html>

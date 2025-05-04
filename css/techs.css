@@ -24,8 +24,22 @@ h1, h2 {
 }
 
 h1 {
-    font-size: 3em;
+    font-size: 3rem;
     text-align: center;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+h3 {
+    font-size: 1rem;
+    margin: 8px 0;
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.8rem;
 }
 
 #container {
@@ -34,24 +48,15 @@ h1 {
 }
 
 #intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
     border-bottom: 1px solid #bcbec0;
     margin: 50px 0;
 }
 
 .col {
-    display: inline-block;
-    width: 570px;
     padding: 10px;
-    vertical-align: top;
-}
-
-.col h3 {
-    font-size: 1em;
-    margin: 5px 0 0 0;
-}
-
-.col img {
-    vertical-align: top;
 }
 
 .col ul {
@@ -61,22 +66,21 @@ h1 {
 }
 
 .col ul li {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 16px;
+    align-items: center;
     margin-bottom: 3px;
 }
 
-.col ul li img {
-    display: inline-block;
-}
-
 .col ul li p {
-    display: inline-block;
     margin: 0;
-    width: 400px;
 }
 
-.selectBox {
-    display: inline-block;
-    margin-right: 15px;
+#select-options {
+    display: flex;
+    flex-direction: row;
+    gap: 64px;
 }
 
 .selectBox p {

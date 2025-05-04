@@ -1,4 +1,6 @@
-var setupArcs = function (data) {
+import { getLeadsToOpt, getLeadsToReq, getTechById, getTechPrereqs } from "./dataTools";
+
+export default function setupArcs(data) {
     var arcDists = []; // list of recent arcRanks
     var leadsReq;
     var leadsOpt;
@@ -29,7 +31,7 @@ var setupArcs = function (data) {
             if (lr.pos < minPos) {
                 minPos = lr.pos;
             }
-            var req = {"id": lr.id, "dist": arcDist, "pos": d.pos};
+            var req = { "id": lr.id, "dist": arcDist, "pos": d.pos };
             rekked.push(req);
         });
         d.lreq = rekked;
@@ -46,7 +48,7 @@ var setupArcs = function (data) {
             if (lo.pos < minPos) {
                 minPos = lo.pos;
             }
-            var opt = {"id": lo.id, "dist": arcDist, "pos": d.pos};
+            var opt = { "id": lo.id, "dist": arcDist, "pos": d.pos };
             opted.push(opt);
         });
         d.lopt = opted;
@@ -80,7 +82,7 @@ var setupArcs = function (data) {
             baseDist = d.pos - minPos;
         }
         d.arcBack = ((2 * Math.PI) / data.displayed.length) * baseDist;
-        
+
         // Set arc rank - distance of arc from centre
         if (d.lreq.length > 0 || d.lopt.length > 0) {
             var ranked = 0;
@@ -96,7 +98,7 @@ var setupArcs = function (data) {
                 arcDists.push(i + maxArcDist);
                 d.arcRank = (arcDists.length - 1);
             }
-            
+
             // Add the arc rank to leads to
             d.lreq.forEach(function (lr) {
                 lr.arcRank = d.arcRank;
@@ -114,7 +116,7 @@ var setupArcs = function (data) {
         }
     });
 
-    
+
     // Set spoke rank - where to start drawing spoke
     data.displayed.forEach(function (d) {
         var spokeRank;
@@ -134,9 +136,9 @@ var setupArcs = function (data) {
         }
     });
 
-    
+
     // Set up arcs for each unlock, if necessary
-    data.displayed.forEach(function(d) {
+    data.displayed.forEach(function (d) {
         d.unlocks.forEach(function (u) {
             if (Array.isArray(u.ref.requires)) {
                 if (u.ref.requires.length > 1) {
@@ -158,11 +160,11 @@ var setupArcs = function (data) {
                             minPos = unlockReq.pos;
                         }
                         if (unlockReq.pos !== d.pos) { // unlock arc square positions
-                            req = {"id": unlockReq.id, "dist": (unlockReq.pos - d.pos), "pos": u.pos, "arcRank": u.rank};
+                            req = { "id": unlockReq.id, "dist": (unlockReq.pos - d.pos), "pos": u.pos, "arcRank": u.rank };
                             u.lreq.push(req);
                         }
                     });
-                    
+
                     endDist = 0;
                     if (maxPos > d.pos) {
                         endDist = maxPos - d.pos;
