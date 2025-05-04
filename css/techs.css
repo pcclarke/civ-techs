@@ -1,216 +1,220 @@
 @font-face {
-    font-family: 'Goudy Trajan Regular';
-    src: url('../font/goudytrajan-regular-trial.eot');
-    src: url('../font/goudytrajan-regular-trial.eot?#iefix') format('embedded-opentype'),
-         url('../font/goudytrajan-regular-trial.woff2') format('woff2'),
-         url('../font/goudytrajan-regular-trial.woff') format('woff'),
-         url('../font/goudytrajan-regular-trial.ttf') format('truetype'),
-         url('../font/goudytrajan-regular-trial.svg#goudy_trajan_regularregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: "Goudy Trajan Regular";
+  src: url("../font/goudytrajan-regular-trial.eot");
+  src: url("../font/goudytrajan-regular-trial.eot?#iefix")
+      format("embedded-opentype"),
+    url("../font/goudytrajan-regular-trial.woff2") format("woff2"),
+    url("../font/goudytrajan-regular-trial.woff") format("woff"),
+    url("../font/goudytrajan-regular-trial.ttf") format("truetype"),
+    url("../font/goudytrajan-regular-trial.svg#goudy_trajan_regularregular")
+      format("svg");
+  font-weight: normal;
+  font-style: normal;
 }
 
 html {
-    background: #fff;
+  background: #fff;
 }
 
 body {
-    font-family: "helvetica neue", Helvetica, Geneva, Tahoma, Arial, "sans-serif";
+  font-family: "helvetica neue", Helvetica, Geneva, Tahoma, Arial, "sans-serif";
 }
 
-h1, h2 {
-    font-family: "Goudy Trajan Regular";
-    font-weight: normal;
+h1,
+h2 {
+  font-family: "Goudy Trajan Regular";
+  font-weight: normal;
 }
 
 h1 {
-    font-size: 3rem;
-    text-align: center;
+  font-size: 3rem;
+  text-align: center;
 }
 
 h2 {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 h3 {
-    font-size: 1rem;
-    margin: 8px 0;
+  font-size: 1rem;
+  margin: 8px 0;
 }
 
 p {
-    font-size: 1rem;
-    line-height: 1.8rem;
+  font-size: 1rem;
+  line-height: 1.8rem;
 }
 
 #container {
-    margin: 0 auto;
-    width: 1200px;
+  margin: 0 auto;
+  width: 1200px;
 }
 
 #intro {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    border-bottom: 1px solid #bcbec0;
-    margin: 50px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  border-bottom: 1px solid #bcbec0;
+  margin: 50px 0;
 }
 
 .col {
-    padding: 10px;
+  padding: 10px;
 }
 
 .col ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .col ul li {
-    display: grid;
-    grid-template-columns: 50px 1fr;
-    gap: 16px;
-    align-items: center;
-    margin-bottom: 3px;
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 3px;
 }
 
 .col ul li p {
-    margin: 0;
+  margin: 0;
 }
 
 #select-options {
-    display: flex;
-    flex-direction: row;
-    gap: 64px;
+  display: flex;
+  flex-direction: row;
+  gap: 64px;
 }
 
 .selectBox p {
-    margin: 3px;
+  margin: 3px;
 }
 
-.techImg, .unlock {
-    cursor: pointer;
+.tech-img,
+.unlock {
+  cursor: pointer;
 }
 
 .fade {
-    opacity: 0.05;
-    transition: all 0.5s ease;
+  opacity: 0.05;
+  transition: all 0.5s ease;
 }
 
-.spokeLine {
-    stroke: #bcbec0;
-    stroke-width: 0.5px;
+.spoke-line {
+  stroke: #bcbec0;
+  stroke-width: 0.5px;
 }
 
-.lineSelected {
-    stroke: #1f1f1f;
-    stroke-width: 1.5px;
+.line-selected {
+  stroke: #1f1f1f;
+  stroke-width: 1.5px;
 }
 
-.lineRequired {
-    stroke: #1f1f1f;
+.line-required {
+  stroke: #1f1f1f;
 }
 
-.lineOptional {
-    stroke: #1f1f1f;
+.line-optional {
+  stroke: #1f1f1f;
 }
 
 .lineLeads {
-    stroke: #1f1f1f;
-    stroke-dasharray: 15px 5px;
+  stroke: #1f1f1f;
+  stroke-dasharray: 15px 5px;
 }
 
 .spokeText {
-    cursor: pointer;
-    
-    font-size: 12px;
-    font-weight: normal;
-    text-transform: capitalize;
+  cursor: pointer;
+
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: capitalize;
 }
 
 .textSelected {
-    fill: #fff;   
+  fill: #fff;
 }
 
 .spokeTextBox {
-    cursor: pointer;
-    stroke: #bcbec0;
-    fill: #fff;
+  cursor: pointer;
+  stroke: #bcbec0;
+  fill: #fff;
 }
 
 .spokeTextBoxSelected {
-    fill: #1f1f1f;   
+  fill: #1f1f1f;
 }
 
-.techImg, .unlockIcon {
-    cursor: pointer;
+.techImg,
+.unlockIcon {
+  cursor: pointer;
 }
 
 .opaque {
-    opacity: 0;
-    transition: all 0.5s ease;
+  opacity: 0;
+  transition: all 0.5s ease;
 }
 
-
 .hidden {
-    display: none;
+  display: none;
 }
 
 #tooltip {
-	border: 1px solid black;
-    border-radius: 6px;
-	background-color: white;
-    position: absolute;
-    width: 400px;
-    height: auto;
-    padding: 5px;
+  border: 1px solid black;
+  border-radius: 6px;
+  background-color: white;
+  position: absolute;
+  width: 400px;
+  height: auto;
+  padding: 5px;
 }
 
 .desc {
-    padding-left: 10px;
+  padding-left: 10px;
 }
 
 #tipCloseButton {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #tipKind {
-    float: left;
-    font-size: 12px;
-    font-style: italic;
-    margin: 6px 0px;
-    width: 100%;
+  float: left;
+  font-size: 12px;
+  font-style: italic;
+  margin: 6px 0px;
+  width: 100%;
 }
 
 #tipName {
-    float: left;
-    font-family: "Goudy Trajan Regular";
-    font-size: 20px;
-    margin: 0;
-    padding: 0;
-    width: 305px;
+  float: left;
+  font-family: "Goudy Trajan Regular";
+  font-size: 20px;
+  margin: 0;
+  padding: 0;
+  width: 305px;
 }
 
 #tipImg {
-    float: left;
-    padding-right: 5px;
-    width: 45px;
+  float: left;
+  padding-right: 5px;
+  width: 45px;
 }
 
 #tipCloseButton {
-    float: right;
+  float: right;
 }
 
 #tipPlusLine {
-    font-style: italic;
-    margin: 0;
-    padding: 0;
+  font-style: italic;
+  margin: 0;
+  padding: 0;
 }
 
 .tipSubTitle {
-    font-weight: bold;
-    padding-bottom: 0;
+  font-weight: bold;
+  padding-bottom: 0;
 }
 
 .clear {
-    clear: both;
+  clear: both;
 }

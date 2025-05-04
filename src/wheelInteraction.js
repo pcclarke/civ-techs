@@ -151,23 +151,25 @@ export function spokeHighlightIn(d, data, color) {
     .classed("fade", false);
 
   if (d.requires) {
+    console.log(d.requires);
     if (Array.isArray(d.requires)) {
       d.requires.forEach(function (r) {
-        select(".spokeAll")
+        select(".spokes")
           .selectAll("." + r)
           .classed("fade", false)
-          .select(".spokeLine")
+          .select(".spoke-line")
           .attr("y1", function (rt) {
             return -(arcBase + arcSpace * rt.arcRank);
           });
 
+        console.log(d, r, data);
         makeTempArc(d, r, data, color);
       });
     } else {
-      select(".spokeAll")
+      select(".spokes")
         .selectAll("." + d.requires)
         .classed("fade", false)
-        .select(".spokeLine")
+        .select(".spoke-line")
         .attr("y1", function (rt) {
           return -(arcBase + arcSpace * rt.arcRank);
         });

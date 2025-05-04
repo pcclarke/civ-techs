@@ -12,6 +12,7 @@ import {
   height,
 } from "./constants";
 import { displayDetailsBox } from "./displayDetailsBox";
+import { imageLink } from "./helpers";
 import orderDisplayed from "./orderDisplayed";
 import setupArcs from "./setupArcs";
 import setupData from "./setupData";
@@ -41,375 +42,269 @@ export default async function makeWheel(wheelState) {
   // // Debug processed data
   // console.log(data.displayed);
 
-  // Populate select civilizations drop-down
-  data.civilizations.forEach(function (c) {
-    select("#select-empire").append("option").attr("value", c.id).text(c.name);
-  });
+  const wheel = svg
+    .selectAll(".wheel")
+    .data([0])
+    .join("g")
+    .attr("class", "wheel")
+    .attr("transform", "translate(" + width / 2 + " " + height / 2 + ")");
 
-  drawWheel();
+  wheel
+    .selectAll(".start-slice") // pie "slice" to indicate start of spokes
+    .data([0])
+    .join("image")
+    .attr("class", "start-slice")
+    .attr("x", 0)
+    .attr("y", -(height / 2))
+    .attr("width", 167)
+    .attr("height", height / 2)
+    .attr("xlink:href", "img/startSlice.png");
 
-  // Draw portions of the wheel
-  function drawWheel() {
-    const wheel = svg
-      .append("g")
-      .attr("class", "wheel")
-      .attr("transform", "translate(" + width / 2 + " " + height / 2 + ")");
+  const spokeAll = wheel
+    .selectAll("g")
+    .data([0])
+    .join("g")
+    .attr("class", "spokes");
 
-    wheel
-      .append("image") // pie "slice" to indicate start of spokes
-      .attr("id", "startSlice")
-      .attr("x", 0)
-      .attr("y", -(height / 2))
-      .attr("width", 167)
-      .attr("height", height / 2)
-      .attr("xlink:href", "img/startSlice.png");
+  const spokes = spokeAll
+    .selectAll(".spoke")
+    .data(data.displayed)
+    .join("g")
+    .attr("class", (d) => `${d.id} spoke`)
+    .attr(
+      "transform",
+      (d) => `rotate(${d.pos * (360 / data.displayed.length) + angleShift})`
+    );
 
-    var spokeAll = wheel.append("g").attr("class", "spokeAll");
+  spokes
+    .selectAll(".spoke-line")
+    .data((d) => [d])
+    .join("line")
+    .attr("class", "spoke-line")
+    .attr("x1", 0)
+    .attr("y1", (d) =>
+      !d.requires && !d.optional ? 0 : -(arcBase + arcSpace * d.spokeRank)
+    )
+    .attr("x2", 0)
+    .attr("y2", (d) => -(width / 2) + 160 - d.unlocks.length * 14);
 
-    var spokes = spokeAll
-      .selectAll(".spoke")
-      .data(data.displayed)
-      .enter()
-      .append("g")
-      .attr("class", function (d) {
-        var className = d.id + " spoke";
-        return className;
-      })
-      .attr("transform", function (d) {
-        var ang = d.pos * (360 / data.displayed.length) + angleShift;
-        return "rotate(" + ang + ")";
-      })
-      .on("click", function (d) {});
+  spokes
+    .selectAll(".technology-image")
+    .data((d) => [d])
+    .join("image")
+    .attr("class", "technology-image")
+    .attr("transform", (d) => {
+      let x = -10;
+      let y = -width / 2 + 182;
+      let rotate = 270;
 
-    var spokeLine = spokes
-      .append("line") // Spoke lines from center
-      .attr("class", "spokeLine")
-      .attr("x1", 0)
-      .attr("y1", function (d) {
-        if (!d.requires && !d.optional) {
-          return 0;
-        }
-        return -(arcBase + arcSpace * d.spokeRank);
-      })
-      .attr("x2", 0)
-      .attr("y2", function (d) {
-        return -(width / 2) + 160 - d.unlocks.length * 14;
-      });
+      if (d.pos > data.displayed.length / 2) {
+        x = 10;
+        y -= 25;
+        rotate = 90;
+      }
 
-    var techIcons = spokes
-      .append("image") // Displayed item icons
-      .attr("class", "techImg")
-      .attr("transform", function (d) {
-        if (d.pos > data.displayed.length / 2) {
-          return "translate(10, " + (-(width / 2) + 157) + ") rotate(90)";
-        }
-        return "translate(-10, " + (-(width / 2) + 182) + ") rotate(270)";
-      })
-      .attr("height", 25)
-      .attr("width", 25)
-      .attr("xlink:href", function (d) {
-        var link;
-        if (d.cat === "units" || d.cat === "buildings") {
-          if (d[empire]) {
-            link =
-              game + "/img/" + d.cat + "/" + d[wheelState.empire].id + ".png";
-          } else {
-            link =
-              game + "/img/" + d.cat + "/" + d.CIVILIZATION_ALL.id + ".png";
-          }
-        } else {
-          link = game + "/img/" + d.cat + "/" + d.id + ".png";
-        }
-        return link;
-      })
-      .on("mouseover", function (_, d) {
-        var tipName = "";
-        if (d.cat === "units" || d.cat === "buildings") {
-          if (d[wheelState.empire]) {
-            tipName = d[wheelState.empire].name;
-          } else {
-            tipName = d.CIVILIZATION_ALL.name;
-          }
-        } else {
-          tipName = d.name;
-        }
-        spokeHighlightIn(d, data, color);
-      })
-      .on("mouseout", function (_, d) {
-        //d3.select("#tooltip").classed("hidden", true);
-        spokeHighlightOut(d);
-      })
-      .on("click", function (_, d) {
-        displayDetailsBox(d, d.pos, wheelState, data);
-      });
+      return `translate(${x}, ${y}) rotate(${rotate})`;
+    })
+    .attr("height", 25)
+    .attr("width", 25)
+    .attr("xlink:href", (d) => {
+      let id = d.id;
+      if (d.cat === "units" || d.cat === "buildings") {
+        id = d[empire] ? d[wheelState.empire].id : d.CIVILIZATION_ALL.id;
+      }
 
-    var unlocks = spokes
-      .selectAll(".unlocks")
-      .data(function (d) {
-        return d.unlocks;
-      })
-      .enter()
-      .filter(function (d) {
-        if (d.arcEnd || d.arcBack) {
-          return true;
-        }
-        return false;
-      })
-      .append("g")
-      .attr("class", function (d) {
-        return "unlock opaque " + d.ref.id + "" + d.pos;
-      });
+      return `${game}/img/${d.cat}/${id}.png`;
+    })
+    .on("mouseover", (_, d) => spokeHighlightIn(d, data, color))
+    .on("mouseout", (_, d) => spokeHighlightOut(d))
+    .on("click", (_, d) => displayDetailsBox(d, d.pos, wheelState, data));
 
-    var unlockArcs = unlocks
-      .append("path")
-      .attr("class", function (d) {
-        return "unlockArc";
-      })
-      .attr("rank", function (d) {
-        return d.rank;
-      })
-      .style("fill", function (d) {
-        return color(d.pos);
-      })
-      .attr("d", unlockArc);
+  const unlocks = spokes
+    .selectAll(".unlocks")
+    .data((d) => d.unlocks)
+    .filter(function (d) {
+      if (d.arcEnd || d.arcBack) {
+        return true;
+      }
+      return false;
+    })
+    .join("g")
+    .attr("class", (d) => `unlock opaque ${d.ref.id}${d.pos}`);
 
-    var unlockSquares = unlocks
-      .selectAll(".unlockSquare")
-      .data(function (d) {
-        return d.lreq;
-      })
-      .enter()
-      .append("g")
-      .attr("transform", function (d) {
-        var ang = d.dist * (360 / data.displayed.length);
-        return (
-          "rotate(" +
-          ang +
-          ") translate(0, " +
-          (-(width / 2) + 145 - 14 * d.arcRank) +
-          ")"
-        );
-      })
-      .attr("class", "unlockSquare");
+  unlocks
+    .append("path")
+    .attr("class", "unlock-arc")
+    .attr("rank", (d) => d.rank)
+    .style("fill", (d) => color(d.pos))
+    .attr("d", unlockArc);
 
-    unlockSquares
-      .append("rect")
-      .attr("x", -2.5)
-      .attr("y", -0.75)
-      .attr("width", 5)
-      .attr("height", 5)
-      .attr("fill", function (d) {
-        return color(d.pos);
-      });
-
-    var unlockIcons = spokes
-      .selectAll(".unlockIcon")
-      .data(function (d) {
-        return d.unlocks;
-      })
-      .enter()
-      .append("image")
-      .attr("class", "unlockIcon")
-      .attr("transform", function (d) {
-        if (d.pos > data.displayed.length / 2) {
-          return (
-            "translate(6, " +
-            (-(width / 2) + (142 - 14 * d.rank)) +
-            ") rotate(90)"
-          );
-        }
-        return (
-          "translate(-6, " +
-          (-(width / 2) + (153 - 14 * d.rank)) +
-          ") rotate(270)"
-        );
-      })
-      .attr("height", 13)
-      .attr("width", 13)
-      .attr("xlink:href", function (d) {
-        var link;
-        if (
-          (d.ref.cat === "units" || d.ref.cat === "buildings") &&
-          !(game === "civ1" || game === "civ2")
-        ) {
-          if (d.ref[wheelState.empire]) {
-            link =
-              game +
-              "/img/" +
-              d.ref.cat +
-              "/" +
-              d.ref[wheelState.empire].id +
-              ".png";
-          } else {
-            link =
-              game +
-              "/img/" +
-              d.ref.cat +
-              "/" +
-              d.ref.CIVILIZATION_ALL.id +
-              ".png";
-          }
-        } else {
-          link = game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png";
-        }
-        return link;
-      })
-      .on("mouseover", function (_, d) {
-        selectAll(".unlockIcon").classed("fade", true);
-        selectAll("." + d.ref.id + "" + d.pos).classed("opaque", false);
-        select(this).classed("fade", false);
-
-        // spokeHighlightIn(d.ref, data, wheelState.color);
-      })
-      .on("mouseout", function (d) {
-        selectAll(".unlockIcon").classed("fade", false);
-        selectAll(".unlock").classed("opaque", true);
-
-        // spokeHighlightOut(d.ref);
-      })
-      .on("click", function (d) {
-        displayDetailsBox(d.ref, d.pos, wheelState, data);
-      });
-
-    // Update icons with unique civilization units
-    select("#select-empire").on("change", function (d) {
-      wheelState.empire = this.options[this.selectedIndex].value;
-      select("#description").classed("hidden", true);
-
-      unlockIcons.attr("xlink:href", function (d) {
-        var link;
-        if (d.ref.cat === "units" || d.ref.cat === "buildings") {
-          if (d.ref[wheelState.empire]) {
-            link =
-              game +
-              "/img/" +
-              d.ref.cat +
-              "/" +
-              d.ref[wheelState.empire].id +
-              ".png";
-          } else {
-            link =
-              game +
-              "/img/" +
-              d.ref.cat +
-              "/" +
-              d.ref.CIVILIZATION_ALL.id +
-              ".png";
-          }
-        } else {
-          link = game + "/img/" + d.ref.cat + "/" + d.ref.id + ".png";
-        }
-        return link;
-      });
+  var unlockSquares = unlocks
+    .selectAll(".unlock-square")
+    .data((d) => d.lreq)
+    .join("g")
+    .attr("class", "unlock-square")
+    .attr("transform", (d) => {
+      const ang = d.dist * (360 / data.displayed.length);
+      const y = -(width / 2) + 145 - 14 * d.arcRank;
+      return `rotate(${ang}) translate(0, ${y})`;
     });
 
-    var reqArcs = wheel.append("g").attr("class", "reqArcs");
+  unlockSquares
+    .append("rect")
+    .attr("x", -2.5)
+    .attr("y", -0.75)
+    .attr("width", 5)
+    .attr("height", 5)
+    .attr("fill", (d) => color(d.pos));
 
-    var reqGroup = reqArcs
-      .selectAll(".reqGroup")
-      .data(data.displayed)
-      .enter()
-      .append("g")
-      .attr("class", function (d) {
-        var className = d.id + " reqGroup";
-        return className;
-      })
-      .attr("transform", function (d) {
-        var ang = d.pos * (360 / data.displayed.length) + angleShift;
-        return "rotate(" + ang + ")";
-      })
-      .on("click", function (d) {});
+  var unlockIcons = spokes
+    .selectAll(".unlock-icon")
+    .data((d) => d.unlocks)
+    .join("image")
+    .attr("class", "unlock-icon")
+    .attr("transform", (d) => {
+      let x = -6;
+      let y = -width / 2 + 153 - 14 * d.rank;
+      let angle = 270;
 
-    var reqArc = reqGroup
-      .append("path")
-      .attr("class", "spokeArc")
-      .style("fill", function (d) {
-        return color(d.pos);
-      })
-      .attr("d", linkArc);
+      if (d.pos > data.displayed.length / 2) {
+        x = 6;
+        y -= 11;
+        angle = 90;
+      }
 
-    var reqPin = reqGroup
-      .append("line")
-      .attr("class", "spokePin")
-      .attr("x1", 0)
-      .attr("y1", function (d) {
-        return -(arcBase + 7 + arcSpace * d.arcRank);
-      })
-      .attr("x2", 0)
-      .attr("y2", function (d) {
-        return -(arcBase - 5 + arcSpace * d.arcRank);
-      })
-      .attr("stroke-width", arcWidth)
-      .attr("stroke", function (d) {
-        return color(d.pos);
-      });
+      return `translate(${x}, ${y}) rotate(${angle})`;
+    })
+    .attr("height", 13)
+    .attr("width", 13)
+    .attr("xlink:href", (d) => {
+      let id = d.ref.id;
 
-    var reqSquares = reqGroup
-      .selectAll(".reqSquare")
-      .data(function (d) {
-        return d.lreq;
-      })
-      .enter()
-      .append("g")
-      .attr("transform", function (d) {
-        var ang = d.dist * (360 / data.displayed.length);
-        return (
-          "rotate(" +
-          ang +
-          ") translate(0, " +
-          (-arcBase - 2.5 - arcSpace * d.arcRank) +
-          ")"
-        );
-      })
-      .attr("class", "reqSquare");
+      if (d.ref.cat === "units" || d.ref.cat === "buildings") {
+        id = d.ref[wheelState.empire]
+          ? d.ref[wheelState.empire].id
+          : d.ref.CIVILIZATION_ALL.id;
+      }
 
-    reqSquares
-      .append("rect")
-      .attr("x", -2.5)
-      .attr("y", -0.75)
-      .attr("width", 5)
-      .attr("height", 5)
-      .attr("fill", function (d) {
-        return color(d.pos);
-      });
+      return `${game}/img/${d.ref.cat}/${id}.png`;
+    })
+    .on("mouseover", function (_, d) {
+      //   selectAll(".unlockIcon").classed("fade", true);
+      //   selectAll("." + d.ref.id + "" + d.pos).classed("opaque", false);
+      //   select(this).classed("fade", false);
+      // spokeHighlightIn(d.ref, data, wheelState.color);
+    })
+    .on("mouseout", function (d) {
+      //   selectAll(".unlockIcon").classed("fade", false);
+      //   selectAll(".unlock").classed("opaque", true);
+      // spokeHighlightOut(d.ref);
+    })
+    .on("click", function (d) {
+      displayDetailsBox(d.ref, d.pos, wheelState, data);
+    });
 
-    var optCircles = reqGroup
-      .selectAll(".optCircle")
-      .data(function (d) {
-        return d.lopt;
-      })
-      .enter()
-      .append("g")
-      .attr("transform", function (d) {
-        var ang = d.dist * (360 / data.displayed.length);
-        return (
-          "rotate(" +
-          ang +
-          ") translate(0, " +
-          (-arcBase - 2.5 - arcSpace * d.arcRank) +
-          ")"
-        );
-      })
-      .attr("class", "optCircle");
+  var reqArcs = wheel.append("g").attr("class", "reqArcs");
 
-    optCircles
-      .append("circle")
-      .attr("cx", 0)
-      .attr("cy", 2)
-      .attr("r", 2.5)
-      .attr("stroke-width", 1)
-      .attr("stroke", function (d) {
-        return color(d.pos);
-      })
-      .attr("fill", "white");
+  var reqGroup = reqArcs
+    .selectAll(".reqGroup")
+    .data(data.displayed)
+    .join("g")
+    .attr("class", (d) => `${d.id} req-group`)
+    .attr(
+      "transform",
+      (d) => `rotate(${d.pos * (360 / data.displayed.length) + angleShift})`
+    );
 
-    // Add the center image
-    wheel
-      .append("image")
-      .attr("x", -75)
-      .attr("y", -75)
-      .attr("width", 150)
-      .attr("height", 150)
-      .attr("xlink:href", game + "/img/" + game + "-center.png");
-  }
+  reqGroup
+    .append("path")
+    .attr("class", "spokeArc")
+    .style("fill", (d) => color(d.pos))
+    .attr("d", linkArc);
+
+  reqGroup
+    .append("line")
+    .attr("class", "spokePin")
+    .attr("x1", 0)
+    .attr("y1", (d) => -(arcBase + 7 + arcSpace * d.arcRank))
+    .attr("x2", 0)
+    .attr("y2", (d) => -(arcBase - 5 + arcSpace * d.arcRank))
+    .attr("stroke-width", arcWidth)
+    .attr("stroke", (d) => color(d.pos));
+
+  const reqSquares = reqGroup
+    .selectAll(".req-square")
+    .data((d) => d.lreq)
+    .join("g")
+    .attr("class", "req-square")
+    .attr("transform", (d) => {
+      var angle = d.dist * (360 / data.displayed.length);
+      const y = -arcBase - 2.5 - arcSpace * d.arcRank;
+
+      return `rotate(${angle}) translate(0, ${y})`;
+    });
+
+  reqSquares
+    .append("rect")
+    .attr("x", -2.5)
+    .attr("y", -0.75)
+    .attr("width", 5)
+    .attr("height", 5)
+    .attr("fill", (d) => color(d.pos));
+
+  var optCircles = reqGroup
+    .selectAll(".opt-circle")
+    .data((d) => d.lopt)
+    .join("g")
+    .attr("class", "opt-circle")
+    .attr("transform", (d) => {
+      const angle = d.dist * (360 / data.displayed.length);
+      const y = -arcBase - 2.5 - arcSpace * d.arcRank;
+
+      return `rotate(${angle}) translate(0, ${y})`;
+    });
+
+  optCircles
+    .append("circle")
+    .attr("cx", 0)
+    .attr("cy", 2)
+    .attr("r", 2.5)
+    .attr("stroke-width", 1)
+    .attr("stroke", (d) => color(d.pos))
+    .attr("fill", "white");
+
+  const empireSelect = select("#select-empire");
+
+  empireSelect
+    .selectAll(".empire-option")
+    .data(data.civilizations)
+    .join("option")
+    .attr("class", "empire-option")
+    .attr("value", (c) => c.id)
+    .text((c) => c.name);
+
+  empireSelect.on("change", function () {
+    wheelState.empire = this.options[this.selectedIndex].value;
+    select("#description").classed("hidden", true);
+
+    unlockIcons.attr("xlink:href", (d) => {
+      let id = d.ref.id;
+
+      if (d.ref.cat === "units" || d.ref.cat === "buildings") {
+        id = d.ref[wheelState.empire]
+          ? d.ref[wheelState.empire].id
+          : d.ref.CIVILIZATION_ALL.id;
+      }
+
+      return imageLink(game, d.ref.cat, id);
+    });
+  });
+
+  wheel
+    .append("image")
+    .attr("x", -75)
+    .attr("y", -75)
+    .attr("width", 150)
+    .attr("height", 150)
+    .attr("xlink:href", `${game}/img/${game}-center.png`);
 }
