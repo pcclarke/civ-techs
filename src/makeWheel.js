@@ -17,6 +17,7 @@ import orderDisplayed from "./orderDisplayed";
 import setupArcs from "./setupArcs";
 import setupData from "./setupData";
 import { spokeHighlightIn, spokeHighlightOut } from "./wheelInteraction";
+import createUnlocks from "./createUnlocks";
 
 export default async function makeWheel(wheelState) {
   const { color, game } = wheelState;
@@ -34,10 +35,17 @@ export default async function makeWheel(wheelState) {
 
   // json(path, function (data) {
 
+  var sortedTechnologyData = data.technologies.toSorted(
+    (a, b) => a.cost - b.cost
+  );
+
   // Functions to process data so wheel can be drawn
   setupData(data);
   orderDisplayed(data);
   setupArcs(data);
+
+  var unlocksData = createUnlocks(sortedTechnologyData);
+  console.log(sortedTechnologyData);
 
   // // Debug processed data
   // console.log(data.displayed);
@@ -61,44 +69,45 @@ export default async function makeWheel(wheelState) {
     .attr("xlink:href", "img/startSlice.png");
 
   const spokeAll = wheel
-    .selectAll("g")
+    .selectAll(".spokes")
     .data([0])
     .join("g")
     .attr("class", "spokes");
 
   const spokes = spokeAll
     .selectAll(".spoke")
-    .data(data.displayed)
+    .data(sortedTechnologyData)
     .join("g")
     .attr("class", (d) => `${d.id} spoke`)
     .attr(
       "transform",
-      (d) => `rotate(${d.pos * (360 / data.displayed.length) + angleShift})`
+      (d) =>
+        `rotate(${d.pos * (360 / sortedTechnologyData.length) + angleShift})`
     );
 
-  spokes
-    .selectAll(".spoke-line")
-    .data((d) => [d])
-    .join("line")
-    .attr("class", "spoke-line")
-    .attr("x1", 0)
-    .attr("y1", (d) =>
-      !d.requires && !d.optional ? 0 : -(arcBase + arcSpace * d.spokeRank)
-    )
-    .attr("x2", 0)
-    .attr("y2", (d) => -(width / 2) + 160 - d.unlocks.length * 14);
+  // spokes
+  //   .selectAll(".spoke-line")
+  //   .data((d) => [d])
+  //   .join("line")
+  //   .attr("class", "spoke-line")
+  //   .attr("x1", 0)
+  //   .attr("y1", (d) =>
+  //     !d.requires && !d.optional ? 0 : -(arcBase + arcSpace * d.spokeRank)
+  //   )
+  //   .attr("x2", 0)
+  //   .attr("y2", (d) => -(width / 2) + 160 - d.unlocks.length * 14);
 
   spokes
     .selectAll(".technology-image")
     .data((d) => [d])
     .join("image")
     .attr("class", "technology-image")
-    .attr("transform", (d) => {
+    .attr("transform", (_, i) => {
       let x = -10;
       let y = -width / 2 + 182;
       let rotate = 270;
 
-      if (d.pos > data.displayed.length / 2) {
+      if (i > sortedTechnologyData.length / 2) {
         x = 10;
         y -= 25;
         rotate = 90;
@@ -108,170 +117,180 @@ export default async function makeWheel(wheelState) {
     })
     .attr("height", 25)
     .attr("width", 25)
-    .attr("xlink:href", (d) => {
-      let id = d.id;
-      if (d.cat === "units" || d.cat === "buildings") {
-        id = d[empire] ? d[wheelState.empire].id : d.CIVILIZATION_ALL.id;
-      }
+    .attr("xlink:href", (d) => `${game}/img/${d.cat}/${d.id}.png`);
 
-      return `${game}/img/${d.cat}/${id}.png`;
-    })
-    .on("mouseover", (_, d) => spokeHighlightIn(d, data, color))
-    .on("mouseout", (_, d) => spokeHighlightOut(d))
-    .on("click", (_, d) => displayDetailsBox(d, d.pos, wheelState, data));
-
-  const unlocks = spokes
-    .selectAll(".unlocks")
-    .data((d) => d.unlocks)
-    .filter(function (d) {
-      if (d.arcEnd || d.arcBack) {
-        return true;
-      }
-      return false;
-    })
+  var prerequisites = wheel
+    .selectAll(".prerequisites")
+    .data([0])
     .join("g")
-    .attr("class", (d) => `unlock opaque ${d.ref.id}${d.pos}`);
+    .attr("class", "prerequisites");
 
-  unlocks
-    .append("path")
-    .attr("class", "unlock-arc")
-    .attr("rank", (d) => d.rank)
-    .style("fill", (d) => color(d.pos))
-    .attr("d", unlockArc);
+  var prerequisite = prerequisites
+    .selectAll(".prerequisite")
+    .data(unlocksData)
+    .join((enter) => {
+      var group = enter.append("g").classed("prerequisite");
 
-  var unlockSquares = unlocks
-    .selectAll(".unlock-square")
-    .data((d) => d.lreq)
-    .join("g")
-    .attr("class", "unlock-square")
-    .attr("transform", (d) => {
-      const ang = d.dist * (360 / data.displayed.length);
-      const y = -(width / 2) + 145 - 14 * d.arcRank;
-      return `rotate(${ang}) translate(0, ${y})`;
+      console.log(enter);
+      return group;
     });
 
-  unlockSquares
-    .append("rect")
-    .attr("x", -2.5)
-    .attr("y", -0.75)
-    .attr("width", 5)
-    .attr("height", 5)
-    .attr("fill", (d) => color(d.pos));
+  // .on("mouseover", (_, d) => spokeHighlightIn(d, data, color))
+  // .on("mouseout", (_, d) => spokeHighlightOut(d))
+  // .on("click", (_, d) => displayDetailsBox(d, d.pos, wheelState, data));
 
-  var unlockIcons = spokes
-    .selectAll(".unlock-icon")
-    .data((d) => d.unlocks)
-    .join("image")
-    .attr("class", "unlock-icon")
-    .attr("transform", (d) => {
-      let x = -6;
-      let y = -width / 2 + 153 - 14 * d.rank;
-      let angle = 270;
+  // const unlocks = spokes
+  //   .selectAll(".unlocks")
+  //   .data((d) => d.unlocks)
+  //   .filter(function (d) {
+  //     if (d.arcEnd || d.arcBack) {
+  //       return true;
+  //     }
+  //     return false;
+  //   })
+  //   .join("g")
+  //   .attr("class", (d) => `unlock opaque ${d.ref.id}${d.pos}`);
 
-      if (d.pos > data.displayed.length / 2) {
-        x = 6;
-        y -= 11;
-        angle = 90;
-      }
+  // unlocks
+  //   .append("path")
+  //   .attr("class", "unlock-arc")
+  //   .attr("rank", (d) => d.rank)
+  //   .style("fill", (d) => color(d.pos))
+  //   .attr("d", unlockArc);
 
-      return `translate(${x}, ${y}) rotate(${angle})`;
-    })
-    .attr("height", 13)
-    .attr("width", 13)
-    .attr("xlink:href", (d) => {
-      let id = d.ref.id;
+  // var unlockSquares = unlocks
+  //   .selectAll(".unlock-square")
+  //   .data((d) => d.lreq)
+  //   .join("g")
+  //   .attr("class", "unlock-square")
+  //   .attr("transform", (d) => {
+  //     const ang = d.dist * (360 / data.displayed.length);
+  //     const y = -(width / 2) + 145 - 14 * d.arcRank;
+  //     return `rotate(${ang}) translate(0, ${y})`;
+  //   });
 
-      if (d.ref.cat === "units" || d.ref.cat === "buildings") {
-        id = d.ref[wheelState.empire]
-          ? d.ref[wheelState.empire].id
-          : d.ref.CIVILIZATION_ALL.id;
-      }
+  // unlockSquares
+  //   .append("rect")
+  //   .attr("x", -2.5)
+  //   .attr("y", -0.75)
+  //   .attr("width", 5)
+  //   .attr("height", 5)
+  //   .attr("fill", (d) => color(d.pos));
 
-      return `${game}/img/${d.ref.cat}/${id}.png`;
-    })
-    .on("mouseover", function (_, d) {
-      //   selectAll(".unlockIcon").classed("fade", true);
-      //   selectAll("." + d.ref.id + "" + d.pos).classed("opaque", false);
-      //   select(this).classed("fade", false);
-      // spokeHighlightIn(d.ref, data, wheelState.color);
-    })
-    .on("mouseout", function (d) {
-      //   selectAll(".unlockIcon").classed("fade", false);
-      //   selectAll(".unlock").classed("opaque", true);
-      // spokeHighlightOut(d.ref);
-    })
-    .on("click", function (d) {
-      displayDetailsBox(d.ref, d.pos, wheelState, data);
-    });
+  // var unlockIcons = spokes
+  //   .selectAll(".unlock-icon")
+  //   .data((d) => d.unlocks)
+  //   .join("image")
+  //   .attr("class", "unlock-icon")
+  //   .attr("transform", (d) => {
+  //     let x = -6;
+  //     let y = -width / 2 + 153 - 14 * d.rank;
+  //     let angle = 270;
 
-  var reqArcs = wheel.append("g").attr("class", "reqArcs");
+  //     if (d.pos > data.displayed.length / 2) {
+  //       x = 6;
+  //       y -= 11;
+  //       angle = 90;
+  //     }
 
-  var reqGroup = reqArcs
-    .selectAll(".reqGroup")
-    .data(data.displayed)
-    .join("g")
-    .attr("class", (d) => `${d.id} req-group`)
-    .attr(
-      "transform",
-      (d) => `rotate(${d.pos * (360 / data.displayed.length) + angleShift})`
-    );
+  //     return `translate(${x}, ${y}) rotate(${angle})`;
+  //   })
+  //   .attr("height", 13)
+  //   .attr("width", 13)
+  //   .attr("xlink:href", (d) => {
+  //     let id = d.ref.id;
 
-  reqGroup
-    .append("path")
-    .attr("class", "spokeArc")
-    .style("fill", (d) => color(d.pos))
-    .attr("d", linkArc);
+  //     if (d.ref.cat === "units" || d.ref.cat === "buildings") {
+  //       id = d.ref[wheelState.empire]
+  //         ? d.ref[wheelState.empire].id
+  //         : d.ref.CIVILIZATION_ALL.id;
+  //     }
 
-  reqGroup
-    .append("line")
-    .attr("class", "spokePin")
-    .attr("x1", 0)
-    .attr("y1", (d) => -(arcBase + 7 + arcSpace * d.arcRank))
-    .attr("x2", 0)
-    .attr("y2", (d) => -(arcBase - 5 + arcSpace * d.arcRank))
-    .attr("stroke-width", arcWidth)
-    .attr("stroke", (d) => color(d.pos));
+  //     return `${game}/img/${d.ref.cat}/${id}.png`;
+  //   })
+  //   .on("mouseover", function (_, d) {
+  //     //   selectAll(".unlockIcon").classed("fade", true);
+  //     //   selectAll("." + d.ref.id + "" + d.pos).classed("opaque", false);
+  //     //   select(this).classed("fade", false);
+  //     // spokeHighlightIn(d.ref, data, wheelState.color);
+  //   })
+  //   .on("mouseout", function (d) {
+  //     //   selectAll(".unlockIcon").classed("fade", false);
+  //     //   selectAll(".unlock").classed("opaque", true);
+  //     // spokeHighlightOut(d.ref);
+  //   })
+  //   .on("click", function (d) {
+  //     displayDetailsBox(d.ref, d.pos, wheelState, data);
+  //   });
 
-  const reqSquares = reqGroup
-    .selectAll(".req-square")
-    .data((d) => d.lreq)
-    .join("g")
-    .attr("class", "req-square")
-    .attr("transform", (d) => {
-      var angle = d.dist * (360 / data.displayed.length);
-      const y = -arcBase - 2.5 - arcSpace * d.arcRank;
+  // var reqArcs = wheel.append("g").attr("class", "reqArcs");
 
-      return `rotate(${angle}) translate(0, ${y})`;
-    });
+  // var reqGroup = reqArcs
+  //   .selectAll(".reqGroup")
+  //   .data(data.displayed)
+  //   .join("g")
+  //   .attr("class", (d) => `${d.id} req-group`)
+  //   .attr(
+  //     "transform",
+  //     (d) => `rotate(${d.pos * (360 / data.displayed.length) + angleShift})`
+  //   );
 
-  reqSquares
-    .append("rect")
-    .attr("x", -2.5)
-    .attr("y", -0.75)
-    .attr("width", 5)
-    .attr("height", 5)
-    .attr("fill", (d) => color(d.pos));
+  // reqGroup
+  //   .append("path")
+  //   .attr("class", "spokeArc")
+  //   .style("fill", (d) => color(d.pos))
+  //   .attr("d", linkArc);
 
-  var optCircles = reqGroup
-    .selectAll(".opt-circle")
-    .data((d) => d.lopt)
-    .join("g")
-    .attr("class", "opt-circle")
-    .attr("transform", (d) => {
-      const angle = d.dist * (360 / data.displayed.length);
-      const y = -arcBase - 2.5 - arcSpace * d.arcRank;
+  // reqGroup
+  //   .append("line")
+  //   .attr("class", "spokePin")
+  //   .attr("x1", 0)
+  //   .attr("y1", (d) => -(arcBase + 7 + arcSpace * d.arcRank))
+  //   .attr("x2", 0)
+  //   .attr("y2", (d) => -(arcBase - 5 + arcSpace * d.arcRank))
+  //   .attr("stroke-width", arcWidth)
+  //   .attr("stroke", (d) => color(d.pos));
 
-      return `rotate(${angle}) translate(0, ${y})`;
-    });
+  // const reqSquares = reqGroup
+  //   .selectAll(".req-square")
+  //   .data((d) => d.lreq)
+  //   .join("g")
+  //   .attr("class", "req-square")
+  //   .attr("transform", (d) => {
+  //     var angle = d.dist * (360 / data.displayed.length);
+  //     const y = -arcBase - 2.5 - arcSpace * d.arcRank;
 
-  optCircles
-    .append("circle")
-    .attr("cx", 0)
-    .attr("cy", 2)
-    .attr("r", 2.5)
-    .attr("stroke-width", 1)
-    .attr("stroke", (d) => color(d.pos))
-    .attr("fill", "white");
+  //     return `rotate(${angle}) translate(0, ${y})`;
+  //   });
+
+  // reqSquares
+  //   .append("rect")
+  //   .attr("x", -2.5)
+  //   .attr("y", -0.75)
+  //   .attr("width", 5)
+  //   .attr("height", 5)
+  //   .attr("fill", (d) => color(d.pos));
+
+  // var optCircles = reqGroup
+  //   .selectAll(".opt-circle")
+  //   .data((d) => d.lopt)
+  //   .join("g")
+  //   .attr("class", "opt-circle")
+  //   .attr("transform", (d) => {
+  //     const angle = d.dist * (360 / data.displayed.length);
+  //     const y = -arcBase - 2.5 - arcSpace * d.arcRank;
+
+  //     return `rotate(${angle}) translate(0, ${y})`;
+  //   });
+
+  // optCircles
+  //   .append("circle")
+  //   .attr("cx", 0)
+  //   .attr("cy", 2)
+  //   .attr("r", 2.5)
+  //   .attr("stroke-width", 1)
+  //   .attr("stroke", (d) => color(d.pos))
+  //   .attr("fill", "white");
 
   const empireSelect = select("#select-empire");
 

@@ -5,33 +5,46 @@
  */
 export default function createUnlocks(technologyData) {
   var unlockPositions = [];
-  var unlocks = [];
   var technologyIds = technologyData.map((t) => t.id);
 
   for (let i = 0; i < technologyData.length; i++) {
-    let hasPrerequisites = false;
+    let requiresObj;
+    let optionalObj;
 
     if (technologyData[i].requires) {
-      const obj = createUnlocksObject(
+      requiresObj = createUnlocksObject(
         technologyData[i],
         technologyIds,
         i,
         true
       );
-      obj.step = obj.step =
-        i === 0 ? 0 : findOpenStep(unlockPositions, obj.range[0]);
-      unlockPositions.push(obj);
+      requiresObj.step =
+        i == 0 ? 0 : findOpenStep(unlockPositions, requiresObj.range[0]);
     }
 
     if (technologyData[i].optional) {
-      const obj = createUnlocksObject(
+      optionalObj = createUnlocksObject(
         technologyData[i],
         technologyIds,
         i,
         false
       );
-      obj.step = i === 0 ? 0 : findOpenStep(unlockPositions, obj.range[0]);
-      unlockPositions.push(obj);
+      optionalObj.step =
+        i == 0 ? 0 : findOpenStep(unlockPositions, optionalObj.range[0]);
+    }
+
+    if (requiresObj && optionalObj) {
+      requiresObj.connects = "left";
+      optionalObj.connects = "right";
+
+      unlockPositions.push(requiresObj);
+      unlockPositions.push(optionalObj);
+    } else if (requiresObj) {
+      requiresObj.connects = "middle";
+      unlockPositions.push(requiresObj);
+    } else if (optionalObj) {
+      optionalObj.connects = "middle";
+      unlockPositions.push(optionalObj);
     }
   }
 
