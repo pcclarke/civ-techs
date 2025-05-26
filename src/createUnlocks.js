@@ -10,29 +10,67 @@ export default function createUnlocks(technologyData) {
 
   for (let i = 0; i < technologyData.length; i++) {
     let hasPrerequisites = false;
+    let minRange;
+
+    const unlock = {
+      id: technologyData[i].id,
+      position: i,
+    };
 
     if (technologyData[i].requires) {
-      const obj = createUnlocksObject(
-        technologyData[i],
+      unlock.required = createUnlocksObject(
+        technologyData[i].requires,
         technologyIds,
-        i,
-        true
+        i
       );
-      obj.step = obj.step =
-        i === 0 ? 0 : findOpenStep(unlockPositions, obj.range[0]);
-      unlockPositions.push(obj);
+
+      minRange = unlock.required.range[0];
+      hasPrerequisites = true;
     }
 
     if (technologyData[i].optional) {
-      const obj = createUnlocksObject(
-        technologyData[i],
+      unlock.optional = createUnlocksObject(
+        technologyData[i].optional,
         technologyIds,
-        i,
-        false
+        i
       );
-      obj.step = i === 0 ? 0 : findOpenStep(unlockPositions, obj.range[0]);
-      unlockPositions.push(obj);
+
+      if (minRange) {
+        minRange = Math.min(unlock.required.range[0], unlock.optional.range[0]);
+      } else {
+        minRange = unlock.optional.range[0];
+      }
+      hasPrerequisites = true;
     }
+
+    if (hasPrerequisites) {
+      unlock.step = i == 0 ? 0 : findOpenStep(unlockPositions, minRange);
+
+      unlockPositions.push(unlock);
+    }
+
+    //   if (technologyData[i].requires) {
+    //     const obj = createUnlocksObject(
+    //       technologyData[i],
+    //       technologyIds,
+    //       i,
+    //       true
+    //     );
+    //     obj.step = obj.step =
+    //       i === 0 ? 0 : findOpenStep(unlockPositions, obj.range[0]);
+    //     unlockPositions.push(obj);
+    //   }
+
+    //   if (technologyData[i].optional) {
+    //     const obj = createUnlocksObject(
+    //       technologyData[i],
+    //       technologyIds,
+    //       i,
+    //       false
+    //     );
+    //     obj.step = i === 0 ? 0 : findOpenStep(unlockPositions, obj.range[0]);
+    //     unlockPositions.push(obj);
+    //   }
   }
 
   console.log(unlockPositions);
@@ -40,55 +78,62 @@ export default function createUnlocks(technologyData) {
   return unlockPositions;
 }
 
-function createUnlocksObject(technology, techIds, position, isRequired, step) {
-  let obj = {
-    id: technology.id,
-    techPosition: position,
-    required: isRequired,
-    step: step,
-  };
+function createUnlocksObject(prereqs, techIds, position) {
+  const requires = getUnlocksPosition(prereqs, techIds);
 
-  const requires = getUnlocksPosition(
-    technology[isRequired ? "requires" : "optional"],
-    techIds
-  );
+  const requiresPositions = requires.map((r) => r.position);
 
-  const requiresPositions = requires.map((r) => r.index);
-
-  obj.range = [
+  var range = [
     Math.min(...requiresPositions, position),
     Math.max(...requiresPositions, position),
   ];
 
-  return obj;
+  return {
+    range: range,
+    requires: requires,
+  };
 }
 
 function getUnlocksPosition(unlocks, techIds) {
   var unlocksWithPositions = [];
 
   unlocks.forEach((u) =>
-    unlocksWithPositions.push({ id: u, index: techIds.indexOf(u) })
+    unlocksWithPositions.push({ id: u, position: techIds.indexOf(u) })
   );
 
   return unlocksWithPositions;
 }
 
-function findOpenStep(unlockPositions, rangeStart) {
+/**
+ * Find an open step where the arc can be drawn
+ * @param {*} unlockPositions
+ * @param {*} newRangeStart
+ * @returns
+ */
+function findOpenStep(unlockPositions, newRangeStart) {
   var openStep = -1;
   var highestStep = 0;
 
   for (let i = 0; i < unlockPositions.length; i++) {
-    if (unlockPositions[i].range[1] < rangeStart) {
-      openStep = unlockPositions[i].step;
-    } else if (
-      openStep == unlockPositions[i].step &&
-      unlockPositions[i].range[1] > rangeStart
-    ) {
+    let unlock = unlockPositions[i];
+
+    let maxRange;
+    if (unlock.required && unlock.optional) {
+      maxRange = Math.max(unlock.required.range[1], unlock.optional.range[1]);
+    } else if (unlock.required) {
+      maxRange = unlock.required.range[1];
+    } else {
+      maxRange = unlock.optional.range[1];
+    }
+
+    if (maxRange < newRangeStart) {
+      openStep = unlock.step;
+    } else if (openStep == unlock.step && maxRange > newRangeStart) {
       openStep = -1;
     }
 
-    if (unlockPositions[i].step > highestStep) {
-      highestStep = unlockPositions[i].step;
+    if (unlock.step > highestStep) {
+      highestStep = unlock.step;
     }
   }
 
