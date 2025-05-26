@@ -1,7 +1,7 @@
 import { json } from "d3-fetch";
 import { select, selectAll } from "d3-selection";
 
-import { linkArc, unlockArc } from "./arcs";
+import { linkArc, unlockArc, prereqArc } from "./arcs";
 import {
   angleShift,
   arcBase,
@@ -128,12 +128,21 @@ export default async function makeWheel(wheelState) {
   var prerequisite = prerequisites
     .selectAll(".prerequisite")
     .data(unlocksData)
-    .join((enter) => {
-      var group = enter.append("g").classed("prerequisite");
+    .join("g")
+    .attr("class", "prerequisite")
+    .attr("tech", (d) => d.id);
 
-      console.log(enter);
-      return group;
-    });
+  var required = prerequisite
+    .filter((d) => d.requires !== undefined)
+    .append("path")
+    .attr("class", "required-arc")
+    .attr("d", (d) => prereqArc(d.requires))
+    .attr("fill", "blue");
+
+  var optional = prerequisite
+    .filter((d) => d.optional !== undefined)
+    .append("path")
+    .attr("class", "optional-arc");
 
   // .on("mouseover", (_, d) => spokeHighlightIn(d, data, color))
   // .on("mouseout", (_, d) => spokeHighlightOut(d))

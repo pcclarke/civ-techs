@@ -18,3 +18,9 @@ export const unlockArc = arc()
   .outerRadius((d) => arcBase + 342.6 + arcWidth + 14 * d.rank)
   .startAngle((d) => -1 * d.arcBack)
   .endAngle((d) => d.arcEnd);
+
+export var prereqArc = arc()
+  .innerRadius((d) => arcBase + arcSpace * d.step)
+  .outerRadius((d) => arcBase + arcWidth + arcSpace * d.step)
+  .startAngle((d) => (d.range[0] / d.count) * 2 * Math.PI)
+  .endAngle((d) => (d.range[1] / d.count) * 2 * Math.PI);

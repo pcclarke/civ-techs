@@ -18,13 +18,14 @@ export default function createUnlocks(technologyData) {
     };
 
     if (technologyData[i].requires) {
-      unlock.required = createUnlocksObject(
+      unlock.requires = createUnlocksObject(
         technologyData[i].requires,
         technologyIds,
         i
       );
+      unlock.requires.count = technologyData.length;
 
-      minRange = unlock.required.range[0];
+      minRange = unlock.requires.range[0];
       hasPrerequisites = true;
     }
 
@@ -34,43 +35,28 @@ export default function createUnlocks(technologyData) {
         technologyIds,
         i
       );
+      unlock.optional.count = technologyData.length;
 
       if (minRange) {
-        minRange = Math.min(unlock.required.range[0], unlock.optional.range[0]);
+        minRange = Math.min(unlock.requires.range[0], unlock.optional.range[0]);
       } else {
         minRange = unlock.optional.range[0];
       }
       hasPrerequisites = true;
     }
 
-    if (hasPrerequisites) {
-      unlock.step = i == 0 ? 0 : findOpenStep(unlockPositions, minRange);
+    unlock.step = i == 0 ? 0 : findOpenStep(unlockPositions, minRange);
 
-      unlockPositions.push(unlock);
+    if (technologyData[i].requires) {
+      unlock.requires.step = unlock.step;
+    }
+    if (technologyData[i].optional) {
+      unlock.optional.step = unlock.step;
     }
 
-    //   if (technologyData[i].requires) {
-    //     const obj = createUnlocksObject(
-    //       technologyData[i],
-    //       technologyIds,
-    //       i,
-    //       true
-    //     );
-    //     obj.step = obj.step =
-    //       i === 0 ? 0 : findOpenStep(unlockPositions, obj.range[0]);
-    //     unlockPositions.push(obj);
-    //   }
-
-    //   if (technologyData[i].optional) {
-    //     const obj = createUnlocksObject(
-    //       technologyData[i],
-    //       technologyIds,
-    //       i,
-    //       false
-    //     );
-    //     obj.step = i === 0 ? 0 : findOpenStep(unlockPositions, obj.range[0]);
-    //     unlockPositions.push(obj);
-    //   }
+    if (hasPrerequisites) {
+      unlockPositions.push(unlock);
+    }
   }
 
   console.log(unlockPositions);
@@ -118,10 +104,10 @@ function findOpenStep(unlockPositions, newRangeStart) {
     let unlock = unlockPositions[i];
 
     let maxRange;
-    if (unlock.required && unlock.optional) {
-      maxRange = Math.max(unlock.required.range[1], unlock.optional.range[1]);
-    } else if (unlock.required) {
-      maxRange = unlock.required.range[1];
+    if (unlock.requires && unlock.optional) {
+      maxRange = Math.max(unlock.requires.range[1], unlock.optional.range[1]);
+    } else if (unlock.requires) {
+      maxRange = unlock.requires.range[1];
     } else {
       maxRange = unlock.optional.range[1];
     }
