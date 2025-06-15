@@ -142,7 +142,9 @@ export default async function makeWheel(wheelState) {
   var optional = prerequisite
     .filter((d) => d.optional !== undefined)
     .append("path")
-    .attr("class", "optional-arc");
+    .attr("class", "optional-arc")
+    .attr("d", (d) => prereqArc(d.optional))
+    .attr("fill", "red");
 
   // .on("mouseover", (_, d) => spokeHighlightIn(d, data, color))
   // .on("mouseout", (_, d) => spokeHighlightOut(d))

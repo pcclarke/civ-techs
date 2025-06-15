@@ -20,7 +20,18 @@ export const unlockArc = arc()
   .endAngle((d) => d.arcEnd);
 
 export var prereqArc = arc()
-  .innerRadius((d) => arcBase + arcSpace * d.step)
-  .outerRadius((d) => arcBase + arcWidth + arcSpace * d.step)
+  .innerRadius((d) => arcBase + setAlignment(d.align) + arcSpace * d.step)
+  .outerRadius(
+    (d) => arcBase + setAlignment(d.align) + arcWidth + arcSpace * d.step
+  )
   .startAngle((d) => (d.range[0] / d.count) * 2 * Math.PI)
   .endAngle((d) => (d.range[1] / d.count) * 2 * Math.PI);
+
+function setAlignment(align) {
+  if (align === "left") {
+    return -1;
+  } else if (align === "right") {
+    return 1;
+  }
+  return 0;
+}

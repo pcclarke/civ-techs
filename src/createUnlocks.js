@@ -11,6 +11,7 @@ export default function createUnlocks(technologyData) {
   for (let i = 0; i < technologyData.length; i++) {
     let hasPrerequisites = false;
     let minRange;
+    let maxRange;
 
     const unlock = {
       id: technologyData[i].id,
@@ -24,8 +25,11 @@ export default function createUnlocks(technologyData) {
         i
       );
       unlock.requires.count = technologyData.length;
+      unlock.requires.align = technologyData[i].optional ? "left" : "middle";
 
       minRange = unlock.requires.range[0];
+      maxRange = unlock.requires.range[1];
+
       hasPrerequisites = true;
     }
 
@@ -36,25 +40,38 @@ export default function createUnlocks(technologyData) {
         i
       );
       unlock.optional.count = technologyData.length;
+      unlock.optional.align = technologyData[i].requires ? "right" : "middle";
 
       if (minRange) {
         minRange = Math.min(unlock.requires.range[0], unlock.optional.range[0]);
       } else {
         minRange = unlock.optional.range[0];
       }
+
+      if (maxRange) {
+        maxRange = Math.max(unlock.requires.range[1], unlock.optional.range[1]);
+      } else {
+        maxRange = unlock.optional.range[1];
+      }
+
       hasPrerequisites = true;
     }
 
-    unlock.step = i == 0 ? 0 : findOpenStep(unlockPositions, minRange);
-
-    if (technologyData[i].requires) {
-      unlock.requires.step = unlock.step;
-    }
-    if (technologyData[i].optional) {
-      unlock.optional.step = unlock.step;
-    }
-
     if (hasPrerequisites) {
+      unlock.step = findOpenStep(
+        unlockPositions,
+        minRange,
+        maxRange,
+        technologyData[i].id
+      );
+
+      if (technologyData[i].requires) {
+        unlock.requires.step = unlock.step;
+      }
+      if (technologyData[i].optional) {
+        unlock.optional.step = unlock.step;
+      }
+
       unlockPositions.push(unlock);
     }
   }
@@ -93,41 +110,82 @@ function getUnlocksPosition(unlocks, techIds) {
 /**
  * Find an open step where the arc can be drawn
  * @param {*} unlockPositions
- * @param {*} newRangeStart
+ * @param {*} newRangeMin
  * @returns
  */
-function findOpenStep(unlockPositions, newRangeStart) {
-  var openStep = -1;
-  var highestStep = 0;
+function findOpenStep(unlockPositions, newRangeMin, newRangeMax) {
+  // Helper function to get the range for a given unlock
+  function getRange(unlock) {
+    let rangeMin, rangeMax;
 
-  for (let i = 0; i < unlockPositions.length; i++) {
-    let unlock = unlockPositions[i];
-
-    let maxRange;
     if (unlock.requires && unlock.optional) {
-      maxRange = Math.max(unlock.requires.range[1], unlock.optional.range[1]);
+      rangeMax = Math.max(unlock.requires.range[1], unlock.optional.range[1]);
+      rangeMin = Math.min(unlock.requires.range[0], unlock.optional.range[0]);
     } else if (unlock.requires) {
-      maxRange = unlock.requires.range[1];
+      rangeMin = unlock.requires.range[0];
+      rangeMax = unlock.requires.range[1];
+    } else if (unlock.optional) {
+      rangeMin = unlock.optional.range[0];
+      rangeMax = unlock.optional.range[1];
     } else {
-      maxRange = unlock.optional.range[1];
+      // Handle case where neither requires nor optional exist
+      return null;
     }
 
-    if (maxRange < newRangeStart) {
-      openStep = unlock.step;
-    } else if (openStep == unlock.step && maxRange > newRangeStart) {
-      openStep = -1;
+    return { min: rangeMin, max: rangeMax };
+  }
+
+  // Helper function to check if two ranges overlap
+  function rangesOverlap(range1Min, range1Max, range2Min, range2Max) {
+    return !(range1Max < range2Min || range2Max < range1Min);
+  }
+
+  // Group existing unlocks by step (row)
+  const stepMap = new Map();
+  let maxStep = -1;
+
+  for (let unlock of unlockPositions) {
+    const range = getRange(unlock);
+    if (range === null) continue;
+
+    const step = unlock.step;
+    maxStep = Math.max(maxStep, step);
+
+    if (!stepMap.has(step)) {
+      stepMap.set(step, []);
+    }
+    stepMap.get(step).push(range);
+  }
+  console.log(stepMap);
+
+  // Try each step starting from 0
+  for (let step = 0; step <= maxStep + 1; step++) {
+    let canUseStep = true;
+
+    // Check if this step has any conflicting ranges
+    if (stepMap.has(step)) {
+      for (let existingRange of stepMap.get(step)) {
+        if (
+          rangesOverlap(
+            newRangeMin,
+            newRangeMax,
+            existingRange.min,
+            existingRange.max
+          )
+        ) {
+          canUseStep = false;
+          break;
+        }
+      }
     }
 
-    if (unlock.step > highestStep) {
-      highestStep = unlock.step;
+    if (canUseStep) {
+      return step;
     }
   }
 
-  if (openStep > -1) {
-    return openStep;
-  }
-
-  return highestStep + 1;
+  // If we get here, return the next available step
+  return maxStep + 1;
 }
 
 function calculateAngle(position, techCount, angleShift) {
