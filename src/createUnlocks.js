@@ -12,19 +12,21 @@ export default function createUnlocks(technologyData) {
     let hasPrerequisites = false;
     let minRange;
     let maxRange;
+    const count = technologyData.length - 1;
+    const position = i;
 
     const unlock = {
       id: technologyData[i].id,
-      position: i,
+      position: position,
     };
 
     if (technologyData[i].requires) {
       unlock.requires = createUnlocksObject(
         technologyData[i].requires,
         technologyIds,
-        i
+        position
       );
-      unlock.requires.count = technologyData.length;
+      unlock.requires.count = count;
       unlock.requires.align = technologyData[i].optional ? "left" : "middle";
 
       minRange = unlock.requires.range[0];
@@ -37,9 +39,10 @@ export default function createUnlocks(technologyData) {
       unlock.optional = createUnlocksObject(
         technologyData[i].optional,
         technologyIds,
-        i
+        position
       );
-      unlock.optional.count = technologyData.length;
+      console.log(technologyData.length);
+      unlock.optional.count = count;
       unlock.optional.align = technologyData[i].requires ? "right" : "middle";
 
       if (minRange) {
@@ -156,7 +159,6 @@ function findOpenStep(unlockPositions, newRangeMin, newRangeMax) {
     }
     stepMap.get(step).push(range);
   }
-  console.log(stepMap);
 
   // Try each step starting from 0
   for (let step = 0; step <= maxStep + 1; step++) {
