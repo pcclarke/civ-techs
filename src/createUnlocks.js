@@ -1,10 +1,13 @@
 /**
+ * @file Various steps to building a list of the relationships between
+ */
+
+/**
  * Get a list of where optional and hard requirements start and stop
  * @param {} technologyData
  * @returns
  */
 export default function createUnlocks(technologyData) {
-  var unlockPositions = [];
   var unlocks = [];
   var technologyIds = technologyData.map((t) => t.id);
 
@@ -14,20 +17,21 @@ export default function createUnlocks(technologyData) {
     let maxRange;
     const count = technologyData.length - 1;
     const position = i;
+    const tech = technologyData[i];
 
     const unlock = {
-      id: technologyData[i].id,
+      count: count,
+      id: tech.id,
       position: position,
     };
 
-    if (technologyData[i].requires) {
+    if (tech.requires) {
       unlock.requires = createUnlocksObject(
-        technologyData[i].requires,
+        tech.requires,
         technologyIds,
         position
       );
       unlock.requires.count = count;
-      unlock.requires.align = technologyData[i].optional ? "left" : "middle";
 
       minRange = unlock.requires.range[0];
       maxRange = unlock.requires.range[1];
@@ -35,15 +39,13 @@ export default function createUnlocks(technologyData) {
       hasPrerequisites = true;
     }
 
-    if (technologyData[i].optional) {
+    if (tech.optional) {
       unlock.optional = createUnlocksObject(
-        technologyData[i].optional,
+        tech.optional,
         technologyIds,
         position
       );
-      console.log(technologyData.length);
       unlock.optional.count = count;
-      unlock.optional.align = technologyData[i].requires ? "right" : "middle";
 
       if (minRange) {
         minRange = Math.min(unlock.requires.range[0], unlock.optional.range[0]);
@@ -61,33 +63,34 @@ export default function createUnlocks(technologyData) {
     }
 
     if (hasPrerequisites) {
-      unlock.step = findOpenStep(
-        unlockPositions,
-        minRange,
-        maxRange,
-        technologyData[i].id
-      );
+      unlock.step = findOpenStep(unlocks, minRange, maxRange, tech.id);
 
-      if (technologyData[i].requires) {
+      if (tech.requires) {
         unlock.requires.step = unlock.step;
       }
-      if (technologyData[i].optional) {
+      if (tech.optional) {
         unlock.optional.step = unlock.step;
       }
 
-      unlockPositions.push(unlock);
+      unlock.range = [minRange, maxRange];
+
+      unlocks.push(unlock);
     }
   }
 
-  console.log(unlockPositions);
-
-  return unlockPositions;
+  return unlocks;
 }
 
+/**
+ * Create an object that describes a technology that unlocks another
+ * @param prereqs
+ * @param {string[]} techIds
+ * @param {number} position
+ */
 function createUnlocksObject(prereqs, techIds, position) {
-  const requires = getUnlocksPosition(prereqs, techIds);
+  var requires = getUnlocksPosition(prereqs, techIds);
 
-  const requiresPositions = requires.map((r) => r.position);
+  var requiresPositions = requires.map((r) => r.position);
 
   var range = [
     Math.min(...requiresPositions, position),
@@ -112,11 +115,12 @@ function getUnlocksPosition(unlocks, techIds) {
 
 /**
  * Find an open step where the arc can be drawn
- * @param {*} unlockPositions
- * @param {*} newRangeMin
+ * @param {*} allUnlocks
+ * @param {number} newRangeMin
+ * @param {number} newRangeMax
  * @returns
  */
-function findOpenStep(unlockPositions, newRangeMin, newRangeMax) {
+function findOpenStep(allUnlocks, newRangeMin, newRangeMax) {
   // Helper function to get the range for a given unlock
   function getRange(unlock) {
     let rangeMin, rangeMax;
@@ -147,7 +151,7 @@ function findOpenStep(unlockPositions, newRangeMin, newRangeMax) {
   const stepMap = new Map();
   let maxStep = -1;
 
-  for (let unlock of unlockPositions) {
+  for (let unlock of allUnlocks) {
     const range = getRange(unlock);
     if (range === null) continue;
 
@@ -188,8 +192,4 @@ function findOpenStep(unlockPositions, newRangeMin, newRangeMax) {
 
   // If we get here, return the next available step
   return maxStep + 1;
-}
-
-function calculateAngle(position, techCount, angleShift) {
-  return position * (360 / techCount) + angleShift;
 }

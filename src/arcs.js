@@ -14,10 +14,12 @@ export const tempArc = arc()
   .endAngle((d) => d.tempArcDist);
 
 export const unlockArc = arc()
-  .innerRadius((d) => arcBase + 342.5 + 14 * d.rank)
-  .outerRadius((d) => arcBase + 342.6 + arcWidth + 14 * d.rank)
-  .startAngle((d) => -1 * d.arcBack)
-  .endAngle((d) => d.arcEnd);
+  .innerRadius((d) => arcBase + arcSpace * d.step)
+  .outerRadius(
+    (d) => arcBase + arcWidth + arcSpace * d.step
+  )
+  .startAngle((d) => (d.range[0] / d.count) * TWO_PI_ADJ + PI_DIFF)
+  .endAngle((d) => (d.range[1] / d.count) * TWO_PI_ADJ + PI_DIFF);
 
 export var prereqArc = arc()
   .innerRadius((d) => arcBase + setAlignment(d.align) + arcSpace * d.step)

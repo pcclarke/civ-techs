@@ -12,6 +12,9 @@ import {
   height,
   ANG_ADJ,
   ANG_DIFF,
+  PI_DIFF,
+  TWO_PI,
+  TWO_PI_ADJ,
 } from "./constants";
 import { displayDetailsBox } from "./displayDetailsBox";
 import { imageLink } from "./helpers";
@@ -24,6 +27,8 @@ import createUnlocks from "./createUnlocks";
 export default async function makeWheel(wheelState) {
   const { color, game } = wheelState;
   const path = game + "/civdata.json";
+  const CENTER_X = width / 2;
+  const CENTER_Y = height / 2;
 
   const svg = select("#chart")
     .append("svg")
@@ -86,10 +91,10 @@ export default async function makeWheel(wheelState) {
     return sortedTechnologies;
   }
 
-  var sortedTechnologyData = data.technologies.toSorted(
-    (a, b) => a.cost - b.cost
-  );
-  // var sortedTechnologyData = depthSortTechnologies(data.technologies);
+  // var sortedTechnologyData = data.technologies.toSorted(
+  //   (a, b) => a.cost - b.cost
+  // );
+  var sortedTechnologyData = depthSortTechnologies(data.technologies);
 
   // Functions to process data so wheel can be drawn
   setupData(data);
@@ -97,7 +102,7 @@ export default async function makeWheel(wheelState) {
   setupArcs(data);
 
   var unlocksData = createUnlocks(sortedTechnologyData);
-  console.log(sortedTechnologyData);
+  console.log(sortedTechnologyData, unlocksData);
 
   // // Debug processed data
   // console.log(data.displayed);
@@ -173,6 +178,25 @@ export default async function makeWheel(wheelState) {
     .attr("width", 25)
     .attr("xlink:href", (d) => `${game}/img/${d.cat}/${d.id}.png`);
 
+  function calculateSingleRadialLinePath(
+    numLines,
+    startDistance,
+    lineLength,
+    lineIndex
+  ) {
+    const startAngle = -Math.PI / 2 + PI_DIFF;
+    const angleIncrement = TWO_PI_ADJ / numLines;
+    const angle = startAngle + lineIndex * angleIncrement;
+
+    const startX = Math.cos(angle) * startDistance;
+    const startY = Math.sin(angle) * startDistance;
+
+    const endX = Math.cos(angle) * lineLength;
+    const endY = Math.sin(angle) * lineLength;
+
+    return `M ${startX} ${startY} ${endX} ${endY}`;
+  }
+
   var prerequisites = wheel
     .selectAll(".prerequisites")
     .data([0])
@@ -186,19 +210,18 @@ export default async function makeWheel(wheelState) {
     .attr("class", "prerequisite")
     .attr("tech", (d) => d.id);
 
-  var required = prerequisite
-    .filter((d) => d.requires !== undefined)
-    .append("path")
-    .attr("class", "required-arc")
-    .attr("d", (d) => prereqArc(d.requires))
-    .attr("fill", "blue");
+  //  var required = prerequisite
+  //    .filter((d) => d.requires !== undefined)
+  //    .append("path")
+  //    .attr("class", "required-arc")
+  //    .attr("d", (d) => prereqArc(d.requires))
+  //    .attr("fill", "blue");
 
-  var optional = prerequisite
-    .filter((d) => d.optional !== undefined)
+  var unlockArcs = prerequisite
     .append("path")
     .attr("class", "optional-arc")
-    .attr("d", (d) => prereqArc(d.optional))
-    .attr("fill", "red");
+    .attr("d", (d) => unlockArc(d))
+    .attr("fill", (d) => color(d.step));
 
   // .on("mouseover", (_, d) => spokeHighlightIn(d, data, color))
   // .on("mouseout", (_, d) => spokeHighlightOut(d))
