@@ -1,5 +1,7 @@
 /**
  * @file Various steps to building a list of the relationships between
+ * technologies that is used to draw lines from a technology to what it
+ * is required or an optional prerequisite for
  */
 
 /**
@@ -9,108 +11,53 @@
  */
 export default function createUnlocks(technologyData) {
   var unlocks = [];
-  var technologyIds = technologyData.map((t) => t.id);
+  const count = technologyData.length - 1;
 
   for (let i = 0; i < technologyData.length; i++) {
-    let hasPrerequisites = false;
-    let minRange;
-    let maxRange;
-    const count = technologyData.length - 1;
+    let minRange = i;
+    let maxRange = i;
+    let reqFor = [];
+    let optFor = [];
     const position = i;
-    const tech = technologyData[i];
+    const unlockTech = technologyData[i];
+    const unlockId = unlockTech.id;
 
-    const unlock = {
+    for (let j = 0; j < technologyData.length; j++) {
+      let compareTech = technologyData[j];
+      let pushed = false;
+
+      if (compareTech.requires && compareTech.requires.indexOf(unlockId) >= 0) {
+        reqFor.push({ id: compareTech.id, pos: j });
+        pushed = true;
+      }
+
+      if (compareTech.optional && compareTech.optional.indexOf(unlockId) >= 0) {
+        optFor.push({ id: compareTech.id, pos: j });
+        pushed = true;
+      }
+
+      if (!pushed) continue;
+
+      if (j < minRange) minRange = j;
+      if (j > maxRange) maxRange = j;
+    }
+
+    if (reqFor.length <= 0 && optFor.length <= 0) continue;
+
+    const step = findOpenStep(unlocks, minRange, maxRange);
+
+    unlocks.push({
       count: count,
-      id: tech.id,
+      id: unlockTech.id,
       position: position,
-    };
-
-    if (tech.requires) {
-      unlock.requires = createUnlocksObject(
-        tech.requires,
-        technologyIds,
-        position
-      );
-      unlock.requires.count = count;
-
-      minRange = unlock.requires.range[0];
-      maxRange = unlock.requires.range[1];
-
-      hasPrerequisites = true;
-    }
-
-    if (tech.optional) {
-      unlock.optional = createUnlocksObject(
-        tech.optional,
-        technologyIds,
-        position
-      );
-      unlock.optional.count = count;
-
-      if (minRange) {
-        minRange = Math.min(unlock.requires.range[0], unlock.optional.range[0]);
-      } else {
-        minRange = unlock.optional.range[0];
-      }
-
-      if (maxRange) {
-        maxRange = Math.max(unlock.requires.range[1], unlock.optional.range[1]);
-      } else {
-        maxRange = unlock.optional.range[1];
-      }
-
-      hasPrerequisites = true;
-    }
-
-    if (hasPrerequisites) {
-      unlock.step = findOpenStep(unlocks, minRange, maxRange, tech.id);
-
-      if (tech.requires) {
-        unlock.requires.step = unlock.step;
-      }
-      if (tech.optional) {
-        unlock.optional.step = unlock.step;
-      }
-
-      unlock.range = [minRange, maxRange];
-
-      unlocks.push(unlock);
-    }
+      reqFor: reqFor,
+      optFor: optFor,
+      range: [minRange, maxRange],
+      step: step,
+    });
   }
 
   return unlocks;
-}
-
-/**
- * Create an object that describes a technology that unlocks another
- * @param prereqs
- * @param {string[]} techIds
- * @param {number} position
- */
-function createUnlocksObject(prereqs, techIds, position) {
-  var requires = getUnlocksPosition(prereqs, techIds);
-
-  var requiresPositions = requires.map((r) => r.position);
-
-  var range = [
-    Math.min(...requiresPositions, position),
-    Math.max(...requiresPositions, position),
-  ];
-
-  return {
-    range: range,
-    requires: requires,
-  };
-}
-
-function getUnlocksPosition(unlocks, techIds) {
-  var unlocksWithPositions = [];
-
-  unlocks.forEach((u) =>
-    unlocksWithPositions.push({ id: u, position: techIds.indexOf(u) })
-  );
-
-  return unlocksWithPositions;
 }
 
 /**
@@ -121,28 +68,6 @@ function getUnlocksPosition(unlocks, techIds) {
  * @returns
  */
 function findOpenStep(allUnlocks, newRangeMin, newRangeMax) {
-  // Helper function to get the range for a given unlock
-  function getRange(unlock) {
-    let rangeMin, rangeMax;
-
-    if (unlock.requires && unlock.optional) {
-      rangeMax = Math.max(unlock.requires.range[1], unlock.optional.range[1]);
-      rangeMin = Math.min(unlock.requires.range[0], unlock.optional.range[0]);
-    } else if (unlock.requires) {
-      rangeMin = unlock.requires.range[0];
-      rangeMax = unlock.requires.range[1];
-    } else if (unlock.optional) {
-      rangeMin = unlock.optional.range[0];
-      rangeMax = unlock.optional.range[1];
-    } else {
-      // Handle case where neither requires nor optional exist
-      return null;
-    }
-
-    return { min: rangeMin, max: rangeMax };
-  }
-
-  // Helper function to check if two ranges overlap
   function rangesOverlap(range1Min, range1Max, range2Min, range2Max) {
     return !(range1Max < range2Min || range2Max < range1Min);
   }
@@ -152,10 +77,9 @@ function findOpenStep(allUnlocks, newRangeMin, newRangeMax) {
   let maxStep = -1;
 
   for (let unlock of allUnlocks) {
-    const range = getRange(unlock);
-    if (range === null) continue;
-
+    const range = unlock.range;
     const step = unlock.step;
+
     maxStep = Math.max(maxStep, step);
 
     if (!stepMap.has(step)) {
@@ -175,8 +99,8 @@ function findOpenStep(allUnlocks, newRangeMin, newRangeMax) {
           rangesOverlap(
             newRangeMin,
             newRangeMax,
-            existingRange.min,
-            existingRange.max
+            existingRange[0],
+            existingRange[1]
           )
         ) {
           canUseStep = false;
