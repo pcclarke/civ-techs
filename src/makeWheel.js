@@ -1,7 +1,7 @@
 import { json } from "d3-fetch";
 import { select, selectAll } from "d3-selection";
 
-import { linkArc, unlockArc } from "./arcs";
+import { linkArc, unlockArc, prereqArc } from "./arcs";
 import {
   angleShift,
   arcBase,
@@ -10,6 +10,11 @@ import {
   margin,
   width,
   height,
+  ANG_ADJ,
+  ANG_DIFF,
+  PI_DIFF,
+  TWO_PI,
+  TWO_PI_ADJ,
 } from "./constants";
 import { displayDetailsBox } from "./displayDetailsBox";
 import { imageLink } from "./helpers";
@@ -22,6 +27,8 @@ import createUnlocks from "./createUnlocks";
 export default async function makeWheel(wheelState) {
   const { color, game } = wheelState;
   const path = game + "/civdata.json";
+  const CENTER_X = width / 2;
+  const CENTER_Y = height / 2;
 
   const svg = select("#chart")
     .append("svg")
@@ -35,9 +42,59 @@ export default async function makeWheel(wheelState) {
 
   // json(path, function (data) {
 
-  var sortedTechnologyData = data.technologies.toSorted(
-    (a, b) => a.cost - b.cost
-  );
+  function depthSortTechnologies(technologyData) {
+    // Calculate dependency depth for each technology
+    const depthMap = new Map();
+
+    function calculateDepth(techId, techMap, visited = new Set()) {
+      if (visited.has(techId)) return 0; // Cycle detection
+      if (depthMap.has(techId)) return depthMap.get(techId);
+
+      visited.add(techId);
+      const tech = techMap.get(techId);
+      if (!tech) return 0;
+
+      let maxDepth = 0;
+      const dependencies = [...(tech.requires || []), ...(tech.optional || [])];
+
+      for (let depId of dependencies) {
+        maxDepth = Math.max(
+          maxDepth,
+          calculateDepth(depId, techMap, visited) + 1
+        );
+      }
+
+      visited.delete(techId);
+      depthMap.set(techId, maxDepth);
+      return maxDepth;
+    }
+
+    const techMap = new Map(technologyData.map((t) => [t.id, t]));
+
+    // Calculate depths
+    for (let tech of technologyData) {
+      calculateDepth(tech.id, techMap);
+    }
+
+    // Sort by depth first, then by cost
+    const sortedTechnologies = [...technologyData].sort((a, b) => {
+      const depthA = depthMap.get(a.id) || 0;
+      const depthB = depthMap.get(b.id) || 0;
+
+      if (depthA !== depthB) {
+        return depthA - depthB;
+      }
+
+      return (a.cost || 0) - (b.cost || 0);
+    });
+
+    return sortedTechnologies;
+  }
+
+  // var sortedTechnologyData = data.technologies.toSorted(
+  //   (a, b) => a.cost - b.cost
+  // );
+  var sortedTechnologyData = depthSortTechnologies(data.technologies);
 
   // Functions to process data so wheel can be drawn
   setupData(data);
@@ -45,7 +102,7 @@ export default async function makeWheel(wheelState) {
   setupArcs(data);
 
   var unlocksData = createUnlocks(sortedTechnologyData);
-  console.log(sortedTechnologyData);
+  console.log(sortedTechnologyData, unlocksData);
 
   // // Debug processed data
   // console.log(data.displayed);
@@ -82,7 +139,9 @@ export default async function makeWheel(wheelState) {
     .attr(
       "transform",
       (d) =>
-        `rotate(${d.pos * (360 / sortedTechnologyData.length) + angleShift})`
+        `rotate(${
+          d.pos * (ANG_ADJ / (sortedTechnologyData.length - 1)) + ANG_DIFF
+        })`
     );
 
   // spokes
@@ -119,6 +178,25 @@ export default async function makeWheel(wheelState) {
     .attr("width", 25)
     .attr("xlink:href", (d) => `${game}/img/${d.cat}/${d.id}.png`);
 
+  function calculateSingleRadialLinePath(
+    numLines,
+    startDistance,
+    lineLength,
+    lineIndex
+  ) {
+    const startAngle = -Math.PI / 2 + PI_DIFF;
+    const angleIncrement = TWO_PI_ADJ / numLines;
+    const angle = startAngle + lineIndex * angleIncrement;
+
+    const startX = Math.cos(angle) * startDistance;
+    const startY = Math.sin(angle) * startDistance;
+
+    const endX = Math.cos(angle) * lineLength;
+    const endY = Math.sin(angle) * lineLength;
+
+    return `M ${startX} ${startY} ${endX} ${endY}`;
+  }
+
   var prerequisites = wheel
     .selectAll(".prerequisites")
     .data([0])
@@ -128,12 +206,22 @@ export default async function makeWheel(wheelState) {
   var prerequisite = prerequisites
     .selectAll(".prerequisite")
     .data(unlocksData)
-    .join((enter) => {
-      var group = enter.append("g").classed("prerequisite");
+    .join("g")
+    .attr("class", "prerequisite")
+    .attr("tech", (d) => d.id);
 
-      console.log(enter);
-      return group;
-    });
+  //  var required = prerequisite
+  //    .filter((d) => d.requires !== undefined)
+  //    .append("path")
+  //    .attr("class", "required-arc")
+  //    .attr("d", (d) => prereqArc(d.requires))
+  //    .attr("fill", "blue");
+
+  var unlockArcs = prerequisite
+    .append("path")
+    .attr("class", "optional-arc")
+    .attr("d", (d) => unlockArc(d))
+    .attr("fill", (d) => color(d.step));
 
   // .on("mouseover", (_, d) => spokeHighlightIn(d, data, color))
   // .on("mouseout", (_, d) => spokeHighlightOut(d))
