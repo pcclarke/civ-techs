@@ -16,6 +16,7 @@ import {
   TWO_PI,
   TWO_PI_ADJ,
 } from "./constants";
+import { depthSortTechnologies } from "./depthSortTechnologies";
 import { displayDetailsBox } from "./displayDetailsBox";
 import { imageLink } from "./helpers";
 import orderDisplayed from "./orderDisplayed";
@@ -40,72 +41,9 @@ export default async function makeWheel(wheelState) {
 
   const data = await json(path);
 
-  // json(path, function (data) {
-
-  function depthSortTechnologies(technologyData) {
-    // Calculate dependency depth for each technology
-    const depthMap = new Map();
-
-    function calculateDepth(techId, techMap, visited = new Set()) {
-      if (visited.has(techId)) return 0; // Cycle detection
-      if (depthMap.has(techId)) return depthMap.get(techId);
-
-      visited.add(techId);
-      const tech = techMap.get(techId);
-      if (!tech) return 0;
-
-      let maxDepth = 0;
-      const dependencies = [...(tech.requires || []), ...(tech.optional || [])];
-
-      for (let depId of dependencies) {
-        maxDepth = Math.max(
-          maxDepth,
-          calculateDepth(depId, techMap, visited) + 1
-        );
-      }
-
-      visited.delete(techId);
-      depthMap.set(techId, maxDepth);
-      return maxDepth;
-    }
-
-    const techMap = new Map(technologyData.map((t) => [t.id, t]));
-
-    // Calculate depths
-    for (let tech of technologyData) {
-      calculateDepth(tech.id, techMap);
-    }
-
-    // Sort by depth first, then by cost
-    const sortedTechnologies = [...technologyData].sort((a, b) => {
-      const depthA = depthMap.get(a.id) || 0;
-      const depthB = depthMap.get(b.id) || 0;
-
-      if (depthA !== depthB) {
-        return depthA - depthB;
-      }
-
-      return (a.cost || 0) - (b.cost || 0);
-    });
-
-    return sortedTechnologies;
-  }
-
-  // var sortedTechnologyData = data.technologies.toSorted(
-  //   (a, b) => a.cost - b.cost
-  // );
   var sortedTechnologyData = depthSortTechnologies(data.technologies);
-
-  // Functions to process data so wheel can be drawn
-  setupData(data);
-  orderDisplayed(data);
-  setupArcs(data);
-
   var unlocksData = createUnlocks(sortedTechnologyData);
   console.log(sortedTechnologyData, unlocksData);
-
-  // // Debug processed data
-  // console.log(data.displayed);
 
   const wheel = svg
     .selectAll(".wheel")
@@ -136,25 +74,29 @@ export default async function makeWheel(wheelState) {
     .data(sortedTechnologyData)
     .join("g")
     .attr("class", (d) => `${d.id} spoke`)
-    .attr(
-      "transform",
-      (d) =>
-        `rotate(${
-          d.pos * (ANG_ADJ / (sortedTechnologyData.length - 1)) + ANG_DIFF
-        })`
-    );
+    .attr("transform", function transformSpoke(_, i) {
+      return `rotate(${
+        i * (ANG_ADJ / (sortedTechnologyData.length - 1)) + ANG_DIFF
+      })`;
+    });
 
-  // spokes
-  //   .selectAll(".spoke-line")
-  //   .data((d) => [d])
-  //   .join("line")
-  //   .attr("class", "spoke-line")
-  //   .attr("x1", 0)
-  //   .attr("y1", (d) =>
-  //     !d.requires && !d.optional ? 0 : -(arcBase + arcSpace * d.spokeRank)
-  //   )
-  //   .attr("x2", 0)
-  //   .attr("y2", (d) => -(width / 2) + 160 - d.unlocks.length * 14);
+  spokes
+    .selectAll(".spoke-line")
+    .data((d) => [d])
+    .join("line")
+    .attr("class", "spoke-line")
+    .attr("x1", 0)
+    .attr(
+      "y1",
+      (d) => 200
+      // !d.requires && !d.optional ? 0 : -(arcBase + arcSpace * d.spokeRank)
+    )
+    .attr("x2", 0)
+    .attr(
+      "y2",
+      (d) => 300
+      // -(width / 2) + 160 - d.unlocks.length * 14
+    );
 
   spokes
     .selectAll(".technology-image")
@@ -176,7 +118,7 @@ export default async function makeWheel(wheelState) {
     })
     .attr("height", 25)
     .attr("width", 25)
-    .attr("xlink:href", (d) => `${game}/img/${d.cat}/${d.id}.png`);
+    .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`);
 
   function calculateSingleRadialLinePath(
     numLines,
