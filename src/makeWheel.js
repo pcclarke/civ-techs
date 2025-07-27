@@ -18,12 +18,13 @@ import {
 } from "./constants";
 import { depthSortTechnologies } from "./depthSortTechnologies";
 import { displayDetailsBox } from "./displayDetailsBox";
-import { imageLink } from "./helpers";
+import { imageLink, calculateSingleRadialLinePath } from "./helpers";
 import orderDisplayed from "./orderDisplayed";
 import setupArcs from "./setupArcs";
 import setupData from "./setupData";
 import { spokeHighlightIn, spokeHighlightOut } from "./wheelInteraction";
 import createUnlocks from "./createUnlocks";
+import { setupSpokes } from "./setupSpokes";
 
 export default async function makeWheel(wheelState) {
   const { color, game } = wheelState;
@@ -43,7 +44,8 @@ export default async function makeWheel(wheelState) {
 
   var sortedTechnologyData = depthSortTechnologies(data.technologies);
   var unlocksData = createUnlocks(sortedTechnologyData);
-  console.log(sortedTechnologyData, unlocksData);
+  var spokeData = setupSpokes(sortedTechnologyData, unlocksData);
+  console.log(sortedTechnologyData, unlocksData, spokeData);
 
   const wheel = svg
     .selectAll(".wheel")
@@ -80,22 +82,18 @@ export default async function makeWheel(wheelState) {
       })`;
     });
 
-  spokes
+  wheel
     .selectAll(".spoke-line")
-    .data((d) => [d])
-    .join("line")
+    .data(spokeData)
+    .join("path")
     .attr("class", "spoke-line")
-    .attr("x1", 0)
-    .attr(
-      "y1",
-      (d) => 200
-      // !d.requires && !d.optional ? 0 : -(arcBase + arcSpace * d.spokeRank)
-    )
-    .attr("x2", 0)
-    .attr(
-      "y2",
-      (d) => 300
-      // -(width / 2) + 160 - d.unlocks.length * 14
+    .attr("d", (d, i) =>
+      calculateSingleRadialLinePath(
+        spokeData.length,
+        arcBase + arcSpace * d.step,
+        420,
+        i
+      )
     );
 
   spokes
@@ -119,25 +117,6 @@ export default async function makeWheel(wheelState) {
     .attr("height", 25)
     .attr("width", 25)
     .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`);
-
-  function calculateSingleRadialLinePath(
-    numLines,
-    startDistance,
-    lineLength,
-    lineIndex
-  ) {
-    const startAngle = -Math.PI / 2 + PI_DIFF;
-    const angleIncrement = TWO_PI_ADJ / numLines;
-    const angle = startAngle + lineIndex * angleIncrement;
-
-    const startX = Math.cos(angle) * startDistance;
-    const startY = Math.sin(angle) * startDistance;
-
-    const endX = Math.cos(angle) * lineLength;
-    const endY = Math.sin(angle) * lineLength;
-
-    return `M ${startX} ${startY} ${endX} ${endY}`;
-  }
 
   var prerequisites = wheel
     .selectAll(".prerequisites")
