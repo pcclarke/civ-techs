@@ -6,65 +6,73 @@
 
 /**
  * Get a list of where optional and hard requirements start and stop
- * @param {} technologyData
+ * @param {Object[]} data
  * @returns
  */
-export default function createUnlocks(technologyData) {
+export default function createUnlocks(data) {
   var unlocks = [];
-  const count = technologyData.length - 1;
 
-  for (let i = 0; i < technologyData.length; i++) {
-    let minRange = i;
-    let maxRange = i;
-    let reqFor = [];
-    let optFor = [];
-    const position = i;
-    const unlockTech = technologyData[i];
-    const unlockId = unlockTech.id;
+  for (let i = 0; i < data.length; i++) {
+    const unlock = createUnlockObject(data, data[i].id, i);
 
-    for (let j = 0; j < technologyData.length; j++) {
-      let compareTech = technologyData[j];
-      let pushed = false;
+    if (unlock.reqFor.length <= 0 && unlock.optFor.length <= 0) continue;
 
-      if (compareTech.requires && compareTech.requires.indexOf(unlockId) >= 0) {
-        reqFor.push({ id: compareTech.id, pos: j });
-        pushed = true;
-      }
-
-      if (compareTech.optional && compareTech.optional.indexOf(unlockId) >= 0) {
-        optFor.push({ id: compareTech.id, pos: j });
-        pushed = true;
-      }
-
-      if (!pushed) continue;
-
-      if (j < minRange) minRange = j;
-      if (j > maxRange) maxRange = j;
-    }
-
-    if (reqFor.length <= 0 && optFor.length <= 0) continue;
-
-    const step = findOpenStep(unlocks, minRange, maxRange);
-
-    unlocks.push({
-      count: count,
-      id: unlockTech.id,
-      position: position,
-      reqFor: reqFor,
-      optFor: optFor,
-      range: [minRange, maxRange],
-      step: step,
-    });
+    unlock.step = findOpenStep(unlocks, unlock.range[0], unlock.range[1]);
+    unlocks.push(unlock);
   }
 
   return unlocks;
 }
 
 /**
+ * Create the object used to describe what technologies are unlocked
+ * when one technology is researched
+ * @param {Object[]} data
+ * @param {string} id
+ * @param {number} position
+ * @returns
+ */
+function createUnlockObject(data, id, position) {
+  let minRange = position;
+  let maxRange = position;
+  var reqFor = [];
+  var optFor = [];
+
+  for (let i = 0; i < data.length; i++) {
+    let compareTech = data[i];
+    let pushed = false;
+
+    if (compareTech.requires && compareTech.requires.indexOf(id) >= 0) {
+      reqFor.push({ id: compareTech.id, pos: i });
+      pushed = true;
+    }
+
+    if (compareTech.optional && compareTech.optional.indexOf(id) >= 0) {
+      optFor.push({ id: compareTech.id, pos: i });
+      pushed = true;
+    }
+
+    if (!pushed) continue;
+
+    if (i < minRange) minRange = i;
+    if (i > maxRange) maxRange = i;
+  }
+
+  return {
+    count: data.length,
+    id: id,
+    position: position,
+    reqFor: reqFor,
+    optFor: optFor,
+    range: [minRange, maxRange],
+  };
+}
+
+/**
  * Find an open step where the arc can be drawn
- * @param {*} allUnlocks
- * @param {number} newRangeMin
- * @param {number} newRangeMax
+ * @param {Object[]} allUnlocks All of the unlocks up to this point
+ * @param {number} newRangeMin The minimum range of the new arc
+ * @param {number} newRangeMax The maximum range of the new arc
  * @returns
  */
 function findOpenStep(allUnlocks, newRangeMin, newRangeMax) {
