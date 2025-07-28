@@ -18,7 +18,11 @@ import {
 } from "./constants";
 import { depthSortTechnologies } from "./depthSortTechnologies";
 import { displayDetailsBox } from "./displayDetailsBox";
-import { imageLink, calculateSingleRadialLinePath } from "./helpers";
+import {
+  imageLink,
+  calculateSingleRadialLinePath,
+  calculatePointOnWheel,
+} from "./helpers";
 import orderDisplayed from "./orderDisplayed";
 import setupArcs from "./setupArcs";
 import setupData from "./setupData";
@@ -42,10 +46,10 @@ export default async function makeWheel(wheelState) {
 
   const data = await json(path);
 
-  var sortedTechnologyData = depthSortTechnologies(data.technologies);
-  var unlocksData = createUnlocks(sortedTechnologyData);
-  var spokeData = setupSpokes(sortedTechnologyData, unlocksData);
-  console.log(sortedTechnologyData, unlocksData, spokeData);
+  var techData = depthSortTechnologies(data.technologies);
+  var unlocksData = createUnlocks(techData);
+  var spokeData = setupSpokes(techData, unlocksData);
+  console.log(techData, unlocksData, spokeData);
 
   const wheel = svg
     .selectAll(".wheel")
@@ -73,13 +77,11 @@ export default async function makeWheel(wheelState) {
 
   const spokes = spokeAll
     .selectAll(".spoke")
-    .data(sortedTechnologyData)
+    .data(techData)
     .join("g")
     .attr("class", (d) => `${d.id} spoke`)
     .attr("transform", function transformSpoke(_, i) {
-      return `rotate(${
-        i * (ANG_ADJ / (sortedTechnologyData.length - 1)) + ANG_DIFF
-      })`;
+      return `rotate(${i * (ANG_ADJ / (techData.length - 1)) + ANG_DIFF})`;
     });
 
   wheel
@@ -96,26 +98,24 @@ export default async function makeWheel(wheelState) {
       )
     );
 
-  spokes
+  const techImgWidth = 25;
+
+  wheel
     .selectAll(".technology-image")
-    .data((d) => [d])
+    .data(techData)
     .join("image")
     .attr("class", "technology-image")
     .attr("transform", (_, i) => {
-      let x = -10;
-      let y = -width / 2 + 182;
-      let rotate = 270;
+      var point = calculatePointOnWheel(techData.length, i, 420);
+      var rotate =
+        point.angle * (180 / Math.PI) - (i > techData.length / 2 ? 180 : 0);
 
-      if (i > sortedTechnologyData.length / 2) {
-        x = 10;
-        y -= 25;
-        rotate = 90;
-      }
-
-      return `translate(${x}, ${y}) rotate(${rotate})`;
+      return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
     })
-    .attr("height", 25)
-    .attr("width", 25)
+    .attr("height", techImgWidth)
+    .attr("width", techImgWidth)
+    .attr("x", -techImgWidth / 2)
+    .attr("y", -techImgWidth / 2)
     .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`);
 
   var prerequisites = wheel

@@ -30,3 +30,18 @@ export function calculateSingleRadialLinePath(
 
   return `M ${startX} ${startY} ${endX} ${endY}`;
 }
+
+export function calculatePointOnWheel(numLines, lineIndex, distFromCenter) {
+  const startAngle = -Math.PI / 2 + PI_DIFF;
+  const angleIncrement = TWO_PI_ADJ / numLines;
+  const angle = startAngle + lineIndex * angleIncrement;
+
+  const x = Math.cos(angle) * distFromCenter;
+  const y = Math.sin(angle) * distFromCenter;
+
+  return {
+    x: x,
+    y: y,
+    angle: angle,
+  };
+}
