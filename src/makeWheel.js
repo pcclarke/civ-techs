@@ -69,22 +69,11 @@ export default async function makeWheel(wheelState) {
     .attr("height", height / 2)
     .attr("xlink:href", "img/startSlice.png");
 
-  const spokeAll = wheel
+  wheel
     .selectAll(".spokes")
     .data([0])
     .join("g")
-    .attr("class", "spokes");
-
-  const spokes = spokeAll
-    .selectAll(".spoke")
-    .data(techData)
-    .join("g")
-    .attr("class", (d) => `${d.id} spoke`)
-    .attr("transform", function transformSpoke(_, i) {
-      return `rotate(${i * (ANG_ADJ / (techData.length - 1)) + ANG_DIFF})`;
-    });
-
-  wheel
+    .attr("class", "spokes")
     .selectAll(".spoke-line")
     .data(spokeData)
     .join("path")
@@ -101,10 +90,14 @@ export default async function makeWheel(wheelState) {
   const techImgWidth = 25;
 
   wheel
-    .selectAll(".technology-image")
+    .selectAll(".tech-images")
+    .data([0])
+    .join("g")
+    .attr("class", "tech-images")
+    .selectAll(".tech-image")
     .data(techData)
     .join("image")
-    .attr("class", "technology-image")
+    .attr("class", "tech-image")
     .attr("transform", (_, i) => {
       var point = calculatePointOnWheel(techData.length, i, 420);
       var rotate =
@@ -118,29 +111,14 @@ export default async function makeWheel(wheelState) {
     .attr("y", -techImgWidth / 2)
     .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`);
 
-  var prerequisites = wheel
-    .selectAll(".prerequisites")
+  wheel
+    .selectAll(".arcs")
     .data([0])
     .join("g")
-    .attr("class", "prerequisites");
-
-  var prerequisite = prerequisites
-    .selectAll(".prerequisite")
+    .attr("class", "arcs")
+    .selectAll("path")
     .data(unlocksData)
-    .join("g")
-    .attr("class", "prerequisite")
-    .attr("tech", (d) => d.id);
-
-  //  var required = prerequisite
-  //    .filter((d) => d.requires !== undefined)
-  //    .append("path")
-  //    .attr("class", "required-arc")
-  //    .attr("d", (d) => prereqArc(d.requires))
-  //    .attr("fill", "blue");
-
-  var unlockArcs = prerequisite
-    .append("path")
-    .attr("class", "optional-arc")
+    .join("path")
     .attr("d", (d) => unlockArc(d))
     .attr("fill", (d) => color(d.step));
 
@@ -148,24 +126,47 @@ export default async function makeWheel(wheelState) {
   // .on("mouseout", (_, d) => spokeHighlightOut(d))
   // .on("click", (_, d) => displayDetailsBox(d, d.pos, wheelState, data));
 
-  // const unlocks = spokes
-  //   .selectAll(".unlocks")
-  //   .data((d) => d.unlocks)
-  //   .filter(function (d) {
-  //     if (d.arcEnd || d.arcBack) {
-  //       return true;
-  //     }
-  //     return false;
-  //   })
-  //   .join("g")
-  //   .attr("class", (d) => `unlock opaque ${d.ref.id}${d.pos}`);
+  var squareData = [];
+  for (let u of unlocksData) {
+    if (!u.reqFor) continue;
 
-  // unlocks
-  //   .append("path")
-  //   .attr("class", "unlock-arc")
-  //   .attr("rank", (d) => d.rank)
-  //   .style("fill", (d) => color(d.pos))
-  //   .attr("d", unlockArc);
+    for (let r of u.reqFor) {
+      var point = calculatePointOnWheel(
+        techData.length,
+        r.pos,
+        arcBase + arcSpace * u.step
+      );
+
+      squareData.push({
+        ...r,
+        step: u.step,
+      });
+    }
+  }
+
+  wheel
+    .selectAll(".unlock-squares")
+    .data([0])
+    .join("g")
+    .attr("class", "unlock-squares")
+    .selectAll("rect")
+    .data(squareData)
+    .join("rect")
+    .attr("x", -2.5)
+    .attr("y", -2.5)
+    .attr("transform", (d, i) => {
+      var point = calculatePointOnWheel(
+        techData.length,
+        d.pos,
+        arcBase + arcWidth / 2 + arcSpace * d.step
+      );
+      var rotate =
+        point.angle * (180 / Math.PI) - (i > techData.length / 2 ? 180 : 0);
+      return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
+    })
+    .attr("width", 5)
+    .attr("height", 5)
+    .attr("fill", (d) => color(d.step));
 
   // var unlockSquares = unlocks
   //   .selectAll(".unlock-square")
