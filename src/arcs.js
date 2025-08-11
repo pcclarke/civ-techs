@@ -14,10 +14,8 @@ export const tempArc = arc()
   .endAngle((d) => d.tempArcDist);
 
 export const unlockArc = arc()
-  .innerRadius((d) => arcBase + arcSpace * d.step)
-  .outerRadius(
-    (d) => arcBase + arcWidth + arcSpace * d.step
-  )
+  .innerRadius((d) => arcBase - arcWidth / 2 + arcSpace * d.step)
+  .outerRadius((d) => arcBase + arcWidth / 2 + arcSpace * d.step)
   .startAngle((d) => (d.range[0] / d.count) * TWO_PI_ADJ + PI_DIFF)
   .endAngle((d) => (d.range[1] / d.count) * TWO_PI_ADJ + PI_DIFF);
 

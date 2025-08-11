@@ -126,21 +126,43 @@ export default async function makeWheel(wheelState) {
   // .on("mouseout", (_, d) => spokeHighlightOut(d))
   // .on("click", (_, d) => displayDetailsBox(d, d.pos, wheelState, data));
 
-  var squareData = [];
-  for (let u of unlocksData) {
-    if (!u.reqFor) continue;
-
-    for (let r of u.reqFor) {
-      var point = calculatePointOnWheel(
-        techData.length,
-        r.pos,
-        arcBase + arcSpace * u.step
+  wheel
+    .selectAll("unlock-pins")
+    .data([0])
+    .join("g")
+    .attr("class", "unlock-pins")
+    .selectAll("path")
+    .data(unlocksData)
+    .join("path")
+    .attr("d", (d, i) => {
+      return calculateSingleRadialLinePath(
+        spokeData.length,
+        arcBase - 5 + arcSpace * d.step,
+        arcBase + 5 + arcSpace * d.step,
+        d.position
       );
+    })
+    .attr("stroke", (d) => color(d.step));
 
-      squareData.push({
-        ...r,
-        step: u.step,
-      });
+  var squareData = [];
+  var circleData = [];
+  for (let u of unlocksData) {
+    if (u.reqFor) {
+      for (let r of u.reqFor) {
+        squareData.push({
+          ...r,
+          step: u.step,
+        });
+      }
+    }
+
+    if (u.optFor) {
+      for (let o of u.optFor) {
+        circleData.push({
+          ...o,
+          step: u.step,
+        });
+      }
     }
   }
 
@@ -158,7 +180,7 @@ export default async function makeWheel(wheelState) {
       var point = calculatePointOnWheel(
         techData.length,
         d.pos,
-        arcBase + arcWidth / 2 + arcSpace * d.step
+        arcBase + arcSpace * d.step
       );
       var rotate =
         point.angle * (180 / Math.PI) - (i > techData.length / 2 ? 180 : 0);
@@ -167,6 +189,28 @@ export default async function makeWheel(wheelState) {
     .attr("width", 5)
     .attr("height", 5)
     .attr("fill", (d) => color(d.step));
+
+  wheel
+    .selectAll(".unlock-circles")
+    .data([0])
+    .join("g")
+    .attr("class", "unlock-circles")
+    .selectAll("circle")
+    .data(circleData)
+    .join("circle")
+    .attr("r", 2.5)
+    .attr("transform", (d, i) => {
+      var point = calculatePointOnWheel(
+        techData.length,
+        d.pos,
+        arcBase + arcSpace * d.step
+      );
+      var rotate =
+        point.angle * (180 / Math.PI) - (i > techData.length / 2 ? 180 : 0);
+      return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
+    })
+    .attr("fill", "#FFF")
+    .attr("stroke", (d) => color(d.step));
 
   // var unlockSquares = unlocks
   //   .selectAll(".unlock-square")
