@@ -9,24 +9,35 @@ export const dataTypes = [
   "civics",
 ];
 
-export const totalWidth = 1200;
-export const totalHeight = 1200;
+export const TOTAL_WIDTH = 1200;
+export const TOTAL_HEIGHT = TOTAL_WIDTH;
 
-export const margin = { top: 10, right: 10, bottom: 10, left: 10 };
+export const MARGIN_TOP = 10;
+export const MARGIN_RIGHT = 10;
+export const MARGIN_BOTTOM = 10;
+export const MARGIN_LEFT = 10;
 
-export const width = totalWidth - margin.left - margin.right;
-export const height = totalHeight - margin.top - margin.bottom;
+export const CHART_WIDTH = TOTAL_WIDTH - MARGIN_LEFT - MARGIN_RIGHT;
+export const CHART_HEIGHT = TOTAL_HEIGHT - MARGIN_TOP - MARGIN_BOTTOM;
 
-export const arcBase = 100;
-export const arcSpace = 14;
-export const arcWidth = 1.5;
-export const angleShift = 2;
+export const CENTER_X = CHART_WIDTH / 2;
+export const CENTER_Y = CHART_HEIGHT / 2;
 
-const angleGap = 0.05;
+/** Radius from chart center to first arc position */
+export const ARC_BASE = 100;
+/** Radial distance between arcs */
+export const ARC_SPACE = 14;
+
+/** Percent of circle that should be left open */
+const ANGLE_GAP = 0.05;
 
 export const TWO_PI = 2 * Math.PI;
-export const TWO_PI_ADJ = (1 - angleGap) * TWO_PI;
-export const PI_DIFF = (angleGap / 2) * TWO_PI;
+/** Two PI minus the gap */
+export const TWO_PI_ADJ = (1 - ANGLE_GAP) * TWO_PI;
+/** Two PI minus half the gap */
+export const PI_DIFF = (ANGLE_GAP / 2) * TWO_PI;
 
-export const ANG_ADJ = (1 - angleGap) * 360;
-export const ANG_DIFF = (angleGap / 2) * 360;
+/** 360 degrees minus the gap */
+export const ANG_ADJ = (1 - ANGLE_GAP) * 360;
+/** 360 degrees minus half the gap */
+export const ANG_DIFF = (ANGLE_GAP / 2) * 360;
