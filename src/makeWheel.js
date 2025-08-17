@@ -1,16 +1,13 @@
 import { json } from "d3-fetch";
+import { scaleOrdinal } from "d3-scale";
+import { schemeCategory10 } from "d3-scale-chromatic";
 import { select } from "d3-selection";
 
 import { unlockArc } from "./arcs";
 import {
   ARC_BASE,
   ARC_SPACE,
-  MARGIN_TOP,
-  MARGIN_LEFT,
-  CENTER_X,
-  CENTER_Y,
-  TOTAL_WIDTH,
-  TOTAL_HEIGHT,
+  TECH_IMG_WIDTH
 } from "./constants";
 import { depthSortTechnologies } from "./depthSortTechnologies";
 import {
@@ -20,49 +17,20 @@ import {
 import createUnlocks from "./createUnlocks";
 import { setupSpokes } from "./setupSpokes";
 
-export default async function makeWheel(wheelState) {
-  const { color, game } = wheelState;
-  const path = game + "/civdata.json";
+export default async function makeWheel() {
+  var game = window.app.game;
+  var svg = window.app.svg;
 
-  const svg = select("#chart")
-    .append("svg")
-    .attr("class", "civ-wheel")
-    .attr("width", TOTAL_WIDTH)
-    .attr("height", TOTAL_HEIGHT)
-    .append("g")
-    .attr("transform", `translate(${MARGIN_LEFT}, ${MARGIN_TOP})`);
+  var path = game + "/civdata.json";
+  var color = scaleOrdinal(schemeCategory10);
 
-  const data = await json(path);
-
+  var data = await json(path);
   var techData = depthSortTechnologies(data.technologies);
   var unlocksData = createUnlocks(techData);
   var spokeData = setupSpokes(techData, unlocksData);
   console.log(techData, unlocksData, spokeData);
 
-  const wheel = svg
-    .selectAll(".wheel")
-    .data([0])
-    .join("g")
-    .attr("class", "wheel")
-    .attr("transform", `translate(${CENTER_X}, ${CENTER_Y})`);
-
-  // pie "slice" to indicate start of spokes
-  wheel
-    .selectAll(".start-slice")
-    .data([0])
-    .join("image")
-    .attr("class", "start-slice")
-    .attr("x", 0)
-    .attr("y", -CENTER_Y)
-    .attr("width", 167)
-    .attr("height", CENTER_Y)
-    .attr("xlink:href", "img/startSlice.png");
-
-  wheel
-    .selectAll(".spokes")
-    .data([0])
-    .join("g")
-    .attr("class", "spokes")
+  svg.spokes
     .selectAll(".spoke-line")
     .data(spokeData)
     .join("path")
@@ -76,13 +44,7 @@ export default async function makeWheel(wheelState) {
       )
     );
 
-  const techImgWidth = 25;
-
-  wheel
-    .selectAll(".tech-images")
-    .data([0])
-    .join("g")
-    .attr("class", "tech-images")
+  svg.techImages
     .selectAll(".tech-image")
     .data(techData)
     .join("image")
@@ -94,28 +56,20 @@ export default async function makeWheel(wheelState) {
 
       return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
     })
-    .attr("height", techImgWidth)
-    .attr("width", techImgWidth)
-    .attr("x", -techImgWidth / 2)
-    .attr("y", -techImgWidth / 2)
+    .attr("height", TECH_IMG_WIDTH)
+    .attr("width", TECH_IMG_WIDTH)
+    .attr("x", -TECH_IMG_WIDTH / 2)
+    .attr("y", -TECH_IMG_WIDTH / 2)
     .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`);
 
-  wheel
-    .selectAll(".arcs")
-    .data([0])
-    .join("g")
-    .attr("class", "arcs")
+  svg.arcs
     .selectAll("path")
     .data(unlocksData)
     .join("path")
     .attr("d", (d) => unlockArc(d))
     .attr("fill", (d) => color(d.step));
 
-  wheel
-    .selectAll("unlock-pins")
-    .data([0])
-    .join("g")
-    .attr("class", "unlock-pins")
+  svg.unlockPins
     .selectAll("path")
     .data(unlocksData)
     .join("path")
@@ -151,11 +105,7 @@ export default async function makeWheel(wheelState) {
     }
   }
 
-  wheel
-    .selectAll(".unlock-squares")
-    .data([0])
-    .join("g")
-    .attr("class", "unlock-squares")
+  svg.unlockSquares
     .selectAll("rect")
     .data(squareData)
     .join("rect")
@@ -175,11 +125,7 @@ export default async function makeWheel(wheelState) {
     .attr("height", 5)
     .attr("fill", (d) => color(d.step));
 
-  wheel
-    .selectAll(".unlock-circles")
-    .data([0])
-    .join("g")
-    .attr("class", "unlock-circles")
+  svg.unlockCircles
     .selectAll("circle")
     .data(circleData)
     .join("circle")
@@ -197,11 +143,6 @@ export default async function makeWheel(wheelState) {
     .attr("fill", "#FFF")
     .attr("stroke", (d) => color(d.step));
 
-  wheel
-    .append("image")
-    .attr("x", -75)
-    .attr("y", -75)
-    .attr("width", 150)
-    .attr("height", 150)
+  svg.centerImage
     .attr("xlink:href", `${game}/img/${game}-center.png`);
 }

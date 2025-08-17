@@ -23,6 +23,8 @@ export const CHART_HEIGHT = TOTAL_HEIGHT - MARGIN_TOP - MARGIN_BOTTOM;
 export const CENTER_X = CHART_WIDTH / 2;
 export const CENTER_Y = CHART_HEIGHT / 2;
 
+export const TECH_IMG_WIDTH = 25;
+
 /** Radius from chart center to first arc position */
 export const ARC_BASE = 100;
 /** Radial distance between arcs */
