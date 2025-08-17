@@ -1,7 +1,6 @@
 import { json } from "d3-fetch";
 import { scaleOrdinal } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
-import { select } from "d3-selection";
 
 import { unlockArc } from "./arcs";
 import {
