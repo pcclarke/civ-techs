@@ -17,7 +17,8 @@ import createUnlocks from "./createUnlocks";
 import { setupSpokes } from "./setupSpokes";
 
 export default async function makeWheel() {
-  var game = window.app.game;
+  const game = window.app.game;
+  const selected = window.app.selected;
   var svg = window.app.svg;
 
   var path = game + "/civdata.json";
@@ -25,7 +26,10 @@ export default async function makeWheel() {
 
   var data = await json(path);
   var techData = depthSortTechnologies(data.technologies);
-  var unlocksData = createUnlocks(techData);
+  var techDataWithUnlocks = createUnlocks(techData);
+  var unlocksData = techDataWithUnlocks.filter(u => {
+    return u.reqFor.length > 0 || u.optFor.length > 0;
+  });
   var spokeData = setupSpokes(techData, unlocksData);
   console.log(techData, unlocksData, spokeData);
 
@@ -34,6 +38,11 @@ export default async function makeWheel() {
     .data(spokeData)
     .join("path")
     .attr("class", "spoke-line")
+    .classed("fade", function(d) {
+      if (!selected) return false;
+
+      return selected != d.id;
+    })
     .attr("d", (d, i) =>
       calculateSingleRadialLinePath(
         spokeData.length,
@@ -45,13 +54,24 @@ export default async function makeWheel() {
 
   svg.techImages
     .selectAll(".tech-image")
-    .data(techData)
+    .data(techDataWithUnlocks)
     .join("image")
     .attr("class", "tech-image")
+    .classed("fade", function(d) {
+      if (!selected) return false;
+
+      const currentSelection = d.id == selected;
+      const reqTo = d.reqTo && d.reqTo.find(r => r.id == selected);
+      const optTo = d.optTo && d.optTo.find(o => o.id == selected);
+      const reqFor = d.reqFor && d.reqFor.find(r => r.id == selected);
+      const optFor = d.optFor && d.optFor.find(o => o.id == selected);
+
+      return !(currentSelection || reqFor || optFor || reqTo || optTo);
+    })
     .attr("transform", (_, i) => {
-      var point = calculatePointOnWheel(techData.length, i, 420);
+      var point = calculatePointOnWheel(techDataWithUnlocks.length, i, 420);
       var rotate =
-        point.angle * (180 / Math.PI) - (i > techData.length / 2 ? 180 : 0);
+        point.angle * (180 / Math.PI) - (i > techDataWithUnlocks.length / 2 ? 180 : 0);
 
       return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
     })
@@ -59,20 +79,43 @@ export default async function makeWheel() {
     .attr("width", TECH_IMG_WIDTH)
     .attr("x", -TECH_IMG_WIDTH / 2)
     .attr("y", -TECH_IMG_WIDTH / 2)
-    .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`);
+    .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`)
+    .on("mouseover", function(_, d) {
+      window.app.selected = d.id;
+      makeWheel();
+    })
+    .on("mouseleave", function() {
+      window.app.selected = null;
+      makeWheel();
+    });
 
   svg.arcs
     .selectAll("path")
     .data(unlocksData)
     .join("path")
+    .classed("fade", Boolean(selected))
     .attr("d", (d) => unlockArc(d))
-    .attr("fill", (d) => color(d.step));
+    .attr("fill", (d) => color(d.step))
+    .on("mouseover", function(_, d) {
+      console.log(d);
+      window.app.selected = d.id;
+      makeWheel();
+    })
+    .on("mouseleave", function() {
+      window.app.selected = null;
+      makeWheel();
+    });
 
   svg.unlockPins
     .selectAll("path")
     .data(unlocksData)
     .join("path")
-    .attr("d", (d, i) => {
+    .classed("fade", function(d) {
+      if (!selected) return false;
+
+      return selected != d.id;
+    })
+    .attr("d", function pinPath(d, i) {
       return calculateSingleRadialLinePath(
         spokeData.length,
         ARC_BASE - 5 + ARC_SPACE * d.step,
@@ -108,6 +151,11 @@ export default async function makeWheel() {
     .selectAll("rect")
     .data(squareData)
     .join("rect")
+    .classed("fade", function(d) {
+      if (!selected) return false;
+
+      return selected != d.id;
+    })
     .attr("x", -2.5)
     .attr("y", -2.5)
     .attr("transform", (d, i) => {
@@ -128,6 +176,11 @@ export default async function makeWheel() {
     .selectAll("circle")
     .data(circleData)
     .join("circle")
+    .classed("fade", function(d) {
+      if (!selected) return false;
+
+      return selected != d.id;
+    })
     .attr("r", 2.5)
     .attr("transform", (d, i) => {
       var point = calculatePointOnWheel(

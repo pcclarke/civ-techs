@@ -13,11 +13,12 @@ export default function createUnlocks(data) {
   var unlocks = [];
 
   for (let i = 0; i < data.length; i++) {
-    const unlock = createUnlockObject(data, data[i].id, i);
+    const unlock = createUnlockObject(data, data[i], i);
 
-    if (unlock.reqFor.length <= 0 && unlock.optFor.length <= 0) continue;
+    if (unlock.reqFor.length >= 0 || unlock.optFor.length >= 0) { 
+      unlock.step = findOpenStep(unlocks, unlock.range[0], unlock.range[1]);
+    }
 
-    unlock.step = findOpenStep(unlocks, unlock.range[0], unlock.range[1]);
     unlocks.push(unlock);
   }
 
@@ -32,9 +33,12 @@ export default function createUnlocks(data) {
  * @param {number} position
  * @returns
  */
-function createUnlockObject(data, id, position) {
-  let minRange = position;
-  let maxRange = position;
+function createUnlockObject(data, tech, position) {
+  const id = tech.id;
+  var minRange = position;
+  var maxRange = position;
+  var reqTo = [];
+  var optTo = [];
   var reqFor = [];
   var optFor = [];
 
@@ -42,9 +46,17 @@ function createUnlockObject(data, id, position) {
     let compareTech = data[i];
     let pushed = false;
 
+    if (tech.requires && tech.requires.includes(compareTech.id)) {
+      reqTo.push({ id: compareTech.id, pos: i});
+    }
+
     if (compareTech.requires && compareTech.requires.indexOf(id) >= 0) {
       reqFor.push({ id: compareTech.id, pos: i });
       pushed = true;
+    }
+
+    if (tech.optional && tech.optional.includes(compareTech.id)) {
+      optTo.push({ id: compareTech.id, pos: i });
     }
 
     if (compareTech.optional && compareTech.optional.indexOf(id) >= 0) {
@@ -62,6 +74,8 @@ function createUnlockObject(data, id, position) {
     count: data.length,
     id: id,
     position: position,
+    reqTo: reqTo,
+    optTo: optTo,
     reqFor: reqFor,
     optFor: optFor,
     range: [minRange, maxRange],

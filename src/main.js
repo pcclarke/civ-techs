@@ -4,7 +4,8 @@ import makeWheel from "./makeWheel";
 import svgInit from "./svgInit";
 
 window.app = {
-  game: "civ4bts"
+  game: "civ4bts",
+  selected: null
 };
 
 // select("body")
