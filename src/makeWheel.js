@@ -32,6 +32,7 @@ export default async function makeWheel() {
   });
   var spokeData = setupSpokes(techData, unlocksData);
   console.log(techData, unlocksData, spokeData);
+  console.log(techDataWithUnlocks);
 
   svg.spokes
     .selectAll(".spoke-line")
@@ -88,6 +89,23 @@ export default async function makeWheel() {
       window.app.selected = null;
       makeWheel();
     });
+
+  svg.techLabels
+    .selectAll("text")
+    .data(techDataWithUnlocks)
+    .join("text")
+    .attr("transform", function labelAngle(d, i) {
+      var point = calculatePointOnWheel(techDataWithUnlocks.length, i, 440)
+      var rotate = point.angle * (180 / Math.PI) - (i > techDataWithUnlocks.length / 2 ? 180 : 0);
+
+      return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
+    })
+    .attr("y", 5)
+    .attr("text-anchor", (_, i) => {
+      return (i > techDataWithUnlocks.length / 2) ?
+        "end" : "start";
+    })
+    .text(d => d.name);
 
   svg.arcs
     .selectAll("path")

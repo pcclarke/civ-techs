@@ -35,6 +35,9 @@ export default function() {
   var techImages = wheel.append("g")
     .attr("class", "tech-images");
   
+  var techLabels = wheel.append("g")
+    .attr("class", "tech-labels");
+
   var arcs = wheel.append("g")
     .attr("class", "arcs");
 
@@ -58,6 +61,7 @@ export default function() {
     centerImage: centerImage,
     spokes: spokes,
     techImages: techImages,
+    techLabels: techLabels,
     unlockCircles: unlockCircles,
     unlockPins: unlockPins,
     unlockSquares: unlockSquares,

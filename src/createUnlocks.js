@@ -73,6 +73,7 @@ function createUnlockObject(data, tech, position) {
   return {
     count: data.length,
     id: id,
+    name: tech.name,
     position: position,
     reqTo: reqTo,
     optTo: optTo,
