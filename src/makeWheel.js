@@ -14,12 +14,11 @@ import {
   calculatePointOnWheel,
 } from "./helpers";
 import createUnlocks from "./createUnlocks";
+import createSelectedUnlocks from "./createSelectedUnlocks";
 import { setupSpokes } from "./setupSpokes";
 
 export default async function makeWheel() {
-  const game = window.app.game;
-  const selected = window.app.selected;
-  var svg = window.app.svg;
+  var { game, selected, svg } = window.app;
 
   var path = game + "/civdata.json";
   var color = scaleOrdinal(schemeCategory10);
@@ -31,44 +30,60 @@ export default async function makeWheel() {
     return u.reqFor.length > 0 || u.optFor.length > 0;
   });
   var spokeData = setupSpokes(techData, unlocksData);
-  console.log(techData, unlocksData, spokeData);
-  console.log(techDataWithUnlocks);
+  var relatedUnlocks = createSelectedUnlocks(techDataWithUnlocks);
 
-  svg.spokes
-    .selectAll(".spoke-line")
-    .data(spokeData)
-    .join("path")
-    .attr("class", "spoke-line")
-    .classed("fade", function(d) {
-      if (!selected) return false;
+    var relatedIds = relatedUnlocks.map(r => r.id);
+    var relatedSpokes = (relatedUnlocks.length > 0) ?
+        setupSpokes(techData, relatedUnlocks, true) : [];
 
-      return selected != d.id;
-    })
-    .attr("d", (d, i) =>
-      calculateSingleRadialLinePath(
-        spokeData.length,
-        ARC_BASE + ARC_SPACE * d.step,
-        420,
-        i
-      )
-    );
+    var selectionRequired = [];
+    var selectionOptional = [];
+    if (selected) {
+        if (selected.reqTo) {
+            selectionRequired = selected.reqTo.map(t => t.id);
+        }
+        if (selected.optTo) {
+            selectionOptional = selected.optTo.map(t => t.id);
+        }
+    }
+    var selectionPrerequisites = [...selectionRequired, ...selectionOptional];
+
+    /** Determine if item should be faded out when a tech is selected */
+    function fadeCheck(tech, selectedOnly = false) {
+        if (!selected || selected.id == tech.id) return false;
+        if (selectedOnly && selected.step != tech.step) return true;
+        if (tech.id == 'TECH_ANIMAL_HUSBANDRY') {
+            console.log(tech);
+        }
+        return !relatedIds.includes(tech.id);
+    }
+
+    function drawSpokes(element, data, length) {
+        return element.selectAll(".spoke-line")
+            .data(data)
+            .join("path")
+            .attr("class", "spoke-line")
+            .attr("d", (d) => 
+                calculateSingleRadialLinePath(
+                    length,
+                    ARC_BASE + ARC_SPACE * d.step,
+                    420,
+                    d.position
+                )
+            );
+    }
+
+    drawSpokes(svg.spokes, spokeData, techData.length)
+        .classed("fade", Boolean(selected));
+
+    drawSpokes(svg.selectedSpokes, relatedSpokes, techData.length);
 
   svg.techImages
     .selectAll(".tech-image")
     .data(techDataWithUnlocks)
     .join("image")
     .attr("class", "tech-image")
-    .classed("fade", function(d) {
-      if (!selected) return false;
-
-      const currentSelection = d.id == selected;
-      const reqTo = d.reqTo && d.reqTo.find(r => r.id == selected);
-      const optTo = d.optTo && d.optTo.find(o => o.id == selected);
-      const reqFor = d.reqFor && d.reqFor.find(r => r.id == selected);
-      const optFor = d.optFor && d.optFor.find(o => o.id == selected);
-
-      return !(currentSelection || reqFor || optFor || reqTo || optTo);
-    })
+    .classed("fade", (d) => fadeCheck(d))
     .attr("transform", (_, i) => {
       var point = calculatePointOnWheel(techDataWithUnlocks.length, i, 420);
       var rotate =
@@ -82,7 +97,7 @@ export default async function makeWheel() {
     .attr("y", -TECH_IMG_WIDTH / 2)
     .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`)
     .on("mouseover", function(_, d) {
-      window.app.selected = d.id;
+      window.app.selected = d;
       makeWheel();
     })
     .on("mouseleave", function() {
@@ -94,6 +109,7 @@ export default async function makeWheel() {
     .selectAll("text")
     .data(techDataWithUnlocks)
     .join("text")
+    .classed("fade", (d) => fadeCheck(d))
     .attr("transform", function labelAngle(d, i) {
       var point = calculatePointOnWheel(techDataWithUnlocks.length, i, 440)
       var rotate = point.angle * (180 / Math.PI) - (i > techDataWithUnlocks.length / 2 ? 180 : 0);
@@ -107,31 +123,40 @@ export default async function makeWheel() {
     })
     .text(d => d.name);
 
-  svg.arcs
-    .selectAll("path")
-    .data(unlocksData)
-    .join("path")
-    .classed("fade", Boolean(selected))
-    .attr("d", (d) => unlockArc(d))
-    .attr("fill", (d) => color(d.step))
-    .on("mouseover", function(_, d) {
-      console.log(d);
-      window.app.selected = d.id;
-      makeWheel();
-    })
-    .on("mouseleave", function() {
-      window.app.selected = null;
-      makeWheel();
-    });
+    function buildArcs(element, data) {
+        return element
+            .selectAll("path")
+            .data(data)
+            .join("path")
+            .attr("d", (d) => unlockArc(d))
+            .attr("fill", (d) => color(d.step))
+    }
+
+    buildArcs(svg.arcs, unlocksData)
+        .classed("fade", Boolean(selected))   
+        .on("mouseover", function(_, d) {
+            console.log(d);
+            window.app.selected = d;
+            makeWheel();
+        })
+        .on("mouseleave", function() {
+            window.app.selected = null;
+            makeWheel();
+        });
+
+    if (Boolean(selected)) {
+        buildArcs(svg.selectedArcs, relatedUnlocks.filter(d => d.range))
+    }
 
   svg.unlockPins
     .selectAll("path")
     .data(unlocksData)
     .join("path")
-    .classed("fade", function(d) {
-      if (!selected) return false;
+    .classed("fade", (d) => {
+        if (!selected) return false;
+        if (d.id == selected.id || selectionPrerequisites.includes(d.id)) return false;
 
-      return selected != d.id;
+        return true;
     })
     .attr("d", function pinPath(d, i) {
       return calculateSingleRadialLinePath(
@@ -151,6 +176,7 @@ export default async function makeWheel() {
         squareData.push({
           ...r,
           step: u.step,
+            arcId: u.id
         });
       }
     }
@@ -160,6 +186,7 @@ export default async function makeWheel() {
         circleData.push({
           ...o,
           step: u.step,
+            arcId: u.id
         });
       }
     }
@@ -169,10 +196,9 @@ export default async function makeWheel() {
     .selectAll("rect")
     .data(squareData)
     .join("rect")
-    .classed("fade", function(d) {
-      if (!selected) return false;
-
-      return selected != d.id;
+    .classed("fade", (circle) => {
+        if (!selected || selected.id == circle.id || selected.id == circle.arcId) return false;
+        return true;
     })
     .attr("x", -2.5)
     .attr("y", -2.5)
@@ -194,10 +220,9 @@ export default async function makeWheel() {
     .selectAll("circle")
     .data(circleData)
     .join("circle")
-    .classed("fade", function(d) {
-      if (!selected) return false;
-
-      return selected != d.id;
+    .classed("fade", (circle) => {
+        if (!selected || selected.id == circle.id || selected.id == circle.arcId) return false;
+        return true;
     })
     .attr("r", 2.5)
     .attr("transform", (d, i) => {

@@ -10,61 +10,53 @@ import {
 } from "./constants";
 
 export default function() {
-  var wheel = select("#chart")
-    .append("svg")
-    .attr("class", "civ-techs")
-    .attr("width", TOTAL_WIDTH)
-    .attr("height", TOTAL_HEIGHT)
-    .append("g")
-    .attr("class", "wheel")
-    .attr("transform", `translate(${MARGIN_LEFT + CENTER_X}, ${MARGIN_TOP + CENTER_Y})`);
+    let groupObj = {};
 
-  // pie "slice" to indicate start of spokes
-  wheel
-    .append("image")
-    .attr("class", "start-slice")
-    .attr("x", 0)
-    .attr("y", -CENTER_Y)
-    .attr("width", 167)
-    .attr("height", CENTER_Y)
-    .attr("xlink:href", "img/startSlice.png");
+    groupObj.wheel = select("#chart")
+        .append("svg")
+        .attr("class", "civ-techs")
+        .attr("width", TOTAL_WIDTH)
+        .attr("height", TOTAL_HEIGHT)
+        .append("g")
+        .attr("class", "wheel")
+        .attr("transform", `translate(${MARGIN_LEFT + CENTER_X}, ${MARGIN_TOP + CENTER_Y})`);
 
-  var spokes = wheel.append("g")
-    .attr("class", "spokes");
+    // pie "slice" to indicate start of spokes
+    groupObj.wheel
+        .append("image")
+        .attr("class", "start-slice")
+        .attr("x", 0)
+        .attr("y", -CENTER_Y)
+        .attr("width", 167)
+        .attr("height", CENTER_Y)
+        .attr("xlink:href", "img/startSlice.png");
 
-  var techImages = wheel.append("g")
-    .attr("class", "tech-images");
-  
-  var techLabels = wheel.append("g")
-    .attr("class", "tech-labels");
+    // SVG groups to organize shapes
+    var shapeGroups = [
+        { prop: "spokes", class: "spokes" },
+        { prop: "selectedSpokes", class: "selected-spokes" },
+        { prop: "techImages", class: "tech-images" },
+        { prop: "techLabels", class: "tech-labels" },
+        { prop: "arcs", class: "arcs" },
+        { prop: "selectedArcs", class: "selected-arcs" },
+        { prop: "unlockPins", class: "unlock-pins" },
+        { prop: "unlockSquares", class: "unlock-squares" },
+        { prop: "unlockCircles", class: "unlock-circles" }
+    ];
 
-  var arcs = wheel.append("g")
-    .attr("class", "arcs");
+    for (const group of shapeGroups) {
+        let svgGroup = groupObj.wheel.append("g")
+            .attr("class", group.class);
 
-  var unlockPins = wheel.append("g")
-    .attr("class", "unlock-pins");
+        groupObj[group.prop] = svgGroup;
+    }
 
-  var unlockSquares = wheel.append("g")
-    .attr("class", "unlock-squares");
+    // Civ game image center of wheel
+    groupObj.centerImage = groupObj.wheel.append("image")
+        .attr("x", -75)
+        .attr("y", -75)
+        .attr("width", 150)
+        .attr("height", 150);
 
-  var unlockCircles = wheel.append("g")
-    .attr("class", "unlock-circles");
-
-  var centerImage = wheel.append("image")
-    .attr("x", -75)
-    .attr("y", -75)
-    .attr("width", 150)
-    .attr("height", 150);
-
-  return {
-    arcs: arcs,
-    centerImage: centerImage,
-    spokes: spokes,
-    techImages: techImages,
-    techLabels: techLabels,
-    unlockCircles: unlockCircles,
-    unlockPins: unlockPins,
-    unlockSquares: unlockSquares,
-    wheel: wheel
-  };
+    return groupObj;
 }

@@ -4,29 +4,29 @@
  * @param {Object[]} unlocks
  * @returns
  */
-export function setupSpokes(data, unlocks) {
-  var spokes = [];
+export function setupSpokes(data, unlocks, filter = false) {
+    var spokes = [];
+    const unlockIds = unlocks.map(u => u.id);
+    console.log("filtering!");
 
-  for (let i = 0; i < data.length; i++) {
-    const tech = data[i];
+    for (let i = 0; i < data.length; i++) {
+        const tech = data[i];
+        if (filter && !unlockIds.includes(tech.id)) continue;
+        let minStep = 0;
 
-    if (!tech.requires && !tech.optional) {
-      spokes.push({
-        id: tech.id,
-        step: 0,
-      });
-      continue;
+        // TODO: Do I need this???
+        if (tech.requires || tech.optional) {
+            minStep = getMinStep(tech.id, unlocks);
+        }
+
+        spokes.push({
+            id: tech.id,
+            position: i,
+            step: minStep
+        });
     }
 
-    let minStep = getMinStep(tech.id, unlocks);
-
-    spokes.push({
-      id: tech.id,
-      step: minStep,
-    });
-  }
-
-  return spokes;
+    return spokes;
 }
 
 /**
@@ -36,10 +36,13 @@ export function setupSpokes(data, unlocks) {
  * @returns
  */
 function getMinStep(id, unlocks) {
-  var unlockSteps = unlocks.reduce((p, c) => {
-    p[c.id] = c.step;
-    return p;
-  }, {});
+    var unlockSteps = unlocks.reduce((p, c) => {
+        if (c.step) {
+            p[c.id] = c.step;
+        }
+        return p;
+    }, {});
+    console.log(unlockSteps);
   var minStep = unlockSteps[id] ?? 100;
 
   for (let i = 0; i < unlocks.length; i++) {
@@ -56,6 +59,7 @@ function getMinStep(id, unlocks) {
 
     if (ul.step < minStep) {
       minStep = ul.step;
+        console.log("id " + id, "compare " + ul.id, minStep);
     }
   }
 
