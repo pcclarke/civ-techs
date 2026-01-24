@@ -15,7 +15,7 @@ export default function createUnlocks(data) {
   for (let i = 0; i < data.length; i++) {
     const unlock = createUnlockObject(data, data[i], i);
 
-    if (unlock.reqFor.length >= 0 || unlock.optFor.length >= 0) { 
+    if (unlock.reqFor.length > 0 || unlock.optFor.length > 0) { 
       unlock.step = findOpenStep(unlocks, unlock.range[0], unlock.range[1]);
     }
 
@@ -44,7 +44,7 @@ function createUnlockObject(data, tech, position) {
 
   for (let i = 0; i < data.length; i++) {
     let compareTech = data[i];
-    let pushed = false;
+    let isAPreqrequisite = false;
 
     if (tech.requires && tech.requires.includes(compareTech.id)) {
       reqTo.push({ id: compareTech.id, pos: i});
@@ -52,7 +52,7 @@ function createUnlockObject(data, tech, position) {
 
     if (compareTech.requires && compareTech.requires.indexOf(id) >= 0) {
       reqFor.push({ id: compareTech.id, pos: i });
-      pushed = true;
+      isAPreqrequisite = true;
     }
 
     if (tech.optional && tech.optional.includes(compareTech.id)) {
@@ -61,10 +61,10 @@ function createUnlockObject(data, tech, position) {
 
     if (compareTech.optional && compareTech.optional.indexOf(id) >= 0) {
       optFor.push({ id: compareTech.id, pos: i });
-      pushed = true;
+      isAPreqrequisite = true;
     }
 
-    if (!pushed) continue;
+    if (!isAPreqrequisite) continue;
 
     if (i < minRange) minRange = i;
     if (i > maxRange) maxRange = i;
@@ -95,11 +95,12 @@ function findOpenStep(allUnlocks, newRangeMin, newRangeMax) {
     return !(range1Max < range2Min || range2Max < range1Min);
   }
 
-  // Group existing unlocks by step (row)
+  // Group existing unlocks by step
   const stepMap = new Map();
   let maxStep = -1;
 
   for (let unlock of allUnlocks) {
+      if (!Number.isFinite(unlock.step)) continue;
     const range = unlock.range;
     const step = unlock.step;
 

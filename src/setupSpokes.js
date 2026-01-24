@@ -1,22 +1,20 @@
 /**
- * Get lowest steps that technology spokes should be drawn to
- * @param {Object[]} data
- * @param {Object[]} unlocks
+ * Get lowest steps that techDatum spokes should be drawn to
+ * @param {Object[]} techData
+ * @param {Object[]} unlocksData
  * @returns
  */
-export function setupSpokes(data, unlocks, filter = false) {
+export function setupSpokes(techData, unlocksData, filter = false) {
     var spokes = [];
-    const unlockIds = unlocks.map(u => u.id);
-    console.log("filtering!");
+    const unlockIds = unlocksData.map(u => u.id);
 
-    for (let i = 0; i < data.length; i++) {
-        const tech = data[i];
+    for (let i = 0; i < techData.length; i++) {
+        const tech = techData[i];
         if (filter && !unlockIds.includes(tech.id)) continue;
-        let minStep = 0;
+        let minStep = -10;
 
-        // TODO: Do I need this???
         if (tech.requires || tech.optional) {
-            minStep = getMinStep(tech.id, unlocks);
+            minStep = getMinStep(tech, unlocksData);
         }
 
         spokes.push({
@@ -30,38 +28,25 @@ export function setupSpokes(data, unlocks, filter = false) {
 }
 
 /**
- * Find the minimum step that a technology intersects with
- * @param {string} id
- * @param {Object[]} unlocks
+ * Find the minimum step that a techDatum intersects with
+ * @param {Object} techDatum
+ * @param {Object[]} unlocksData
  * @returns
  */
-function getMinStep(id, unlocks) {
-    var unlockSteps = unlocks.reduce((p, c) => {
-        if (c.step) {
-            p[c.id] = c.step;
+function getMinStep(techDatum, unlocksData) {
+    var unlockForTech = unlocksData.find(unlock => techDatum.id == unlock.id);
+    var minStep = (unlockForTech && !Object.is(unlockForTech.step, undefined)) ? unlockForTech.step : 100;
+
+    for (const ul of unlocksData) {
+        var isRequirementFor = ul.reqFor && ul.reqFor.map(r => r.id).includes(techDatum.id);
+        var isOptionalFor = ul.optFor && ul.optFor.map(o => o.id).includes(techDatum.id);
+
+        if (!isRequirementFor && !isOptionalFor) continue;
+
+        if (ul.step < minStep) {
+            minStep = ul.step;
         }
-        return p;
-    }, {});
-    console.log(unlockSteps);
-  var minStep = unlockSteps[id] ?? 100;
-
-  for (let i = 0; i < unlocks.length; i++) {
-    const ul = unlocks[i];
-    const relations = [ul.id];
-
-    if (ul.reqFor) {
-      ul.reqFor.forEach((r) => relations.push(r.id));
     }
-    if (ul.optFor) {
-      ul.optFor.forEach((o) => relations.push(o.id));
-    }
-    if (relations.indexOf(id) <= 0) continue;
 
-    if (ul.step < minStep) {
-      minStep = ul.step;
-        console.log("id " + id, "compare " + ul.id, minStep);
-    }
-  }
-
-  return minStep;
+    return minStep;
 }

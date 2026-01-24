@@ -36,7 +36,7 @@ export default function(techData) {
             } else if (reqTo || optTo) {
                 related.push({
                     id: tech.id,
-                    step: tech.step
+                    //step: tech.step
                 });
             } else {
               related.push(tech);

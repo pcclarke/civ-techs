@@ -29,12 +29,17 @@ export default async function makeWheel() {
   var unlocksData = techDataWithUnlocks.filter(u => {
     return u.reqFor.length > 0 || u.optFor.length > 0;
   });
-  var spokeData = setupSpokes(techData, unlocksData);
-  var relatedUnlocks = createSelectedUnlocks(techDataWithUnlocks);
+    var spokeData = setupSpokes(techData, unlocksData);
+
+    var relatedUnlocks = createSelectedUnlocks(techDataWithUnlocks);
+    console.log(techData, unlocksData);
+    console.log("techDataWithUnlocks", techDataWithUnlocks);
+    console.log("selected", relatedUnlocks);
 
     var relatedIds = relatedUnlocks.map(r => r.id);
     var relatedSpokes = (relatedUnlocks.length > 0) ?
         setupSpokes(techData, relatedUnlocks, true) : [];
+    console.log("relatedUnlocks: ", relatedUnlocks, "relatedSpokes: ", relatedSpokes);
 
     var selectionRequired = [];
     var selectionOptional = [];
@@ -58,9 +63,9 @@ export default async function makeWheel() {
         return !relatedIds.includes(tech.id);
     }
 
-    function drawSpokes(element, data, length) {
+    function drawSpokes(element, spokeData, length) {
         return element.selectAll(".spoke-line")
-            .data(data)
+            .data(spokeData)
             .join("path")
             .attr("class", "spoke-line")
             .attr("d", (d) => 
@@ -101,8 +106,8 @@ export default async function makeWheel() {
       makeWheel();
     })
     .on("mouseleave", function() {
-      window.app.selected = null;
-      makeWheel();
+//      window.app.selected = null;
+//      makeWheel();
     });
 
   svg.techLabels
