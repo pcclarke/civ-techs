@@ -12,10 +12,12 @@ import { depthSortTechnologies } from "./depthSortTechnologies";
 import {
   calculateSingleRadialLinePath,
   calculatePointOnWheel,
+    fadeCheck
 } from "./helpers";
 import createUnlocks from "./createUnlocks";
 import createSelectedUnlocks from "./createSelectedUnlocks";
 import { setupSpokes } from "./setupSpokes";
+import { drawSpokes } from "./drawTools";
 
 export default async function makeWheel() {
   var { game, selected, svg } = window.app;
@@ -53,30 +55,6 @@ export default async function makeWheel() {
     }
     var selectionPrerequisites = [...selectionRequired, ...selectionOptional];
 
-    /** Determine if item should be faded out when a tech is selected */
-    function fadeCheck(tech, selectedOnly = false) {
-        if (!selected || selected.id == tech.id) return false;
-        if (selectedOnly && selected.step != tech.step) return true;
-        if (tech.id == 'TECH_ANIMAL_HUSBANDRY') {
-            console.log(tech);
-        }
-        return !relatedIds.includes(tech.id);
-    }
-
-    function drawSpokes(element, spokeData, length) {
-        return element.selectAll(".spoke-line")
-            .data(spokeData)
-            .join("path")
-            .attr("class", "spoke-line")
-            .attr("d", (d) => 
-                calculateSingleRadialLinePath(
-                    length,
-                    ARC_BASE + ARC_SPACE * d.step,
-                    420,
-                    d.position
-                )
-            );
-    }
 
     drawSpokes(svg.spokes, spokeData, techData.length)
         .classed("fade", Boolean(selected));
@@ -106,8 +84,8 @@ export default async function makeWheel() {
       makeWheel();
     })
     .on("mouseleave", function() {
-//      window.app.selected = null;
-//      makeWheel();
+      window.app.selected = null;
+      makeWheel();
     });
 
   svg.techLabels

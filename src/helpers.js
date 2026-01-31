@@ -4,6 +4,16 @@ export function imageLink(game, category, id) {
   return `${game}/img/${category}/${id}.png`;
 }
 
+
+/** Determine if item should be faded out when a tech is selected */
+export function fadeCheck(tech, selectedOnly = false) {
+    var { selected } = window.app;
+
+    if (!selected || selected.id == tech.id) return false;
+    if (selectedOnly && selected.step != tech.step) return true;
+    return !relatedIds.includes(tech.id);
+}
+
 /**
  * Get a path string for a line extending from the center of an SVG
  * @param {number} numLines
@@ -45,3 +55,4 @@ export function calculatePointOnWheel(numLines, lineIndex, distFromCenter) {
     angle: angle,
   };
 }
+
