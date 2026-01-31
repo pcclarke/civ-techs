@@ -15,7 +15,7 @@ import {
     fadeCheck
 } from "./helpers";
 import createUnlocks from "./createUnlocks";
-import createSelectedUnlocks from "./createSelectedUnlocks";
+import getHighlightedTechs from "./createSelectedUnlocks";
 import { setupSpokes } from "./setupSpokes";
 import { drawSpokes } from "./drawTools";
 
@@ -27,50 +27,44 @@ export default async function makeWheel() {
 
   var data = await json(path);
   var techData = depthSortTechnologies(data.technologies);
-  var techDataWithUnlocks = createUnlocks(techData);
-  var unlocksData = techDataWithUnlocks.filter(u => {
-    return u.reqFor.length > 0 || u.optFor.length > 0;
-  });
-    var spokeData = setupSpokes(techData, unlocksData);
+  var { allTechs, prerequisites } = createUnlocks(techData);
+  var spokeData = setupSpokes(techData, prerequisites);
 
-    var relatedUnlocks = createSelectedUnlocks(techDataWithUnlocks);
-    console.log(techData, unlocksData);
-    console.log("techDataWithUnlocks", techDataWithUnlocks);
-    console.log("selected", relatedUnlocks);
+    var { highlightedIds, selectionPrerequisites } = getHighlightedTechs(allTechs);
+    console.log(techData, prerequisites);
+    console.log("allTechs", allTechs);
+    console.log("selectionPrerequisites", selectionPrerequisites);
 
-    var relatedIds = relatedUnlocks.map(r => r.id);
-    var relatedSpokes = (relatedUnlocks.length > 0) ?
-        setupSpokes(techData, relatedUnlocks, true) : [];
-    console.log("relatedUnlocks: ", relatedUnlocks, "relatedSpokes: ", relatedSpokes);
+    var selectedSpokes = (selectionPrerequisites.length > 0) ?
+        setupSpokes(techData, selectionPrerequisites, true) : [];
+    console.log("selectionPrerequisites: ", selectionPrerequisites, "selectedSpokes: ", selectedSpokes);
 
-    var selectionRequired = [];
-    var selectionOptional = [];
+    var prerequisiteIds = [];
     if (selected) {
         if (selected.reqTo) {
-            selectionRequired = selected.reqTo.map(t => t.id);
+            prerequisiteIds.push(...selected.reqTo.map(t => t.id));
         }
         if (selected.optTo) {
-            selectionOptional = selected.optTo.map(t => t.id);
+            prerequisiteIds.push(...selected.optTo.map(t => t.id));
         }
     }
-    var selectionPrerequisites = [...selectionRequired, ...selectionOptional];
 
 
     drawSpokes(svg.spokes, spokeData, techData.length)
         .classed("fade", Boolean(selected));
 
-    drawSpokes(svg.selectedSpokes, relatedSpokes, techData.length);
+    drawSpokes(svg.selectedSpokes, selectedSpokes, techData.length);
 
   svg.techImages
     .selectAll(".tech-image")
-    .data(techDataWithUnlocks)
+    .data(allTechs)
     .join("image")
     .attr("class", "tech-image")
-    .classed("fade", (d) => fadeCheck(d))
+    .classed("fade", (d) => fadeCheck(d, highlightedIds))
     .attr("transform", (_, i) => {
-      var point = calculatePointOnWheel(techDataWithUnlocks.length, i, 420);
+      var point = calculatePointOnWheel(allTechs.length, i, 420);
       var rotate =
-        point.angle * (180 / Math.PI) - (i > techDataWithUnlocks.length / 2 ? 180 : 0);
+        point.angle * (180 / Math.PI) - (i > allTechs.length / 2 ? 180 : 0);
 
       return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
     })
@@ -90,18 +84,18 @@ export default async function makeWheel() {
 
   svg.techLabels
     .selectAll("text")
-    .data(techDataWithUnlocks)
+    .data(allTechs)
     .join("text")
-    .classed("fade", (d) => fadeCheck(d))
+    .classed("fade", (d) => fadeCheck(d, highlightedIds))
     .attr("transform", function labelAngle(d, i) {
-      var point = calculatePointOnWheel(techDataWithUnlocks.length, i, 440)
-      var rotate = point.angle * (180 / Math.PI) - (i > techDataWithUnlocks.length / 2 ? 180 : 0);
+      var point = calculatePointOnWheel(allTechs.length, i, 440)
+      var rotate = point.angle * (180 / Math.PI) - (i > allTechs.length / 2 ? 180 : 0);
 
       return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
     })
     .attr("y", 5)
     .attr("text-anchor", (_, i) => {
-      return (i > techDataWithUnlocks.length / 2) ?
+      return (i > allTechs.length / 2) ?
         "end" : "start";
     })
     .text(d => d.name);
@@ -115,7 +109,7 @@ export default async function makeWheel() {
             .attr("fill", (d) => color(d.step))
     }
 
-    buildArcs(svg.arcs, unlocksData)
+    buildArcs(svg.arcs, prerequisites)
         .classed("fade", Boolean(selected))   
         .on("mouseover", function(_, d) {
             console.log(d);
@@ -128,16 +122,16 @@ export default async function makeWheel() {
         });
 
     if (Boolean(selected)) {
-        buildArcs(svg.selectedArcs, relatedUnlocks.filter(d => d.range))
+        buildArcs(svg.selectedArcs, selectionPrerequisites.filter(d => d.step !== undefined))
     }
 
   svg.unlockPins
     .selectAll("path")
-    .data(unlocksData)
+    .data(prerequisites)
     .join("path")
     .classed("fade", (d) => {
         if (!selected) return false;
-        if (d.id == selected.id || selectionPrerequisites.includes(d.id)) return false;
+        if (d.id == selected.id || prerequisiteIds.includes(d.id)) return false;
 
         return true;
     })
@@ -153,7 +147,7 @@ export default async function makeWheel() {
 
   var squareData = [];
   var circleData = [];
-  for (let u of unlocksData) {
+  for (let u of prerequisites) {
     if (u.reqFor) {
       for (let r of u.reqFor) {
         squareData.push({

@@ -6,7 +6,7 @@ export function imageLink(game, category, id) {
 
 
 /** Determine if item should be faded out when a tech is selected */
-export function fadeCheck(tech, selectedOnly = false) {
+export function fadeCheck(tech, relatedIds = [], selectedOnly = false) {
     var { selected } = window.app;
 
     if (!selected || selected.id == tech.id) return false;

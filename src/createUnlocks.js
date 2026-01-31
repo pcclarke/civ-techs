@@ -10,19 +10,21 @@
  * @returns
  */
 export default function createUnlocks(data) {
-  var unlocks = [];
+  var allTechs = [];
+  var prerequisites = [];
 
   for (let i = 0; i < data.length; i++) {
-    const unlock = createUnlockObject(data, data[i], i);
+    const tech = createUnlockObject(data, data[i], i);
 
-    if (unlock.reqFor.length > 0 || unlock.optFor.length > 0) { 
-      unlock.step = findOpenStep(unlocks, unlock.range[0], unlock.range[1]);
+    if (tech.reqFor.length > 0 || tech.optFor.length > 0) {
+      tech.step = findOpenStep(prerequisites, tech.range[0], tech.range[1]);
+      prerequisites.push(tech);
     }
 
-    unlocks.push(unlock);
+    allTechs.push(tech);
   }
 
-  return unlocks;
+  return { allTechs, prerequisites };
 }
 
 /**
