@@ -11,7 +11,6 @@ import {
     calculatePointOnWheel,
     fadeCheck
 } from "./helpers";
-import { initWheelData } from "./initWheelData";
 import { drawArcs, drawSpokes } from "./drawTools";
 import { setupHighlights } from "./setupHighlights";
 
@@ -22,14 +21,14 @@ const color = scaleOrdinal(schemeCategory10);
  * Call this when the selection changes.
  */
 export async function renderWheel() {
-    const { game, selected, svg } = window.app;
+    var { game, selected, svg, wheelData } = window.app;
     const {
         allTechs,
         prerequisites,
         spokeData,
         squareData,
         circleData
-    } = await initWheelData();
+    } = wheelData;
     const {
         highlightedIds,
         selectionPrerequisites,
@@ -61,14 +60,8 @@ export async function renderWheel() {
     .attr("x", -TECH_IMG_WIDTH / 2)
     .attr("y", -TECH_IMG_WIDTH / 2)
     .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`)
-    .on("mouseover", function(_, d) {
-      window.app.selected = d;
-      renderWheel();
-    })
-    .on("mouseleave", function() {
-      window.app.selected = null;
-      renderWheel();
-    });
+    .on("mouseover", (_, d) => window.app.selected = d)
+    .on("mouseleave", () => window.app.selected = null);
 
   svg.techLabels
     .selectAll("text")
@@ -90,15 +83,11 @@ export async function renderWheel() {
 
   drawArcs(svg.arcs, prerequisites, color)
       .classed("fade", Boolean(selected))
-      .on("mouseover", function(_, d) {
+      .on("mouseover", (_, d) => {
           console.log(d);
           window.app.selected = d;
-          renderWheel();
       })
-      .on("mouseleave", function() {
-          window.app.selected = null;
-          renderWheel();
-      });
+      .on("mouseleave", () => window.app.selected = null);
 
   if (Boolean(selected)) {
       drawArcs(svg.selectedArcs, selectionPrerequisites.filter(d => d.step !== undefined), color)

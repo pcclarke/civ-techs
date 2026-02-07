@@ -2,6 +2,7 @@ import { json } from "d3-fetch";
 
 import { depthSortTechnologies } from "./depthSortTechnologies";
 import createUnlocks from "./createUnlocks";
+import { renderWheel } from "./makeWheel";
 import { setupSpokes } from "./setupSpokes";
 
 /**
@@ -42,12 +43,14 @@ export async function initWheelData() {
     }
   }
 
-  // Store processed data on window.app
-  return {
-    allTechs,
-    prerequisites,
-    spokeData,
-    squareData,
-    circleData
-  };
+    // Store processed data on window.app
+    window.app.wheelData = {
+        allTechs,
+        prerequisites,
+        spokeData,
+        squareData,
+        circleData
+    };
+
+    renderWheel();
 }
