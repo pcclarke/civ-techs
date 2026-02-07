@@ -13,7 +13,7 @@ export function setupSpokes(techData, unlocksData, filter = false) {
         if (filter && !unlockIds.includes(tech.id)) continue;
         let minStep = -10;
 
-        if (tech.requires || tech.optional) {
+        if (tech.reqTo?.length > 0 || tech.optTo?.length > 0) {
             minStep = getMinStep(tech, unlocksData);
         }
 

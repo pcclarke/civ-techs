@@ -1,59 +1,47 @@
-import { json } from "d3-fetch";
 import { scaleOrdinal } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
 
-import { unlockArc } from "./arcs";
 import {
-  ARC_BASE,
-  ARC_SPACE,
-  TECH_IMG_WIDTH
+    ARC_BASE,
+    ARC_SPACE,
+    TECH_IMG_WIDTH
 } from "./constants";
-import { depthSortTechnologies } from "./depthSortTechnologies";
 import {
-  calculateSingleRadialLinePath,
-  calculatePointOnWheel,
+    calculateSingleRadialLinePath,
+    calculatePointOnWheel,
     fadeCheck
 } from "./helpers";
-import createUnlocks from "./createUnlocks";
-import getHighlightedTechs from "./createSelectedUnlocks";
-import { setupSpokes } from "./setupSpokes";
-import { drawSpokes } from "./drawTools";
+import { initWheelData } from "./initWheelData";
+import { drawArcs, drawSpokes } from "./drawTools";
+import { setupHighlights } from "./setupHighlights";
 
-export default async function makeWheel() {
-  var { game, selected, svg } = window.app;
+const color = scaleOrdinal(schemeCategory10);
 
-  var path = game + "/civdata.json";
-  var color = scaleOrdinal(schemeCategory10);
-
-  var data = await json(path);
-  var techData = depthSortTechnologies(data.technologies);
-  var { allTechs, prerequisites } = createUnlocks(techData);
-  var spokeData = setupSpokes(techData, prerequisites);
-
-    var { highlightedIds, selectionPrerequisites } = getHighlightedTechs(allTechs);
-    console.log(techData, prerequisites);
-    console.log("allTechs", allTechs);
-    console.log("selectionPrerequisites", selectionPrerequisites);
-
-    var selectedSpokes = (selectionPrerequisites.length > 0) ?
-        setupSpokes(techData, selectionPrerequisites, true) : [];
-    console.log("selectionPrerequisites: ", selectionPrerequisites, "selectedSpokes: ", selectedSpokes);
-
-    var prerequisiteIds = [];
-    if (selected) {
-        if (selected.reqTo) {
-            prerequisiteIds.push(...selected.reqTo.map(t => t.id));
-        }
-        if (selected.optTo) {
-            prerequisiteIds.push(...selected.optTo.map(t => t.id));
-        }
-    }
+/**
+ * Render the wheel visualization using cached data.
+ * Call this when the selection changes.
+ */
+export async function renderWheel() {
+    const { game, selected, svg } = window.app;
+    const {
+        allTechs,
+        prerequisites,
+        spokeData,
+        squareData,
+        circleData
+    } = await initWheelData();
+    const {
+        highlightedIds,
+        selectionPrerequisites,
+        selectedSpokes,
+        prerequisiteIds
+    } = setupHighlights(allTechs);
 
 
-    drawSpokes(svg.spokes, spokeData, techData.length)
-        .classed("fade", Boolean(selected));
+  drawSpokes(svg.spokes, spokeData, allTechs.length)
+      .classed("fade", Boolean(selected));
 
-    drawSpokes(svg.selectedSpokes, selectedSpokes, techData.length);
+  drawSpokes(svg.selectedSpokes, selectedSpokes, allTechs.length);
 
   svg.techImages
     .selectAll(".tech-image")
@@ -75,11 +63,11 @@ export default async function makeWheel() {
     .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`)
     .on("mouseover", function(_, d) {
       window.app.selected = d;
-      makeWheel();
+      renderWheel();
     })
     .on("mouseleave", function() {
       window.app.selected = null;
-      makeWheel();
+      renderWheel();
     });
 
   svg.techLabels
@@ -100,30 +88,21 @@ export default async function makeWheel() {
     })
     .text(d => d.name);
 
-    function buildArcs(element, data) {
-        return element
-            .selectAll("path")
-            .data(data)
-            .join("path")
-            .attr("d", (d) => unlockArc(d))
-            .attr("fill", (d) => color(d.step))
-    }
+  drawArcs(svg.arcs, prerequisites, color)
+      .classed("fade", Boolean(selected))
+      .on("mouseover", function(_, d) {
+          console.log(d);
+          window.app.selected = d;
+          renderWheel();
+      })
+      .on("mouseleave", function() {
+          window.app.selected = null;
+          renderWheel();
+      });
 
-    buildArcs(svg.arcs, prerequisites)
-        .classed("fade", Boolean(selected))   
-        .on("mouseover", function(_, d) {
-            console.log(d);
-            window.app.selected = d;
-            makeWheel();
-        })
-        .on("mouseleave", function() {
-            window.app.selected = null;
-            makeWheel();
-        });
-
-    if (Boolean(selected)) {
-        buildArcs(svg.selectedArcs, selectionPrerequisites.filter(d => d.step !== undefined))
-    }
+  if (Boolean(selected)) {
+      drawArcs(svg.selectedArcs, selectionPrerequisites.filter(d => d.step !== undefined), color)
+  }
 
   svg.unlockPins
     .selectAll("path")
@@ -145,30 +124,6 @@ export default async function makeWheel() {
     })
     .attr("stroke", (d) => color(d.step));
 
-  var squareData = [];
-  var circleData = [];
-  for (let u of prerequisites) {
-    if (u.reqFor) {
-      for (let r of u.reqFor) {
-        squareData.push({
-          ...r,
-          step: u.step,
-            arcId: u.id
-        });
-      }
-    }
-
-    if (u.optFor) {
-      for (let o of u.optFor) {
-        circleData.push({
-          ...o,
-          step: u.step,
-            arcId: u.id
-        });
-      }
-    }
-  }
-
   svg.unlockSquares
     .selectAll("rect")
     .data(squareData)
@@ -181,12 +136,12 @@ export default async function makeWheel() {
     .attr("y", -2.5)
     .attr("transform", (d, i) => {
       var point = calculatePointOnWheel(
-        techData.length,
+        allTechs.length,
         d.pos,
         ARC_BASE + ARC_SPACE * d.step
       );
       var rotate =
-        point.angle * (180 / Math.PI) - (i > techData.length / 2 ? 180 : 0);
+        point.angle * (180 / Math.PI) - (i > allTechs.length / 2 ? 180 : 0);
       return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
     })
     .attr("width", 5)
@@ -204,12 +159,12 @@ export default async function makeWheel() {
     .attr("r", 2.5)
     .attr("transform", (d, i) => {
       var point = calculatePointOnWheel(
-        techData.length,
+        allTechs.length,
         d.pos,
         ARC_BASE + ARC_SPACE * d.step
       );
       var rotate =
-        point.angle * (180 / Math.PI) - (i > techData.length / 2 ? 180 : 0);
+        point.angle * (180 / Math.PI) - (i > allTechs.length / 2 ? 180 : 0);
       return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
     })
     .attr("fill", "#FFF")

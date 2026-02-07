@@ -1,3 +1,5 @@
+export const DEFAULT_GAME = "civ4bts";
+
 export const dataTypes = [
   "units",
   "buildings",
