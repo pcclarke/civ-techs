@@ -56,3 +56,16 @@ export function calculatePointOnWheel(numLines, lineIndex, distFromCenter) {
   };
 }
 
+/**
+ * Get a transform string for positioning an element on the wheel
+ * @param {number} count - Total number of items on the wheel
+ * @param {number} index - Index of this item
+ * @param {number} radius - Distance from center
+ * @returns {string} CSS transform string
+ */
+export function wheelTransform(count, index, radius) {
+  const point = calculatePointOnWheel(count, index, radius);
+  const rotate = point.angle * (180 / Math.PI) - (index > count / 2 ? 180 : 0);
+  return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
+}
+

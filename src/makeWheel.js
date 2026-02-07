@@ -1,17 +1,9 @@
 import { scaleOrdinal } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
 
-import {
-    ARC_BASE,
-    ARC_SPACE,
-    TECH_IMG_WIDTH
-} from "./constants";
-import {
-    calculateSingleRadialLinePath,
-    calculatePointOnWheel,
-    fadeCheck
-} from "./helpers";
-import { drawArcs, drawSpokes } from "./drawTools";
+import { ARC_BASE, ARC_SPACE } from "./constants";
+import { calculateSingleRadialLinePath, wheelTransform } from "./helpers";
+import { drawArcs, drawSpokes, drawTechImages, drawTechLabels } from "./drawTools";
 import { setupHighlights } from "./setupHighlights";
 
 const color = scaleOrdinal(schemeCategory10);
@@ -42,44 +34,8 @@ export async function renderWheel() {
 
   drawSpokes(svg.selectedSpokes, selectedSpokes, allTechs.length);
 
-  svg.techImages
-    .selectAll(".tech-image")
-    .data(allTechs)
-    .join("image")
-    .attr("class", "tech-image")
-    .classed("fade", (d) => fadeCheck(d, highlightedIds))
-    .attr("transform", (_, i) => {
-      var point = calculatePointOnWheel(allTechs.length, i, 420);
-      var rotate =
-        point.angle * (180 / Math.PI) - (i > allTechs.length / 2 ? 180 : 0);
-
-      return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
-    })
-    .attr("height", TECH_IMG_WIDTH)
-    .attr("width", TECH_IMG_WIDTH)
-    .attr("x", -TECH_IMG_WIDTH / 2)
-    .attr("y", -TECH_IMG_WIDTH / 2)
-    .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`)
-    .on("mouseover", (_, d) => window.app.selected = d)
-    .on("mouseleave", () => window.app.selected = null);
-
-  svg.techLabels
-    .selectAll("text")
-    .data(allTechs)
-    .join("text")
-    .classed("fade", (d) => fadeCheck(d, highlightedIds))
-    .attr("transform", function labelAngle(d, i) {
-      var point = calculatePointOnWheel(allTechs.length, i, 440)
-      var rotate = point.angle * (180 / Math.PI) - (i > allTechs.length / 2 ? 180 : 0);
-
-      return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
-    })
-    .attr("y", 5)
-    .attr("text-anchor", (_, i) => {
-      return (i > allTechs.length / 2) ?
-        "end" : "start";
-    })
-    .text(d => d.name);
+  drawTechImages(svg.techImages, allTechs, game, highlightedIds);
+  drawTechLabels(svg.techLabels, allTechs, highlightedIds);
 
   drawArcs(svg.arcs, prerequisites, color)
       .classed("fade", Boolean(selected))
@@ -117,22 +73,13 @@ export async function renderWheel() {
     .selectAll("rect")
     .data(squareData)
     .join("rect")
-    .classed("fade", (circle) => {
-        if (!selected || selected.id == circle.id || selected.id == circle.arcId) return false;
+    .classed("fade", (d) => {
+        if (!selected || selected.id == d.id || selected.id == d.arcId) return false;
         return true;
     })
     .attr("x", -2.5)
     .attr("y", -2.5)
-    .attr("transform", (d, i) => {
-      var point = calculatePointOnWheel(
-        allTechs.length,
-        d.pos,
-        ARC_BASE + ARC_SPACE * d.step
-      );
-      var rotate =
-        point.angle * (180 / Math.PI) - (i > allTechs.length / 2 ? 180 : 0);
-      return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
-    })
+    .attr("transform", (d) => wheelTransform(allTechs.length, d.pos, ARC_BASE + ARC_SPACE * d.step))
     .attr("width", 5)
     .attr("height", 5)
     .attr("fill", (d) => color(d.step));
@@ -141,21 +88,12 @@ export async function renderWheel() {
     .selectAll("circle")
     .data(circleData)
     .join("circle")
-    .classed("fade", (circle) => {
-        if (!selected || selected.id == circle.id || selected.id == circle.arcId) return false;
+    .classed("fade", (d) => {
+        if (!selected || selected.id == d.id || selected.id == d.arcId) return false;
         return true;
     })
     .attr("r", 2.5)
-    .attr("transform", (d, i) => {
-      var point = calculatePointOnWheel(
-        allTechs.length,
-        d.pos,
-        ARC_BASE + ARC_SPACE * d.step
-      );
-      var rotate =
-        point.angle * (180 / Math.PI) - (i > allTechs.length / 2 ? 180 : 0);
-      return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
-    })
+    .attr("transform", (d) => wheelTransform(allTechs.length, d.pos, ARC_BASE + ARC_SPACE * d.step))
     .attr("fill", "#FFF")
     .attr("stroke", (d) => color(d.step));
 

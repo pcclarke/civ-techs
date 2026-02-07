@@ -1,6 +1,6 @@
-import { ARC_BASE, ARC_SPACE } from "./constants";
+import { ARC_BASE, ARC_SPACE, TECH_IMG_WIDTH } from "./constants";
 import { unlockArc } from "./arcs";
-import { calculateSingleRadialLinePath } from "./helpers";
+import { calculateSingleRadialLinePath, wheelTransform, fadeCheck } from "./helpers";
 
 export function drawArcs(element, data, color) {
       return element
@@ -16,7 +16,7 @@ export function drawSpokes(element, spokeData, length) {
         .data(spokeData)
         .join("path")
         .attr("class", "spoke-line")
-        .attr("d", (d) => 
+        .attr("d", (d) =>
             calculateSingleRadialLinePath(
                 length,
                 ARC_BASE + ARC_SPACE * d.step,
@@ -24,6 +24,35 @@ export function drawSpokes(element, spokeData, length) {
                 d.position
             )
         );
+}
+
+export function drawTechImages(element, allTechs, game, highlightedIds) {
+    return element
+        .selectAll(".tech-image")
+        .data(allTechs)
+        .join("image")
+        .attr("class", "tech-image")
+        .classed("fade", (d) => fadeCheck(d, highlightedIds))
+        .attr("transform", (_, i) => wheelTransform(allTechs.length, i, 420))
+        .attr("height", TECH_IMG_WIDTH)
+        .attr("width", TECH_IMG_WIDTH)
+        .attr("x", -TECH_IMG_WIDTH / 2)
+        .attr("y", -TECH_IMG_WIDTH / 2)
+        .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`)
+        .on("mouseover", (_, d) => window.app.selected = d)
+        .on("mouseleave", () => window.app.selected = null);
+}
+
+export function drawTechLabels(element, allTechs, highlightedIds) {
+    return element
+        .selectAll("text")
+        .data(allTechs)
+        .join("text")
+        .classed("fade", (d) => fadeCheck(d, highlightedIds))
+        .attr("transform", (_, i) => wheelTransform(allTechs.length, i, 440))
+        .attr("y", 5)
+        .attr("text-anchor", (_, i) => (i > allTechs.length / 2) ? "end" : "start")
+        .text(d => d.name);
 }
 
 
