@@ -1,16 +1,17 @@
 import { select } from "d3-selection";
 
 import {
-  CENTER_X,
-  CENTER_Y,
-  MARGIN_LEFT,
-  MARGIN_TOP,
-  TOTAL_WIDTH,
-  TOTAL_HEIGHT
+    CENTER_X,
+    CENTER_Y,
+    GAME_IMG_WIDTH,
+    MARGIN_LEFT,
+    MARGIN_TOP,
+    TOTAL_WIDTH,
+    TOTAL_HEIGHT
 } from "./constants";
 
 export default function() {
-    let groupObj = {};
+    const groupObj = {};
 
     groupObj.wheel = select("#chart")
         .append("svg")
@@ -32,7 +33,7 @@ export default function() {
         .attr("xlink:href", "img/startSlice.png");
 
     // SVG groups to organize shapes
-    var shapeGroups = [
+    const shapeGroups = [
         { prop: "spokes", class: "spokes" },
         { prop: "selectedSpokes", class: "selected-spokes" },
         { prop: "techImages", class: "tech-images" },
@@ -45,7 +46,7 @@ export default function() {
     ];
 
     for (const group of shapeGroups) {
-        let svgGroup = groupObj.wheel.append("g")
+        const svgGroup = groupObj.wheel.append("g")
             .attr("class", group.class);
 
         groupObj[group.prop] = svgGroup;
@@ -53,10 +54,11 @@ export default function() {
 
     // Civ game image center of wheel
     groupObj.centerImage = groupObj.wheel.append("image")
-        .attr("x", -75)
-        .attr("y", -75)
-        .attr("width", 150)
-        .attr("height", 150);
+        .attr("x", -(GAME_IMG_WIDTH / 2))
+        .attr("y", -(GAME_IMG_WIDTH / 2))
+        .attr("width", GAME_IMG_WIDTH)
+        .attr("height", GAME_IMG_WIDTH);
 
     return groupObj;
 }
+

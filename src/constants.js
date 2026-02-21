@@ -49,3 +49,5 @@ export const PI_DIFF = (ANGLE_GAP / 2) * TWO_PI;
 export const ANG_ADJ = (1 - ANGLE_GAP) * 360;
 /** 360 degrees minus half the gap */
 export const ANG_DIFF = (ANGLE_GAP / 2) * 360;
+
+export const GAME_IMG_WIDTH = 150;

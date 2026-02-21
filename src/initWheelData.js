@@ -3,7 +3,6 @@ import { json } from "d3-fetch";
 import { TECH_IMG_WIDTH, TECH_IMG_RADIUS, LABEL_PADDING } from "./constants";
 import { depthSortTechnologies } from "./depthSortTechnologies";
 import createUnlocks from "./createUnlocks";
-import { getMaxTextWidth } from "./helpers";
 import { renderWheel } from "./makeWheel";
 import { setupSpokes } from "./setupSpokes";
 
@@ -46,8 +45,7 @@ export async function initWheelData() {
   }
 
   // Calculate label radius based on longest tech name
-  const maxLabelWidth = getMaxTextWidth(allTechs.map(t => t.name));
-  const labelRadius = TECH_IMG_RADIUS + TECH_IMG_WIDTH / 2 + LABEL_PADDING + maxLabelWidth / 2;
+  const labelRadius = TECH_IMG_RADIUS + TECH_IMG_WIDTH / 2 + LABEL_PADDING;
 
     // Store processed data on window.app
     window.app.wheelData = {
