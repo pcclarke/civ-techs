@@ -4,6 +4,20 @@ export function imageLink(game, category, id) {
   return `${game}/img/${category}/${id}.png`;
 }
 
+/**
+ * Measure the maximum text width from an array of strings
+ * @param {string[]} texts - Array of text strings to measure
+ * @param {string} font - CSS font string (e.g., "12px sans-serif")
+ * @returns {number} Maximum width in pixels
+ */
+export function getMaxTextWidth(texts, font = "12px sans-serif") {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.font = font;
+
+  return Math.max(...texts.map(text => ctx.measureText(text).width));
+}
+
 
 /** Determine if item should be faded out when a tech is selected */
 export function fadeCheck(tech, relatedIds = [], selectedOnly = false) {

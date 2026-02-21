@@ -43,13 +43,13 @@ export function drawTechImages(element, allTechs, game, highlightedIds) {
         .on("mouseleave", () => window.app.selected = null);
 }
 
-export function drawTechLabels(element, allTechs, highlightedIds) {
+export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
     return element
         .selectAll("text")
         .data(allTechs)
         .join("text")
         .classed("fade", (d) => fadeCheck(d, highlightedIds))
-        .attr("transform", (_, i) => wheelTransform(allTechs.length, i, 440))
+        .attr("transform", (_, i) => wheelTransform(allTechs.length, i, labelRadius))
         .attr("y", 5)
         .attr("text-anchor", (_, i) => (i > allTechs.length / 2) ? "end" : "start")
         .text(d => d.name);
