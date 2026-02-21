@@ -26,6 +26,10 @@ export const CENTER_X = CHART_WIDTH / 2;
 export const CENTER_Y = CHART_HEIGHT / 2;
 
 export const TECH_IMG_WIDTH = 25;
+/** Radius from chart center to tech images */
+export const TECH_IMG_RADIUS = 420;
+/** Padding between tech image edge and label */
+export const LABEL_PADDING = 8;
 
 /** Radius from chart center to first arc position */
 export const ARC_BASE = 100;
