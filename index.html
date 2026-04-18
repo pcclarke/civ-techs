@@ -37,13 +37,30 @@
             </div>
 
             <div id="select-options">
-                <div>
+                <fieldset>
+                    <legend>Game</legend>
+
+                    <div>
+                        <input type="radio" id="civ1-select" name="game" value="civ1" checked />
+                        <label for="civ1">1</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="civ2-select" name="game" value="civ2" checked />
+                        <label for="civ2">2</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="civ3-select" name="game" value="civ3" checked />
+                        <label for="civ3">3</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="civ4-select" name="game" value="civ4" checked />
+                        <label for="civ4">4</label>
+                    </div>
+                </fieldset>
+
+                <div id="expansion">
                     <h3>Expansion</h3>
-                    <select id="select-expansion">
-                        <option value="civ4">Base game</option>
-                        <option value="civ4war">Warlords</option>
-                        <option value="civ4bts" selected="selected">Beyond the Sword</option>
-                    </select>
+                    <select id="select-expansion"></select>
                 </div>
             </div>
 

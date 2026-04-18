@@ -1,4 +1,25 @@
-export const DEFAULT_GAME = "civ4bts";
+export const GAMES = [
+    { name: "Civilization 1", id: "civ1" },
+    { name: "Civilization 2", id: "civ2" },
+    {
+        name: "Civilization 3",
+        id: "civ3",
+        expansions: [
+            { name: "Play the World", id: "civ3ptw" },
+            { name: "Conquests", id: "civ3con" }
+        ]
+    },
+    {
+        name: "Civilization 4",
+        id: "civ4",
+        expansions: [
+            { name: "Warlords", id: "civ4war" },
+            { name: "Beyond the Sword", id: "civ4bts" }
+        ]
+    }
+];
+
+export const DEFAULT_GAME = GAMES[3];
 
 export const dataTypes = [
   "units",
