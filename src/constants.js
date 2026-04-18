@@ -16,6 +16,14 @@ export const GAMES = [
             { name: "Warlords", id: "civ4war" },
             { name: "Beyond the Sword", id: "civ4bts" }
         ]
+    },
+    {
+        name: "Civilization 5",
+        id: "civ5",
+        expansions: [
+            { name: "Gods & Kings", id: "civ5gnk" },
+            { name: "Brave New World", id: "civ5bnw" }
+        ]
     }
 ];
 
