@@ -24,6 +24,14 @@ export const GAMES = [
             { name: "Gods & Kings", id: "civ5gnk" },
             { name: "Brave New World", id: "civ5bnw" }
         ]
+    },
+    {
+        // Tech tree only for now. Rise & Fall adds civics/boosts but no new
+        // techs, so its tech wheel would be identical to base. Gathering Storm
+        // adds 10 techs + random-cost Information-era mechanics; both deferred
+        // until civics support lands.
+        name: "Civilization 6",
+        id: "civ6"
     }
 ];
 

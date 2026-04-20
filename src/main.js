@@ -35,7 +35,7 @@ addExpansions();
 selectAll("input[name='game']").on("change", (e) => {
     gameInfo = GAMES.find(g => g.id == e.target.value);
     window.app.game = gameInfo.id;
-    if (gameInfo.id != "civ1" && gameInfo.id != "civ2") {
+    if (gameInfo.expansions && gameInfo.expansions.length) {
         addExpansions();
     } else {
         hideExpansions();
