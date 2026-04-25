@@ -1,7 +1,7 @@
 import { scaleOrdinal } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
 
-import { ARC_BASE, ARC_SPACE } from "./constants";
+import { ARC_BASE } from "./constants";
 import { calculateSingleRadialLinePath, wheelTransform } from "./helpers";
 import { drawArcs, drawSpokes, drawTechImages, drawTechLabels } from "./drawTools";
 import { setupHighlights } from "./setupHighlights";
@@ -22,7 +22,8 @@ export async function renderWheel() {
         squareData,
         circleData,
         labelRadius,
-        techImgRadius
+        techImgRadius,
+        arcSpace
     } = wheelData;
     const {
         highlightedIds,
@@ -32,15 +33,15 @@ export async function renderWheel() {
     } = setupHighlights(allTechs);
 
 
-  drawSpokes(svg.spokes, spokeData, allTechs.length, techImgRadius)
+  drawSpokes(svg.spokes, spokeData, allTechs.length, techImgRadius, arcSpace)
       .classed("fade", Boolean(selected));
 
-  drawSpokes(svg.selectedSpokes, selectedSpokes, allTechs.length, techImgRadius);
+  drawSpokes(svg.selectedSpokes, selectedSpokes, allTechs.length, techImgRadius, arcSpace);
 
   drawTechImages(svg.techImages, allTechs, game, highlightedIds, iconFolder, techImgRadius);
   drawTechLabels(svg.techLabels, allTechs, highlightedIds, labelRadius);
 
-  drawArcs(svg.arcs, prerequisites, color)
+  drawArcs(svg.arcs, prerequisites, color, arcSpace)
       .classed("fade", Boolean(selected))
       .on("mouseover", (_, d) => {
           console.log(d);
@@ -49,7 +50,7 @@ export async function renderWheel() {
       .on("mouseleave", () => window.app.selected = null);
 
   if (Boolean(selected)) {
-      drawArcs(svg.selectedArcs, selectionPrerequisites.filter(d => d.step !== undefined), color)
+      drawArcs(svg.selectedArcs, selectionPrerequisites.filter(d => d.step !== undefined), color, arcSpace)
   }
 
   svg.unlockPins
@@ -65,8 +66,8 @@ export async function renderWheel() {
     .attr("d", function pinPath(d, i) {
       return calculateSingleRadialLinePath(
         spokeData.length,
-        ARC_BASE - 5 + ARC_SPACE * d.step,
-        ARC_BASE + 5 + ARC_SPACE * d.step,
+        ARC_BASE - 5 + arcSpace * d.step,
+        ARC_BASE + 5 + arcSpace * d.step,
         d.position
       );
     })
@@ -82,7 +83,7 @@ export async function renderWheel() {
     })
     .attr("x", -2.5)
     .attr("y", -2.5)
-    .attr("transform", (d) => wheelTransform(allTechs.length, d.pos, ARC_BASE + ARC_SPACE * d.step))
+    .attr("transform", (d) => wheelTransform(allTechs.length, d.pos, ARC_BASE + arcSpace * d.step))
     .attr("width", 5)
     .attr("height", 5)
     .attr("fill", (d) => color(d.step));
@@ -96,7 +97,7 @@ export async function renderWheel() {
         return true;
     })
     .attr("r", 2.5)
-    .attr("transform", (d) => wheelTransform(allTechs.length, d.pos, ARC_BASE + ARC_SPACE * d.step))
+    .attr("transform", (d) => wheelTransform(allTechs.length, d.pos, ARC_BASE + arcSpace * d.step))
     .attr("fill", "#FFF")
     .attr("stroke", (d) => color(d.step));
 

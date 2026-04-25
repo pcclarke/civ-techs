@@ -83,8 +83,15 @@ export const MIN_TECH_IMG_RADIUS = 200;
 
 /** Radius from chart center to first arc position */
 export const ARC_BASE = 100;
-/** Radial distance between arcs */
+/** Default radial distance between arcs. The live wheel computes this
+ *  dynamically each render so arcs scale with the available radial space
+ *  between ARC_BASE and the icon ring; this constant is a fallback. */
 export const ARC_SPACE = 14;
+/** Maximum radial distance between arcs. Caps the dynamic spacing so arcs
+ *  don't get unreasonably spread out on small trees with lots of room. */
+export const ARC_SPACE_MAX = 20;
+/** Clearance between the outermost arc and the inner edge of the icon ring. */
+export const ARC_GAP_FROM_ICONS = 16;
 
 /** Percent of circle that should be left open */
 const ANGLE_GAP = 0.05;

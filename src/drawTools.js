@@ -1,8 +1,9 @@
 import { ARC_BASE, ARC_SPACE, TECH_IMG_RADIUS, TECH_IMG_WIDTH } from "./constants";
-import { unlockArc } from "./arcs";
+import { makeUnlockArc } from "./arcs";
 import { calculateSingleRadialLinePath, wheelTransform, fadeCheck } from "./helpers";
 
-export function drawArcs(element, data, color) {
+export function drawArcs(element, data, color, arcSpace = ARC_SPACE) {
+      const unlockArc = makeUnlockArc(arcSpace);
       return element
           .selectAll("path")
           .data(data)
@@ -11,7 +12,7 @@ export function drawArcs(element, data, color) {
           .attr("fill", (d) => color(d.step));
 }
 
-export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_RADIUS) {
+export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_RADIUS, arcSpace = ARC_SPACE) {
     return element.selectAll(".spoke-line")
         .data(spokeData)
         .join("path")
@@ -19,7 +20,7 @@ export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_
         .attr("d", (d) =>
             calculateSingleRadialLinePath(
                 length,
-                ARC_BASE + ARC_SPACE * d.step,
+                ARC_BASE + arcSpace * d.step,
                 techImgRadius,
                 d.position
             )
@@ -54,5 +55,6 @@ export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
         .attr("text-anchor", (_, i) => (i > allTechs.length / 2) ? "end" : "start")
         .text(d => d.name);
 }
+
 
 
