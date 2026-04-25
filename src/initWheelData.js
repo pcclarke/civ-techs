@@ -11,11 +11,16 @@ import { setupSpokes } from "./setupSpokes";
  * Call this once on startup and when the game changes.
  */
 export async function initWheelData() {
-  var { game } = window.app;
+  var { game, tree } = window.app;
   var path = game + "/civdata.json";
 
   var data = await json(path);
-  var sortedTechs = depthSortTechnologies(data.technologies);
+  // Pick the right node array for the active tree (default: technologies).
+  // For pre-tree games this is just `data.technologies`; for Civ 6 it can
+  // also be `data.civics`.
+  var dataKey = (tree && tree.dataKey) || "technologies";
+  var nodes = data[dataKey] || data.technologies;
+  var sortedTechs = depthSortTechnologies(nodes);
   var { allTechs, prerequisites } = createUnlocks(sortedTechs);
   var spokeData = setupSpokes(allTechs, prerequisites);
 

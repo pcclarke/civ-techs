@@ -26,7 +26,7 @@ export function drawSpokes(element, spokeData, length) {
         );
 }
 
-export function drawTechImages(element, allTechs, game, highlightedIds) {
+export function drawTechImages(element, allTechs, game, highlightedIds, folder = "technologies") {
     return element
         .selectAll(".tech-image")
         .data(allTechs)
@@ -38,7 +38,7 @@ export function drawTechImages(element, allTechs, game, highlightedIds) {
         .attr("width", TECH_IMG_WIDTH)
         .attr("x", -TECH_IMG_WIDTH / 2)
         .attr("y", -TECH_IMG_WIDTH / 2)
-        .attr("xlink:href", (d) => `${game}/img/technologies/${d.id}.png`)
+        .attr("xlink:href", (d) => `${game}/img/${folder}/${d.id}.png`)
         .on("mouseover", (_, d) => window.app.selected = d)
         .on("mouseleave", () => window.app.selected = null);
 }

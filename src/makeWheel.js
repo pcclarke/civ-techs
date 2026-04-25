@@ -13,7 +13,8 @@ const color = scaleOrdinal(schemeCategory10);
  * Call this when the selection changes.
  */
 export async function renderWheel() {
-    var { game, selected, svg, wheelData } = window.app;
+    var { game, tree, selected, svg, wheelData } = window.app;
+    var iconFolder = (tree && tree.folder) || "technologies";
     const {
         allTechs,
         prerequisites,
@@ -35,7 +36,7 @@ export async function renderWheel() {
 
   drawSpokes(svg.selectedSpokes, selectedSpokes, allTechs.length);
 
-  drawTechImages(svg.techImages, allTechs, game, highlightedIds);
+  drawTechImages(svg.techImages, allTechs, game, highlightedIds, iconFolder);
   drawTechLabels(svg.techLabels, allTechs, highlightedIds, labelRadius);
 
   drawArcs(svg.arcs, prerequisites, color)

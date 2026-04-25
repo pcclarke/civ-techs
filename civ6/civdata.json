@@ -624,5 +624,482 @@
         "TECH_NUCLEAR_FUSION"
       ]
     }
+  ],
+  "civics": [
+    {
+      "id": "CIVIC_CODE_OF_LAWS",
+      "cost": 20,
+      "era": "ERA_ANCIENT",
+      "name": "Code of Laws"
+    },
+    {
+      "id": "CIVIC_CRAFTSMANSHIP",
+      "cost": 40,
+      "era": "ERA_ANCIENT",
+      "name": "Craftsmanship",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "CIVIC_FOREIGN_TRADE",
+      "cost": 40,
+      "era": "ERA_ANCIENT",
+      "name": "Foreign Trade",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "CIVIC_MILITARY_TRADITION",
+      "cost": 50,
+      "era": "ERA_ANCIENT",
+      "name": "Military Tradition",
+      "requires": [
+        "CIVIC_CRAFTSMANSHIP"
+      ]
+    },
+    {
+      "id": "CIVIC_STATE_WORKFORCE",
+      "cost": 70,
+      "era": "ERA_ANCIENT",
+      "name": "State Workforce",
+      "requires": [
+        "CIVIC_CRAFTSMANSHIP"
+      ]
+    },
+    {
+      "id": "CIVIC_EARLY_EMPIRE",
+      "cost": 70,
+      "era": "ERA_ANCIENT",
+      "name": "Early Empire",
+      "requires": [
+        "CIVIC_FOREIGN_TRADE"
+      ]
+    },
+    {
+      "id": "CIVIC_MYSTICISM",
+      "cost": 50,
+      "era": "ERA_ANCIENT",
+      "name": "Mysticism",
+      "requires": [
+        "CIVIC_FOREIGN_TRADE"
+      ]
+    },
+    {
+      "id": "CIVIC_GAMES_RECREATION",
+      "cost": 110,
+      "era": "ERA_CLASSICAL",
+      "name": "Games and Recreation",
+      "requires": [
+        "CIVIC_STATE_WORKFORCE"
+      ]
+    },
+    {
+      "id": "CIVIC_POLITICAL_PHILOSOPHY",
+      "cost": 110,
+      "era": "ERA_CLASSICAL",
+      "name": "Political Philosophy",
+      "requires": [
+        "CIVIC_STATE_WORKFORCE",
+        "CIVIC_EARLY_EMPIRE"
+      ]
+    },
+    {
+      "id": "CIVIC_DRAMA_POETRY",
+      "cost": 110,
+      "era": "ERA_CLASSICAL",
+      "name": "Drama and Poetry",
+      "requires": [
+        "CIVIC_EARLY_EMPIRE"
+      ]
+    },
+    {
+      "id": "CIVIC_MILITARY_TRAINING",
+      "cost": 120,
+      "era": "ERA_CLASSICAL",
+      "name": "Military Training",
+      "requires": [
+        "CIVIC_MILITARY_TRADITION",
+        "CIVIC_GAMES_RECREATION"
+      ]
+    },
+    {
+      "id": "CIVIC_DEFENSIVE_TACTICS",
+      "cost": 175,
+      "era": "ERA_CLASSICAL",
+      "name": "Defensive Tactics",
+      "requires": [
+        "CIVIC_GAMES_RECREATION",
+        "CIVIC_POLITICAL_PHILOSOPHY"
+      ]
+    },
+    {
+      "id": "CIVIC_RECORDED_HISTORY",
+      "cost": 175,
+      "era": "ERA_CLASSICAL",
+      "name": "Recorded History",
+      "requires": [
+        "CIVIC_POLITICAL_PHILOSOPHY",
+        "CIVIC_DRAMA_POETRY"
+      ]
+    },
+    {
+      "id": "CIVIC_THEOLOGY",
+      "cost": 120,
+      "era": "ERA_CLASSICAL",
+      "name": "Theology",
+      "requires": [
+        "CIVIC_DRAMA_POETRY",
+        "CIVIC_MYSTICISM"
+      ]
+    },
+    {
+      "id": "CIVIC_NAVAL_TRADITION",
+      "cost": 200,
+      "era": "ERA_MEDIEVAL",
+      "name": "Naval Tradition",
+      "requires": [
+        "CIVIC_DEFENSIVE_TACTICS"
+      ]
+    },
+    {
+      "id": "CIVIC_FEUDALISM",
+      "cost": 275,
+      "era": "ERA_MEDIEVAL",
+      "name": "Feudalism",
+      "requires": [
+        "CIVIC_DEFENSIVE_TACTICS"
+      ]
+    },
+    {
+      "id": "CIVIC_CIVIL_SERVICE",
+      "cost": 275,
+      "era": "ERA_MEDIEVAL",
+      "name": "Civil Service",
+      "requires": [
+        "CIVIC_DEFENSIVE_TACTICS",
+        "CIVIC_RECORDED_HISTORY"
+      ]
+    },
+    {
+      "id": "CIVIC_MERCENARIES",
+      "cost": 290,
+      "era": "ERA_MEDIEVAL",
+      "name": "Mercenaries",
+      "requires": [
+        "CIVIC_MILITARY_TRAINING",
+        "CIVIC_FEUDALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_MEDIEVAL_FAIRES",
+      "cost": 385,
+      "era": "ERA_MEDIEVAL",
+      "name": "Medieval Faires",
+      "requires": [
+        "CIVIC_FEUDALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_GUILDS",
+      "cost": 385,
+      "era": "ERA_MEDIEVAL",
+      "name": "Guilds",
+      "requires": [
+        "CIVIC_FEUDALISM",
+        "CIVIC_CIVIL_SERVICE"
+      ]
+    },
+    {
+      "id": "CIVIC_DIVINE_RIGHT",
+      "cost": 290,
+      "era": "ERA_MEDIEVAL",
+      "name": "Divine Right",
+      "requires": [
+        "CIVIC_CIVIL_SERVICE",
+        "CIVIC_THEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_EXPLORATION",
+      "cost": 400,
+      "era": "ERA_RENAISSANCE",
+      "name": "Exploration",
+      "requires": [
+        "CIVIC_MERCENARIES",
+        "CIVIC_MEDIEVAL_FAIRES"
+      ]
+    },
+    {
+      "id": "CIVIC_HUMANISM",
+      "cost": 540,
+      "era": "ERA_RENAISSANCE",
+      "name": "Humanism",
+      "requires": [
+        "CIVIC_MEDIEVAL_FAIRES",
+        "CIVIC_GUILDS"
+      ]
+    },
+    {
+      "id": "CIVIC_DIPLOMATIC_SERVICE",
+      "cost": 540,
+      "era": "ERA_RENAISSANCE",
+      "name": "Diplomatic Service",
+      "requires": [
+        "CIVIC_GUILDS"
+      ]
+    },
+    {
+      "id": "CIVIC_REFORMED_CHURCH",
+      "cost": 400,
+      "era": "ERA_RENAISSANCE",
+      "name": "Reformed Church",
+      "requires": [
+        "CIVIC_GUILDS",
+        "CIVIC_DIVINE_RIGHT"
+      ]
+    },
+    {
+      "id": "CIVIC_MERCANTILISM",
+      "cost": 655,
+      "era": "ERA_RENAISSANCE",
+      "name": "Mercantilism",
+      "requires": [
+        "CIVIC_HUMANISM"
+      ]
+    },
+    {
+      "id": "CIVIC_THE_ENLIGHTENMENT",
+      "cost": 655,
+      "era": "ERA_RENAISSANCE",
+      "name": "The Enlightenment",
+      "requires": [
+        "CIVIC_HUMANISM",
+        "CIVIC_DIPLOMATIC_SERVICE"
+      ]
+    },
+    {
+      "id": "CIVIC_COLONIALISM",
+      "cost": 725,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Colonialism",
+      "requires": [
+        "CIVIC_MERCANTILISM"
+      ]
+    },
+    {
+      "id": "CIVIC_CIVIL_ENGINEERING",
+      "cost": 920,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Civil Engineering",
+      "requires": [
+        "CIVIC_MERCANTILISM"
+      ]
+    },
+    {
+      "id": "CIVIC_NATIONALISM",
+      "cost": 920,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Nationalism",
+      "requires": [
+        "CIVIC_THE_ENLIGHTENMENT"
+      ]
+    },
+    {
+      "id": "CIVIC_OPERA_BALLET",
+      "cost": 725,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Opera and Ballet",
+      "requires": [
+        "CIVIC_THE_ENLIGHTENMENT"
+      ]
+    },
+    {
+      "id": "CIVIC_NATURAL_HISTORY",
+      "cost": 870,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Natural History",
+      "requires": [
+        "CIVIC_COLONIALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_SCORCHED_EARTH",
+      "cost": 1060,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Scorched Earth",
+      "requires": [
+        "CIVIC_NATIONALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_URBANIZATION",
+      "cost": 1060,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Urbanization",
+      "requires": [
+        "CIVIC_CIVIL_ENGINEERING",
+        "CIVIC_NATIONALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_CONSERVATION",
+      "cost": 1255,
+      "era": "ERA_MODERN",
+      "name": "Conservation",
+      "requires": [
+        "CIVIC_NATURAL_HISTORY"
+      ]
+    },
+    {
+      "id": "CIVIC_CAPITALISM",
+      "cost": 1560,
+      "era": "ERA_MODERN",
+      "name": "Capitalism",
+      "requires": [
+        "CIVIC_MASS_MEDIA"
+      ]
+    },
+    {
+      "id": "CIVIC_NUCLEAR_PROGRAM",
+      "cost": 1715,
+      "era": "ERA_MODERN",
+      "name": " Nuclear Program",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_MASS_MEDIA",
+      "cost": 1410,
+      "era": "ERA_MODERN",
+      "name": "Mass Media",
+      "requires": [
+        "CIVIC_NATURAL_HISTORY",
+        "CIVIC_URBANIZATION"
+      ]
+    },
+    {
+      "id": "CIVIC_MOBILIZATION",
+      "cost": 1410,
+      "era": "ERA_MODERN",
+      "name": "Mobilization",
+      "requires": [
+        "CIVIC_URBANIZATION"
+      ]
+    },
+    {
+      "id": "CIVIC_IDEOLOGY",
+      "cost": 660,
+      "era": "ERA_MODERN",
+      "name": "Ideology",
+      "requires": [
+        "CIVIC_MASS_MEDIA",
+        "CIVIC_MOBILIZATION"
+      ]
+    },
+    {
+      "id": "CIVIC_SUFFRAGE",
+      "cost": 1715,
+      "era": "ERA_MODERN",
+      "name": "Suffrage",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_TOTALITARIANISM",
+      "cost": 1715,
+      "era": "ERA_MODERN",
+      "name": "Totalitarianism",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_CLASS_STRUGGLE",
+      "cost": 1715,
+      "era": "ERA_MODERN",
+      "name": "Class Struggle",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_COLD_WAR",
+      "cost": 2185,
+      "era": "ERA_ATOMIC",
+      "name": "Cold War",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_PROFESSIONAL_SPORTS",
+      "cost": 2185,
+      "era": "ERA_ATOMIC",
+      "name": "Professional Sports",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_CULTURAL_HERITAGE",
+      "cost": 1955,
+      "era": "ERA_ATOMIC",
+      "name": "Cultural Heritage",
+      "requires": [
+        "CIVIC_CONSERVATION"
+      ]
+    },
+    {
+      "id": "CIVIC_RAPID_DEPLOYMENT",
+      "cost": 2415,
+      "era": "ERA_ATOMIC",
+      "name": "Rapid Deployment",
+      "requires": [
+        "CIVIC_COLD_WAR"
+      ]
+    },
+    {
+      "id": "CIVIC_SPACE_RACE",
+      "cost": 2415,
+      "era": "ERA_ATOMIC",
+      "name": "Space Race",
+      "requires": [
+        "CIVIC_COLD_WAR"
+      ]
+    },
+    {
+      "id": "CIVIC_GLOBALIZATION",
+      "cost": 2880,
+      "era": "ERA_INFORMATION",
+      "name": "Globalization",
+      "requires": [
+        "CIVIC_RAPID_DEPLOYMENT",
+        "CIVIC_SPACE_RACE"
+      ]
+    },
+    {
+      "id": "CIVIC_SOCIAL_MEDIA",
+      "cost": 2880,
+      "era": "ERA_INFORMATION",
+      "name": "Social Media",
+      "requires": [
+        "CIVIC_SPACE_RACE",
+        "CIVIC_PROFESSIONAL_SPORTS"
+      ]
+    },
+    {
+      "id": "CIVIC_FUTURE_CIVIC",
+      "cost": 3200,
+      "era": "ERA_INFORMATION",
+      "name": "Future Civic",
+      "requires": [
+        "CIVIC_GLOBALIZATION",
+        "CIVIC_SOCIAL_MEDIA"
+      ]
+    }
   ]
 }

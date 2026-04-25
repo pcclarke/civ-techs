@@ -4,13 +4,16 @@ Civilization 6 data scraper.
 Reads Firaxis XML from ./data/base, ./data/expansion1, ./data/expansion2 and
 emits civdata.json in the shape consumed by src/initWheelData.js:
 
-    { "technologies": [ { "id", "name", "cost", "era", "requires"? }, ... ] }
+    {
+      "technologies": [ { "id", "name", "cost", "era", "requires"? }, ... ],
+      "civics":       [ { "id", "name", "cost", "era", "requires"? }, ... ]
+    }
 
 The ./data subtree holds the raw game asset dumps and is gitignored — only
 the scripts in this directory are tracked.
 
-Current scope: base-game technology tree only. Civics and expansion
-deltas are TODO (see notes at bottom).
+Current scope: base-game technology + civics trees. Expansion deltas are
+TODO (see notes at bottom).
 
 Run from this directory:
     python3 scraper.py --game base --out ../../civ6/civdata.json
@@ -78,55 +81,109 @@ def parse_text_file(pkg: str, filename: str, parent_tag: str = 'BaseGameText') -
     return out
 
 
-# --------------------------- Tech tree ---------------------------
+# --------------------------- Generic node/prereq prep ---------------------------
 
-def prep_technologies(pkg: str, tech_file: str, text_map: Dict[str, str]) -> List[dict]:
-    """Scrape the technology tree from <pkg>/<tech_file>, resolving names via text_map."""
-    root = parse_xml(pkg, tech_file)
+def prep_nodes(
+    pkg: str,
+    xml_file: str,
+    *,
+    nodes_table: str,
+    id_attr: str,
+    prereq_table: str,
+    prereq_node_attr: str,
+    prereq_attr: str,
+    id_strip_prefix: str,
+    text_map: Dict[str, str],
+) -> List[dict]:
+    """Scrape a tech-tree-shaped table out of <pkg>/<xml_file>.
+
+    Both Technologies and Civics share the same shape: a primary table with
+    {id, name (LOC tag), cost, era} and a prereq side-table with {child, parent}.
+    The attribute names differ — this helper takes them as arguments so the
+    same code handles both.
+
+    Args:
+        nodes_table:        e.g. 'Technologies' or 'Civics'
+        id_attr:            primary-key column on each node row
+                            ('TechnologyType' / 'CivicType')
+        prereq_table:       e.g. 'TechnologyPrereqs' or 'CivicPrereqs'
+        prereq_node_attr:   FK column referencing the child node ('Technology' / 'Civic')
+        prereq_attr:        column with the parent node id ('PrereqTech' / 'PrereqCivic')
+        id_strip_prefix:    prefix to strip when synthesizing a fallback name
+                            ('TECH_' / 'CIVIC_')
+    """
+    root = parse_xml(pkg, xml_file)
     if root is None:
-        raise FileNotFoundError(f'{pkg}/{tech_file} not found')
+        raise FileNotFoundError(f'{pkg}/{xml_file} not found')
 
-    techs: Dict[str, dict] = {}
+    nodes: Dict[str, dict] = {}
 
-    # 1. Basic tech rows: id, cost, era, name (resolved via text_map)
-    techs_table = root.find('Technologies')
-    if techs_table is not None:
-        for row in techs_table.findall('Row'):
-            tid = row.get('TechnologyType')
-            if not tid:
+    # 1. Basic rows: id, cost, era, name (resolved via text_map)
+    table = root.find(nodes_table)
+    if table is not None:
+        for row in table.findall('Row'):
+            nid = row.get(id_attr)
+            if not nid:
                 continue
             name_key = row.get('Name', '')
-            tech: dict = {'id': tid}
-            # cost as int for consistency with civ4 data; coerce when present
+            node: dict = {'id': nid}
             if row.get('Cost') is not None:
                 try:
-                    tech['cost'] = int(row.get('Cost'))
+                    node['cost'] = int(row.get('Cost'))
                 except ValueError:
-                    tech['cost'] = row.get('Cost')
+                    node['cost'] = row.get('Cost')
             if row.get('EraType'):
-                tech['era'] = row.get('EraType')
+                node['era'] = row.get('EraType')
             if name_key in text_map:
-                tech['name'] = text_map[name_key]
+                node['name'] = text_map[name_key]
             else:
-                # Fall back to a humanized form of the id rather than dropping the tech
-                tech['name'] = tid.replace('TECH_', '').replace('_', ' ').title()
-            techs[tid] = tech
+                # Fall back to a humanized form of the id rather than dropping the row
+                node['name'] = nid.replace(id_strip_prefix, '').replace('_', ' ').title()
+            nodes[nid] = node
 
-    # 2. Prereqs: append each PrereqTech onto `requires`
-    prereqs_table = root.find('TechnologyPrereqs')
-    if prereqs_table is not None:
-        for row in prereqs_table.findall('Row'):
-            tid = row.get('Technology')
-            preq = row.get('PrereqTech')
-            if not tid or not preq:
+    # 2. Prereqs: append each parent onto child's `requires`
+    pre_table = root.find(prereq_table)
+    if pre_table is not None:
+        for row in pre_table.findall('Row'):
+            child = row.get(prereq_node_attr)
+            parent = row.get(prereq_attr)
+            if not child or not parent:
                 continue
-            if tid not in techs:
-                # Prereq references a tech that isn't in this file's Technologies table
-                # (can happen in expansion files that reference base techs); skip.
+            if child not in nodes:
+                # Prereq references a node not in this file's primary table
+                # (can happen in expansion files referencing base nodes); skip.
                 continue
-            techs[tid].setdefault('requires', []).append(preq)
+            nodes[child].setdefault('requires', []).append(parent)
 
-    return list(techs.values())
+    return list(nodes.values())
+
+
+def prep_technologies(pkg: str, tech_file: str, text_map: Dict[str, str]) -> List[dict]:
+    """Scrape the technology tree from <pkg>/<tech_file>."""
+    return prep_nodes(
+        pkg, tech_file,
+        nodes_table='Technologies',
+        id_attr='TechnologyType',
+        prereq_table='TechnologyPrereqs',
+        prereq_node_attr='Technology',
+        prereq_attr='PrereqTech',
+        id_strip_prefix='TECH_',
+        text_map=text_map,
+    )
+
+
+def prep_civics(pkg: str, civics_file: str, text_map: Dict[str, str]) -> List[dict]:
+    """Scrape the civics tree from <pkg>/<civics_file>."""
+    return prep_nodes(
+        pkg, civics_file,
+        nodes_table='Civics',
+        id_attr='CivicType',
+        prereq_table='CivicPrereqs',
+        prereq_node_attr='Civic',
+        prereq_attr='PrereqCivic',
+        id_strip_prefix='CIVIC_',
+        text_map=text_map,
+    )
 
 
 # --------------------------- Driver ---------------------------
@@ -136,11 +193,18 @@ def build_civdata(game: str) -> dict:
     data: dict = {}
 
     if game == 'base':
-        text_map = parse_text_file('base', 'Types_Text.xml', 'BaseGameText')
+        # Tech and civic display names live in different text files in the
+        # base package. Merge into a single lookup so we don't have to thread
+        # two maps through.
+        text_map: Dict[str, str] = {}
+        text_map.update(parse_text_file('base', 'Types_Text.xml', 'BaseGameText'))
+        text_map.update(parse_text_file('base', 'Civics_Text.xml', 'BaseGameText'))
         data['technologies'] = prep_technologies('base', 'Technologies.xml', text_map)
+        data['civics']       = prep_civics('base', 'Civics.xml', text_map)
     elif game in ('rf', 'gs'):
-        # Not yet supported: would need to layer expansion Technologies rows on top of base,
-        # honor Technologies_XP2 (hidden-until-prereq, random costs), and merge expansion text.
+        # Not yet supported: would need to layer expansion rows on top of base,
+        # honor Technologies_XP2 / Civics_XP2 (hidden-until-prereq, random costs),
+        # and merge expansion text.
         raise NotImplementedError(
             f'--game {game} not implemented yet; only "base" is supported this round'
         )
@@ -167,7 +231,8 @@ def main():
         json.dump(data, f, indent=args.indent if args.indent else None)
 
     techs = data.get('technologies', [])
-    print(f'Wrote {len(techs)} technologies to {args.out}')
+    civics = data.get('civics', [])
+    print(f'Wrote {len(techs)} technologies and {len(civics)} civics to {args.out}')
 
 
 if __name__ == '__main__':
@@ -176,8 +241,10 @@ if __name__ == '__main__':
 
 # ----------------------------------------------------------------------
 # Deferred work:
-#   - Civics tree: parse base/Civics.xml + Civics_Text.xml; separate graph.
-#   - Expansion deltas: Expansion2 adds 10 techs + overrides + Technologies_XP2.
-#   - Unlocks: buildings/units/improvements with PrereqTech; the svelted
-#     scraper in git history has a reasonable starting point for this.
+#   - Expansion deltas: Expansion2 adds 10 techs + overrides + Technologies_XP2,
+#     and similar for civics (Civics_XP2). Same hidden-until-prereq +
+#     random-cost mechanics on both sides.
+#   - Unlocks: buildings/units/improvements with PrereqTech and governments
+#     /policies/wonders with PrereqCivic; the svelted scraper in git history
+#     has a reasonable starting point for techs.
 # ----------------------------------------------------------------------

@@ -9,6 +9,9 @@ let gameInfo = DEFAULT_GAME;
 
 window.app = {
   game: gameInfo.id,
+  // Tree picker (Civ 6 only). Always populated so downstream code can read
+  // it unconditionally; defaults match the legacy single-tree-per-game shape.
+  tree: (gameInfo.trees && gameInfo.trees[0]) || { id: "tech", folder: "technologies", dataKey: "technologies" },
   _selected: null
 };
 
@@ -32,13 +35,30 @@ const selectExpansion = select("#select-expansion")
     });
 addExpansions();
 
+const tree = select("#tree");
+const selectTree = select("#select-tree")
+    .on("change", function() {
+        const id = this.options[this.selectedIndex].value;
+        window.app.tree = gameInfo.trees.find(t => t.id == id);
+        initWheelData();
+    });
+
 selectAll("input[name='game']").on("change", (e) => {
     gameInfo = GAMES.find(g => g.id == e.target.value);
     window.app.game = gameInfo.id;
+    // Reset tree to the game's first tree (or the legacy single-tree default).
+    window.app.tree = (gameInfo.trees && gameInfo.trees[0])
+        || { id: "tech", folder: "technologies", dataKey: "technologies" };
+
     if (gameInfo.expansions && gameInfo.expansions.length) {
         addExpansions();
     } else {
         hideExpansions();
+    }
+    if (gameInfo.trees && gameInfo.trees.length > 1) {
+        addTrees();
+    } else {
+        hideTrees();
     }
     initWheelData();
 });
@@ -56,6 +76,26 @@ function addExpansions() {
 
 function hideExpansions() {
     expansion.classed("hidden", true);
+}
+
+function addTrees() {
+    tree.classed("hidden", false);
+    selectTree
+        .selectAll("option")
+        .data(gameInfo.trees)
+        .join("option")
+        .attr("value", d => d.id)
+        .text(d => d.name)
+        .property("selected", d => d.id == window.app.tree.id);
+}
+
+function hideTrees() {
+    tree.classed("hidden", true);
+}
+
+// Initial render: if the default game has trees, populate the toggle.
+if (gameInfo.trees && gameInfo.trees.length > 1) {
+    addTrees();
 }
 
 select("#tooltip").on("click", () => tooltip.classed("hidden", true));

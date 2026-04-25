@@ -26,12 +26,17 @@ export const GAMES = [
         ]
     },
     {
-        // Tech tree only for now. Rise & Fall adds civics/boosts but no new
-        // techs, so its tech wheel would be identical to base. Gathering Storm
-        // adds 10 techs + random-cost Information-era mechanics; both deferred
-        // until civics support lands.
+        // Civ 6 ships two parallel progression trees — technologies and
+        // civics. They share the wheel renderer; the in-Civ-6 `trees` toggle
+        // picks which array of nodes to render. Expansion deltas (Rise & Fall
+        // adds civics, Gathering Storm adds 10 techs + random-cost Information
+        // era mechanics) are still TODO.
         name: "Civilization 6",
-        id: "civ6"
+        id: "civ6",
+        trees: [
+            { name: "Technologies", id: "tech",   folder: "technologies", dataKey: "technologies" },
+            { name: "Civics",       id: "civics", folder: "civics",       dataKey: "civics" }
+        ]
     }
 ];
 
