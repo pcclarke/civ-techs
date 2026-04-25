@@ -38,3 +38,8 @@ civxml_to_json/XML/*
 civxml_to_json/civ4/*
 civxml_to_json/war/*
 civxml_to_json/bts/*
+
+# Raw game asset dumps for the scrapers — kept locally, never committed.
+# Only the Python scripts under data_scrapers/<game>/ are tracked.
+data_scrapers/*/data/
+data_scrapers/**/__pycache__/
