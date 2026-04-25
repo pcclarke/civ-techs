@@ -68,10 +68,18 @@ export const CENTER_X = CHART_WIDTH / 2;
 export const CENTER_Y = CHART_HEIGHT / 2;
 
 export const TECH_IMG_WIDTH = 25;
-/** Radius from chart center to tech images */
+/** Default radius from chart center to tech images. The live wheel computes
+ *  this dynamically each render based on label widths (see computeWheelLayout),
+ *  but the constant is still a useful fallback / sanity ceiling. */
 export const TECH_IMG_RADIUS = 420;
 /** Padding between tech image edge and label */
 export const LABEL_PADDING = 8;
+/** Clearance between the outermost label corner and the SVG edge */
+export const EDGE_PADDING = 4;
+/** Floor on the dynamically-computed tech image radius so the inner arc
+ *  region always has room. If labels are extremely wide we'd rather clip
+ *  one or two of them than collapse the whole wheel. */
+export const MIN_TECH_IMG_RADIUS = 200;
 
 /** Radius from chart center to first arc position */
 export const ARC_BASE = 100;

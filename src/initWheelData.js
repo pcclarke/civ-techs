@@ -1,6 +1,6 @@
 import { json } from "d3-fetch";
 
-import { TECH_IMG_WIDTH, TECH_IMG_RADIUS, LABEL_PADDING } from "./constants";
+import { computeWheelLayout } from "./computeWheelLayout";
 import { depthSortTechnologies } from "./depthSortTechnologies";
 import createUnlocks from "./createUnlocks";
 import { renderWheel } from "./makeWheel";
@@ -49,18 +49,23 @@ export async function initWheelData() {
     }
   }
 
-  // Calculate label radius based on longest tech name
-  const labelRadius = TECH_IMG_RADIUS + TECH_IMG_WIDTH / 2 + LABEL_PADDING;
+  // Size the wheel to its data: measure the actual rendered label widths so
+  // the largest one sits ~EDGE_PADDING from the SVG edge, then derive the
+  // icon ring inward from that. Done per data load, after the SVG exists,
+  // because widths depend on the live font + the specific tech names.
+  const { labelRadius, techImgRadius } =
+      computeWheelLayout(window.app.svg.techLabels, allTechs);
 
-    // Store processed data on window.app
-    window.app.wheelData = {
-        allTechs,
-        prerequisites,
-        spokeData,
-        squareData,
-        circleData,
-        labelRadius
-    };
+  // Store processed data on window.app
+  window.app.wheelData = {
+      allTechs,
+      prerequisites,
+      spokeData,
+      squareData,
+      circleData,
+      labelRadius,
+      techImgRadius,
+  };
 
-    renderWheel();
+  renderWheel();
 }

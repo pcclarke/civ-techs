@@ -1,4 +1,4 @@
-import { ARC_BASE, ARC_SPACE, TECH_IMG_WIDTH } from "./constants";
+import { ARC_BASE, ARC_SPACE, TECH_IMG_RADIUS, TECH_IMG_WIDTH } from "./constants";
 import { unlockArc } from "./arcs";
 import { calculateSingleRadialLinePath, wheelTransform, fadeCheck } from "./helpers";
 
@@ -11,7 +11,7 @@ export function drawArcs(element, data, color) {
           .attr("fill", (d) => color(d.step));
 }
 
-export function drawSpokes(element, spokeData, length) {
+export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_RADIUS) {
     return element.selectAll(".spoke-line")
         .data(spokeData)
         .join("path")
@@ -20,20 +20,20 @@ export function drawSpokes(element, spokeData, length) {
             calculateSingleRadialLinePath(
                 length,
                 ARC_BASE + ARC_SPACE * d.step,
-                420,
+                techImgRadius,
                 d.position
             )
         );
 }
 
-export function drawTechImages(element, allTechs, game, highlightedIds, folder = "technologies") {
+export function drawTechImages(element, allTechs, game, highlightedIds, folder = "technologies", techImgRadius = TECH_IMG_RADIUS) {
     return element
         .selectAll(".tech-image")
         .data(allTechs)
         .join("image")
         .attr("class", "tech-image")
         .classed("fade", (d) => fadeCheck(d, highlightedIds))
-        .attr("transform", (_, i) => wheelTransform(allTechs.length, i, 420))
+        .attr("transform", (_, i) => wheelTransform(allTechs.length, i, techImgRadius))
         .attr("height", TECH_IMG_WIDTH)
         .attr("width", TECH_IMG_WIDTH)
         .attr("x", -TECH_IMG_WIDTH / 2)

@@ -21,7 +21,8 @@ export async function renderWheel() {
         spokeData,
         squareData,
         circleData,
-        labelRadius
+        labelRadius,
+        techImgRadius
     } = wheelData;
     const {
         highlightedIds,
@@ -31,12 +32,12 @@ export async function renderWheel() {
     } = setupHighlights(allTechs);
 
 
-  drawSpokes(svg.spokes, spokeData, allTechs.length)
+  drawSpokes(svg.spokes, spokeData, allTechs.length, techImgRadius)
       .classed("fade", Boolean(selected));
 
-  drawSpokes(svg.selectedSpokes, selectedSpokes, allTechs.length);
+  drawSpokes(svg.selectedSpokes, selectedSpokes, allTechs.length, techImgRadius);
 
-  drawTechImages(svg.techImages, allTechs, game, highlightedIds, iconFolder);
+  drawTechImages(svg.techImages, allTechs, game, highlightedIds, iconFolder, techImgRadius);
   drawTechLabels(svg.techLabels, allTechs, highlightedIds, labelRadius);
 
   drawArcs(svg.arcs, prerequisites, color)
