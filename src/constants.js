@@ -30,7 +30,6 @@ export const GAMES = [
         // techs, so its tech wheel would be identical to base. Gathering Storm
         // adds 10 techs + random-cost Information-era mechanics; both deferred
         // until civics support lands.
-        // TODO: Also need images!
         name: "Civilization 6",
         id: "civ6"
     }
