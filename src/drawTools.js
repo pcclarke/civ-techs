@@ -17,14 +17,20 @@ export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_
         .data(spokeData)
         .join("path")
         .attr("class", "spoke-line")
-        .attr("d", (d) =>
-            calculateSingleRadialLinePath(
+        .attr("d", (d) => {
+            // Techs with no prerequisites have no inner arc to start from
+            // (setupSpokes marks them with a negative sentinel step). Run their
+            // spoke from the chart center so it sits underneath the game image.
+            const innerRadius = d.step >= 0
+                ? ARC_BASE + arcSpace * d.step
+                : 0;
+            return calculateSingleRadialLinePath(
                 length,
-                ARC_BASE + arcSpace * d.step,
+                innerRadius,
                 techImgRadius,
                 d.position
-            )
-        );
+            );
+        });
 }
 
 export function drawTechImages(element, allTechs, game, highlightedIds, folder = "technologies", techImgRadius = TECH_IMG_RADIUS) {
