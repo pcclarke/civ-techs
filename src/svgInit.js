@@ -13,11 +13,16 @@ import {
 export default function() {
     const groupObj = {};
 
+    // Use a viewBox instead of fixed pixel dimensions so the SVG scales to
+    // whatever space the container gives it. The internal coordinate system
+    // (used by every layout calculation in the app) stays at the original
+    // TOTAL_WIDTH × TOTAL_HEIGHT, so label/icon math is unchanged. CSS pins
+    // the rendered size to the container's width with `max-width: 100%`.
     groupObj.wheel = select("#chart")
         .append("svg")
         .attr("class", "civ-techs")
-        .attr("width", TOTAL_WIDTH)
-        .attr("height", TOTAL_HEIGHT)
+        .attr("viewBox", `0 0 ${TOTAL_WIDTH} ${TOTAL_HEIGHT}`)
+        .attr("preserveAspectRatio", "xMidYMid meet")
         .append("g")
         .attr("class", "wheel")
         .attr("transform", `translate(${MARGIN_LEFT + CENTER_X}, ${MARGIN_TOP + CENTER_Y})`);

@@ -47,7 +47,24 @@ p {
 
 #container {
   margin: 0 auto;
-  width: 1200px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+/* The wheel SVG uses a viewBox so it can scale to whatever room the page
+ * gives it. The viewBox is square (1200×1200), so capping the rendered
+ * width also caps the rendered height proportionally — that lets us fit
+ * the whole wheel inside the viewport's *height* by capping width at 95vh.
+ * On wide-and-short screens (the common case) the wheel comes out as tall
+ * as the viewport allows; on narrow-and-tall screens the container width
+ * limit kicks in instead. */
+.civ-techs {
+  display: block;
+  margin: 0 auto;
+  width: min(100%, 95vh);
+  height: auto;
 }
 
 #intro {
