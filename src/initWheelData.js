@@ -7,6 +7,7 @@ import {
     TECH_IMG_WIDTH,
 } from "./constants";
 import { computeWheelLayout } from "./computeWheelLayout";
+import { computeEraRanges, getEraOrdering } from "./eraData";
 import { depthSortTechnologies } from "./depthSortTechnologies";
 import createUnlocks from "./createUnlocks";
 import { renderWheel } from "./makeWheel";
@@ -25,10 +26,31 @@ export async function initWheelData() {
   // For pre-tree games this is just `data.technologies`; for Civ 6 it can
   // also be `data.civics`.
   var dataKey = (tree && tree.dataKey) || "technologies";
-  var nodes = data[dataKey] || data.technologies;
-  var sortedTechs = depthSortTechnologies(nodes);
+  var rawNodes = data[dataKey] || data.technologies;
+
+  // Civ 3 stores eras as fake-tech entries (kind: "Era") inline with the
+  // real techs so prereqs like "Pottery → Ancient Times" can resolve. We
+  // don't render eras as nodes — they're a separate visualization layer —
+  // so strip them out before anything else looks at the list.
+  var nodes = rawNodes.filter((n) => n.kind !== "Era");
+
+  // Build a canonical era-ordering map from the techs (in their authored
+  // JSON order, which is chronological for every game). Pass it to the
+  // sorter so techs cluster by era, then sub-sort by depth/cost. Games
+  // with no era info (Civ 1, Civ 4) end up with an empty map and the sort
+  // falls back to its original depth-then-cost behaviour.
+  const eraIndex = getEraOrdering(nodes);
+  var sortedTechs = depthSortTechnologies(nodes, eraIndex);
   var { allTechs, prerequisites } = createUnlocks(sortedTechs);
   var spokeData = setupSpokes(allTechs, prerequisites);
+
+  // After the era-aware sort, eras are contiguous on the wheel — derive
+  // each era's first/last tech index so the era ring/background can draw
+  // them as wedges. We feed `sortedTechs` (not `allTechs`) because
+  // createUnlocks rebuilds each tech as a new object that omits the .era
+  // field; the two arrays share order and length, so positions match.
+  // Empty for games without era data.
+  const eraRanges = computeEraRanges(sortedTechs);
 
   // Pre-compute square and circle data from prerequisites
   var squareData = [];
@@ -59,8 +81,11 @@ export async function initWheelData() {
   // the largest one sits ~EDGE_PADDING from the SVG edge, then derive the
   // icon ring inward from that. Done per data load, after the SVG exists,
   // because widths depend on the live font + the specific tech names.
-  const { labelRadius, techImgRadius } =
-      computeWheelLayout(window.app.svg.techLabels, allTechs);
+  // When the wheel has eras, we also reserve an outer band for era labels
+  // so they sit outside the tech labels rather than overlapping them.
+  const hasEras = eraRanges.length > 0;
+  const { labelRadius, techImgRadius, eraLabelRadius } =
+      computeWheelLayout(window.app.svg.techLabels, allTechs, hasEras);
 
   // Space the arc rings to fill the gap between ARC_BASE and the icon ring,
   // capped at ARC_SPACE_MAX so trees with few steps don't end up with absurdly
@@ -89,6 +114,8 @@ export async function initWheelData() {
       circleData,
       labelRadius,
       techImgRadius,
+      eraLabelRadius,
+      eraRanges,
       arcSpace,
   };
 

@@ -93,6 +93,12 @@ export const ARC_SPACE_MAX = 20;
 /** Clearance between the outermost arc and the inner edge of the icon ring. */
 export const ARC_GAP_FROM_ICONS = 16;
 
+/** Radial band reserved at the outer edge of the wheel for era labels. The
+ *  layout shrinks the label-radius cap by this amount so the era ring sits
+ *  outside the tech labels without clipping at the SVG edge. Set to 0 to
+ *  disable the era ring entirely. */
+export const ERA_LABEL_HEIGHT = 24;
+
 /** Percent of circle that should be left open */
 const ANGLE_GAP = 0.05;
 

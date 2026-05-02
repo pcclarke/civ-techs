@@ -1,6 +1,7 @@
 import { calculatePointOnWheel } from "./helpers";
 import {
     EDGE_PADDING,
+    ERA_LABEL_HEIGHT,
     LABEL_PADDING,
     MIN_TECH_IMG_RADIUS,
     TECH_IMG_RADIUS,
@@ -47,7 +48,7 @@ function measureLabels(group, allTechs) {
 
 /**
  * Compute the largest label radius R such that every label's outer bounding
- * box corner sits within ±MAX_EXTENT on both axes.
+ * box corner sits within ±maxExtent on both axes.
  *
  * Geometry: a label is anchored at radius R on a spoke at polar angle α and
  * is rotated to read radially outward. Its rendered text occupies the radial
@@ -56,10 +57,10 @@ function measureLabels(group, allTechs) {
  *     |x| = (R + w) · |cos α| + (h/2) · |sin α|
  *     |y| = (R + w) · |sin α| + (h/2) · |cos α|
  *
- * Setting each ≤ MAX_EXTENT and solving for R gives a per-label cap; the
+ * Setting each ≤ maxExtent and solving for R gives a per-label cap; the
  * wheel uses min across all labels.
  */
-function maxLabelRadius(allTechs, widths, lineHeight) {
+function maxLabelRadius(allTechs, widths, lineHeight, maxExtent) {
     const n = allTechs.length;
     let best = Infinity;
 
@@ -70,12 +71,12 @@ function maxLabelRadius(allTechs, widths, lineHeight) {
         const w = widths[i];
         const h = lineHeight;
 
-        // For each axis, max(R + w) is what's left of MAX_EXTENT after the
+        // For each axis, max(R + w) is what's left of maxExtent after the
         // tangential corner contribution, divided by the radial projection.
         // When cos or sin is ~0 the corresponding axis can't constrain us
         // (the label runs along the other axis), so skip it.
-        const xCap = c > 1e-9 ? (MAX_EXTENT - (h / 2) * s) / c : Infinity;
-        const yCap = s > 1e-9 ? (MAX_EXTENT - (h / 2) * c) / s : Infinity;
+        const xCap = c > 1e-9 ? (maxExtent - (h / 2) * s) / c : Infinity;
+        const yCap = s > 1e-9 ? (maxExtent - (h / 2) * c) / s : Infinity;
         const r = Math.min(xCap, yCap) - w;
 
         if (r < best) best = r;
@@ -89,15 +90,30 @@ function maxLabelRadius(allTechs, widths, lineHeight) {
  * that satisfies the EDGE_PADDING constraint for every label; the icon
  * radius is set just inside that with room for the icon and LABEL_PADDING.
  *
- * Returns { labelRadius, techImgRadius }.
+ * When `hasEras` is true, the outermost ERA_LABEL_HEIGHT pixels are reserved
+ * for era labels — tech labels are pushed inward by that amount, and the
+ * returned `eraLabelRadius` sits at the centre of the reserved band.
+ *
+ * Returns { labelRadius, techImgRadius, eraLabelRadius }.
  */
-export function computeWheelLayout(labelGroup, allTechs) {
+export function computeWheelLayout(labelGroup, allTechs, hasEras = false) {
     if (!allTechs.length) {
-        return { labelRadius: TECH_IMG_RADIUS, techImgRadius: TECH_IMG_RADIUS };
+        return {
+            labelRadius: TECH_IMG_RADIUS,
+            techImgRadius: TECH_IMG_RADIUS,
+            eraLabelRadius: TECH_IMG_RADIUS,
+        };
     }
 
     const { widths, lineHeight } = measureLabels(labelGroup, allTechs);
-    const rawLabelRadius = maxLabelRadius(allTechs, widths, lineHeight);
+
+    // Reserve a radial band at the outer edge for era labels when the
+    // current data has eras. Tech labels then have to fit within a shrunken
+    // extent. The era ring sits at the centre of the reserved band so its
+    // text is roughly equidistant from the tech labels and the SVG edge.
+    const eraReserve = hasEras ? ERA_LABEL_HEIGHT : 0;
+    const techExtent = MAX_EXTENT - eraReserve;
+    const rawLabelRadius = maxLabelRadius(allTechs, widths, lineHeight, techExtent);
 
     // The icon sits inside the label by half its own width plus LABEL_PADDING.
     const iconInset = TECH_IMG_WIDTH / 2 + LABEL_PADDING;
@@ -108,5 +124,11 @@ export function computeWheelLayout(labelGroup, allTechs) {
     const techImgRadius = Math.max(MIN_TECH_IMG_RADIUS, rawLabelRadius - iconInset);
     const labelRadius = techImgRadius + iconInset;
 
-    return { labelRadius, techImgRadius };
+    // Centre of the reserved era band, measured from the wheel centre. Falls
+    // through to labelRadius when there are no eras (no caller will use it).
+    const eraLabelRadius = hasEras
+        ? techExtent + eraReserve / 2
+        : labelRadius;
+
+    return { labelRadius, techImgRadius, eraLabelRadius };
 }

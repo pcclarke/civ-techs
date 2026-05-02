@@ -37,8 +37,13 @@ export default function() {
         .attr("height", CENTER_Y)
         .attr("xlink:href", "img/startSlice.png");
 
-    // SVG groups to organize shapes
+    // SVG groups to organize shapes. Order is paint order — earlier groups
+    // sit behind later ones. eraBackgrounds is first so its faint coloured
+    // wedges sit below every other layer; eraLabels is last so the curved
+    // era names sit above the tech labels (they live in a reserved outer
+    // band so they don't actually overlap).
     const shapeGroups = [
+        { prop: "eraBackgrounds", class: "era-backgrounds" },
         { prop: "spokes", class: "spokes" },
         { prop: "selectedSpokes", class: "selected-spokes" },
         { prop: "techImages", class: "tech-images" },
@@ -47,7 +52,8 @@ export default function() {
         { prop: "selectedArcs", class: "selected-arcs" },
         { prop: "unlockPins", class: "unlock-pins" },
         { prop: "unlockSquares", class: "unlock-squares" },
-        { prop: "unlockCircles", class: "unlock-circles" }
+        { prop: "unlockCircles", class: "unlock-circles" },
+        { prop: "eraLabels", class: "era-labels" }
     ];
 
     for (const group of shapeGroups) {

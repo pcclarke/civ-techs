@@ -1,12 +1,17 @@
 import { scaleOrdinal } from "d3-scale";
-import { schemeCategory10 } from "d3-scale-chromatic";
+import { schemeCategory10, schemeTableau10 } from "d3-scale-chromatic";
 
 import { ARC_BASE } from "./constants";
 import { calculateSingleRadialLinePath, wheelTransform } from "./helpers";
 import { drawArcs, drawSpokes, drawTechImages, drawTechLabels } from "./drawTools";
+import { drawEraBackgrounds, drawEraLabels } from "./drawEras";
 import { setupHighlights } from "./setupHighlights";
 
 const color = scaleOrdinal(schemeCategory10);
+// Era colours come from a separate palette so they don't compete with the
+// arc-step colours on screen at the same time. Tableau10 is muted enough to
+// look good as a low-opacity background tint while still being distinct.
+const eraColor = scaleOrdinal(schemeTableau10);
 
 /**
  * Render the wheel visualization using cached data.
@@ -23,6 +28,8 @@ export async function renderWheel() {
         circleData,
         labelRadius,
         techImgRadius,
+        eraLabelRadius,
+        eraRanges,
         arcSpace
     } = wheelData;
     const {
@@ -32,6 +39,12 @@ export async function renderWheel() {
         prerequisiteIds
     } = setupHighlights(allTechs);
 
+  // Era layers — backgrounds sit behind everything (groups are drawn in
+  // SVG paint order set by svgInit), labels sit on the reserved outer ring.
+  // For games without era data, eraRanges is empty and both selections
+  // exit-clear, leaving no era visuals.
+  drawEraBackgrounds(svg.eraBackgrounds, eraRanges, eraColor, labelRadius);
+  drawEraLabels(svg.eraLabels, eraRanges, eraColor, eraLabelRadius);
 
   drawSpokes(svg.spokes, spokeData, allTechs.length, techImgRadius, arcSpace)
       .classed("fade", Boolean(selected));

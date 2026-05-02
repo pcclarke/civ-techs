@@ -235,3 +235,19 @@ p {
 .clear {
   clear: both;
 }
+
+/* Era visualization. Backgrounds sit behind every other wheel layer as faint
+ * coloured wedges; labels sit on the reserved outer ring. Fill colours come
+ * from JS so the styling here only handles opacity and typography. */
+.era-background {
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.era-label {
+  font-family: "Goudy Trajan Regular";
+  font-size: 14px;
+  text-transform: capitalize;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
