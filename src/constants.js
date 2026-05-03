@@ -45,6 +45,22 @@ export const GAMES = [
             { name: "Technologies", id: "tech",   folder: "technologies", dataKey: "technologies" },
             { name: "Civics",       id: "civics", folder: "civics",       dataKey: "civics" }
         ]
+    },
+    {
+        // Civ 7 splits each game into three sequential Ages (Antiquity,
+        // Exploration, Modern), each with its own tech and civic trees that
+        // reset between Ages. We render the three Ages as eras on a single
+        // wheel — they appear as three colored bands with no spokes
+        // crossing between them, since cross-Age prereqs don't exist.
+        // Data was scraped from the community Fandom wiki rather than the
+        // game files (see data_scrapers/civ7/scraper.py); no expansions
+        // wired up yet.
+        name: "Civilization 7",
+        id: "civ7",
+        trees: [
+            { name: "Technologies", id: "tech",   folder: "technologies", dataKey: "technologies" },
+            { name: "Civics",       id: "civics", folder: "civics",       dataKey: "civics" }
+        ]
     }
 ];
 

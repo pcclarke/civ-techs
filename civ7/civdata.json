@@ -1,0 +1,759 @@
+{
+  "technologies": [
+    {
+      "id": "TECH_AGRICULTURE",
+      "name": "Agriculture",
+      "era": "Antiquity",
+      "cost": 1
+    },
+    {
+      "id": "TECH_ANIMAL_HUSBANDRY",
+      "name": "Animal Husbandry",
+      "era": "Antiquity",
+      "cost": 70,
+      "requires": [
+        "TECH_AGRICULTURE"
+      ]
+    },
+    {
+      "id": "TECH_BRONZE_WORKING",
+      "name": "Bronze Working",
+      "era": "Antiquity",
+      "cost": 255,
+      "requires": [
+        "TECH_IRRIGATION",
+        "TECH_WRITING"
+      ]
+    },
+    {
+      "id": "TECH_CURRENCY",
+      "name": "Currency",
+      "era": "Antiquity",
+      "cost": 245,
+      "requires": [
+        "TECH_WRITING"
+      ]
+    },
+    {
+      "id": "TECH_ENGINEERING",
+      "name": "Engineering",
+      "era": "Antiquity",
+      "cost": 430,
+      "requires": [
+        "TECH_BRONZE_WORKING",
+        "TECH_CURRENCY"
+      ]
+    },
+    {
+      "id": "TECH_IRON_WORKING",
+      "name": "Iron Working",
+      "era": "Antiquity",
+      "cost": 738,
+      "requires": [
+        "TECH_MILITARY_TRAINING"
+      ]
+    },
+    {
+      "id": "TECH_IRRIGATION",
+      "name": "Irrigation",
+      "era": "Antiquity",
+      "cost": 125,
+      "requires": [
+        "TECH_ANIMAL_HUSBANDRY",
+        "TECH_POTTERY"
+      ]
+    },
+    {
+      "id": "TECH_MASONRY",
+      "name": "Masonry",
+      "era": "Antiquity",
+      "cost": 125,
+      "requires": [
+        "TECH_ANIMAL_HUSBANDRY"
+      ]
+    },
+    {
+      "id": "TECH_MATHEMATICS",
+      "name": "Mathematics",
+      "era": "Antiquity",
+      "cost": 738,
+      "requires": [
+        "TECH_ENGINEERING"
+      ]
+    },
+    {
+      "id": "TECH_MILITARY_TRAINING",
+      "name": "Military Training",
+      "era": "Antiquity",
+      "cost": 430,
+      "requires": [
+        "TECH_THE_WHEEL"
+      ]
+    },
+    {
+      "id": "TECH_NAVIGATION",
+      "name": "Navigation",
+      "era": "Antiquity",
+      "cost": 430,
+      "requires": [
+        "TECH_CURRENCY"
+      ]
+    },
+    {
+      "id": "TECH_POTTERY",
+      "name": "Pottery",
+      "era": "Antiquity",
+      "cost": 70,
+      "requires": [
+        "TECH_AGRICULTURE"
+      ]
+    },
+    {
+      "id": "TECH_SAILING",
+      "name": "Sailing",
+      "era": "Antiquity",
+      "cost": 85,
+      "requires": [
+        "TECH_AGRICULTURE"
+      ]
+    },
+    {
+      "id": "TECH_THE_WHEEL",
+      "name": "The Wheel",
+      "era": "Antiquity",
+      "cost": 245,
+      "requires": [
+        "TECH_IRRIGATION",
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "id": "TECH_WRITING",
+      "name": "Writing",
+      "era": "Antiquity",
+      "cost": 125,
+      "requires": [
+        "TECH_POTTERY"
+      ]
+    },
+    {
+      "id": "TECH_FUTURE_TECH_ANTIQUITY",
+      "name": "Future Tech",
+      "era": "Antiquity",
+      "cost": 1255,
+      "requires": [
+        "TECH_IRON_WORKING",
+        "TECH_MATHEMATICS"
+      ]
+    },
+    {
+      "id": "TECH_ARCHITECTURE",
+      "name": "Architecture",
+      "era": "Exploration",
+      "cost": 1200,
+      "requires": [
+        "TECH_EDUCATION",
+        "TECH_SHIPBUILDING"
+      ]
+    },
+    {
+      "id": "TECH_ASTRONOMY",
+      "name": "Astronomy",
+      "era": "Exploration",
+      "cost": 500
+    },
+    {
+      "id": "TECH_CARTOGRAPHY",
+      "name": "Cartography",
+      "era": "Exploration",
+      "cost": 500
+    },
+    {
+      "id": "TECH_CASTLES",
+      "name": "Castles",
+      "era": "Exploration",
+      "cost": 650,
+      "requires": [
+        "TECH_MACHINERY"
+      ]
+    },
+    {
+      "id": "TECH_EDUCATION",
+      "name": "Education",
+      "era": "Exploration",
+      "cost": 900,
+      "requires": [
+        "TECH_FEUDALISM",
+        "TECH_GUILDS"
+      ]
+    },
+    {
+      "id": "TECH_FEUDALISM",
+      "name": "Feudalism",
+      "era": "Exploration",
+      "cost": 650,
+      "requires": [
+        "TECH_ASTRONOMY",
+        "TECH_CARTOGRAPHY"
+      ]
+    },
+    {
+      "id": "TECH_GUILDS",
+      "name": "Guilds",
+      "era": "Exploration",
+      "cost": 650,
+      "requires": [
+        "TECH_CARTOGRAPHY"
+      ]
+    },
+    {
+      "id": "TECH_GUNPOWDER",
+      "name": "Gunpowder",
+      "era": "Exploration",
+      "cost": 2100,
+      "requires": [
+        "TECH_METAL_CASTING"
+      ]
+    },
+    {
+      "id": "TECH_HERALDRY",
+      "name": "Heraldry",
+      "era": "Exploration",
+      "cost": 650,
+      "requires": [
+        "TECH_ASTRONOMY",
+        "TECH_MACHINERY"
+      ]
+    },
+    {
+      "id": "TECH_MACHINERY",
+      "name": "Machinery",
+      "era": "Exploration",
+      "cost": 500
+    },
+    {
+      "id": "TECH_METALLURGY",
+      "name": "Metallurgy",
+      "era": "Exploration",
+      "cost": 900,
+      "requires": [
+        "TECH_CASTLES",
+        "TECH_HERALDRY"
+      ]
+    },
+    {
+      "id": "TECH_METAL_CASTING",
+      "name": "Metal Casting",
+      "era": "Exploration",
+      "cost": 1200,
+      "requires": [
+        "TECH_METALLURGY",
+        "TECH_SHIPBUILDING"
+      ]
+    },
+    {
+      "id": "TECH_SHIPBUILDING",
+      "name": "Shipbuilding",
+      "era": "Exploration",
+      "cost": 900,
+      "requires": [
+        "TECH_FEUDALISM",
+        "TECH_HERALDRY"
+      ]
+    },
+    {
+      "id": "TECH_URBAN_PLANNING",
+      "name": "Urban Planning",
+      "era": "Exploration",
+      "cost": 2100,
+      "requires": [
+        "TECH_ARCHITECTURE"
+      ]
+    },
+    {
+      "id": "TECH_FUTURE_TECH_EXPLORATION",
+      "name": "Future Tech",
+      "era": "Exploration",
+      "cost": 2750,
+      "requires": [
+        "TECH_GUNPOWDER",
+        "TECH_URBAN_PLANNING"
+      ]
+    },
+    {
+      "id": "TECH_ACADEMICS",
+      "name": "Academics",
+      "era": "Modern",
+      "cost": 1400
+    },
+    {
+      "id": "TECH_AERODYNAMICS",
+      "name": "Aerodynamics",
+      "era": "Modern",
+      "cost": 6000,
+      "requires": [
+        "TECH_ARMOR",
+        "TECH_MOBILIZATION"
+      ]
+    },
+    {
+      "id": "TECH_ARMOR",
+      "name": "Armor",
+      "era": "Modern",
+      "cost": 4000,
+      "requires": [
+        "TECH_FLIGHT",
+        "TECH_MASS_PRODUCTION"
+      ]
+    },
+    {
+      "id": "TECH_COMBUSTION",
+      "name": "Combustion",
+      "era": "Modern",
+      "cost": 2425,
+      "requires": [
+        "TECH_MILITARY_SCIENCE",
+        "TECH_STEAM_ENGINE"
+      ]
+    },
+    {
+      "id": "TECH_ELECTRICITY",
+      "name": "Electricity",
+      "era": "Modern",
+      "cost": 2425,
+      "requires": [
+        "TECH_ACADEMICS"
+      ]
+    },
+    {
+      "id": "TECH_FLIGHT",
+      "name": "Flight",
+      "era": "Modern",
+      "cost": 3000,
+      "requires": [
+        "TECH_COMBUSTION",
+        "TECH_URBANIZATION"
+      ]
+    },
+    {
+      "id": "TECH_INDUSTRIALIZATION",
+      "name": "Industrialization",
+      "era": "Modern",
+      "cost": 2425,
+      "requires": [
+        "TECH_MILITARY_SCIENCE"
+      ]
+    },
+    {
+      "id": "TECH_MASS_PRODUCTION",
+      "name": "Mass Production",
+      "era": "Modern",
+      "cost": 3000,
+      "requires": [
+        "TECH_COMBUSTION",
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "id": "TECH_MILITARY_SCIENCE",
+      "name": "Military Science",
+      "era": "Modern",
+      "cost": 1400
+    },
+    {
+      "id": "TECH_MOBILIZATION",
+      "name": "Mobilization",
+      "era": "Modern",
+      "cost": 4000,
+      "requires": [
+        "TECH_FLIGHT",
+        "TECH_RADIO"
+      ]
+    },
+    {
+      "id": "TECH_NUCLEAR_FISSION",
+      "name": "Nuclear Fission",
+      "era": "Modern",
+      "cost": 8500,
+      "requires": [
+        "TECH_AERODYNAMICS"
+      ]
+    },
+    {
+      "id": "TECH_RADIO",
+      "name": "Radio",
+      "era": "Modern",
+      "cost": 3000,
+      "requires": [
+        "TECH_ELECTRICITY",
+        "TECH_URBANIZATION"
+      ]
+    },
+    {
+      "id": "TECH_ROCKETRY",
+      "name": "Rocketry",
+      "era": "Modern",
+      "cost": 8500,
+      "requires": [
+        "TECH_AERODYNAMICS"
+      ]
+    },
+    {
+      "id": "TECH_STEAM_ENGINE",
+      "name": "Steam Engine",
+      "era": "Modern",
+      "cost": 1400
+    },
+    {
+      "id": "TECH_URBANIZATION",
+      "name": "Urbanization",
+      "era": "Modern",
+      "cost": 2425,
+      "requires": [
+        "TECH_ACADEMICS",
+        "TECH_STEAM_ENGINE"
+      ]
+    },
+    {
+      "id": "TECH_FUTURE_TECH_MODERN",
+      "name": "Future Tech",
+      "era": "Modern",
+      "cost": 10000,
+      "requires": [
+        "TECH_ROCKETRY"
+      ]
+    }
+  ],
+  "civics": [
+    {
+      "id": "CIVIC_CHIEFDOM",
+      "name": "Chiefdom",
+      "era": "Antiquity",
+      "cost": 90
+    },
+    {
+      "id": "CIVIC_CITIZENSHIP",
+      "name": "Citizenship",
+      "era": "Antiquity",
+      "cost": 450,
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "CIVIC_CODE_OF_LAWS",
+      "name": "Code of Laws",
+      "era": "Antiquity",
+      "cost": 245,
+      "requires": [
+        "CIVIC_DISCIPLINE",
+        "CIVIC_MYSTICISM"
+      ]
+    },
+    {
+      "id": "CIVIC_COMMERCE",
+      "name": "Commerce",
+      "era": "Antiquity",
+      "cost": 750,
+      "requires": [
+        "CIVIC_SKILLED_TRADES"
+      ]
+    },
+    {
+      "id": "CIVIC_DISCIPLINE",
+      "name": "Discipline",
+      "era": "Antiquity",
+      "cost": 125,
+      "requires": [
+        "CIVIC_CHIEFDOM"
+      ]
+    },
+    {
+      "id": "CIVIC_ENTERTAINMENT",
+      "name": "Entertainment",
+      "era": "Antiquity",
+      "cost": 450,
+      "requires": [
+        "CIVIC_PUBLIC_LIFE"
+      ]
+    },
+    {
+      "id": "CIVIC_LITERACY",
+      "name": "Literacy",
+      "era": "Antiquity",
+      "cost": 600,
+      "requires": [
+        "CIVIC_CITIZENSHIP"
+      ]
+    },
+    {
+      "id": "CIVIC_MYSTICISM",
+      "name": "Mysticism",
+      "era": "Antiquity",
+      "cost": 125,
+      "requires": [
+        "CIVIC_CHIEFDOM"
+      ]
+    },
+    {
+      "id": "CIVIC_ORGANIZED_MILITARY",
+      "name": "Organized Military",
+      "era": "Antiquity",
+      "cost": 450,
+      "requires": [
+        "CIVIC_TACTICS"
+      ]
+    },
+    {
+      "id": "CIVIC_PHILOSOPHY",
+      "name": "Philosophy",
+      "era": "Antiquity",
+      "cost": 750,
+      "requires": [
+        "CIVIC_LITERACY"
+      ]
+    },
+    {
+      "id": "CIVIC_PUBLIC_LIFE",
+      "name": "Public Life",
+      "era": "Antiquity",
+      "cost": 245,
+      "requires": [
+        "CIVIC_MYSTICISM"
+      ]
+    },
+    {
+      "id": "CIVIC_SKILLED_TRADES",
+      "name": "Skilled Trades",
+      "era": "Antiquity",
+      "cost": 600,
+      "requires": [
+        "CIVIC_CITIZENSHIP"
+      ]
+    },
+    {
+      "id": "CIVIC_TACTICS",
+      "name": "Tactics",
+      "era": "Antiquity",
+      "cost": 245,
+      "requires": [
+        "CIVIC_DISCIPLINE"
+      ]
+    },
+    {
+      "id": "CIVIC_FUTURE_CIVIC_ANTIQUITY",
+      "name": "Future Civic",
+      "era": "Antiquity",
+      "cost": 1000,
+      "requires": [
+        "CIVIC_ENTERTAINMENT",
+        "CIVIC_ORGANIZED_MILITARY",
+        "CIVIC_PHILOSOPHY",
+        "CIVIC_COMMERCE"
+      ]
+    },
+    {
+      "id": "CIVIC_AUTHORITY",
+      "name": "Authority",
+      "era": "Exploration",
+      "cost": 900,
+      "requires": [
+        "CIVIC_PIETY",
+        "CIVIC_ECONOMICS"
+      ]
+    },
+    {
+      "id": "CIVIC_BUREAUCRACY",
+      "name": "Bureaucracy",
+      "era": "Exploration",
+      "cost": 1300,
+      "requires": [
+        "CIVIC_AUTHORITY"
+      ]
+    },
+    {
+      "id": "CIVIC_COLONIALISM",
+      "name": "Colonialism",
+      "era": "Exploration",
+      "cost": 1300,
+      "requires": [
+        "CIVIC_MERCANTILISM"
+      ]
+    },
+    {
+      "id": "CIVIC_DIPLOMATIC_SERVICE",
+      "name": "Diplomatic Service",
+      "era": "Exploration",
+      "cost": 1300,
+      "requires": [
+        "CIVIC_AUTHORITY"
+      ]
+    },
+    {
+      "id": "CIVIC_ECONOMICS",
+      "name": "Economics",
+      "era": "Exploration",
+      "cost": 700
+    },
+    {
+      "id": "CIVIC_IMPERIALISM",
+      "name": "Imperialism",
+      "era": "Exploration",
+      "cost": 2100,
+      "requires": [
+        "CIVIC_BUREAUCRACY",
+        "CIVIC_COLONIALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_INSPIRATION",
+      "name": "Inspiration",
+      "era": "Exploration",
+      "cost": 900,
+      "requires": [
+        "CIVIC_PIETY"
+      ]
+    },
+    {
+      "id": "CIVIC_MERCANTILISM",
+      "name": "Mercantilism",
+      "era": "Exploration",
+      "cost": 900,
+      "requires": [
+        "CIVIC_ECONOMICS"
+      ]
+    },
+    {
+      "id": "CIVIC_PIETY",
+      "name": "Piety",
+      "era": "Exploration",
+      "cost": 700
+    },
+    {
+      "id": "CIVIC_SOCIAL_CLASS",
+      "name": "Social Class",
+      "era": "Exploration",
+      "cost": 2100,
+      "requires": [
+        "CIVIC_DIPLOMATIC_SERVICE",
+        "CIVIC_SOCIETY"
+      ]
+    },
+    {
+      "id": "CIVIC_SOCIETY",
+      "name": "Society",
+      "era": "Exploration",
+      "cost": 1300,
+      "requires": [
+        "CIVIC_INSPIRATION"
+      ]
+    },
+    {
+      "id": "CIVIC_SOVEREIGNTY",
+      "name": "Sovereignty",
+      "era": "Exploration",
+      "cost": 2100,
+      "requires": [
+        "CIVIC_BUREAUCRACY",
+        "CIVIC_DIPLOMATIC_SERVICE"
+      ]
+    },
+    {
+      "id": "CIVIC_FUTURE_CIVIC_EXPLORATION",
+      "name": "Future Civic",
+      "era": "Exploration",
+      "cost": 3000,
+      "requires": [
+        "CIVIC_SOCIAL_CLASS",
+        "CIVIC_SOVEREIGNTY",
+        "CIVIC_IMPERIALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_CAPITALISM",
+      "name": "Capitalism",
+      "era": "Modern",
+      "cost": 7500,
+      "requires": [
+        "CIVIC_GLOBALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_GLOBALISM",
+      "name": "Globalism",
+      "era": "Modern",
+      "cost": 3750,
+      "requires": [
+        "CIVIC_POLITICAL_THEORY"
+      ]
+    },
+    {
+      "id": "CIVIC_HEGEMONY",
+      "name": "Hegemony",
+      "era": "Modern",
+      "cost": 7500,
+      "requires": [
+        "CIVIC_GLOBALISM",
+        "CIVIC_NATIONALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_MILITARISM",
+      "name": "Militarism",
+      "era": "Modern",
+      "cost": 7500,
+      "requires": [
+        "CIVIC_NATIONALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_MODERNIZATION",
+      "name": "Modernization",
+      "era": "Modern",
+      "cost": 1600
+    },
+    {
+      "id": "CIVIC_NATIONALISM",
+      "name": "Nationalism",
+      "era": "Modern",
+      "cost": 3750,
+      "requires": [
+        "CIVIC_POLITICAL_THEORY"
+      ]
+    },
+    {
+      "id": "CIVIC_NATURAL_HISTORY",
+      "name": "Natural History",
+      "era": "Modern",
+      "cost": 1600
+    },
+    {
+      "id": "CIVIC_POLITICAL_THEORY",
+      "name": "Political Theory",
+      "era": "Modern",
+      "cost": 2750,
+      "requires": [
+        "CIVIC_MODERNIZATION",
+        "CIVIC_NATURAL_HISTORY",
+        "CIVIC_SOCIAL_QUESTION"
+      ]
+    },
+    {
+      "id": "CIVIC_SOCIAL_QUESTION",
+      "name": "Social Question",
+      "era": "Modern",
+      "cost": 1600
+    },
+    {
+      "id": "CIVIC_FUTURE_CIVIC_MODERN",
+      "name": "Future Civic",
+      "era": "Modern",
+      "cost": 8000,
+      "requires": [
+        "CIVIC_CAPITALISM",
+        "CIVIC_HEGEMONY",
+        "CIVIC_MILITARISM"
+      ]
+    }
+  ]
+}
