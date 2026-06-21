@@ -2,777 +2,703 @@
   "technologies": [
     {
       "id": "TECH_AGRICULTURE",
-      "cost": "20",
+      "cost": 20,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_AGRICULTURE_TITLE",
       "name": "Agriculture"
     },
     {
       "id": "TECH_POTTERY",
-      "cost": "35",
+      "cost": 35,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_POTTERY_TITLE",
+      "name": "Pottery",
       "requires": [
         "TECH_AGRICULTURE"
-      ],
-      "name": "Pottery"
+      ]
     },
     {
       "id": "TECH_ANIMAL_HUSBANDRY",
-      "cost": "35",
+      "cost": 35,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_ANIMAL_HUSBANDRY_TITLE",
+      "name": "Animal Husbandry",
       "requires": [
         "TECH_AGRICULTURE"
-      ],
-      "name": "Animal Husbandry"
+      ]
     },
     {
       "id": "TECH_ARCHERY",
-      "cost": "35",
+      "cost": 35,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_ARCHERY_TITLE",
+      "name": "Archery",
       "requires": [
         "TECH_AGRICULTURE"
-      ],
-      "name": "Archery"
+      ]
     },
     {
       "id": "TECH_MINING",
-      "cost": "35",
+      "cost": 35,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_MINING_TITLE",
+      "name": "Mining",
       "requires": [
         "TECH_AGRICULTURE"
-      ],
-      "name": "Mining"
+      ]
     },
     {
       "id": "TECH_SAILING",
-      "cost": "55",
+      "cost": 55,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_SAILING_TITLE",
+      "name": "Sailing",
       "requires": [
         "TECH_POTTERY"
-      ],
-      "name": "Sailing"
+      ]
     },
     {
       "id": "TECH_CALENDAR",
-      "cost": "55",
+      "cost": 55,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_CALENDAR_TITLE",
+      "name": "Calendar",
       "requires": [
         "TECH_POTTERY"
-      ],
-      "name": "Calendar"
+      ]
     },
     {
       "id": "TECH_WRITING",
-      "cost": "55",
+      "cost": 55,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_WRITING_TITLE",
+      "name": "Writing",
       "requires": [
         "TECH_POTTERY"
-      ],
-      "name": "Writing"
+      ]
     },
     {
       "id": "TECH_TRAPPING",
-      "cost": "55",
+      "cost": 55,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_TRAPPING_TITLE",
+      "name": "Trapping",
       "requires": [
         "TECH_ANIMAL_HUSBANDRY"
-      ],
-      "name": "Trapping"
+      ]
     },
     {
       "id": "TECH_THE_WHEEL",
-      "cost": "55",
+      "cost": 55,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_THE_WHEEL_TITLE",
+      "name": "The Wheel",
       "requires": [
         "TECH_ANIMAL_HUSBANDRY"
-      ],
-      "name": "The Wheel"
+      ]
     },
     {
       "id": "TECH_MASONRY",
-      "cost": "55",
+      "cost": 55,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_MASONRY_TITLE",
+      "name": "Masonry",
       "requires": [
         "TECH_MINING"
-      ],
-      "name": "Masonry"
+      ]
     },
     {
       "id": "TECH_BRONZE_WORKING",
-      "cost": "55",
+      "cost": 55,
       "era": "ERA_ANCIENT",
-      "title_key": "TXT_KEY_TECH_BRONZE_WORKING_TITLE",
+      "name": "Bronze Working",
       "requires": [
         "TECH_MINING"
-      ],
-      "name": "Bronze Working"
+      ]
     },
     {
       "id": "TECH_OPTICS",
-      "cost": "85",
+      "cost": 85,
       "era": "ERA_CLASSICAL",
-      "title_key": "TXT_KEY_TECH_OPTICS_TITLE",
+      "name": "Optics",
       "requires": [
         "TECH_SAILING"
-      ],
-      "name": "Optics"
+      ]
     },
     {
       "id": "TECH_PHILOSOPHY",
-      "cost": "105",
+      "cost": 105,
       "era": "ERA_CLASSICAL",
-      "title_key": "TXT_KEY_TECH_PHILOSOPHY_TITLE",
+      "name": "Philosophy",
       "requires": [
         "TECH_WRITING"
-      ],
-      "name": "Philosophy"
+      ]
     },
     {
       "id": "TECH_HORSEBACK_RIDING",
-      "cost": "105",
+      "cost": 105,
       "era": "ERA_CLASSICAL",
-      "title_key": "TXT_KEY_TECH_HORSEBACK_RIDING_TITLE",
+      "name": "Horseback Riding",
       "requires": [
         "TECH_THE_WHEEL"
-      ],
-      "name": "Horseback Riding"
+      ]
     },
     {
       "id": "TECH_MATHEMATICS",
-      "cost": "105",
+      "cost": 105,
       "era": "ERA_CLASSICAL",
-      "title_key": "TXT_KEY_TECH_MATHEMATICS_TITLE",
+      "name": "Mathematics",
       "requires": [
         "TECH_THE_WHEEL",
         "TECH_ARCHERY"
-      ],
-      "name": "Mathematics"
+      ]
     },
     {
       "id": "TECH_CONSTRUCTION",
-      "cost": "105",
+      "cost": 105,
       "era": "ERA_CLASSICAL",
-      "title_key": "TXT_KEY_TECH_CONSTRUCTION_TITLE",
+      "name": "Construction",
       "requires": [
         "TECH_MASONRY"
-      ],
-      "name": "Construction"
+      ]
     },
     {
       "id": "TECH_IRON_WORKING",
-      "cost": "105",
+      "cost": 105,
       "era": "ERA_CLASSICAL",
-      "title_key": "TXT_KEY_TECH_IRON_WORKING_TITLE",
+      "name": "Iron Working",
       "requires": [
         "TECH_BRONZE_WORKING"
-      ],
-      "name": "Iron Working"
+      ]
     },
     {
       "id": "TECH_THEOLOGY",
-      "cost": "275",
+      "cost": 275,
       "era": "ERA_MEDIEVAL",
-      "title_key": "TXT_KEY_TECH_THEOLOGY_TITLE",
+      "name": "Theology",
       "requires": [
         "TECH_CALENDAR",
         "TECH_PHILOSOPHY"
-      ],
-      "name": "Theology"
+      ]
     },
     {
       "id": "TECH_CIVIL_SERVICE",
-      "cost": "275",
+      "cost": 275,
       "era": "ERA_MEDIEVAL",
-      "title_key": "TXT_KEY_TECH_CIVIL_SERVICE_TITLE",
+      "name": "Civil Service",
       "requires": [
         "TECH_PHILOSOPHY",
         "TECH_TRAPPING"
-      ],
-      "name": "Civil Service"
+      ]
     },
     {
       "id": "TECH_CURRENCY",
-      "cost": "275",
+      "cost": 275,
       "era": "ERA_MEDIEVAL",
-      "title_key": "TXT_KEY_TECH_CURRENCY_TITLE",
+      "name": "Currency",
       "requires": [
         "TECH_MATHEMATICS"
-      ],
-      "name": "Currency"
+      ]
     },
     {
       "id": "TECH_ENGINEERING",
-      "cost": "275",
+      "cost": 275,
       "era": "ERA_MEDIEVAL",
-      "title_key": "TXT_KEY_TECH_ENGINEERING_TITLE",
+      "name": "Engineering",
       "requires": [
         "TECH_MATHEMATICS",
         "TECH_CONSTRUCTION"
-      ],
-      "name": "Engineering"
+      ]
     },
     {
       "id": "TECH_METAL_CASTING",
-      "cost": "275",
+      "cost": 275,
       "era": "ERA_MEDIEVAL",
-      "title_key": "TXT_KEY_TECH_METAL_CASTING_TITLE",
+      "name": "Metal Casting",
       "requires": [
         "TECH_CONSTRUCTION",
         "TECH_IRON_WORKING"
-      ],
-      "name": "Metal Casting"
+      ]
     },
     {
       "id": "TECH_COMPASS",
-      "cost": "375",
+      "cost": 375,
       "era": "ERA_MEDIEVAL",
-      "title_key": "TXT_KEY_TECH_COMPASS_TITLE",
+      "name": "Compass",
       "requires": [
         "TECH_OPTICS"
-      ],
-      "name": "Compass"
+      ]
     },
     {
       "id": "TECH_EDUCATION",
-      "cost": "485",
+      "cost": 485,
       "era": "ERA_MEDIEVAL",
-      "title_key": "TXT_KEY_TECH_EDUCATION_TITLE",
+      "name": "Education",
       "requires": [
         "TECH_THEOLOGY",
         "TECH_CIVIL_SERVICE"
-      ],
-      "name": "Education"
+      ]
     },
     {
       "id": "TECH_CHIVALRY",
-      "cost": "485",
+      "cost": 485,
       "era": "ERA_MEDIEVAL",
-      "title_key": "TXT_KEY_TECH_CHIVALRY_TITLE",
+      "name": "Chivalry",
       "requires": [
         "TECH_CIVIL_SERVICE",
         "TECH_HORSEBACK_RIDING",
         "TECH_CURRENCY"
-      ],
-      "name": "Chivalry"
+      ]
     },
     {
       "id": "TECH_MACHINERY",
-      "cost": "485",
+      "cost": 485,
       "era": "ERA_MEDIEVAL",
-      "title_key": "TXT_KEY_TECH_MACHINERY_TITLE",
+      "name": "Machinery",
       "requires": [
         "TECH_ENGINEERING"
-      ],
-      "name": "Machinery"
+      ]
     },
     {
       "id": "TECH_PHYSICS",
-      "cost": "485",
+      "cost": 485,
       "era": "ERA_MEDIEVAL",
-      "title_key": "TXT_KEY_TECH_PHYSICS_TITLE",
+      "name": "Physics",
       "requires": [
         "TECH_ENGINEERING",
         "TECH_METAL_CASTING"
-      ],
-      "name": "Physics"
+      ]
     },
     {
       "id": "TECH_STEEL",
-      "cost": "485",
+      "cost": 485,
       "era": "ERA_MEDIEVAL",
-      "title_key": "TXT_KEY_TECH_STEEL_TITLE",
+      "name": "Steel",
       "requires": [
         "TECH_METAL_CASTING"
-      ],
-      "name": "Steel"
+      ]
     },
     {
       "id": "TECH_ASTRONOMY",
-      "cost": "780",
+      "cost": 780,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_ASTRONOMY_TITLE",
+      "name": "Astronomy",
       "requires": [
         "TECH_COMPASS",
         "TECH_EDUCATION"
-      ],
-      "name": "Astronomy"
+      ]
     },
     {
       "id": "TECH_ACOUSTICS",
-      "cost": "780",
+      "cost": 780,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_ACOUSTICS_TITLE",
+      "name": "Acoustics",
       "requires": [
         "TECH_EDUCATION",
         "TECH_CHIVALRY"
-      ],
-      "name": "Acoustics"
+      ]
     },
     {
       "id": "TECH_BANKING",
-      "cost": "780",
+      "cost": 780,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_BANKING_TITLE",
+      "name": "Banking",
       "requires": [
         "TECH_EDUCATION",
         "TECH_CHIVALRY"
-      ],
-      "name": "Banking"
+      ]
     },
     {
       "id": "TECH_PRINTING_PRESS",
-      "cost": "780",
+      "cost": 780,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_PRINTING_PRESS_TITLE",
+      "name": "Printing Press",
       "requires": [
         "TECH_MACHINERY",
         "TECH_PHYSICS"
-      ],
-      "name": "Printing Press"
+      ]
     },
     {
       "id": "TECH_GUNPOWDER",
-      "cost": "780",
+      "cost": 780,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_GUNPOWDER_TITLE",
+      "name": "Gunpowder",
       "requires": [
         "TECH_PHYSICS",
         "TECH_STEEL"
-      ],
-      "name": "Gunpowder"
+      ]
     },
     {
       "id": "TECH_NAVIGATION",
-      "cost": "1150",
+      "cost": 1150,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_NAVIGATION_TITLE",
+      "name": "Navigation",
       "requires": [
         "TECH_ASTRONOMY"
-      ],
-      "name": "Navigation"
+      ]
     },
     {
       "id": "TECH_ECONOMICS",
-      "cost": "1150",
+      "cost": 1150,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_ECONOMICS_TITLE",
+      "name": "Economics",
       "requires": [
         "TECH_BANKING",
         "TECH_PRINTING_PRESS"
-      ],
-      "name": "Economics"
+      ]
     },
     {
       "id": "TECH_CHEMISTRY",
-      "cost": "1150",
+      "cost": 1150,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_CHEMISTRY_TITLE",
+      "name": "Chemistry",
       "requires": [
         "TECH_GUNPOWDER"
-      ],
-      "name": "Chemistry"
+      ]
     },
     {
       "id": "TECH_METALLURGY",
-      "cost": "1150",
+      "cost": 1150,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_METALLURGY_TITLE",
+      "name": "Metallurgy",
       "requires": [
         "TECH_GUNPOWDER"
-      ],
-      "name": "Metallurgy"
+      ]
     },
     {
       "id": "TECH_ARCHAEOLOGY",
-      "cost": "1600",
+      "cost": 1600,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_ARCHAEOLOGY_TITLE",
+      "name": "Archaeology",
       "requires": [
         "TECH_NAVIGATION"
-      ],
-      "name": "Archaeology"
+      ]
     },
     {
       "id": "TECH_SCIENTIFIC_THEORY",
-      "cost": "1600",
+      "cost": 1600,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_SCIENTIFIC_THEORY_TITLE",
+      "name": "Scientific Theory",
       "requires": [
         "TECH_ECONOMICS",
         "TECH_NAVIGATION",
         "TECH_ACOUSTICS"
-      ],
-      "name": "Scientific Theory"
+      ]
     },
     {
       "id": "TECH_MILITARY_SCIENCE",
-      "cost": "1600",
+      "cost": 1600,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_MILITARY_SCIENCE_TITLE",
+      "name": "Military Science",
       "requires": [
         "TECH_ECONOMICS",
         "TECH_CHEMISTRY"
-      ],
-      "name": "Military Science"
+      ]
     },
     {
       "id": "TECH_FERTILIZER",
-      "cost": "1600",
+      "cost": 1600,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_FERTILIZER_TITLE",
+      "name": "Fertilizer",
       "requires": [
         "TECH_CHEMISTRY"
-      ],
-      "name": "Fertilizer"
+      ]
     },
     {
       "id": "TECH_RIFLING",
-      "cost": "1600",
+      "cost": 1600,
       "era": "ERA_RENAISSANCE",
-      "title_key": "TXT_KEY_TECH_RIFLING_TITLE",
+      "name": "Rifling",
       "requires": [
         "TECH_METALLURGY"
-      ],
-      "name": "Rifling"
+      ]
     },
     {
       "id": "TECH_BIOLOGY",
-      "cost": "2350",
+      "cost": 2350,
       "era": "ERA_INDUSTRIAL",
-      "title_key": "TXT_KEY_TECH_BIOLOGY_TITLE",
+      "name": "Biology",
       "requires": [
         "TECH_ARCHAEOLOGY",
         "TECH_SCIENTIFIC_THEORY"
-      ],
-      "name": "Biology"
+      ]
     },
     {
       "id": "TECH_STEAM_POWER",
-      "cost": "2350",
+      "cost": 2350,
       "era": "ERA_INDUSTRIAL",
-      "title_key": "TXT_KEY_TECH_STEAM_POWER_TITLE",
+      "name": "Steam Power",
       "requires": [
         "TECH_SCIENTIFIC_THEORY",
         "TECH_MILITARY_SCIENCE"
-      ],
-      "name": "Steam Power"
+      ]
     },
     {
       "id": "TECH_ELECTRICITY",
-      "cost": "3100",
+      "cost": 3100,
       "era": "ERA_INDUSTRIAL",
-      "title_key": "TXT_KEY_TECH_ELECTRICITY_TITLE",
+      "name": "Electricity",
       "requires": [
         "TECH_BIOLOGY",
         "TECH_STEAM_POWER"
-      ],
-      "name": "Electricity"
+      ]
     },
     {
       "id": "TECH_REPLACEABLE_PARTS",
-      "cost": "3100",
+      "cost": 3100,
       "era": "ERA_INDUSTRIAL",
-      "title_key": "TXT_KEY_TECH_REPLACEABLE_PARTS_TITLE",
+      "name": "Replaceable Parts",
       "requires": [
         "TECH_STEAM_POWER"
-      ],
-      "name": "Replaceable Parts"
+      ]
     },
     {
       "id": "TECH_RAILROAD",
-      "cost": "3100",
+      "cost": 3100,
       "era": "ERA_INDUSTRIAL",
-      "title_key": "TXT_KEY_TECH_RAILROAD_TITLE",
+      "name": "Railroad",
       "requires": [
         "TECH_STEAM_POWER",
         "TECH_DYNAMITE"
-      ],
-      "name": "Railroad"
+      ]
     },
     {
       "id": "TECH_DYNAMITE",
-      "cost": "2350",
+      "cost": 2350,
       "era": "ERA_INDUSTRIAL",
-      "title_key": "TXT_KEY_TECH_DYNAMITE_TITLE",
+      "name": "Dynamite",
       "requires": [
         "TECH_FERTILIZER",
         "TECH_MILITARY_SCIENCE",
         "TECH_RIFLING"
-      ],
-      "name": "Dynamite"
+      ]
     },
     {
       "id": "TECH_REFRIGERATION",
-      "cost": "4100",
+      "cost": 4100,
       "era": "ERA_INDUSTRIAL",
-      "title_key": "TXT_KEY_TECH_REFRIGERATION_TITLE",
+      "name": "Refrigeration",
       "requires": [
         "TECH_ELECTRICITY"
-      ],
-      "name": "Refrigeration"
+      ]
     },
     {
       "id": "TECH_TELEGRAPH",
-      "cost": "4100",
+      "cost": 4100,
       "era": "ERA_INDUSTRIAL",
-      "title_key": "TXT_KEY_TECH_TELEGRAPH_TITLE",
+      "name": "Telegraph",
       "requires": [
         "TECH_ELECTRICITY"
-      ],
-      "name": "Telegraph"
+      ]
     },
     {
       "id": "TECH_RADIO",
-      "cost": "4100",
+      "cost": 4100,
       "era": "ERA_INDUSTRIAL",
-      "title_key": "TXT_KEY_TECH_RADIO_TITLE",
+      "name": "Radio",
       "requires": [
         "TECH_ELECTRICITY"
-      ],
-      "name": "Radio"
+      ]
     },
     {
       "id": "TECH_FLIGHT",
-      "cost": "4100",
+      "cost": 4100,
       "era": "ERA_INDUSTRIAL",
-      "title_key": "TXT_KEY_TECH_FLIGHT_TITLE",
+      "name": "Flight",
       "requires": [
         "TECH_REPLACEABLE_PARTS"
-      ],
-      "name": "Flight"
+      ]
     },
     {
       "id": "TECH_COMBUSTION",
-      "cost": "4100",
+      "cost": 4100,
       "era": "ERA_INDUSTRIAL",
-      "title_key": "TXT_KEY_TECH_COMBUSTION_TITLE",
+      "name": "Combustion",
       "requires": [
         "TECH_REPLACEABLE_PARTS",
         "TECH_RAILROAD"
-      ],
-      "name": "Combustion"
+      ]
     },
     {
       "id": "TECH_PLASTIC",
-      "cost": "5100",
+      "cost": 5100,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_PLASTICS_TITLE",
+      "name": "Plastics",
       "requires": [
         "TECH_REFRIGERATION"
-      ],
-      "name": "Plastics"
+      ]
     },
     {
       "id": "TECH_PENICILIN",
-      "cost": "5100",
+      "cost": 5100,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_PENICILIN_TITLE",
+      "name": "Penicillin",
       "requires": [
         "TECH_REFRIGERATION"
-      ],
-      "name": "Penicillin"
+      ]
     },
     {
       "id": "TECH_ELECTRONICS",
-      "cost": "5100",
+      "cost": 5100,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_ELECTRONICS_TITLE",
+      "name": "Electronics",
       "requires": [
         "TECH_TELEGRAPH"
-      ],
-      "name": "Electronics"
+      ]
     },
     {
       "id": "TECH_MASS_MEDIA",
-      "cost": "5100",
+      "cost": 5100,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_MASS_MEDIA_TITLE",
+      "name": "Mass Media",
       "requires": [
         "TECH_RADIO"
-      ],
-      "name": "Mass Media"
+      ]
     },
     {
       "id": "TECH_RADAR",
-      "cost": "5100",
+      "cost": 5100,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_RADAR_TITLE",
+      "name": "Radar",
       "requires": [
         "TECH_RADIO",
         "TECH_COMBUSTION",
         "TECH_FLIGHT"
-      ],
-      "name": "Radar"
+      ]
     },
     {
       "id": "TECH_ATOMIC_THEORY",
-      "cost": "5100",
+      "cost": 5100,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_ATOMIC_THEORY_TITLE",
+      "name": "Atomic Theory",
       "requires": [
         "TECH_COMBUSTION"
-      ],
-      "name": "Atomic Theory"
+      ]
     },
     {
       "id": "TECH_ECOLOGY",
-      "cost": "6400",
+      "cost": 6400,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_ECOLOGY_TITLE",
+      "name": "Ecology",
       "requires": [
         "TECH_PLASTIC",
         "TECH_PENICILIN"
-      ],
-      "name": "Ecology"
+      ]
     },
     {
       "id": "TECH_COMPUTERS",
-      "cost": "6400",
+      "cost": 6400,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_COMPUTERS_TITLE",
+      "name": "Computers",
       "requires": [
         "TECH_ELECTRONICS",
         "TECH_MASS_MEDIA",
         "TECH_RADAR"
-      ],
-      "name": "Computers"
+      ]
     },
     {
       "id": "TECH_ROCKETRY",
-      "cost": "6400",
+      "cost": 6400,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_ROCKETRY_TITLE",
+      "name": "Rocketry",
       "requires": [
         "TECH_RADAR"
-      ],
-      "name": "Rocketry"
+      ]
     },
     {
       "id": "TECH_LASERS",
-      "cost": "6400",
+      "cost": 6400,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_LASERS_TITLE",
+      "name": "Lasers",
       "requires": [
         "TECH_RADAR"
-      ],
-      "name": "Lasers"
+      ]
     },
     {
       "id": "TECH_NUCLEAR_FISSION",
-      "cost": "6400",
+      "cost": 6400,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_NUCLEAR_FISSION_TITLE",
+      "name": "Nuclear Fission",
       "requires": [
         "TECH_ATOMIC_THEORY"
-      ],
-      "name": "Nuclear Fission"
+      ]
     },
     {
       "id": "TECH_GLOBALIZATION",
-      "cost": "9500",
+      "cost": 9500,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_GLOBALIZATION_TITLE",
+      "name": "Globalization",
       "requires": [
         "TECH_ECOLOGY",
         "TECH_COMPUTERS"
-      ],
-      "name": "Globalization"
+      ]
     },
     {
       "id": "TECH_ROBOTICS",
-      "cost": "7700",
+      "cost": 7700,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_ROBOTICS_TITLE",
+      "name": "Robotics",
       "requires": [
         "TECH_COMPUTERS"
-      ],
-      "name": "Robotics"
+      ]
     },
     {
       "id": "TECH_SATELLITES",
-      "cost": "7700",
+      "cost": 7700,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_SATELLITES_TITLE",
+      "name": "Satellites",
       "requires": [
         "TECH_ROCKETRY"
-      ],
-      "name": "Satellites"
+      ]
     },
     {
       "id": "TECH_STEALTH",
-      "cost": "7700",
+      "cost": 7700,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_STEALTH_TITLE",
+      "name": "Stealth",
       "requires": [
         "TECH_LASERS"
-      ],
-      "name": "Stealth"
+      ]
     },
     {
       "id": "TECH_ADVANCED_BALLISTICS",
-      "cost": "7700",
+      "cost": 7700,
       "era": "ERA_MODERN",
-      "title_key": "TXT_KEY_TECH_ADVANCED_BALLISTICS_TITLE",
+      "name": "Advanced Ballistics",
       "requires": [
         "TECH_LASERS",
         "TECH_NUCLEAR_FISSION"
-      ],
-      "name": "Advanced Ballistics"
+      ]
     },
     {
       "id": "TECH_PARTICLE_PHYSICS",
-      "cost": "8800",
+      "cost": 8800,
       "era": "ERA_FUTURE",
-      "title_key": "TXT_KEY_TECH_PARTICLE_PHYSICS_TITLE",
+      "name": "Particle Physics",
       "requires": [
         "TECH_ROBOTICS",
         "TECH_SATELLITES"
-      ],
-      "name": "Particle Physics"
+      ]
     },
     {
       "id": "TECH_NUCLEAR_FUSION",
-      "cost": "8800",
+      "cost": 8800,
       "era": "ERA_FUTURE",
-      "title_key": "TXT_KEY_TECH_NUCLEAR_FUSION_TITLE",
+      "name": "Nuclear Fusion",
       "requires": [
         "TECH_SATELLITES",
         "TECH_STEALTH",
         "TECH_ADVANCED_BALLISTICS"
-      ],
-      "name": "Nuclear Fusion"
+      ]
     },
     {
       "id": "TECH_NANOTECHNOLOGY",
-      "cost": "9500",
+      "cost": 9500,
       "era": "ERA_FUTURE",
-      "title_key": "TXT_KEY_TECH_NANOTECHNOLOGY_TITLE",
+      "name": "Nanotechnology",
       "requires": [
         "TECH_PARTICLE_PHYSICS"
-      ],
-      "name": "Nanotechnology"
+      ]
     },
     {
       "id": "TECH_FUTURE_TECH",
-      "cost": "9500",
+      "cost": 9500,
       "era": "ERA_FUTURE",
-      "title_key": "TXT_KEY_TECH_FUTURE_TECH_TITLE",
+      "name": "Future Tech",
       "requires": [
         "TECH_NANOTECHNOLOGY",
         "TECH_NUCLEAR_FUSION",
         "TECH_GLOBALIZATION"
-      ],
-      "name": "Future Tech"
+      ]
     }
   ],
   "promotions": [
@@ -781,28 +707,28 @@
       "requires": [
         "TECH_COMBUSTION"
       ],
-      "name": "TXT_KEY_PROMOTION_AMBUSH_1"
+      "name": "Ambush I"
     },
     {
       "id": "PROMOTION_AMBUSH_2",
       "requires": [
         "TECH_COMBUSTION"
       ],
-      "name": "TXT_KEY_PROMOTION_AMBUSH_2"
+      "name": "Ambush II"
     },
     {
       "id": "PROMOTION_EMBARKATION",
       "requires": [
         "TECH_OPTICS"
       ],
-      "name": "TXT_KEY_PROMOTION_EMBARKATION"
+      "name": "Embarkation"
     },
     {
       "id": "PROMOTION_DEFENSIVE_EMBARKATION",
       "requires": [
         "TECH_OPTICS"
       ],
-      "name": "TXT_KEY_PROMOTION_DEFENSIVE_EMBARKATION"
+      "name": "Embarkation with Defense"
     }
   ],
   "projects": [
