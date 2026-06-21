@@ -6,6 +6,7 @@ import {
     ARC_SPACE_MAX,
     TECH_IMG_WIDTH,
 } from "./constants";
+import { buildUnlockIndex } from "./buildUnlockIndex";
 import { computeWheelLayout } from "./computeWheelLayout";
 import { computeEraRanges, getEraOrdering } from "./eraData";
 import { depthSortTechnologies } from "./depthSortTechnologies";
@@ -105,6 +106,12 @@ export async function initWheelData() {
         )
       : ARC_SPACE_MAX;
 
+  // Index buildings/units/improvements/etc. by which tech (or civic) gates
+  // them, plus the inverse for items the tech makes obsolete. The active
+  // tree's own array is excluded — tech-to-tech edges already render via
+  // the existing Required/Required-for sections.
+  const { unlocksByTech, obsoletesByTech } = buildUnlockIndex(data, dataKey);
+
   // Store processed data on window.app
   window.app.wheelData = {
       allTechs,
@@ -117,6 +124,8 @@ export async function initWheelData() {
       eraLabelRadius,
       eraRanges,
       arcSpace,
+      unlocksByTech,
+      obsoletesByTech,
   };
 
   renderWheel();

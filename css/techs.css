@@ -177,13 +177,36 @@ p {
 }
 
 #tooltip {
+  /* position:fixed lets us use viewport-relative coords from
+   * getBoundingClientRect directly; pointer-events:none means hovering
+   * over the tooltip itself doesn't dismiss it (the tooltip is purely
+   * informational and can sit on top of underlying labels without
+   * stealing their hover). */
+  position: fixed;
+  pointer-events: none;
   border: 1px solid black;
   border-radius: 6px;
   background-color: white;
-  position: absolute;
   width: 400px;
   height: auto;
   padding: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+/* Override the global .hidden { display: none } for the tooltip. We want
+ * the box to remain in layout so its real width/height are available to
+ * the JS that positions it antipodally — display:none zeroes out
+ * offset*, which breaks the centring math. visibility:hidden keeps the
+ * layout but hides pixels, which is exactly what we want. */
+#tooltip.hidden {
+  display: block;
+  visibility: hidden;
+}
+
+/* Close button is left in the markup but irrelevant to the hover model. */
+#tipCloseButton {
+  display: none;
 }
 
 .desc {
@@ -230,6 +253,61 @@ p {
 .tipSubTitle {
   font-weight: bold;
   padding-bottom: 0;
+  margin: 6px 0 2px;
+}
+
+/* Unlocks / Makes obsolete sections.
+ *
+ * Items are grouped by source category (Buildings, Units, etc.) with a
+ * small subheading. Within each group we lay items out as a wrapping
+ * grid of icon+name pairs so big trees (Masonry → 4 wonders) flow nicely
+ * inside the fixed-width tooltip without spilling vertically.
+ */
+.tipGroup {
+  margin: 4px 0 6px;
+}
+
+.tipGroupName {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #555;
+  margin: 0 0 2px;
+}
+
+.tipItemList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 8px;
+  row-gap: 2px;
+}
+
+.tipItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.tipItemIcon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.tipItemName {
+  /* Long names truncate rather than overflow the column, so a tooltip
+   * with many unlocks stays compact. The full name still shows in the
+   * native browser tooltip thanks to the fallback below. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .clear {

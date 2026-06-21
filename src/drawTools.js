@@ -1,6 +1,7 @@
 import { ARC_BASE, ARC_SPACE, TECH_IMG_RADIUS, TECH_IMG_WIDTH } from "./constants";
 import { makeUnlockArc } from "./arcs";
 import { calculateSingleRadialLinePath, wheelTransform, fadeCheck } from "./helpers";
+import { hideTooltip, showTooltip } from "./tooltip";
 
 export function drawArcs(element, data, color, arcSpace = ARC_SPACE) {
       const unlockArc = makeUnlockArc(arcSpace);
@@ -46,8 +47,8 @@ export function drawTechImages(element, allTechs, game, highlightedIds, folder =
         .attr("x", -TECH_IMG_WIDTH / 2)
         .attr("y", -TECH_IMG_WIDTH / 2)
         .attr("xlink:href", (d) => `${game}/img/${folder}/${d.id}.png`)
-        .on("mouseover", (_, d) => window.app.selected = d)
-        .on("mouseleave", () => window.app.selected = null);
+        .on("mouseover", onNodeHover)
+        .on("mouseleave", onNodeLeave);
 }
 
 export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
@@ -59,7 +60,26 @@ export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
         .attr("transform", (_, i) => wheelTransform(allTechs.length, i, labelRadius))
         .attr("y", 5)
         .attr("text-anchor", (_, i) => (i > allTechs.length / 2) ? "end" : "start")
-        .text(d => d.name);
+        .text(d => d.name)
+        // Labels share the same hover behaviour as the icons: pointing at
+        // either side of the same node should activate it. Keep the cursor
+        // styling here in sync with .tech-image (.spokeText already sets
+        // cursor: pointer in CSS).
+        .on("mouseover", onNodeHover)
+        .on("mouseleave", onNodeLeave);
+}
+
+/** Shared hover handler. Setting `selected` triggers the wheel re-render
+ *  that draws the arcs; the tooltip lives outside the SVG paint hierarchy
+ *  and is updated independently. */
+function onNodeHover(_, d) {
+    window.app.selected = d;
+    showTooltip(d);
+}
+
+function onNodeLeave() {
+    window.app.selected = null;
+    hideTooltip();
 }
 
 

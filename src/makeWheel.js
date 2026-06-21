@@ -6,6 +6,7 @@ import { calculateSingleRadialLinePath, wheelTransform } from "./helpers";
 import { drawArcs, drawSpokes, drawTechImages, drawTechLabels } from "./drawTools";
 import { drawEraBackgrounds, drawEraLabels } from "./drawEras";
 import { setupHighlights } from "./setupHighlights";
+import { hideTooltip, showTooltip } from "./tooltip";
 
 const color = scaleOrdinal(schemeCategory10);
 // Era colours come from a separate palette so they don't compete with the
@@ -57,10 +58,13 @@ export async function renderWheel() {
   drawArcs(svg.arcs, prerequisites, color, arcSpace)
       .classed("fade", Boolean(selected))
       .on("mouseover", (_, d) => {
-          console.log(d);
           window.app.selected = d;
+          showTooltip(d);
       })
-      .on("mouseleave", () => window.app.selected = null);
+      .on("mouseleave", () => {
+          window.app.selected = null;
+          hideTooltip();
+      });
 
   if (Boolean(selected)) {
       drawArcs(svg.selectedArcs, selectionPrerequisites.filter(d => d.step !== undefined), color, arcSpace)

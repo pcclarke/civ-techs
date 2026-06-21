@@ -98,7 +98,5 @@ if (gameInfo.trees && gameInfo.trees.length > 1) {
     addTrees();
 }
 
-select("#tooltip").on("click", () => tooltip.classed("hidden", true));
-
 initWheelData();
 
