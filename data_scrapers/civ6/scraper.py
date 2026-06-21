@@ -6,7 +6,15 @@ civdata.json in the shape consumed by src/initWheelData.js:
 
     {
       "technologies": [ { "id", "name", "cost", "era", "requires"? }, ... ],
-      "civics":       [ { "id", "name", "cost", "era", "requires"? }, ... ]
+      "civics":       [ ... same shape ... ],
+      "buildings":    [ { "id", "name", "cost"?, "requires"? }, ... ],
+      "wonders":      [ ... same shape, only IsWonder buildings ... ],
+      "units":        [ ... ],
+      "districts":    [ ... ],
+      "improvements": [ ... ],
+      "projects":     [ ... ],
+      "policies":     [ ... ],
+      "governments":  [ ... ],
     }
 
 The ./data subtree holds the raw game asset dumps and is gitignored — only
@@ -18,18 +26,31 @@ Game variants:
     --game gs     -> civ6gs/civdata.json (base + Rise & Fall + Gathering Storm)
     --all         -> all three
 
-Layered loading: each expansion's tech/civic XML is applied as a delta on
-top of base. Within a layer, <Row> in <Technologies>/<Civics> is an upsert
-(Firaxis uses one for TECH_FUTURE_TECH in GS to wholesale re-define it),
-<Update><Where><Set/></Update> is a field-level patch, <Row> in *Prereqs is
-an edge insert, and <Delete> in *Prereqs removes one specific edge.
-Expansion text files use <EnglishText>; base uses <BaseGameText>.
+Layered loading: each expansion's XML is applied as a delta on top of
+base. There are two table shapes:
+
+  Tech / civic — main rows in one table, prereq EDGES in a sibling table:
+      <Technologies>     <Row id_attr=..>...
+      <TechnologyPrereqs> <Row Technology=.. PrereqTech=..>
+                          <Delete Technology=.. PrereqTech=..>
+
+  Unlocks (buildings, units, districts, etc.) — main rows carry their
+  prereqs INLINE as PrereqTech / PrereqCivic columns, no edge table:
+      <Buildings>        <Row BuildingType=.. PrereqTech=.. PrereqCivic=..>
+
+Both shapes accept <Row> (upsert), <Update><Where/><Set/></Update>
+(field patch); the prereq-edge shape additionally honours <Delete>.
 
 Ignored on purpose:
-  - <Technologies_XP2> / <Civics_XP2> (just metadata flagging the random-
-    prereq mechanic; the actual prereq edges still come from *Prereqs)
-  - <TechnologyRandomCosts> / <CivicRandomCosts> (the wheel only renders one
+  - <Technologies_XP2> / <Civics_XP2> / <Buildings_XP2> / <Units_XP2> /
+    <Districts_XP2> (metadata flagging the random-prereq mechanic; actual
+    prereq edges still come from the main table or *Prereqs side-table)
+  - <TechnologyRandomCosts> / <CivicRandomCosts> (the wheel renders one
     cost per node; the static Cost on the row is a fine canonical value)
+  - District / building / project chain prereqs (PrereqDistrict on a
+    building, PrereqBuilding via the BuildingPrereqs side-table, etc.) —
+    the wheel only cares about tech/civic gates, not in-tree dependency
+    chains within a single category
 
 Run from this directory:
     python3 scraper.py --game base
@@ -48,16 +69,29 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(HERE, 'data')
 REPO_ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 
-# Per-package layout. Each package contributes one tech XML and one civic
-# XML (which may be empty for that package), plus matching text files.
+# Per-package layout. Each package contributes XML files for several
+# categories (tech/civic + unlock tables) plus matching text files.
+# `unlock_files` maps category-key -> list of XMLs to apply in order
+# (some expansions split a category across base + _Major files).
 PACKAGES: Dict[str, dict] = {
     'base': {
         'pkg': 'base',
         'tech_xml': 'Technologies.xml',
         'civic_xml': 'Civics.xml',
+        'unlock_files': {
+            'building':    ['Buildings.xml'],
+            'unit':        ['Units.xml'],
+            'district':    ['Districts.xml'],
+            'improvement': ['Improvements.xml'],
+            'project':     ['Projects.xml'],
+            'policy':      ['Policies.xml'],
+            'government':  ['Governments.xml'],
+        },
         # Multiple text files contribute to one map; load all of these.
-        # Types_Text holds the canonical short names ('Pottery', etc.)
-        # used by both trees, so it stays in the list for every layer.
+        # Types_Text holds the canonical short names for *most* nodes
+        # (techs, civics, districts, units, etc.); the per-category
+        # Buildings_Text / Civics_Text / Technologies_Text files top it up
+        # with civilopedia entries.
         'text_files': ['Types_Text.xml', 'Civics_Text.xml', 'Technologies_Text.xml'],
         'text_parent': 'BaseGameText',
     },
@@ -65,14 +99,47 @@ PACKAGES: Dict[str, dict] = {
         'pkg': 'expansion1',
         'tech_xml': 'Expansion1_Technologies.xml',
         'civic_xml': 'Expansion1_Civics.xml',
-        'text_files': ['Expansion1_Technologies_Text.xml', 'Expansion1_Civics_Text.xml'],
+        'unlock_files': {
+            # Most expansion categories ship two files: base name (for the
+            # delta-style patches) and `_Major` (for new full-row inserts).
+            'building':    ['Expansion1_Buildings.xml', 'Expansion1_Buildings_Major.xml'],
+            'unit':        ['Expansion1_Units.xml',     'Expansion1_Units_Major.xml'],
+            'district':    ['Expansion1_Districts.xml', 'Expansion1_Districts_Major.xml'],
+            'improvement': ['Expansion1_Improvements.xml', 'Expansion1_Improvements_Major.xml'],
+            'project':     ['Expansion1_Projects.xml'],
+            'policy':      ['Expansion1_Policies.xml'],
+            'government':  ['Expansion1_Governments.xml'],
+        },
+        'text_files': [
+            'Expansion1_Technologies_Text.xml',
+            'Expansion1_Civics_Text.xml',
+            'Expansion1_Buildings_Text.xml',
+            'Expansion1_Districts_Text.xml',
+            'Expansion1_Units_Text.xml',
+        ],
         'text_parent': 'EnglishText',
     },
     'gs': {
         'pkg': 'expansion2',
         'tech_xml': 'Expansion2_Technologies.xml',
         'civic_xml': 'Expansion2_Civics.xml',
-        'text_files': ['Expansion2_Technologies_Text.xml', 'Expansion2_Civics_Text.xml'],
+        'unlock_files': {
+            'building':    ['Expansion2_Buildings.xml',     'Expansion2_Buildings_Major.xml'],
+            'unit':        ['Expansion2_Units.xml',         'Expansion2_Units_Major.xml'],
+            'district':    ['Expansion2_Districts.xml',     'Expansion2_Districts_Major.xml'],
+            'improvement': ['Expansion2_Improvements.xml',  'Expansion2_Improvements_Major.xml'],
+            'project':     ['Expansion2_Projects.xml'],
+            'policy':      ['Expansion2_Policies.xml'],
+            'government':  ['Expansion2_Governments.xml'],
+        },
+        'text_files': [
+            'Expansion2_Technologies_Text.xml',
+            'Expansion2_Civics_Text.xml',
+            'Expansion2_Buildings_Text.xml',
+            'Expansion2_Districts_Text.xml',
+            'Expansion2_Improvements_Text.xml',
+            'Expansion2_Units_Text.xml',
+        ],
         'text_parent': 'EnglishText',
     },
 }
@@ -84,11 +151,78 @@ GAMES: Dict[str, Tuple[List[str], str]] = {
     'gs':   (['base', 'rf', 'gs'],  'civ6gs/civdata.json'),
 }
 
-# What we pull off each <Row> in <Technologies>/<Civics> (and what <Update>
-# may patch). Skipping fields the wheel doesn't render keeps the JSON small
-# and stable when Firaxis adds unrelated columns.
+# Tech / civic node fields. Skipping fields the wheel doesn't render keeps
+# the JSON compact and stable when Firaxis adds unrelated columns.
 NODE_FIELDS_INT = ['Cost']
 NODE_FIELDS_STR = ['EraType', 'Name']
+
+# Inline-prereq columns we lift onto every unlock node's `requires` list.
+# Both fields can be set on the same row; both go into requires together.
+INLINE_PREREQ_FIELDS = ['PrereqTech', 'PrereqCivic']
+
+# Per-category exclusion list — ids dropped from the output entirely, even
+# if they have a real prereq and would otherwise show up in the wheel's
+# tooltip. Use sparingly; the right home for an item Firaxis ships but we
+# don't want is "remove via this list" rather than "let it render".
+#
+# DISTRICT_WATER_STREET_CARNIVAL is Brazil's coastal twin of their unique
+# Street Carnival district. It's redundant alongside the regular Street
+# Carnival in the wheel UI — same flavour, just placed on water tiles —
+# and Firaxis's icon for it is just an alias to the standard Water Park
+# icon (no distinct art). Dropped here so a fresh scrape doesn't bring it
+# back.
+EXCLUDE_IDS: Dict[str, set] = {
+    'districts': {'DISTRICT_WATER_STREET_CARNIVAL'},
+}
+
+# Per-category configuration for the inline-unlock extractor. file_key is
+# the lookup into PACKAGES[*]['unlock_files']. is_wonder_split routes
+# IsWonder=true rows into a separate output array.
+UNLOCK_CATEGORIES: Dict[str, dict] = {
+    'buildings': {
+        'file_key':         'building',
+        'table_name':       'Buildings',
+        'id_attr':          'BuildingType',
+        'id_strip_prefix':  'BUILDING_',
+        'is_wonder_split':  True,
+    },
+    'units': {
+        'file_key':         'unit',
+        'table_name':       'Units',
+        'id_attr':          'UnitType',
+        'id_strip_prefix':  'UNIT_',
+    },
+    'districts': {
+        'file_key':         'district',
+        'table_name':       'Districts',
+        'id_attr':          'DistrictType',
+        'id_strip_prefix':  'DISTRICT_',
+    },
+    'improvements': {
+        'file_key':         'improvement',
+        'table_name':       'Improvements',
+        'id_attr':          'ImprovementType',
+        'id_strip_prefix':  'IMPROVEMENT_',
+    },
+    'projects': {
+        'file_key':         'project',
+        'table_name':       'Projects',
+        'id_attr':          'ProjectType',
+        'id_strip_prefix':  'PROJECT_',
+    },
+    'policies': {
+        'file_key':         'policy',
+        'table_name':       'Policies',
+        'id_attr':          'PolicyType',
+        'id_strip_prefix':  'POLICY_',
+    },
+    'governments': {
+        'file_key':         'government',
+        'table_name':       'Governments',
+        'id_attr':          'GovernmentType',
+        'id_strip_prefix':  'GOVERNMENT_',
+    },
+}
 
 
 # --------------------------- XML helpers ---------------------------
@@ -145,7 +279,7 @@ def collect_text_map(pkg_keys: List[str]) -> Dict[str, str]:
     return text_map
 
 
-# --------------------------- Per-layer apply ---------------------------
+# --------------------------- Tech/civic main-table apply ---------------------------
 
 def _coerce_field(name: str, raw: str):
     """Normalise a field value. Costs are ints; everything else stays a string."""
@@ -309,6 +443,123 @@ def build_nodes_for_tree(
     return list(nodes.values())
 
 
+# --------------------------- Inline-unlock apply ---------------------------
+
+def _apply_inline_attrs(entry: dict, attrs: Dict[str, str], *,
+                        text_map: Dict[str, str], id_strip_prefix: str) -> None:
+    """Apply a flat attrs dict (from a <Row> attribute set or an Update's
+    <Set> children) onto an unlock node. Resolves Name, ints Cost, appends
+    PrereqTech/PrereqCivic onto `requires`, and tags wonders for later split.
+    """
+    if 'Name' in attrs:
+        name_key = attrs['Name']
+        if name_key in text_map:
+            entry['name'] = text_map[name_key]
+        else:
+            entry.setdefault(
+                'name',
+                entry.get('id', name_key).replace(id_strip_prefix, '').replace('_', ' ').title(),
+            )
+
+    if 'Cost' in attrs and attrs['Cost'] is not None:
+        try:
+            entry['cost'] = int(attrs['Cost'])
+        except (ValueError, TypeError):
+            entry['cost'] = attrs['Cost']
+
+    requires = entry.get('requires', [])
+    for fld in INLINE_PREREQ_FIELDS:
+        v = attrs.get(fld)
+        if v and v not in requires:
+            requires.append(v)
+    if requires:
+        entry['requires'] = requires
+
+    if attrs.get('IsWonder') == 'true':
+        entry['_is_wonder'] = True
+
+
+def _apply_inline_unlock_layer(
+    items: Dict[str, dict],
+    layer_root: ET.Element,
+    *,
+    cfg: dict,
+    text_map: Dict[str, str],
+) -> None:
+    """Apply one layer's main unlock table (Buildings / Units / etc).
+
+    Same Row/Update grammar as _apply_node_layer, except prereqs live as
+    inline columns on the row rather than in a sibling edge table.
+    """
+    table = layer_root.find(cfg['table_name'])
+    if table is None:
+        return
+
+    id_attr = cfg['id_attr']
+    id_strip_prefix = cfg['id_strip_prefix']
+
+    for child in list(table):
+        if child.tag == 'Row':
+            iid = child.get(id_attr)
+            if not iid:
+                continue
+            entry = items.setdefault(iid, {'id': iid})
+            _apply_inline_attrs(entry, child.attrib,
+                                text_map=text_map, id_strip_prefix=id_strip_prefix)
+            # Always synthesise a fallback name if nothing landed.
+            if 'name' not in entry:
+                entry['name'] = iid.replace(id_strip_prefix, '').replace('_', ' ').title()
+
+        elif child.tag == 'Update':
+            where = child.find('Where')
+            sset = child.find('Set')
+            if where is None or sset is None:
+                continue
+            iid = where.get(id_attr)
+            if not iid or iid not in items:
+                continue
+            # Build a flat attrs dict from <Set>'s children (each child's
+            # tag is the column name and its text is the new value).
+            set_attrs: Dict[str, str] = {}
+            for sc in list(sset):
+                set_attrs[sc.tag] = sc.text or ''
+            _apply_inline_attrs(items[iid], set_attrs,
+                                text_map=text_map, id_strip_prefix=id_strip_prefix)
+
+
+def build_unlocks_for_category(
+    pkg_keys: List[str],
+    cfg: dict,
+    text_map: Dict[str, str],
+) -> Tuple[List[dict], List[dict]]:
+    """Walk every package layer for one unlock category, returning a list
+    of node dicts (and, for buildings, a separate wonders list).
+
+    Wonder split: if cfg has is_wonder_split=True, items tagged _is_wonder
+    are pulled out into the second return list. The marker field itself is
+    stripped from the output.
+    """
+    items: Dict[str, dict] = {}
+    for key in pkg_keys:
+        info = PACKAGES[key]
+        for filename in info.get('unlock_files', {}).get(cfg['file_key'], []):
+            root = parse_xml(info['pkg'], filename)
+            if root is None:
+                continue
+            _apply_inline_unlock_layer(items, root, cfg=cfg, text_map=text_map)
+
+    main: List[dict] = []
+    wonders: List[dict] = []
+    split = cfg.get('is_wonder_split', False)
+    for entry in items.values():
+        is_wonder = entry.pop('_is_wonder', False)
+        if split and is_wonder:
+            wonders.append(entry)
+        else:
+            main.append(entry)
+    return main, wonders
+
+
 # --------------------------- Driver ---------------------------
 
 def build_civdata(game: str) -> dict:
@@ -318,7 +569,9 @@ def build_civdata(game: str) -> dict:
 
     text_map = collect_text_map(pkg_keys)
 
-    techs = build_nodes_for_tree(
+    out: Dict[str, list] = {}
+
+    out['technologies'] = build_nodes_for_tree(
         pkg_keys,
         xml_attr='tech_xml',
         nodes_table='Technologies',
@@ -329,7 +582,7 @@ def build_civdata(game: str) -> dict:
         id_strip_prefix='TECH_',
         text_map=text_map,
     )
-    civics = build_nodes_for_tree(
+    out['civics'] = build_nodes_for_tree(
         pkg_keys,
         xml_attr='civic_xml',
         nodes_table='Civics',
@@ -341,7 +594,18 @@ def build_civdata(game: str) -> dict:
         text_map=text_map,
     )
 
-    return {'technologies': techs, 'civics': civics}
+    for category, cfg in UNLOCK_CATEGORIES.items():
+        main, wonders = build_unlocks_for_category(pkg_keys, cfg, text_map)
+        # Strip excluded ids from both the main and wonders lists.
+        # Wonders share their source key with buildings, so apply the
+        # `buildings` exclusion to both halves of the split.
+        excl_main = EXCLUDE_IDS.get(category, set())
+        excl_won = EXCLUDE_IDS.get('wonders' if category == 'buildings' else category, set())
+        out[category] = [n for n in main if n['id'] not in excl_main]
+        if cfg.get('is_wonder_split'):
+            out['wonders'] = [n for n in wonders if n['id'] not in excl_won]
+
+    return out
 
 
 def write_output(out_path: str, data: dict, indent: int) -> None:
@@ -355,11 +619,9 @@ def run_one(game: str, indent: int) -> None:
     data = build_civdata(game)
     out_path = os.path.join(REPO_ROOT, rel_out)
     write_output(out_path, data, indent)
-    techs = data['technologies']
-    civics = data['civics']
-    eras = sorted({n.get('era') for n in techs + civics if n.get('era')})
-    print(f'[{game}] {len(techs)} techs, {len(civics)} civics -> {rel_out}')
-    print(f'        eras: {", ".join(eras) if eras else "none"}')
+    counts = ', '.join(f'{len(data[k])} {k}' for k in data if isinstance(data[k], list) and data[k])
+    print(f'[{game}] -> {rel_out}')
+    print(f'         {counts}')
 
 
 def main():
