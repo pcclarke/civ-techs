@@ -88,16 +88,21 @@ export function buildUnlockIndex(data, dataKey) {
 
 
 /**
- * Normalise the {id, name, source} we'll show in the tooltip. Handles the
- * two name/id conventions in our data:
+ * Normalise the {id, name, source} we'll show in the tooltip. Handles
+ * three name/id conventions in our data:
  *   - flat: { id, name, ... }                       (Civ 1/2/3, civics, etc.)
  *   - civ-wrapped: { id: CLASS_ID, CIVILIZATION_ALL: { id, name } }
- *                                                   (Civ 4+ buildings/units)
- * For the wrapped shape we prefer the inner concrete unit/building id
- * because that matches the icon filename on disk.
+ *                                                   (Civ 4+ shared buildings/units)
+ *   - civ-specific: { id: CLASS_ID, CIVILIZATION_GERMANY: { id, name } }
+ *                                                   (Civ 4+ unique buildings/units)
+ * For the wrapped shapes we prefer the inner concrete unit/building id
+ * because that matches the icon filename on disk. Uniques land under
+ * `CIVILIZATION_<CIV>` instead of `CIVILIZATION_ALL`; falling back to
+ * "any CIVILIZATION_ key with an id" lets Foreign Legion / Landsknecht /
+ * Dutch Sea Beggar / etc. resolve to their proper on-disk icons.
  */
 function displayFor(item, source) {
-    const inner = item.CIVILIZATION_ALL;
+    const inner = pickCivWrapper(item);
     if (inner && (inner.name || inner.id)) {
         return {
             id:     inner.id || item.id,
@@ -110,6 +115,25 @@ function displayFor(item, source) {
         name:   item.name || item.id,
         source,
     };
+}
+
+
+/**
+ * Return the CIVILIZATION_ALL sub-object if present, otherwise the first
+ * CIVILIZATION_<CIV> sub-object that carries a real id or name. Ignores
+ * every other top-level key (id, name, requires, etc.) so we don't
+ * misread cost/cat/etc. as a civ wrapper.
+ */
+function pickCivWrapper(item) {
+    if (item.CIVILIZATION_ALL && typeof item.CIVILIZATION_ALL === "object") {
+        return item.CIVILIZATION_ALL;
+    }
+    for (const key of Object.keys(item)) {
+        if (!key.startsWith("CIVILIZATION_")) continue;
+        const v = item[key];
+        if (v && typeof v === "object" && (v.id || v.name)) return v;
+    }
+    return null;
 }
 
 
