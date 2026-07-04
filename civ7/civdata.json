@@ -755,5 +755,1687 @@
         "CIVIC_MILITARISM"
       ]
     }
+  ],
+  "buildings": [
+    {
+      "id": "BUILDING_ACADEMY",
+      "name": "Academy",
+      "era": "Antiquity",
+      "cost": 180,
+      "requires": [
+        "TECH_MATHEMATICS"
+      ]
+    },
+    {
+      "id": "BUILDING_ALTAR",
+      "name": "Altar",
+      "era": "Antiquity",
+      "cost": 90,
+      "requires": [
+        "CIVIC_MYSTICISM"
+      ]
+    },
+    {
+      "id": "BUILDING_AMPHITHEATER",
+      "name": "Amphitheater",
+      "era": "Antiquity",
+      "cost": 180,
+      "requires": [
+        "TECH_ENGINEERING"
+      ]
+    },
+    {
+      "id": "BUILDING_ANCIENT_BRIDGE",
+      "name": "Ancient Bridge",
+      "era": "Antiquity",
+      "cost": 100,
+      "requires": [
+        "TECH_ENGINEERING"
+      ]
+    },
+    {
+      "id": "BUILDING_ANCIENT_WALLS",
+      "name": "Ancient Walls",
+      "era": "Antiquity",
+      "cost": 60,
+      "requires": [
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "id": "BUILDING_ARENA",
+      "name": "Arena",
+      "era": "Antiquity",
+      "cost": 180,
+      "requires": [
+        "TECH_MILITARY_TRAINING"
+      ]
+    },
+    {
+      "id": "BUILDING_BARRACKS",
+      "name": "Barracks",
+      "era": "Antiquity",
+      "cost": 90,
+      "requires": [
+        "TECH_BRONZE_WORKING"
+      ]
+    },
+    {
+      "id": "BUILDING_BATH",
+      "name": "Bath",
+      "era": "Antiquity",
+      "cost": 180,
+      "requires": [
+        "TECH_CURRENCY"
+      ]
+    },
+    {
+      "id": "BUILDING_BLACKSMITH",
+      "name": "Blacksmith",
+      "era": "Antiquity",
+      "cost": 180,
+      "requires": [
+        "TECH_MILITARY_TRAINING"
+      ]
+    },
+    {
+      "id": "BUILDING_BRICKYARD",
+      "name": "Brickyard",
+      "era": "Antiquity",
+      "cost": 55,
+      "requires": [
+        "TECH_POTTERY"
+      ]
+    },
+    {
+      "id": "BUILDING_CITY_HALL",
+      "name": "City Hall",
+      "era": "Antiquity",
+      "cost": 150
+    },
+    {
+      "id": "BUILDING_FISHING_QUAY",
+      "name": "Fishing Quay",
+      "era": "Antiquity",
+      "cost": 55,
+      "requires": [
+        "TECH_SAILING"
+      ]
+    },
+    {
+      "id": "BUILDING_GARDEN",
+      "name": "Garden",
+      "era": "Antiquity",
+      "cost": 90,
+      "requires": [
+        "TECH_IRRIGATION"
+      ]
+    },
+    {
+      "id": "BUILDING_GRANARY",
+      "name": "Granary",
+      "era": "Antiquity",
+      "cost": 55,
+      "requires": [
+        "TECH_AGRICULTURE"
+      ]
+    },
+    {
+      "id": "BUILDING_HARBOR",
+      "name": "Harbor",
+      "era": "Antiquity",
+      "cost": 55,
+      "requires": [
+        "TECH_SAILING"
+      ]
+    },
+    {
+      "id": "BUILDING_LIBRARY",
+      "name": "Library",
+      "era": "Antiquity",
+      "cost": 90,
+      "requires": [
+        "TECH_WRITING"
+      ]
+    },
+    {
+      "id": "BUILDING_LIGHTHOUSE",
+      "name": "Lighthouse",
+      "era": "Antiquity",
+      "cost": 180,
+      "requires": [
+        "TECH_NAVIGATION"
+      ]
+    },
+    {
+      "id": "BUILDING_MARKET",
+      "name": "Market",
+      "era": "Antiquity",
+      "cost": 90,
+      "requires": [
+        "TECH_CURRENCY"
+      ]
+    },
+    {
+      "id": "BUILDING_MONUMENT",
+      "name": "Monument",
+      "era": "Antiquity",
+      "cost": 90,
+      "requires": [
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "id": "BUILDING_PALACE",
+      "name": "Palace",
+      "era": "Antiquity",
+      "cost": 500
+    },
+    {
+      "id": "BUILDING_SAW_PIT",
+      "name": "Saw Pit",
+      "era": "Antiquity",
+      "cost": 55,
+      "requires": [
+        "TECH_ANIMAL_HUSBANDRY"
+      ]
+    },
+    {
+      "id": "BUILDING_VILLA",
+      "name": "Villa",
+      "era": "Antiquity",
+      "cost": 180,
+      "requires": [
+        "TECH_THE_WHEEL"
+      ]
+    },
+    {
+      "id": "BUILDING_ARMORER",
+      "name": "Armorer",
+      "era": "Exploration",
+      "cost": 200,
+      "requires": [
+        "TECH_METALLURGY"
+      ]
+    },
+    {
+      "id": "BUILDING_BANK",
+      "name": "Bank",
+      "era": "Exploration",
+      "cost": 380,
+      "requires": [
+        "TECH_URBAN_PLANNING"
+      ]
+    },
+    {
+      "id": "BUILDING_BAZAAR",
+      "name": "Bazaar",
+      "era": "Exploration",
+      "cost": 200
+    },
+    {
+      "id": "BUILDING_DUNGEON",
+      "name": "Dungeon",
+      "era": "Exploration",
+      "cost": 200,
+      "requires": [
+        "TECH_CASTLES"
+      ]
+    },
+    {
+      "id": "BUILDING_GRISTMILL",
+      "name": "Gristmill",
+      "era": "Exploration",
+      "cost": 175,
+      "requires": [
+        "TECH_MACHINERY"
+      ]
+    },
+    {
+      "id": "BUILDING_GUILDHALL",
+      "name": "Guildhall",
+      "era": "Exploration",
+      "cost": 200,
+      "requires": [
+        "TECH_GUILDS"
+      ]
+    },
+    {
+      "id": "BUILDING_HOSPITAL",
+      "name": "Hospital",
+      "era": "Exploration",
+      "cost": 380,
+      "requires": [
+        "TECH_URBAN_PLANNING"
+      ]
+    },
+    {
+      "id": "BUILDING_INN",
+      "name": "Inn",
+      "era": "Exploration",
+      "cost": 200,
+      "requires": [
+        "TECH_FEUDALISM"
+      ]
+    },
+    {
+      "id": "BUILDING_KILN",
+      "name": "Kiln",
+      "era": "Exploration",
+      "cost": 200,
+      "requires": [
+        "TECH_GUILDS"
+      ]
+    },
+    {
+      "id": "BUILDING_MEDIEVAL_BRIDGE",
+      "name": "Medieval Bridge",
+      "era": "Exploration",
+      "cost": 200,
+      "requires": [
+        "TECH_FEUDALISM"
+      ]
+    },
+    {
+      "id": "BUILDING_MEDIEVAL_WALLS",
+      "name": "Medieval Walls",
+      "era": "Exploration",
+      "cost": 150,
+      "requires": [
+        "TECH_CASTLES"
+      ]
+    },
+    {
+      "id": "BUILDING_MENAGERIE",
+      "name": "Menagerie",
+      "era": "Exploration",
+      "cost": 380,
+      "requires": [
+        "TECH_ARCHITECTURE"
+      ]
+    },
+    {
+      "id": "BUILDING_OBSERVATORY",
+      "name": "Observatory",
+      "era": "Exploration",
+      "cost": 200,
+      "requires": [
+        "TECH_ASTRONOMY"
+      ]
+    },
+    {
+      "id": "BUILDING_PAVILION",
+      "name": "Pavilion",
+      "era": "Exploration",
+      "cost": 380,
+      "requires": [
+        "TECH_ARCHITECTURE"
+      ]
+    },
+    {
+      "id": "BUILDING_SAWMILL",
+      "name": "Sawmill",
+      "era": "Exploration",
+      "cost": 175,
+      "requires": [
+        "TECH_MACHINERY"
+      ]
+    },
+    {
+      "id": "BUILDING_SHIPYARD",
+      "name": "Shipyard",
+      "era": "Exploration",
+      "cost": 380,
+      "requires": [
+        "TECH_SHIPBUILDING"
+      ]
+    },
+    {
+      "id": "BUILDING_STONECUTTER",
+      "name": "Stonecutter",
+      "era": "Exploration",
+      "cost": 175
+    },
+    {
+      "id": "BUILDING_TEMPLE",
+      "name": "Temple",
+      "era": "Exploration",
+      "cost": 200,
+      "requires": [
+        "CIVIC_PIETY"
+      ]
+    },
+    {
+      "id": "BUILDING_UNIVERSITY",
+      "name": "University",
+      "era": "Exploration",
+      "cost": 380,
+      "requires": [
+        "TECH_EDUCATION"
+      ]
+    },
+    {
+      "id": "BUILDING_WHARF",
+      "name": "Wharf",
+      "era": "Exploration",
+      "cost": 200,
+      "requires": [
+        "TECH_CARTOGRAPHY"
+      ]
+    },
+    {
+      "id": "BUILDING_AERODROME",
+      "name": "Aerodrome",
+      "era": "Modern",
+      "cost": 840,
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "BUILDING_CANNERY",
+      "name": "Cannery",
+      "era": "Modern",
+      "cost": 420,
+      "requires": [
+        "TECH_MASS_PRODUCTION"
+      ]
+    },
+    {
+      "id": "BUILDING_CITY_PARK",
+      "name": "City Park",
+      "era": "Modern",
+      "cost": 420
+    },
+    {
+      "id": "BUILDING_DEFENSIVE_FORTIFICATIONS",
+      "name": "Defensive Fortifications",
+      "era": "Modern",
+      "cost": 500,
+      "requires": [
+        "TECH_MILITARY_SCIENCE"
+      ]
+    },
+    {
+      "id": "BUILDING_DEPARTMENT_STORE",
+      "name": "Department Store",
+      "era": "Modern",
+      "cost": 780,
+      "requires": [
+        "TECH_URBANIZATION"
+      ]
+    },
+    {
+      "id": "BUILDING_FACTORY",
+      "name": "Factory",
+      "era": "Modern",
+      "cost": 780,
+      "requires": [
+        "TECH_MASS_PRODUCTION"
+      ]
+    },
+    {
+      "id": "BUILDING_GROCER",
+      "name": "Grocer",
+      "era": "Modern",
+      "cost": 535
+    },
+    {
+      "id": "BUILDING_IRONWORKS",
+      "name": "Ironworks",
+      "era": "Modern",
+      "cost": 535,
+      "requires": [
+        "TECH_STEAM_ENGINE"
+      ]
+    },
+    {
+      "id": "BUILDING_LABORATORY",
+      "name": "Laboratory",
+      "era": "Modern",
+      "cost": 780,
+      "requires": [
+        "TECH_ELECTRICITY"
+      ]
+    },
+    {
+      "id": "BUILDING_LAUNCH_PAD",
+      "name": "Launch Pad",
+      "era": "Modern",
+      "cost": 1560,
+      "requires": [
+        "TECH_ROCKETRY"
+      ]
+    },
+    {
+      "id": "BUILDING_MILITARY_ACADEMY",
+      "name": "Military Academy",
+      "era": "Modern",
+      "cost": 420,
+      "requires": [
+        "TECH_MILITARY_SCIENCE"
+      ]
+    },
+    {
+      "id": "BUILDING_MODERN_BRIDGE",
+      "name": "Modern Bridge",
+      "era": "Modern",
+      "cost": 500,
+      "requires": [
+        "TECH_URBANIZATION"
+      ]
+    },
+    {
+      "id": "BUILDING_MUSEUM",
+      "name": "Museum",
+      "era": "Modern",
+      "cost": 420,
+      "requires": [
+        "CIVIC_NATURAL_HISTORY"
+      ]
+    },
+    {
+      "id": "BUILDING_OPERA_HOUSE",
+      "name": "Opera House",
+      "era": "Modern",
+      "cost": 780,
+      "requires": [
+        "TECH_URBANIZATION"
+      ]
+    },
+    {
+      "id": "BUILDING_PORT",
+      "name": "Port",
+      "era": "Modern",
+      "cost": 420,
+      "requires": [
+        "TECH_STEAM_ENGINE"
+      ]
+    },
+    {
+      "id": "BUILDING_RADIO_STATION",
+      "name": "Radio Station",
+      "era": "Modern",
+      "cost": 700,
+      "requires": [
+        "TECH_RADIO"
+      ]
+    },
+    {
+      "id": "BUILDING_RAIL_STATION",
+      "name": "Rail Station",
+      "era": "Modern",
+      "cost": 840,
+      "requires": [
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "id": "BUILDING_SCHOOLHOUSE",
+      "name": "Schoolhouse",
+      "era": "Modern",
+      "cost": 420,
+      "requires": [
+        "TECH_ACADEMICS"
+      ]
+    },
+    {
+      "id": "BUILDING_TENEMENT",
+      "name": "Tenement",
+      "era": "Modern",
+      "cost": 780,
+      "requires": [
+        "TECH_RADIO"
+      ]
+    }
+  ],
+  "units": [
+    {
+      "id": "UNIT_SLINGER",
+      "name": "Slinger",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_ANIMAL_HUSBANDRY"
+      ]
+    },
+    {
+      "id": "UNIT_BURNING_ARROW",
+      "name": "Burning Arrow",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_ANIMAL_HUSBANDRY"
+      ]
+    },
+    {
+      "id": "UNIT_CHU_KO_NU",
+      "name": "Chu-Ko-Nu",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_ANIMAL_HUSBANDRY"
+      ]
+    },
+    {
+      "id": "UNIT_HUL_CHE",
+      "name": "Hul'che",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_ANIMAL_HUSBANDRY"
+      ]
+    },
+    {
+      "id": "UNIT_CHARIOT",
+      "name": "Chariot",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_THE_WHEEL"
+      ]
+    },
+    {
+      "id": "UNIT_SPEARMAN",
+      "name": "Spearman",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_BRONZE_WORKING"
+      ]
+    },
+    {
+      "id": "UNIT_ARCHER",
+      "name": "Archer",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_BRONZE_WORKING"
+      ]
+    },
+    {
+      "id": "UNIT_BALLISTA",
+      "name": "Ballista",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_THE_WHEEL"
+      ]
+    },
+    {
+      "id": "UNIT_GALLEY",
+      "name": "Galley",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_SAILING"
+      ]
+    },
+    {
+      "id": "UNIT_PURABHETTARAH",
+      "name": "Purabhettarah",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_THE_WHEEL"
+      ]
+    },
+    {
+      "id": "UNIT_YUTHAHATHI",
+      "name": "Yuthahathi",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_THE_WHEEL"
+      ]
+    },
+    {
+      "id": "UNIT_IMMORTAL",
+      "name": "Immortal",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_BRONZE_WORKING"
+      ]
+    },
+    {
+      "id": "UNIT_LEGION",
+      "name": "Legion",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_BRONZE_WORKING"
+      ]
+    },
+    {
+      "id": "UNIT_DHOW",
+      "name": "Dhow",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_SAILING"
+      ]
+    },
+    {
+      "id": "UNIT_HORSEMAN",
+      "name": "Horseman",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_IRON_WORKING"
+      ]
+    },
+    {
+      "id": "UNIT_PHALANX",
+      "name": "Phalanx",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_IRON_WORKING"
+      ]
+    },
+    {
+      "id": "UNIT_QUADRIREME",
+      "name": "Quadrireme",
+      "era": "Antiquity",
+      "requires": [
+        "TECH_NAVIGATION"
+      ]
+    },
+    {
+      "id": "UNIT_MERCHANT_ANTIQUITY",
+      "name": "Merchant",
+      "era": "Antiquity",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "UNIT_VAISHYA",
+      "name": "Vaishya",
+      "era": "Antiquity",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "UNIT_WATONATHI",
+      "name": "Watonathi",
+      "era": "Antiquity",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "UNIT_ARMY_COMMANDER_ANTIQUITY",
+      "name": "Army Commander",
+      "era": "Antiquity",
+      "requires": [
+        "CIVIC_DISCIPLINE"
+      ]
+    },
+    {
+      "id": "UNIT_HAZARAPATIS",
+      "name": "Hazarapatis",
+      "era": "Antiquity",
+      "requires": [
+        "CIVIC_DISCIPLINE"
+      ]
+    },
+    {
+      "id": "UNIT_LEGATUS",
+      "name": "Legatus",
+      "era": "Antiquity",
+      "requires": [
+        "CIVIC_DISCIPLINE"
+      ]
+    },
+    {
+      "id": "UNIT_TURTANU",
+      "name": "Turtanu",
+      "era": "Antiquity",
+      "requires": [
+        "CIVIC_DISCIPLINE"
+      ]
+    },
+    {
+      "id": "UNIT_KNIGHT",
+      "name": "Knight",
+      "era": "Exploration",
+      "requires": [
+        "TECH_HERALDRY"
+      ]
+    },
+    {
+      "id": "UNIT_MAN_AT_ARMS",
+      "name": "Man-At-Arms",
+      "era": "Exploration",
+      "requires": [
+        "TECH_HERALDRY"
+      ]
+    },
+    {
+      "id": "UNIT_CROSSBOWMAN",
+      "name": "Crossbowman",
+      "era": "Exploration",
+      "requires": [
+        "TECH_CASTLES"
+      ]
+    },
+    {
+      "id": "UNIT_TREBUCHET",
+      "name": "Trebuchet",
+      "era": "Exploration",
+      "requires": [
+        "TECH_METALLURGY"
+      ]
+    },
+    {
+      "id": "UNIT_CARRACK",
+      "name": "Carrack",
+      "era": "Exploration",
+      "requires": [
+        "TECH_SHIPBUILDING"
+      ]
+    },
+    {
+      "id": "UNIT_PRIVATEER",
+      "name": "Privateer",
+      "era": "Exploration",
+      "requires": [
+        "TECH_HERALDRY"
+      ]
+    },
+    {
+      "id": "UNIT_LANCER",
+      "name": "Lancer",
+      "era": "Exploration",
+      "requires": [
+        "TECH_METAL_CASTING"
+      ]
+    },
+    {
+      "id": "UNIT_PIKEMAN",
+      "name": "Pikeman",
+      "era": "Exploration",
+      "requires": [
+        "TECH_METAL_CASTING"
+      ]
+    },
+    {
+      "id": "UNIT_ARQUEBUSIER",
+      "name": "Arquebusier",
+      "era": "Exploration",
+      "requires": [
+        "TECH_GUNPOWDER"
+      ]
+    },
+    {
+      "id": "UNIT_BOMBARD",
+      "name": "Bombard",
+      "era": "Exploration",
+      "requires": [
+        "TECH_GUNPOWDER"
+      ]
+    },
+    {
+      "id": "UNIT_GALLEON",
+      "name": "Galleon",
+      "era": "Exploration",
+      "requires": [
+        "TECH_GUNPOWDER"
+      ]
+    },
+    {
+      "id": "UNIT_MERCHANT_EXPLORATION",
+      "name": "Merchant",
+      "era": "Exploration",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "UNIT_ARMY_COMMANDER_EXPLORATION",
+      "name": "Army Commander",
+      "era": "Exploration",
+      "requires": [
+        "CIVIC_DISCIPLINE"
+      ]
+    },
+    {
+      "id": "UNIT_FLEET_COMMANDER_EXPLORATION",
+      "name": "Fleet Commander",
+      "era": "Exploration",
+      "requires": [
+        "TECH_ASTRONOMY"
+      ]
+    },
+    {
+      "id": "UNIT_OTTRU",
+      "name": "Ottru",
+      "era": "Exploration",
+      "requires": [
+        "TECH_ASTRONOMY"
+      ]
+    },
+    {
+      "id": "UNIT_LANDSHIP",
+      "name": "Landship",
+      "era": "Modern",
+      "requires": [
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "id": "UNIT_RIFLE_INFANTRY",
+      "name": "Rifle Infantry",
+      "era": "Modern",
+      "requires": [
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "id": "UNIT_FIELD_GUN",
+      "name": "Field Gun",
+      "era": "Modern",
+      "requires": [
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "id": "UNIT_HOWITZER",
+      "name": "Howitzer",
+      "era": "Modern",
+      "requires": [
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "id": "UNIT_KATYUSHA_ROCKET_LAUNCHER",
+      "name": "Katyusha Rocket Launcher",
+      "era": "Modern",
+      "requires": [
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "id": "UNIT_TANK",
+      "name": "Tank",
+      "era": "Modern",
+      "requires": [
+        "TECH_ARMOR"
+      ]
+    },
+    {
+      "id": "UNIT_INFANTRY_COMPANY",
+      "name": "Infantry Company",
+      "era": "Modern",
+      "requires": [
+        "TECH_ARMOR"
+      ]
+    },
+    {
+      "id": "UNIT_AT_GUN",
+      "name": "AT Gun",
+      "era": "Modern",
+      "requires": [
+        "TECH_ARMOR"
+      ]
+    },
+    {
+      "id": "UNIT_ASSAULT_GUN",
+      "name": "Assault Gun",
+      "era": "Modern",
+      "requires": [
+        "TECH_ARMOR"
+      ]
+    },
+    {
+      "id": "UNIT_IRONCLAD",
+      "name": "Ironclad",
+      "era": "Modern",
+      "requires": [
+        "TECH_STEAM_ENGINE"
+      ]
+    },
+    {
+      "id": "UNIT_DREADNOUGHT",
+      "name": "Dreadnought",
+      "era": "Modern",
+      "requires": [
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "id": "UNIT_CRUISER",
+      "name": "Cruiser",
+      "era": "Modern",
+      "requires": [
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "id": "UNIT_MIKASA",
+      "name": "Mikasa",
+      "era": "Modern",
+      "requires": [
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "id": "UNIT_REVENGE",
+      "name": "Revenge",
+      "era": "Modern",
+      "requires": [
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "id": "UNIT_BATTLESHIP",
+      "name": "Battleship",
+      "era": "Modern",
+      "requires": [
+        "TECH_MOBILIZATION"
+      ]
+    },
+    {
+      "id": "UNIT_DESTROYER",
+      "name": "Destroyer",
+      "era": "Modern",
+      "requires": [
+        "TECH_MOBILIZATION"
+      ]
+    },
+    {
+      "id": "UNIT_SUBMARINE",
+      "name": "Submarine",
+      "era": "Modern",
+      "requires": [
+        "TECH_MOBILIZATION"
+      ]
+    },
+    {
+      "id": "UNIT_BIPLANE",
+      "name": "Biplane",
+      "era": "Modern",
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "UNIT_TRENCH_FIGHTER",
+      "name": "Trench Fighter",
+      "era": "Modern",
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "UNIT_BOMBER",
+      "name": "Bomber",
+      "era": "Modern",
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "UNIT_ZERO",
+      "name": "Zero",
+      "era": "Modern",
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "UNIT_STUKA",
+      "name": "Stuka",
+      "era": "Modern",
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "UNIT_DIVE_BOMBER",
+      "name": "Dive Bomber",
+      "era": "Modern",
+      "requires": [
+        "TECH_AERODYNAMICS"
+      ]
+    },
+    {
+      "id": "UNIT_HEAVY_BOMBER",
+      "name": "Heavy Bomber",
+      "era": "Modern",
+      "requires": [
+        "TECH_AERODYNAMICS"
+      ]
+    },
+    {
+      "id": "UNIT_EXPLORER",
+      "name": "Explorer",
+      "era": "Modern",
+      "requires": [
+        "CIVIC_HEGEMONY"
+      ]
+    },
+    {
+      "id": "UNIT_ANTIQUARIAN",
+      "name": "Antiquarian",
+      "era": "Modern",
+      "requires": [
+        "CIVIC_NATURAL_HISTORY"
+      ]
+    },
+    {
+      "id": "UNIT_MERCHANT_MODERN",
+      "name": "Merchant",
+      "era": "Modern",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "UNIT_AIRCRAFT_CARRIER",
+      "name": "Aircraft Carrier",
+      "era": "Modern",
+      "requires": [
+        "TECH_MOBILIZATION"
+      ]
+    },
+    {
+      "id": "UNIT_ARMY_COMMANDER_MODERN",
+      "name": "Army Commander",
+      "era": "Modern",
+      "requires": [
+        "CIVIC_DISCIPLINE"
+      ]
+    },
+    {
+      "id": "UNIT_FLEET_COMMANDER_MODERN",
+      "name": "Fleet Commander",
+      "era": "Modern",
+      "requires": [
+        "TECH_ASTRONOMY"
+      ]
+    },
+    {
+      "id": "UNIT_SQUADRON_COMMANDER",
+      "name": "Squadron Commander",
+      "era": "Modern",
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    }
+  ],
+  "wonders": [
+    {
+      "id": "BUILDING_ANGKOR_WAT",
+      "name": "Angkor Wat",
+      "era": "Antiquity",
+      "cost": 450,
+      "requires": [
+        "CIVIC_PHILOSOPHY"
+      ]
+    },
+    {
+      "id": "BUILDING_BYRSA",
+      "name": "Byrsa",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "TECH_ENGINEERING"
+      ]
+    },
+    {
+      "id": "BUILDING_COLOSSEUM",
+      "name": "Colosseum",
+      "era": "Antiquity",
+      "cost": 450,
+      "requires": [
+        "CIVIC_ENTERTAINMENT"
+      ]
+    },
+    {
+      "id": "BUILDING_COLOSSUS",
+      "name": "Colossus",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "TECH_CURRENCY"
+      ]
+    },
+    {
+      "id": "BUILDING_DUR_SHARRUKIN",
+      "name": "Dur-Sharrukin",
+      "era": "Antiquity",
+      "cost": 275,
+      "requires": [
+        "CIVIC_DISCIPLINE"
+      ]
+    },
+    {
+      "id": "BUILDING_EMILE_BELL",
+      "name": "Emile Bell",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "CIVIC_CITIZENSHIP"
+      ]
+    },
+    {
+      "id": "BUILDING_GATE_OF_ALL_NATIONS",
+      "name": "Gate of All Nations",
+      "era": "Antiquity",
+      "cost": 275,
+      "requires": [
+        "CIVIC_DISCIPLINE"
+      ]
+    },
+    {
+      "id": "BUILDING_GREAT_LIBRARY",
+      "name": "Great Library",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "TECH_MATHEMATICS"
+      ]
+    },
+    {
+      "id": "BUILDING_GREAT_LIGHTHOUSE",
+      "name": "Great Lighthouse",
+      "era": "Antiquity",
+      "cost": 275,
+      "requires": [
+        "TECH_NAVIGATION"
+      ]
+    },
+    {
+      "id": "BUILDING_GREAT_STELE",
+      "name": "Great Stele",
+      "era": "Antiquity",
+      "cost": 275,
+      "requires": [
+        "CIVIC_MYSTICISM"
+      ]
+    },
+    {
+      "id": "BUILDING_HA_AMONGA__A_MAUI",
+      "name": "Ha'amonga 'a Maui",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "TECH_NAVIGATION"
+      ]
+    },
+    {
+      "id": "BUILDING_HANGING_GARDENS",
+      "name": "Hanging Gardens",
+      "era": "Antiquity",
+      "cost": 275,
+      "requires": [
+        "TECH_IRRIGATION"
+      ]
+    },
+    {
+      "id": "BUILDING_HOO_DO_HALL",
+      "name": "Hoo-do Hall",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "BUILDING_MAUSOLEUM_AT_HALICARNASSUS",
+      "name": "Mausoleum at Halicarnassus",
+      "era": "Antiquity",
+      "cost": 450,
+      "requires": [
+        "TECH_IRON_WORKING"
+      ]
+    },
+    {
+      "id": "BUILDING_MAUSOLEUM_OF_THEODORIC",
+      "name": "Mausoleum of Theodoric",
+      "era": "Antiquity",
+      "cost": 450,
+      "requires": [
+        "CIVIC_ORGANIZED_MILITARY"
+      ]
+    },
+    {
+      "id": "BUILDING_MIREUKSA",
+      "name": "Mireuksa",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "TECH_ENGINEERING"
+      ]
+    },
+    {
+      "id": "BUILDING_MONKS_MOUND",
+      "name": "Monks Mound",
+      "era": "Antiquity",
+      "cost": 450,
+      "requires": [
+        "CIVIC_COMMERCE"
+      ]
+    },
+    {
+      "id": "BUILDING_MUNDO_PERDIDO",
+      "name": "Mundo Perdido",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "BUILDING_NALANDA",
+      "name": "Nalanda",
+      "era": "Antiquity",
+      "cost": 450,
+      "requires": [
+        "CIVIC_LITERACY"
+      ]
+    },
+    {
+      "id": "BUILDING_ORACLE",
+      "name": "Oracle",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "CIVIC_PUBLIC_LIFE"
+      ]
+    },
+    {
+      "id": "BUILDING_PETRA",
+      "name": "Petra",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "BUILDING_PYRAMID_OF_THE_SUN",
+      "name": "Pyramid Of The Sun",
+      "era": "Antiquity",
+      "cost": 450,
+      "requires": [
+        "TECH_MATHEMATICS"
+      ]
+    },
+    {
+      "id": "BUILDING_PYRAMIDS",
+      "name": "Pyramids",
+      "era": "Antiquity",
+      "cost": 275,
+      "requires": [
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "id": "BUILDING_SANCHI_STUPA",
+      "name": "Sanchi Stupa",
+      "era": "Antiquity",
+      "cost": 450,
+      "requires": [
+        "CIVIC_SKILLED_TRADES"
+      ]
+    },
+    {
+      "id": "BUILDING_TERRACOTTA_ARMY",
+      "name": "Terracotta Army",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "CIVIC_TACTICS"
+      ]
+    },
+    {
+      "id": "BUILDING_WEIYANG_PALACE",
+      "name": "Weiyang Palace",
+      "era": "Antiquity",
+      "cost": 375,
+      "requires": [
+        "CIVIC_CITIZENSHIP"
+      ]
+    },
+    {
+      "id": "BUILDING_BOROBUDUR",
+      "name": "Borobudur",
+      "era": "Exploration",
+      "cost": 600,
+      "requires": [
+        "CIVIC_BUREAUCRACY"
+      ]
+    },
+    {
+      "id": "BUILDING_BRIHADEESWARAR_TEMPLE",
+      "name": "Brihadeeswarar Temple",
+      "era": "Exploration",
+      "cost": 600,
+      "requires": [
+        "CIVIC_DIPLOMATIC_SERVICE"
+      ]
+    },
+    {
+      "id": "BUILDING_EL_ESCORIAL",
+      "name": "El Escorial",
+      "era": "Exploration",
+      "cost": 600,
+      "requires": [
+        "CIVIC_COLONIALISM"
+      ]
+    },
+    {
+      "id": "BUILDING_ERDENE_ZUU",
+      "name": "Erdene Zuu",
+      "era": "Exploration",
+      "cost": 525,
+      "requires": [
+        "CIVIC_AUTHORITY"
+      ]
+    },
+    {
+      "id": "BUILDING_FORBIDDEN_CITY",
+      "name": "Forbidden City",
+      "era": "Exploration",
+      "cost": 750,
+      "requires": [
+        "CIVIC_IMPERIALISM"
+      ]
+    },
+    {
+      "id": "BUILDING_GRAND_BAZAAR",
+      "name": "Grand Bazaar",
+      "era": "Exploration",
+      "cost": 525,
+      "requires": [
+        "CIVIC_ECONOMICS"
+      ]
+    },
+    {
+      "id": "BUILDING_HALE_O_KEAWE",
+      "name": "Hale o Keawe",
+      "era": "Exploration",
+      "cost": 525,
+      "requires": [
+        "CIVIC_INSPIRATION"
+      ]
+    },
+    {
+      "id": "BUILDING_HAVANA_HARBOR",
+      "name": "Havana Harbor",
+      "era": "Exploration",
+      "cost": 525,
+      "requires": [
+        "TECH_SHIPBUILDING"
+      ]
+    },
+    {
+      "id": "BUILDING_HIMEJI_CASTLE",
+      "name": "Himeji Castle",
+      "era": "Exploration",
+      "cost": 750,
+      "requires": [
+        "TECH_CASTLES"
+      ]
+    },
+    {
+      "id": "BUILDING_HOUSE_OF_WISDOM",
+      "name": "House of Wisdom",
+      "era": "Exploration",
+      "cost": 600,
+      "requires": [
+        "CIVIC_SOCIETY"
+      ]
+    },
+    {
+      "id": "BUILDING_MACHU_PIKCHU",
+      "name": "Machu Pikchu",
+      "era": "Exploration",
+      "cost": 750,
+      "requires": [
+        "TECH_URBAN_PLANNING"
+      ]
+    },
+    {
+      "id": "BUILDING_NAN_MADOL",
+      "name": "Nan Madol",
+      "era": "Exploration",
+      "cost": 525,
+      "requires": [
+        "TECH_FEUDALISM"
+      ]
+    },
+    {
+      "id": "BUILDING_NOTRE_DAME",
+      "name": "Notre Dame",
+      "era": "Exploration",
+      "cost": 550,
+      "requires": [
+        "CIVIC_SOCIAL_CLASS"
+      ]
+    },
+    {
+      "id": "BUILDING_REYKJAHOLT",
+      "name": "Reykjaholt",
+      "era": "Exploration",
+      "cost": 750,
+      "requires": [
+        "CIVIC_SOCIETY"
+      ]
+    },
+    {
+      "id": "BUILDING_RILA_MONASTERY",
+      "name": "Rila Monastery",
+      "era": "Exploration",
+      "cost": 750,
+      "requires": [
+        "TECH_HERALDRY"
+      ]
+    },
+    {
+      "id": "BUILDING_SERPENT_MOUND",
+      "name": "Serpent Mound",
+      "era": "Exploration",
+      "cost": 750,
+      "requires": [
+        "TECH_ASTRONOMY"
+      ]
+    },
+    {
+      "id": "BUILDING_SHWEDAGON_ZEDI_DAW",
+      "name": "Shwedagon Zedi Daw",
+      "era": "Exploration",
+      "cost": 750,
+      "requires": [
+        "TECH_EDUCATION"
+      ]
+    },
+    {
+      "id": "BUILDING_TH_NH_HU_",
+      "name": "Th\u00e0nh Hu\u1ebf",
+      "era": "Exploration",
+      "cost": 750,
+      "requires": [
+        "TECH_CASTLES"
+      ]
+    },
+    {
+      "id": "BUILDING_TOMB_OF_ASKIA",
+      "name": "Tomb of Askia",
+      "era": "Exploration",
+      "cost": 525,
+      "requires": [
+        "CIVIC_MERCANTILISM"
+      ]
+    },
+    {
+      "id": "BUILDING_WAT_XIENG_THONG",
+      "name": "Wat Xieng Thong",
+      "era": "Exploration",
+      "cost": 525,
+      "requires": [
+        "CIVIC_PIETY"
+      ]
+    },
+    {
+      "id": "BUILDING_WHITE_TOWER",
+      "name": "White Tower",
+      "era": "Exploration",
+      "cost": 750,
+      "requires": [
+        "CIVIC_SOVEREIGNTY"
+      ]
+    },
+    {
+      "id": "BUILDING_BATTERSEA_POWER_STATION",
+      "name": "Battersea Power Station",
+      "era": "Modern",
+      "cost": 1500,
+      "requires": [
+        "TECH_ELECTRICITY"
+      ]
+    },
+    {
+      "id": "BUILDING_BOUDHANATH",
+      "name": "Boudhanath",
+      "era": "Modern",
+      "cost": 1500,
+      "requires": [
+        "CIVIC_NATIONALISM"
+      ]
+    },
+    {
+      "id": "BUILDING_BRANDENBURG_GATE",
+      "name": "Brandenburg Gate",
+      "era": "Modern",
+      "cost": 2100,
+      "requires": [
+        "CIVIC_MILITARISM"
+      ]
+    },
+    {
+      "id": "BUILDING_CHENGDE_MOUNTAIN_RESORT",
+      "name": "Chengde Mountain Resort",
+      "era": "Modern",
+      "cost": 2100,
+      "requires": [
+        "CIVIC_HEGEMONY"
+      ]
+    },
+    {
+      "id": "BUILDING_DOGO_ONSEN",
+      "name": "Dogo Onsen",
+      "era": "Modern",
+      "cost": 1500,
+      "requires": [
+        "CIVIC_SOCIAL_QUESTION"
+      ]
+    },
+    {
+      "id": "BUILDING_DOI_SUTHEP",
+      "name": "Doi Suthep",
+      "era": "Modern",
+      "cost": 1500,
+      "requires": [
+        "CIVIC_POLITICAL_THEORY"
+      ]
+    },
+    {
+      "id": "BUILDING_EIFFEL_TOWER",
+      "name": "Eiffel Tower",
+      "era": "Modern",
+      "cost": 1800,
+      "requires": [
+        "TECH_RADIO"
+      ]
+    },
+    {
+      "id": "BUILDING_ERAM_GARDEN",
+      "name": "Eram Garden",
+      "era": "Modern",
+      "cost": 1500,
+      "requires": [
+        "CIVIC_HEGEMONY"
+      ]
+    },
+    {
+      "id": "BUILDING_MANHATTAN_PROJECT",
+      "name": "Manhattan Project",
+      "era": "Modern",
+      "cost": 1800,
+      "requires": [
+        "TECH_NUCLEAR_FISSION"
+      ]
+    },
+    {
+      "id": "BUILDING_MUZIBU_AZAALA_MPANGA",
+      "name": "Muzibu Azaala Mpanga",
+      "era": "Modern",
+      "cost": 1500,
+      "requires": [
+        "CIVIC_NATURAL_HISTORY"
+      ]
+    },
+    {
+      "id": "BUILDING_NIRAYAMA_REVERBERATORY_FURNACE",
+      "name": "Nirayama Reverberatory Furnace",
+      "era": "Modern",
+      "cost": 1500,
+      "requires": [
+        "TECH_MASS_PRODUCTION"
+      ]
+    },
+    {
+      "id": "BUILDING_PALACIO_DE_BELLAS_ARTES",
+      "name": "Palacio de Bellas Artes",
+      "era": "Modern",
+      "cost": 1800,
+      "requires": [
+        "CIVIC_GLOBALISM"
+      ]
+    },
+    {
+      "id": "BUILDING_RED_FORT",
+      "name": "Red Fort",
+      "era": "Modern",
+      "cost": 1500,
+      "requires": [
+        "TECH_MILITARY_SCIENCE"
+      ]
+    },
+    {
+      "id": "BUILDING_STATUE_OF_LIBERTY",
+      "name": "Statue of Liberty",
+      "era": "Modern",
+      "cost": 2100,
+      "requires": [
+        "CIVIC_CAPITALISM"
+      ]
+    },
+    {
+      "id": "BUILDING_SULTANAHMET_CAMII",
+      "name": "Sultanahmet Camii",
+      "era": "Modern",
+      "cost": 1000,
+      "requires": [
+        "CIVIC_MODERNIZATION"
+      ]
+    },
+    {
+      "id": "BUILDING_TAJ_MAHAL",
+      "name": "Taj Mahal",
+      "era": "Modern",
+      "cost": 1800,
+      "requires": [
+        "CIVIC_NATIONALISM"
+      ]
+    },
+    {
+      "id": "BUILDING_UBUDIAH_MOSQUE",
+      "name": "Ubudiah Mosque",
+      "era": "Modern",
+      "cost": 1500,
+      "requires": [
+        "TECH_URBANIZATION"
+      ]
+    },
+    {
+      "id": "BUILDING_WORLD_S_FAIR",
+      "name": "World's Fair",
+      "era": "Modern",
+      "cost": 2100,
+      "requires": [
+        "CIVIC_HEGEMONY"
+      ]
+    }
   ]
 }
