@@ -39,37 +39,49 @@
       "kind": "Civilization Advance",
       "name": "Mysticism",
       "id": "TECH_MYSTICISM",
-      "requires": ["TECH_CEREMONIAL_BURIAL"]
+      "requires": [
+        "TECH_CEREMONIAL_BURIAL"
+      ]
     },
     {
       "kind": "Civilization Advance",
       "name": "Code of Laws",
       "id": "TECH_CODE_OF_LAWS",
-      "requires": ["TECH_ALPHABET"]
+      "requires": [
+        "TECH_ALPHABET"
+      ]
     },
     {
       "kind": "Civilization Advance",
       "name": "Mapmaking",
       "id": "TECH_MAPMAKING",
-      "requires": ["TECH_ALPHABET"]
+      "requires": [
+        "TECH_ALPHABET"
+      ]
     },
     {
       "kind": "Civilization Advance",
       "name": "Writing",
       "id": "TECH_WRITING",
-      "requires": ["TECH_ALPHABET"]
+      "requires": [
+        "TECH_ALPHABET"
+      ]
     },
     {
       "kind": "Civilization Advance",
       "name": "Iron Working",
       "id": "TECH_IRON_WORKING",
-      "requires": ["TECH_BRONZE_WORKING"]
+      "requires": [
+        "TECH_BRONZE_WORKING"
+      ]
     },
     {
       "kind": "Civilization Advance",
       "name": "Currency",
       "id": "TECH_CURRENCY",
-      "requires": ["TECH_BRONZE_WORKING"]
+      "requires": [
+        "TECH_BRONZE_WORKING"
+      ]
     },
     {
       "kind": "Civilization Advance",
@@ -561,7 +573,9 @@
       "kind": "Civilization Advance",
       "name": "Future Tech",
       "id": "TECH_FUTURE_TECH",
-      "requires": ["TECH_FUSION_POWER"]
+      "requires": [
+        "TECH_FUSION_POWER"
+      ]
     }
   ],
   "build": [
@@ -878,7 +892,7 @@
       "kind": "Wonder",
       "name": "Apollo Program",
       "id": "BUILDING_APOLLO_PROGRAM",
-      "requires": "TECH_SPACEFLIGHT"
+      "requires": "TECH_SPACE_FLIGHT"
     },
     {
       "cost": 600,
