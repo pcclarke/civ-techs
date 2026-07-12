@@ -3,10 +3,14 @@ import {
     EDGE_PADDING,
     ERA_LABEL_HEIGHT,
     LABEL_PADDING,
+    LABEL_SLOT_FRACTION,
     MIN_TECH_IMG_RADIUS,
     TECH_IMG_RADIUS,
     TECH_IMG_WIDTH,
+    TECH_LABEL_FONT_MAX,
+    TECH_LABEL_FONT_MIN,
     TOTAL_WIDTH,
+    TWO_PI_ADJ,
 } from "./constants";
 
 /**
@@ -100,6 +104,10 @@ function maxLabelRadius(allTechs, widths, lineHeight, maxExtent, maxRadius = Inf
  * that satisfies the EDGE_PADDING constraint for every label; the icon
  * radius is set just inside that with room for the icon and LABEL_PADDING.
  *
+ * The label font size is chosen here too (and left applied to labelGroup):
+ * sparse wheels get a larger font, bounded by TECH_LABEL_FONT_MAX and the
+ * LABEL_SLOT_FRACTION crowding test against neighbouring labels.
+ *
  * When `hasEras` is true, the outermost ERA_LABEL_HEIGHT pixels are reserved
  * for era labels — tech labels are pushed inward by that amount, and the
  * returned `eraLabelRadius` sits at the centre of the reserved band.
@@ -115,8 +123,6 @@ export function computeWheelLayout(labelGroup, allTechs, hasEras = false) {
         };
     }
 
-    const { widths, lineHeight } = measureLabels(labelGroup, allTechs);
-
     // Reserve a radial band at the outer edge for era labels when the
     // current data has eras. Tech labels then have to fit within a shrunken
     // extent. The era ring sits at the centre of the reserved band so its
@@ -126,22 +132,38 @@ export function computeWheelLayout(labelGroup, allTechs, hasEras = false) {
     // the per-axis constraint yet still cross the ring.
     const eraReserve = hasEras ? ERA_LABEL_HEIGHT : 0;
     const techExtent = MAX_EXTENT - eraReserve;
-    const rawLabelRadius = maxLabelRadius(
-        allTechs,
-        widths,
-        lineHeight,
-        techExtent,
-        hasEras ? techExtent : Infinity
-    );
 
     // The icon sits inside the label by half its own width plus LABEL_PADDING.
     const iconInset = TECH_IMG_WIDTH / 2 + LABEL_PADDING;
 
-    // Floor the icon radius so the inner arc region is always usable. If the
-    // labels would force us below the floor, accept slight over-extension on
-    // the worst label rather than collapse the wheel.
-    const techImgRadius = Math.max(MIN_TECH_IMG_RADIUS, rawLabelRadius - iconInset);
-    const labelRadius = techImgRadius + iconInset;
+    // Pick the largest label font that still leaves breathing room between
+    // neighbouring labels. A bigger font widens every label, which shrinks
+    // the wheel and with it the tangential slot each label gets, so every
+    // candidate size has to be measured and laid out before the fit test.
+    // The font is set on the label group so the real labels drawn into it
+    // later inherit the size the measurement was taken at. The smallest
+    // size is accepted unconditionally — it's today's default.
+    let techImgRadius, labelRadius;
+    for (let fontSize = TECH_LABEL_FONT_MAX; fontSize >= TECH_LABEL_FONT_MIN; fontSize--) {
+        labelGroup.style("font-size", `${fontSize}px`);
+        const { widths, lineHeight } = measureLabels(labelGroup, allTechs);
+        const rawLabelRadius = maxLabelRadius(
+            allTechs,
+            widths,
+            lineHeight,
+            techExtent,
+            hasEras ? techExtent : Infinity
+        );
+
+        // Floor the icon radius so the inner arc region is always usable.
+        // If the labels would force us below the floor, accept slight
+        // over-extension on the worst label rather than collapse the wheel.
+        techImgRadius = Math.max(MIN_TECH_IMG_RADIUS, rawLabelRadius - iconInset);
+        labelRadius = techImgRadius + iconInset;
+
+        const slot = (labelRadius * TWO_PI_ADJ) / allTechs.length;
+        if (lineHeight <= slot * LABEL_SLOT_FRACTION) break;
+    }
 
     // Centre of the reserved era band, measured from the wheel centre. Falls
     // through to labelRadius when there are no eras (no caller will use it).

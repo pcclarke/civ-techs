@@ -117,11 +117,27 @@ export const ARC_SPACE_MAX = 20;
 /** Clearance between the outermost arc and the inner edge of the icon ring. */
 export const ARC_GAP_FROM_ICONS = 16;
 
+/** Bounds for the dynamically-chosen tech label font size. The layout tries
+ *  sizes from max down to min and keeps the largest one whose line height
+ *  still fits the tangential slot between adjacent spokes (see
+ *  LABEL_SLOT_FRACTION), so sparse wheels get bigger, more readable text.
+ *  The min matches the browser-default 16px the wheel has always used, so
+ *  dense wheels render exactly as before. */
+export const TECH_LABEL_FONT_MAX = 20;
+export const TECH_LABEL_FONT_MIN = 16;
+/** Max fraction of the tangential slot between adjacent spokes that a
+ *  label's line box may occupy. 0.65 matches the densest existing wheel
+ *  (Civ 4 BTS) at the default font size, so no current tree gets crowded
+ *  beyond what it already was. */
+export const LABEL_SLOT_FRACTION = 0.65;
+
 /** Radial band reserved at the outer edge of the wheel for era labels. The
  *  layout shrinks the label-radius cap by this amount so the era ring sits
- *  outside the tech labels without clipping at the SVG edge. Set to 0 to
- *  disable the era ring entirely. */
-export const ERA_LABEL_HEIGHT = 24;
+ *  outside the tech labels without clipping at the SVG edge. Sized to hold
+ *  the .era-label font (22px, see techs.css) plus breathing room on both
+ *  sides; grow it if that font grows. Set to 0 to disable the era ring
+ *  entirely. */
+export const ERA_LABEL_HEIGHT = 32;
 
 /** Percent of circle that should be left open */
 const ANGLE_GAP = 0.05;

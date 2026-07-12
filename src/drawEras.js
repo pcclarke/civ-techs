@@ -1,8 +1,11 @@
 import { arc } from "d3-shape";
 
-import { PI_DIFF, TWO_PI_ADJ } from "./constants";
+import { EDGE_PADDING, PI_DIFF, TOTAL_WIDTH, TWO_PI_ADJ } from "./constants";
 import { eraDisplayName } from "./eraData";
 import { calculatePointOnWheel } from "./helpers";
+
+/** Same edge budget the tech labels use (see computeWheelLayout). */
+const MAX_EXTENT = TOTAL_WIDTH / 2 - EDGE_PADDING;
 
 /**
  * Era visualization is two layers, drawn together so eras read as both a
@@ -64,6 +67,14 @@ export function drawEraBackgrounds(element, eraRanges, color, outerRadius) {
  * 180° so the reader doesn't have to tilt their head — same trick the tech
  * labels use, just rotated 90° because era labels run along the ring rather
  * than radially.
+ *
+ * Long era names near the diagonals can poke past the SVG edge: the label
+ * is centred at `radius` but its text runs tangentially, and nothing about
+ * the reserved radial band limits that direction. After rendering, each
+ * label's corner extents are checked against the same ±MAX_EXTENT budget
+ * the tech labels obey (a corner sits at C ± (w/2)·tangent ± (h/2)·radial),
+ * and any label too wide for its spot is squeezed with textLength. The
+ * squeeze is a few percent at worst, invisible next to a clipped glyph.
  */
 export function drawEraLabels(element, eraRanges, color, radius) {
     return element
@@ -83,5 +94,33 @@ export function drawEraLabels(element, eraRanges, color, radius) {
             return `translate(${point.x}, ${point.y}) rotate(${tangentRot})`;
         })
         .attr("fill", (_, i) => color(i))
-        .text((d) => eraDisplayName(d.era));
+        .text((d) => eraDisplayName(d.era))
+        .each(function (d) {
+            const midIdx = (d.first + d.last) / 2;
+            const { angle } = calculatePointOnWheel(d.count, midIdx, 1);
+            const c = Math.abs(Math.cos(angle));
+            const s = Math.abs(Math.sin(angle));
+            const w = this.getComputedTextLength();
+            const h = this.getBBox().height;
+
+            // Solve |x| ≤ MAX_EXTENT and |y| ≤ MAX_EXTENT for the text
+            // width, mirroring the corner geometry in computeWheelLayout.
+            // Near-zero sin/cos means the tangent runs along the other
+            // axis, so that axis can't constrain the width.
+            const xCap = s > 1e-9
+                ? (2 * (MAX_EXTENT - (radius + h / 2) * c)) / s
+                : Infinity;
+            const yCap = c > 1e-9
+                ? (2 * (MAX_EXTENT - (radius + h / 2) * s)) / c
+                : Infinity;
+            const wCap = Math.min(xCap, yCap);
+
+            if (wCap > 0 && w > wCap) {
+                this.setAttribute("textLength", wCap);
+                this.setAttribute("lengthAdjust", "spacingAndGlyphs");
+            } else {
+                this.removeAttribute("textLength");
+                this.removeAttribute("lengthAdjust");
+            }
+        });
 }

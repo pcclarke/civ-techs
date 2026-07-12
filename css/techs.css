@@ -324,7 +324,11 @@ p {
 
 .era-label {
   font-family: "Goudy Trajan Regular";
-  font-size: 14px;
+  /* Larger than the biggest tech-label font (TECH_LABEL_FONT_MAX, 20px) so
+   * era names read as headings over the labels they group. If this grows,
+   * ERA_LABEL_HEIGHT in constants.js must grow with it — that constant
+   * reserves the radial band this text sits in. */
+  font-size: 22px;
   text-transform: capitalize;
   letter-spacing: 0.05em;
   pointer-events: none;
