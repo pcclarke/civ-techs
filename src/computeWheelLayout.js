@@ -59,8 +59,15 @@ function measureLabels(group, allTechs) {
  *
  * Setting each ≤ maxExtent and solving for R gives a per-label cap; the
  * wheel uses min across all labels.
+ *
+ * When `maxRadius` is finite, labels must additionally stay inside a circle
+ * of that radius (used to keep tech labels out of the circular era-label
+ * ring — the square constraint alone lets diagonal labels reach up to
+ * √2·maxExtent from the centre, straight through the ring). The label's
+ * farthest corner sits at distance √((R+w)² + (h/2)²), so the cap on
+ * (R + w) is √(maxRadius² − (h/2)²).
  */
-function maxLabelRadius(allTechs, widths, lineHeight, maxExtent) {
+function maxLabelRadius(allTechs, widths, lineHeight, maxExtent, maxRadius = Infinity) {
     const n = allTechs.length;
     let best = Infinity;
 
@@ -77,7 +84,10 @@ function maxLabelRadius(allTechs, widths, lineHeight, maxExtent) {
         // (the label runs along the other axis), so skip it.
         const xCap = c > 1e-9 ? (maxExtent - (h / 2) * s) / c : Infinity;
         const yCap = s > 1e-9 ? (maxExtent - (h / 2) * c) / s : Infinity;
-        const r = Math.min(xCap, yCap) - w;
+        const radialCap = Number.isFinite(maxRadius)
+            ? Math.sqrt(Math.max(0, maxRadius * maxRadius - (h / 2) * (h / 2)))
+            : Infinity;
+        const r = Math.min(xCap, yCap, radialCap) - w;
 
         if (r < best) best = r;
     }
@@ -111,9 +121,18 @@ export function computeWheelLayout(labelGroup, allTechs, hasEras = false) {
     // current data has eras. Tech labels then have to fit within a shrunken
     // extent. The era ring sits at the centre of the reserved band so its
     // text is roughly equidistant from the tech labels and the SVG edge.
+    // Because the era ring is a circle, the shrunken extent is applied as a
+    // circular cap too — otherwise labels near the diagonals would satisfy
+    // the per-axis constraint yet still cross the ring.
     const eraReserve = hasEras ? ERA_LABEL_HEIGHT : 0;
     const techExtent = MAX_EXTENT - eraReserve;
-    const rawLabelRadius = maxLabelRadius(allTechs, widths, lineHeight, techExtent);
+    const rawLabelRadius = maxLabelRadius(
+        allTechs,
+        widths,
+        lineHeight,
+        techExtent,
+        hasEras ? techExtent : Infinity
+    );
 
     // The icon sits inside the label by half its own width plus LABEL_PADDING.
     const iconInset = TECH_IMG_WIDTH / 2 + LABEL_PADDING;
