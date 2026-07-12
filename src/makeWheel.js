@@ -1,5 +1,5 @@
 import { scaleOrdinal } from "d3-scale";
-import { schemeCategory10, schemeTableau10 } from "d3-scale-chromatic";
+import { schemeCategory10 } from "d3-scale-chromatic";
 
 import { ARC_BASE } from "./constants";
 import { calculateSingleRadialLinePath, wheelTransform } from "./helpers";
@@ -9,10 +9,24 @@ import { setupHighlights } from "./setupHighlights";
 import { hideTooltip, showTooltip } from "./tooltip";
 
 const color = scaleOrdinal(schemeCategory10);
-// Era colours come from a separate palette so they don't compete with the
-// arc-step colours on screen at the same time. Tableau10 is muted enough to
-// look good as a low-opacity background tint while still being distinct.
-const eraColor = scaleOrdinal(schemeTableau10);
+// Era colours are a hand-picked muted "antique" palette — desaturated,
+// mid-dark tones that read clearly as 22px serif text and tint softly as
+// wedge backgrounds, while staying visually distinct from the vivid
+// Category10 hues the arcs use (the era labels sit right on top of the
+// arc region, so the two palettes must not be confusable). Nine entries
+// covers the largest era count (Civ 6 GS); the ordinal scale wraps if a
+// future game exceeds that.
+const eraColor = scaleOrdinal([
+    "#8a6d3f", // bronze
+    "#5c7154", // moss
+    "#4e6e8c", // slate
+    "#8c5a5a", // clay
+    "#6e5c82", // dusty violet
+    "#4e7d74", // pine
+    "#9a7b4f", // ochre
+    "#75757f", // pewter
+    "#5b6b45", // olive
+]);
 
 /**
  * Render the wheel visualization using cached data.
@@ -41,11 +55,15 @@ export async function renderWheel() {
     } = setupHighlights(allTechs);
 
   // Era layers — backgrounds sit behind everything (groups are drawn in
-  // SVG paint order set by svgInit), labels sit on the reserved outer ring.
-  // For games without era data, eraRanges is empty and both selections
-  // exit-clear, leaving no era visuals.
+  // SVG paint order set by svgInit), labels render radially in the annulus
+  // between the centre image and the icons. For games without era data,
+  // eraRanges is empty and both selections exit-clear, leaving no era
+  // visuals.
   drawEraBackgrounds(svg.eraBackgrounds, eraRanges, eraColor, labelRadius);
-  drawEraLabels(svg.eraLabels, eraRanges, eraColor, eraLabelRadius);
+  // Era names fade alongside the unrelated techs while a tech is hovered,
+  // so the highlighted prerequisite chain stands out against a quiet wheel.
+  drawEraLabels(svg.eraLabels, eraRanges, eraColor, eraLabelRadius)
+      .classed("fade", Boolean(selected));
 
   drawSpokes(svg.spokes, spokeData, allTechs.length, techImgRadius, arcSpace)
       .classed("fade", Boolean(selected));

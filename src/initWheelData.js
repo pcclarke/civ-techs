@@ -82,11 +82,10 @@ export async function initWheelData() {
   // the largest one sits ~EDGE_PADDING from the SVG edge, then derive the
   // icon ring inward from that. Done per data load, after the SVG exists,
   // because widths depend on the live font + the specific tech names.
-  // When the wheel has eras, we also reserve an outer band for era labels
-  // so they sit outside the tech labels rather than overlapping them.
-  const hasEras = eraRanges.length > 0;
+  // Era labels render in the interior (between the centre image and the
+  // icons), so they don't influence the tech label layout.
   const { labelRadius, techImgRadius, eraLabelRadius } =
-      computeWheelLayout(window.app.svg.techLabels, allTechs, hasEras);
+      computeWheelLayout(window.app.svg.techLabels, allTechs);
 
   // Space the arc rings to fill the gap between ARC_BASE and the icon ring,
   // capped at ARC_SPACE_MAX so trees with few steps don't end up with absurdly

@@ -315,8 +315,9 @@ p {
 }
 
 /* Era visualization. Backgrounds sit behind every other wheel layer as faint
- * coloured wedges; labels sit on the reserved outer ring. Fill colours come
- * from JS so the styling here only handles opacity and typography. */
+ * coloured wedges; labels render radially inside the wheel, between the
+ * centre game image and the icon ring. Fill colours come from JS so the
+ * styling here only handles typography and legibility. */
 .era-background {
   opacity: 0.12;
   pointer-events: none;
@@ -325,11 +326,16 @@ p {
 .era-label {
   font-family: "Goudy Trajan Regular";
   /* Larger than the biggest tech-label font (TECH_LABEL_FONT_MAX, 20px) so
-   * era names read as headings over the labels they group. If this grows,
-   * ERA_LABEL_HEIGHT in constants.js must grow with it — that constant
-   * reserves the radial band this text sits in. */
+   * era names read as headings over the labels they group. */
   font-size: 22px;
   text-transform: capitalize;
   letter-spacing: 0.05em;
   pointer-events: none;
+  /* The labels sit on top of the arc/spoke layers, so halo each glyph in
+   * white (stroke painted under the fill) to keep the text readable where
+   * it crosses a coloured arc. */
+  stroke: #fff;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  paint-order: stroke;
 }

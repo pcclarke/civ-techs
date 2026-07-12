@@ -39,9 +39,9 @@ export default function() {
 
     // SVG groups to organize shapes. Order is paint order — earlier groups
     // sit behind later ones. eraBackgrounds is first so its faint coloured
-    // wedges sit below every other layer; eraLabels is last so the curved
-    // era names sit above the tech labels (they live in a reserved outer
-    // band so they don't actually overlap).
+    // wedges sit below every other layer; eraLabels is last so the era
+    // names (drawn radially inside the wheel, over the arc region) stay
+    // readable on top of the arcs and spokes they cross.
     const shapeGroups = [
         { prop: "eraBackgrounds", class: "era-backgrounds" },
         { prop: "spokes", class: "spokes" },

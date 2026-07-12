@@ -1,22 +1,20 @@
 import { arc } from "d3-shape";
 
-import { EDGE_PADDING, PI_DIFF, TOTAL_WIDTH, TWO_PI_ADJ } from "./constants";
+import { GAME_IMG_WIDTH, LABEL_PADDING, PI_DIFF, TWO_PI_ADJ } from "./constants";
 import { eraDisplayName } from "./eraData";
-import { calculatePointOnWheel } from "./helpers";
-
-/** Same edge budget the tech labels use (see computeWheelLayout). */
-const MAX_EXTENT = TOTAL_WIDTH / 2 - EDGE_PADDING;
+import { wheelTransform } from "./helpers";
 
 /**
  * Era visualization is two layers, drawn together so eras read as both a
- * background tint behind their techs and a name on the outer ring:
+ * background tint behind their techs and a name inside the wheel:
  *
  *   - drawEraBackgrounds: full wedges from the chart centre out to the icon
  *     ring, one per era, with a half-tech-slot of angular buffer so adjacent
  *     eras meet exactly between consecutive techs.
- *   - drawEraLabels: single text per era at the angular midpoint, sitting on
- *     the reserved outer band. Text is tangent to the ring and flipped on
- *     the bottom half so it always reads upright.
+ *   - drawEraLabels: single text per era on the spoke at its angular
+ *     midpoint, reading radially like the tech labels but centred in the
+ *     annulus between the centre game image and the icon ring, so era
+ *     names take no space away from the tech labels at the outer edge.
  *
  * Both are driven by the eraRanges array produced by computeEraRanges; each
  * entry is `{era, first, last, count}` where first/last are tech indices and
@@ -61,22 +59,22 @@ export function drawEraBackgrounds(element, eraRanges, color, outerRadius) {
 }
 
 /**
- * Render the era name at the angular midpoint of each era, on the reserved
- * outer ring. The text is laid out tangent to the ring; for points in the
- * lower half of the SVG (sin(angle) > 0 since y points down) it's flipped
- * 180° so the reader doesn't have to tilt their head — same trick the tech
- * labels use, just rotated 90° because era labels run along the ring rather
- * than radially.
+ * Render the era name on the spoke at the angular midpoint of each era,
+ * reading radially exactly like the tech labels (wheelTransform flips the
+ * rotation 180° on the left half so text never renders upside down). The
+ * text is anchored at its middle so it spreads evenly around `radius`,
+ * which computeWheelLayout centres in the annulus between the centre game
+ * image and the icon ring.
  *
- * Long era names near the diagonals can poke past the SVG edge: the label
- * is centred at `radius` but its text runs tangentially, and nothing about
- * the reserved radial band limits that direction. After rendering, each
- * label's corner extents are checked against the same ±MAX_EXTENT budget
- * the tech labels obey (a corner sits at C ± (w/2)·tangent ± (h/2)·radial),
- * and any label too wide for its spot is squeezed with textLength. The
- * squeeze is a few percent at worst, invisible next to a clipped glyph.
+ * A long era name can outgrow that annulus — its text runs radially and
+ * would collide with the centre image on one end and the icons on the
+ * other. `radius` splits the annulus evenly, so the room available is
+ * twice the distance from the anchor to the image edge; anything wider is
+ * squeezed with textLength (a few percent at worst, invisible next to an
+ * overlap).
  */
 export function drawEraLabels(element, eraRanges, color, radius) {
+    const widthCap = 2 * (radius - GAME_IMG_WIDTH / 2 - LABEL_PADDING);
     return element
         .selectAll("text")
         .data(eraRanges)
@@ -84,39 +82,13 @@ export function drawEraLabels(element, eraRanges, color, radius) {
         .attr("class", "era-label")
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "middle")
-        .attr("transform", (d) => {
-            const midIdx = (d.first + d.last) / 2;
-            const point = calculatePointOnWheel(d.count, midIdx, radius);
-            const angleDeg = point.angle * (180 / Math.PI);
-            const tangentRot = Math.sin(point.angle) > 0
-                ? angleDeg - 90
-                : angleDeg + 90;
-            return `translate(${point.x}, ${point.y}) rotate(${tangentRot})`;
-        })
+        .attr("transform", (d) => wheelTransform(d.count, (d.first + d.last) / 2, radius))
         .attr("fill", (_, i) => color(i))
         .text((d) => eraDisplayName(d.era))
-        .each(function (d) {
-            const midIdx = (d.first + d.last) / 2;
-            const { angle } = calculatePointOnWheel(d.count, midIdx, 1);
-            const c = Math.abs(Math.cos(angle));
-            const s = Math.abs(Math.sin(angle));
+        .each(function () {
             const w = this.getComputedTextLength();
-            const h = this.getBBox().height;
-
-            // Solve |x| ≤ MAX_EXTENT and |y| ≤ MAX_EXTENT for the text
-            // width, mirroring the corner geometry in computeWheelLayout.
-            // Near-zero sin/cos means the tangent runs along the other
-            // axis, so that axis can't constrain the width.
-            const xCap = s > 1e-9
-                ? (2 * (MAX_EXTENT - (radius + h / 2) * c)) / s
-                : Infinity;
-            const yCap = c > 1e-9
-                ? (2 * (MAX_EXTENT - (radius + h / 2) * s)) / c
-                : Infinity;
-            const wCap = Math.min(xCap, yCap);
-
-            if (wCap > 0 && w > wCap) {
-                this.setAttribute("textLength", wCap);
+            if (widthCap > 0 && w > widthCap) {
+                this.setAttribute("textLength", widthCap);
                 this.setAttribute("lengthAdjust", "spacingAndGlyphs");
             } else {
                 this.removeAttribute("textLength");

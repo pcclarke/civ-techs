@@ -1,7 +1,7 @@
 import { calculatePointOnWheel } from "./helpers";
 import {
     EDGE_PADDING,
-    ERA_LABEL_HEIGHT,
+    GAME_IMG_WIDTH,
     LABEL_PADDING,
     LABEL_SLOT_FRACTION,
     MIN_TECH_IMG_RADIUS,
@@ -63,15 +63,8 @@ function measureLabels(group, allTechs) {
  *
  * Setting each ≤ maxExtent and solving for R gives a per-label cap; the
  * wheel uses min across all labels.
- *
- * When `maxRadius` is finite, labels must additionally stay inside a circle
- * of that radius (used to keep tech labels out of the circular era-label
- * ring — the square constraint alone lets diagonal labels reach up to
- * √2·maxExtent from the centre, straight through the ring). The label's
- * farthest corner sits at distance √((R+w)² + (h/2)²), so the cap on
- * (R + w) is √(maxRadius² − (h/2)²).
  */
-function maxLabelRadius(allTechs, widths, lineHeight, maxExtent, maxRadius = Infinity) {
+function maxLabelRadius(allTechs, widths, lineHeight, maxExtent) {
     const n = allTechs.length;
     let best = Infinity;
 
@@ -88,10 +81,7 @@ function maxLabelRadius(allTechs, widths, lineHeight, maxExtent, maxRadius = Inf
         // (the label runs along the other axis), so skip it.
         const xCap = c > 1e-9 ? (maxExtent - (h / 2) * s) / c : Infinity;
         const yCap = s > 1e-9 ? (maxExtent - (h / 2) * c) / s : Infinity;
-        const radialCap = Number.isFinite(maxRadius)
-            ? Math.sqrt(Math.max(0, maxRadius * maxRadius - (h / 2) * (h / 2)))
-            : Infinity;
-        const r = Math.min(xCap, yCap, radialCap) - w;
+        const r = Math.min(xCap, yCap) - w;
 
         if (r < best) best = r;
     }
@@ -108,13 +98,14 @@ function maxLabelRadius(allTechs, widths, lineHeight, maxExtent, maxRadius = Inf
  * sparse wheels get a larger font, bounded by TECH_LABEL_FONT_MAX and the
  * LABEL_SLOT_FRACTION crowding test against neighbouring labels.
  *
- * When `hasEras` is true, the outermost ERA_LABEL_HEIGHT pixels are reserved
- * for era labels — tech labels are pushed inward by that amount, and the
- * returned `eraLabelRadius` sits at the centre of the reserved band.
+ * `eraLabelRadius` is the centre of the annulus between the centre game
+ * image and the inner edge of the icon ring — era labels render radially
+ * in that interior space (see drawEraLabels), so they claim no outer-edge
+ * real estate from the tech labels.
  *
  * Returns { labelRadius, techImgRadius, eraLabelRadius }.
  */
-export function computeWheelLayout(labelGroup, allTechs, hasEras = false) {
+export function computeWheelLayout(labelGroup, allTechs) {
     if (!allTechs.length) {
         return {
             labelRadius: TECH_IMG_RADIUS,
@@ -122,16 +113,6 @@ export function computeWheelLayout(labelGroup, allTechs, hasEras = false) {
             eraLabelRadius: TECH_IMG_RADIUS,
         };
     }
-
-    // Reserve a radial band at the outer edge for era labels when the
-    // current data has eras. Tech labels then have to fit within a shrunken
-    // extent. The era ring sits at the centre of the reserved band so its
-    // text is roughly equidistant from the tech labels and the SVG edge.
-    // Because the era ring is a circle, the shrunken extent is applied as a
-    // circular cap too — otherwise labels near the diagonals would satisfy
-    // the per-axis constraint yet still cross the ring.
-    const eraReserve = hasEras ? ERA_LABEL_HEIGHT : 0;
-    const techExtent = MAX_EXTENT - eraReserve;
 
     // The icon sits inside the label by half its own width plus LABEL_PADDING.
     const iconInset = TECH_IMG_WIDTH / 2 + LABEL_PADDING;
@@ -147,13 +128,7 @@ export function computeWheelLayout(labelGroup, allTechs, hasEras = false) {
     for (let fontSize = TECH_LABEL_FONT_MAX; fontSize >= TECH_LABEL_FONT_MIN; fontSize--) {
         labelGroup.style("font-size", `${fontSize}px`);
         const { widths, lineHeight } = measureLabels(labelGroup, allTechs);
-        const rawLabelRadius = maxLabelRadius(
-            allTechs,
-            widths,
-            lineHeight,
-            techExtent,
-            hasEras ? techExtent : Infinity
-        );
+        const rawLabelRadius = maxLabelRadius(allTechs, widths, lineHeight, MAX_EXTENT);
 
         // Floor the icon radius so the inner arc region is always usable.
         // If the labels would force us below the floor, accept slight
@@ -165,11 +140,11 @@ export function computeWheelLayout(labelGroup, allTechs, hasEras = false) {
         if (lineHeight <= slot * LABEL_SLOT_FRACTION) break;
     }
 
-    // Centre of the reserved era band, measured from the wheel centre. Falls
-    // through to labelRadius when there are no eras (no caller will use it).
-    const eraLabelRadius = hasEras
-        ? techExtent + eraReserve / 2
-        : labelRadius;
+    // Era labels live inside the wheel, radially centred between the centre
+    // game image and the icon ring's inner edge. Unused when the current
+    // data has no eras.
+    const eraLabelRadius =
+        (GAME_IMG_WIDTH / 2 + techImgRadius - TECH_IMG_WIDTH / 2) / 2;
 
     return { labelRadius, techImgRadius, eraLabelRadius };
 }

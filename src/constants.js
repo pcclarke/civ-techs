@@ -131,14 +131,6 @@ export const TECH_LABEL_FONT_MIN = 16;
  *  beyond what it already was. */
 export const LABEL_SLOT_FRACTION = 0.65;
 
-/** Radial band reserved at the outer edge of the wheel for era labels. The
- *  layout shrinks the label-radius cap by this amount so the era ring sits
- *  outside the tech labels without clipping at the SVG edge. Sized to hold
- *  the .era-label font (22px, see techs.css) plus breathing room on both
- *  sides; grow it if that font grows. Set to 0 to disable the era ring
- *  entirely. */
-export const ERA_LABEL_HEIGHT = 32;
-
 /** Percent of circle that should be left open */
 const ANGLE_GAP = 0.05;
 
