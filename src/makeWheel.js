@@ -84,9 +84,17 @@ export async function renderWheel() {
           hideTooltip();
       });
 
-  if (Boolean(selected)) {
-      drawArcs(svg.selectedArcs, selectionPrerequisites.filter(d => d.step !== undefined), color, arcSpace)
-  }
+  // Always join the highlight arcs — with an empty array when nothing is
+  // selected — so the previous hover's paths exit-clear. Drawing this layer
+  // conditionally used to leave stale paths behind on mouseleave; invisible
+  // while they coincided with the base arcs, but plainly wrong once a game
+  // switch rebuilt the base arcs underneath them.
+  drawArcs(
+      svg.selectedArcs,
+      selected ? selectionPrerequisites.filter(d => d.step !== undefined) : [],
+      color,
+      arcSpace
+  );
 
   svg.unlockPins
     .selectAll("path")

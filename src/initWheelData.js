@@ -13,6 +13,7 @@ import { depthSortTechnologies } from "./depthSortTechnologies";
 import createUnlocks from "./createUnlocks";
 import { renderWheel } from "./makeWheel";
 import { setupSpokes } from "./setupSpokes";
+import { hideTooltip } from "./tooltip";
 
 /**
  * Load and process data for the wheel visualization.
@@ -21,6 +22,15 @@ import { setupSpokes } from "./setupSpokes";
 export async function initWheelData() {
   var { game, tree } = window.app;
   var path = game + "/civdata.json";
+
+  // A hover selection can survive a game/tree switch (switching via
+  // keyboard, or racing the mouseleave), but the selected object belongs
+  // to the outgoing data set — ids can even collide across games, so the
+  // highlight layers would render nonsense against the new wheel. Clear it
+  // through the backing field (the `selected` setter would re-render
+  // against the old wheelData), and drop any tooltip still showing.
+  window.app._selected = null;
+  hideTooltip();
 
   var data = await json(path);
   // Pick the right node array for the active tree (default: technologies).
