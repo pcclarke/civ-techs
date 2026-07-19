@@ -97,20 +97,362 @@ p {
   margin: 0;
 }
 
-#select-options {
-  display: flex;
-  flex-direction: row;
-  gap: 64px;
+/* ------------------------------------------------------------------ */
+/* Per-game theme tokens. src/main.js stamps data-game="civN" on <body>
+ * whenever the active game changes; each block below restyles the
+ * selection panel, pills, and tooltip in that game's own UI idiom. The
+ * :root defaults double as a neutral fallback and document what each
+ * token controls. Values were picked in the theme mockup session:
+ * fonts fall back gracefully where a system face (Copperplate, Tahoma)
+ * isn't installed. */
+:root {
+  /* Selection panel (and compact toolbar) surface + text. */
+  --game-panel-bg: #fff;
+  --game-ink: #1f1f1f;
+  /* Secondary text: tooltip kind line, unlock group headings. Chosen
+   * per game to stay readable on that game's tooltip background. */
+  --game-ink-muted: #555;
+  /* Interactive highlight: active pill fill, checked tab ring, hover
+   * borders, compact toolbar rule. --game-on-accent is text on top. */
+  --game-accent: #1f1f1f;
+  --game-on-accent: #fff;
+  /* Resting tabs and pills. */
+  --game-control-bg: #fff;
+  --game-control-ink: #1f1f1f;
+  --game-control-border: 1px solid #bcbec0;
+  /* Corner language: 0 for the hard-edged retro/deco games, round for
+   * the friendly ones. Pills get their own radius so a theme can have
+   * round tabs but squared pills (or vice versa). */
+  --game-radius: 8px;
+  --game-pill-radius: 999px;
+  /* Display face (tab captions, row labels, tooltip title) and body
+   * face (pill text, tooltip body). */
+  --game-font-display: "Goudy Trajan Regular";
+  --game-font-body: "helvetica neue", Helvetica, Geneva, Tahoma, Arial, sans-serif;
+  /* Tooltip surface. Kept separate from the panel so e.g. Civ 2 can
+   * pair gray dialogs with a parchment Civilopedia page. */
+  --game-tip-bg: #fff;
+  --game-tip-ink: #000;
+  --game-tip-border: 1px solid #000;
 }
 
-.selectBox p {
-  margin: 3px;
+/* Civ 1 — EGA menus: solid blue, cyan highlights, hard pixel edges,
+ * monospace type; tooltip as a DOS-gray dialog. */
+body[data-game="civ1"] {
+  --game-panel-bg: #0000aa;
+  --game-ink: #ffffff;
+  --game-ink-muted: #444444;
+  --game-accent: #55ffff;
+  --game-on-accent: #0000aa;
+  --game-control-bg: #000066;
+  --game-control-ink: #ffffff;
+  --game-control-border: 2px solid #ffffff;
+  --game-radius: 0px;
+  --game-pill-radius: 0px;
+  --game-font-display: "Courier New", monospace;
+  --game-font-body: "Courier New", monospace;
+  --game-tip-bg: #c0c0c0;
+  --game-tip-ink: #000000;
+  --game-tip-border: 2px solid #ffffff;
+}
+
+/* Civ 2 — Win95 chrome: beveled gray dialogs, navy accents, parchment
+ * Civilopedia tooltip. */
+body[data-game="civ2"] {
+  --game-panel-bg: #c0c0c0;
+  --game-ink: #000000;
+  --game-ink-muted: #5a4a33;
+  --game-accent: #000080;
+  --game-on-accent: #ffffff;
+  --game-control-bg: #d4d0c8;
+  --game-control-ink: #000000;
+  --game-control-border: 2px outset #ffffff;
+  --game-radius: 0px;
+  --game-pill-radius: 0px;
+  --game-font-display: Tahoma, Verdana, sans-serif;
+  --game-font-body: Tahoma, Verdana, sans-serif;
+  --game-tip-bg: #fff8dc;
+  --game-tip-ink: #3b2f1e;
+  --game-tip-border: 1px solid #808080;
+}
+
+/* Civ 3 — parchment and leather: tan papers, umber ink, serif headers. */
+body[data-game="civ3"] {
+  --game-panel-bg: #e8d9b0;
+  --game-ink: #4a3520;
+  --game-ink-muted: #7a6446;
+  --game-accent: #8b5e2a;
+  --game-on-accent: #f3e8c8;
+  --game-control-bg: #d9c48e;
+  --game-control-ink: #4a3520;
+  --game-control-border: 1px solid #8b5e2a;
+  --game-radius: 6px;
+  --game-pill-radius: 999px;
+  --game-font-display: Georgia, serif;
+  --game-font-body: Georgia, serif;
+  --game-tip-bg: #f3e8c8;
+  --game-tip-ink: #4a3520;
+  --game-tip-border: 1px solid #8b5e2a;
+}
+
+/* Civ 4 — deep navy and marble with gold trim. */
+body[data-game="civ4"] {
+  --game-panel-bg: #14243f;
+  --game-ink: #e8dfc8;
+  --game-ink-muted: #a89a76;
+  --game-accent: #c9a75c;
+  --game-on-accent: #14243f;
+  --game-control-bg: #1e3356;
+  --game-control-ink: #c9a75c;
+  --game-control-border: 1px solid #c9a75c;
+  --game-radius: 6px;
+  --game-pill-radius: 999px;
+  --game-font-display: Georgia, serif;
+  --game-font-body: Georgia, serif;
+  --game-tip-bg: #1b2e4e;
+  --game-tip-ink: #e8dfc8;
+  --game-tip-border: 1px solid #c9a75c;
+}
+
+/* Civ 5 — art deco: charcoal panels, gold geometric linework, teal
+ * button accents. */
+body[data-game="civ5"] {
+  --game-panel-bg: #211d18;
+  --game-ink: #d9cfb8;
+  --game-ink-muted: #9a8f77;
+  --game-accent: #3fa8a0;
+  --game-on-accent: #211d18;
+  --game-control-bg: #2a2620;
+  --game-control-ink: #3fa8a0;
+  --game-control-border: 1px solid #c8a954;
+  --game-radius: 0px;
+  --game-pill-radius: 0px;
+  --game-font-display: Copperplate, "Goudy Trajan Regular", serif;
+  --game-font-body: Georgia, serif;
+  --game-tip-bg: #262119;
+  --game-tip-ink: #d9cfb8;
+  --game-tip-border: 1px solid #c8a954;
+}
+
+/* Civ 6 — bright cartographic flat design: cream, teal, round shapes. */
+body[data-game="civ6"] {
+  --game-panel-bg: #f2ebdc;
+  --game-ink: #2e3a46;
+  --game-ink-muted: #64707c;
+  --game-accent: #2c8c99;
+  --game-on-accent: #ffffff;
+  --game-control-bg: #ffffff;
+  --game-control-ink: #2c8c99;
+  --game-control-border: 2px solid #2c8c99;
+  --game-radius: 14px;
+  --game-pill-radius: 999px;
+  --game-font-display: "Segoe UI", system-ui, sans-serif;
+  --game-font-body: "Segoe UI", system-ui, sans-serif;
+  --game-tip-bg: #ffffff;
+  --game-tip-ink: #2e3a46;
+  --game-tip-border: 2px solid #2c8c99;
+}
+
+/* Civ 7 — near-black panels, gold Trajan capitals, restrained ornament.
+ * Goudy Trajan is the site's own face, so this doubles as "the site
+ * theme, turned up". */
+body[data-game="civ7"] {
+  --game-panel-bg: #0c0c0e;
+  --game-ink: #d8cba8;
+  --game-ink-muted: #97906f;
+  --game-accent: #b99a5b;
+  --game-on-accent: #0c0c0e;
+  --game-control-bg: #17171a;
+  --game-control-ink: #b99a5b;
+  --game-control-border: 1px solid #b99a5b;
+  --game-radius: 2px;
+  --game-pill-radius: 2px;
+  --game-font-display: "Goudy Trajan Regular", Georgia, serif;
+  --game-font-body: Georgia, serif;
+  --game-tip-bg: #101013;
+  --game-tip-ink: #d8cba8;
+  --game-tip-border: 1px solid #b99a5b;
+}
+
+/* Game/expansion/tree selection. The game picker is a row of tabs (label
+ * wrapping a visually-hidden radio + the game's wheel-center emblem);
+ * expansion and tree are rows of pill buttons rendered by src/main.js. */
+/* The bottom margin lives on the wrapper (not the sticky panel inside it)
+ * so it counts toward the reserved flow height main.js freezes while the
+ * panel is pinned. */
+#select-wrap {
+  margin-bottom: 24px;
+}
+
+#select-options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--game-panel-bg);
+  color: var(--game-ink);
+  border-radius: var(--game-radius);
+  padding: 10px 12px;
+}
+
+/* Compact (pinned) mode: main.js adds .compact once the page scrolls past
+ * #select-wrap. The bar leaves normal flow and pins to the viewport top
+ * (position: fixed rather than sticky — sticky can't work here because
+ * the wrapper containing block is exactly the panel's own height, so
+ * there'd be no room to slide). The wrapper's frozen height keeps the
+ * page from jumping. Horizontal geometry mirrors #container (centered,
+ * max-width 1200px, 10px side padding) so the bar aligns with the page
+ * column. Everything goes on one line: emblem-only tabs, slim pills,
+ * captions and row labels hidden. */
+#select-options.compact {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1200px;
+  padding: 10px;
+  box-sizing: border-box;
+  z-index: 5;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid var(--game-accent);
+  border-radius: 0;
+}
+
+#select-options.compact #game-tabs {
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+#select-options.compact .game-tab {
+  min-width: 0;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+#select-options.compact .game-tab span {
+  display: none;
+}
+
+#select-options.compact .game-tab img {
+  width: 26px;
+  height: 26px;
+}
+
+#select-options.compact .pill-row-label {
+  display: none;
+}
+
+#select-options.compact .pill {
+  padding: 3px 10px;
+  font-size: 12px;
+}
+
+#game-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.game-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 76px;
+  padding: 12px 14px 9px;
+  border: var(--game-control-border);
+  border-radius: var(--game-radius);
+  background: var(--game-control-bg);
+  cursor: pointer;
+}
+
+.game-tab img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.game-tab span {
+  font-family: var(--game-font-display);
+  font-size: 13px;
+  color: var(--game-control-ink);
+}
+
+/* The radio still drives selection (keyboard, JS bindings) but the label
+ * is the visible control, so hide the input without removing it from the
+ * accessibility tree's focus order. */
+.game-tab input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.game-tab:hover {
+  border-color: var(--game-accent);
+}
+
+.game-tab:has(input:checked) {
+  border-color: var(--game-accent);
+  box-shadow: inset 0 0 0 1px var(--game-accent);
+}
+
+.game-tab:has(input:focus-visible) {
+  outline: 2px solid var(--game-accent);
+  outline-offset: 2px;
+}
+
+.pill-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pill-row-label {
+  font-family: var(--game-font-display);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  color: var(--game-ink);
+}
+
+.pill-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  padding: 5px 16px;
+  border: var(--game-control-border);
+  border-radius: var(--game-pill-radius);
+  background: var(--game-control-bg);
+  color: var(--game-control-ink);
+  font-family: var(--game-font-body);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pill:hover {
+  border-color: var(--game-accent);
+}
+
+.pill.active {
+  background: var(--game-accent);
+  border-color: var(--game-accent);
+  color: var(--game-on-accent);
 }
 
 .tech-image,
 .unlock {
   cursor: pointer;
   transition: opacity 0.5s ease;
+}
+
+/* Arcs share the node hover/click handlers, so they should invite the
+ * same interaction. */
+.arcs path {
+  cursor: pointer;
 }
 
 .fade {
@@ -184,9 +526,11 @@ p {
    * stealing their hover). */
   position: fixed;
   pointer-events: none;
-  border: 1px solid black;
-  border-radius: 6px;
-  background-color: white;
+  border: var(--game-tip-border);
+  border-radius: var(--game-radius);
+  background-color: var(--game-tip-bg);
+  color: var(--game-tip-ink);
+  font-family: var(--game-font-body);
   width: 400px;
   height: auto;
   padding: 5px;
@@ -204,17 +548,33 @@ p {
   visibility: hidden;
 }
 
-/* Close button is left in the markup but irrelevant to the hover model. */
+/* The close button only exists for the pinned state: hover previews
+ * dismiss themselves on mouseleave, but a pinned tooltip needs an
+ * explicit way out. pointer-events:auto punches through the tooltip's
+ * own pointer-events:none so the button is clickable while the rest of
+ * the box stays hover-transparent. */
 #tipCloseButton {
   display: none;
 }
 
-.desc {
-  padding-left: 10px;
+#tooltip.pinned #tipCloseButton {
+  display: block;
+  pointer-events: auto;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: 14px;
+  padding: 2px 6px;
 }
 
-#tipCloseButton {
-  cursor: pointer;
+/* Doubled border marks a tooltip that will stay put. */
+#tooltip.pinned {
+  border-width: 2px;
+}
+
+.desc {
+  padding-left: 10px;
 }
 
 #tipKind {
@@ -227,7 +587,7 @@ p {
 
 #tipName {
   float: left;
-  font-family: "Goudy Trajan Regular";
+  font-family: var(--game-font-display);
   font-size: 20px;
   margin: 0;
   padding: 0;
@@ -272,7 +632,7 @@ p {
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #555;
+  color: var(--game-ink-muted);
   margin: 0 0 2px;
 }
 

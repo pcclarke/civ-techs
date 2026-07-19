@@ -13,7 +13,9 @@ import { calculatePointOnWheel } from "./helpers";
  * the design discussion that motivated this module — TL;DR is "anywhere
  * the selected arcs are likely to be is wrong, and arcs concentrate near
  * the hovered node, so far away is right." Result is then clamped inside
- * the SVG bounds so it never escapes off-screen.
+ * the SVG bounds so it never escapes off-screen. (An experiment docking
+ * the tooltip in the wheel's hub was rejected: it sat on top of the inner
+ * arcs, including the selection's own highlight chain.)
  */
 
 const SELECTORS = {
@@ -104,11 +106,18 @@ export function showTooltip(tech) {
     populateTooltip(tech, allTechs, game, folder);
     populateUnlocks(tech, unlocksByTech, obsoletesByTech, game);
     positionTooltipAt(tech, allTechs.length, labelRadius);
+    // While pinned the tooltip advertises it (stronger border, visible
+    // close button — see #tooltip.pinned in techs.css). Hover previews
+    // are suppressed during a pin, so a shown tooltip is either a plain
+    // hover preview or THE pinned tech, never a mixture.
+    tipBox.classed("pinned", Boolean(app.pinned));
     tipBox.classed("hidden", false);
 }
 
 export function hideTooltip() {
-    select(SELECTORS.box).classed("hidden", true);
+    select(SELECTORS.box)
+        .classed("pinned", false)
+        .classed("hidden", true);
 }
 
 

@@ -36,49 +36,70 @@
                 </div>
             </div>
 
+            <!-- The wrapper reserves the panel's expanded height in normal
+                 flow (frozen by main.js while the panel is pinned), so the
+                 sticky panel can collapse to a slim toolbar without changing
+                 the document height — no content jump, no scroll clamping.
+                 Its position also tells main.js when the panel is pinned. -->
+            <div id="select-wrap">
             <div id="select-options">
-                <fieldset>
-                    <legend>Game</legend>
-
-                    <div>
-                        <input type="radio" id="civ1-select" name="game" value="civ1" checked />
-                        <label for="civ1">1</label>
-                    </div>
-                    <div>
-                        <input type="radio" id="civ2-select" name="game" value="civ2" checked />
-                        <label for="civ2">2</label>
-                    </div>
-                    <div>
-                        <input type="radio" id="civ3-select" name="game" value="civ3" checked />
-                        <label for="civ3">3</label>
-                    </div>
-                    <div>
+                <!-- Game tabs: each label wraps its radio so clicking anywhere on
+                     the tab selects it; the input stays in the DOM (visually
+                     hidden via CSS) so keyboard and existing JS bindings on
+                     input[name="game"] keep working. Emblems are the same
+                     center-of-wheel images the chart uses. Only the default
+                     game (see DEFAULT_GAME in src/constants.js) is checked. -->
+                <div id="game-tabs" role="radiogroup" aria-label="Game">
+                    <label class="game-tab">
+                        <input type="radio" id="civ1-select" name="game" value="civ1" />
+                        <img src="civ1/img/civ1-center.png" alt="" />
+                        <span>Civ I</span>
+                    </label>
+                    <label class="game-tab">
+                        <input type="radio" id="civ2-select" name="game" value="civ2" />
+                        <img src="civ2/img/civ2-center.png" alt="" />
+                        <span>Civ II</span>
+                    </label>
+                    <label class="game-tab">
+                        <input type="radio" id="civ3-select" name="game" value="civ3" />
+                        <img src="civ3/img/civ3-center.png" alt="" />
+                        <span>Civ III</span>
+                    </label>
+                    <label class="game-tab">
                         <input type="radio" id="civ4-select" name="game" value="civ4" checked />
-                        <label for="civ4">4</label>
-                    </div>
-                    <div>
+                        <img src="civ4/img/civ4-center.png" alt="" />
+                        <span>Civ IV</span>
+                    </label>
+                    <label class="game-tab">
                         <input type="radio" id="civ5-select" name="game" value="civ5" />
-                        <label for="civ5">5</label>
-                    </div>
-                    <div>
+                        <img src="civ5/img/civ5-center.png" alt="" />
+                        <span>Civ V</span>
+                    </label>
+                    <label class="game-tab">
                         <input type="radio" id="civ6-select" name="game" value="civ6" />
-                        <label for="civ6">6</label>
-                    </div>
-                    <div>
+                        <img src="civ6/img/civ6-center.png" alt="" />
+                        <span>Civ VI</span>
+                    </label>
+                    <label class="game-tab">
                         <input type="radio" id="civ7-select" name="game" value="civ7" />
-                        <label for="civ7">7</label>
-                    </div>
-                </fieldset>
-
-                <div id="expansion">
-                    <h3>Expansion</h3>
-                    <select id="select-expansion"></select>
+                        <img src="civ7/img/civ7-center.png" alt="" />
+                        <span>Civ VII</span>
+                    </label>
                 </div>
 
-                <div id="tree" class="hidden">
-                    <h3>Tree</h3>
-                    <select id="select-tree"></select>
+                <!-- Expansion / tree pills are rendered into these containers
+                     by src/main.js; the rows hide when the active game has no
+                     choice to make. -->
+                <div id="expansion" class="pill-row">
+                    <span class="pill-row-label">Expansion</span>
+                    <div id="select-expansion" class="pill-group"></div>
                 </div>
+
+                <div id="tree" class="pill-row hidden">
+                    <span class="pill-row-label">Tree</span>
+                    <div id="select-tree" class="pill-group"></div>
+                </div>
+            </div>
             </div>
 
             <div id="chart"></div>

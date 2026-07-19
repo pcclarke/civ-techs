@@ -3,10 +3,17 @@ import { schemeCategory10 } from "d3-scale-chromatic";
 
 import { ARC_BASE } from "./constants";
 import { calculateSingleRadialLinePath, wheelTransform } from "./helpers";
-import { drawArcs, drawSpokes, drawTechImages, drawTechLabels } from "./drawTools";
+import {
+    drawArcs,
+    drawSpokes,
+    drawTechImages,
+    drawTechLabels,
+    onNodeClick,
+    onNodeHover,
+    onNodeLeave,
+} from "./drawTools";
 import { drawEraBackgrounds, drawEraLabels } from "./drawEras";
 import { setupHighlights } from "./setupHighlights";
-import { hideTooltip, showTooltip } from "./tooltip";
 
 const color = scaleOrdinal(schemeCategory10);
 // Era colours are a hand-picked muted "antique" palette — desaturated,
@@ -73,16 +80,13 @@ export async function renderWheel() {
   drawTechImages(svg.techImages, allTechs, game, highlightedIds, iconFolder, techImgRadius);
   drawTechLabels(svg.techLabels, allTechs, highlightedIds, labelRadius);
 
+  // Arcs share the node handlers so hovering or clicking an arc behaves
+  // exactly like hovering or clicking its origin tech.
   drawArcs(svg.arcs, prerequisites, color, arcSpace)
       .classed("fade", Boolean(selected))
-      .on("mouseover", (_, d) => {
-          window.app.selected = d;
-          showTooltip(d);
-      })
-      .on("mouseleave", () => {
-          window.app.selected = null;
-          hideTooltip();
-      });
+      .on("mouseover", onNodeHover)
+      .on("mouseleave", onNodeLeave)
+      .on("click", onNodeClick);
 
   // Always join the highlight arcs — with an empty array when nothing is
   // selected — so the previous hover's paths exit-clear. Drawing this layer

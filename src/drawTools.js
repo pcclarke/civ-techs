@@ -48,7 +48,8 @@ export function drawTechImages(element, allTechs, game, highlightedIds, folder =
         .attr("y", -TECH_IMG_WIDTH / 2)
         .attr("xlink:href", (d) => `${game}/img/${folder}/${d.id}.png`)
         .on("mouseover", onNodeHover)
-        .on("mouseleave", onNodeLeave);
+        .on("mouseleave", onNodeLeave)
+        .on("click", onNodeClick);
 }
 
 export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
@@ -66,20 +67,39 @@ export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
         // styling here in sync with .tech-image (.spokeText already sets
         // cursor: pointer in CSS).
         .on("mouseover", onNodeHover)
-        .on("mouseleave", onNodeLeave);
+        .on("mouseleave", onNodeLeave)
+        .on("click", onNodeClick);
 }
 
-/** Shared hover handler. Setting `selected` triggers the wheel re-render
- *  that draws the arcs; the tooltip lives outside the SVG paint hierarchy
- *  and is updated independently. */
-function onNodeHover(_, d) {
+/** Shared hover handler (also used for arcs — see makeWheel). Setting
+ *  `selected` triggers the wheel re-render that draws the arcs; the
+ *  tooltip lives outside the SVG paint hierarchy and is updated
+ *  independently. While a node is pinned, hover is inert: previews would
+ *  rip the pinned tooltip away as the pointer crosses the wheel (e.g. on
+ *  its way to the tooltip's close button), which defeats the pin. */
+export function onNodeHover(_, d) {
+    if (window.app.pinned) return;
     window.app.selected = d;
     showTooltip(d);
 }
 
-function onNodeLeave() {
+export function onNodeLeave() {
+    if (window.app.pinned) return;
     window.app.selected = null;
     hideTooltip();
+}
+
+/** Click pins the node so its highlight and tooltip survive mouseleave.
+ *  Clicking the pinned node again releases it (hover keeps working from
+ *  that position); clicking any other node moves the pin there directly.
+ *  stopPropagation keeps the click from reaching the SVG background,
+ *  whose own handler releases the pin. */
+export function onNodeClick(event, d) {
+    event.stopPropagation();
+    const { pinned } = window.app;
+    window.app.pinned = pinned && pinned.id === d.id ? null : d;
+    window.app.selected = d;
+    showTooltip(d);
 }
 
 
