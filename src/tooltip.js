@@ -245,7 +245,9 @@ function renderItemSection(items, sectionSel, contentSel, game) {
                 // Items with unique variants span both grid columns so
                 // the variant chips sit unambiguously with their base
                 // item instead of interleaving the two-column packing.
-                .classed("tipItemWide", hasUniques);
+                // Owner-tagged exclusives span too: "Immortal (Achaemenid
+                // Persian)" ellipsizes in a half-width column.
+                .classed("tipItemWide", hasUniques || Boolean(it.civ));
             li.append("img")
                 .attr("class", "tipItemIcon")
                 .attr("src", `${game}/img/${source}/${it.id}.png`)

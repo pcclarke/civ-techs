@@ -253,6 +253,16 @@ body[data-game="civ6"] {
   --game-tip-border: 2px solid #2c8c99;
 }
 
+/* Civ 7's unit icons are pure-black masks with alpha — the game tints
+ * them per context at runtime, and the wiki exports the black tint —
+ * so on this theme's near-black tooltip they vanish. Re-tint them white
+ * the way the game does. Scoped to unit icons only: every other Civ 7
+ * icon category (buildings, wonders, techs, civics) is full-colour art
+ * that already reads fine on dark. */
+body[data-game="civ7"] #tooltip img[src*="/units/"] {
+  filter: brightness(0) invert(1);
+}
+
 /* Civ 7 — near-black panels, gold Trajan capitals, restrained ornament.
  * Goudy Trajan is the site's own face, so this doubles as "the site
  * theme, turned up". */
