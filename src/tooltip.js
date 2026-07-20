@@ -1,6 +1,7 @@
 import { select } from "d3-selection";
 
 import { TOTAL_WIDTH } from "./constants";
+import { eraDisplayName } from "./eraData";
 import { calculatePointOnWheel } from "./helpers";
 
 /**
@@ -96,6 +97,7 @@ export function showTooltip(tech) {
         labelRadius,
         unlocksByTech,
         obsoletesByTech,
+        eraRanges,
     } = app.wheelData;
     const game = app.game;
     const folder = (app.tree && app.tree.folder) || "technologies";
@@ -103,7 +105,7 @@ export function showTooltip(tech) {
     const tipBox = select(SELECTORS.box);
     if (tipBox.empty()) return;
 
-    populateTooltip(tech, allTechs, game, folder);
+    populateTooltip(tech, allTechs, game, folder, eraRanges);
     populateUnlocks(tech, unlocksByTech, obsoletesByTech, game);
     positionTooltipAt(tech, allTechs.length, labelRadius);
     // While pinned the tooltip advertises it (stronger border, visible
@@ -123,7 +125,7 @@ export function hideTooltip() {
 
 // --------------------------- Content ---------------------------
 
-function populateTooltip(tech, allTechs, game, folder) {
+function populateTooltip(tech, allTechs, game, folder, eraRanges) {
     const nameOf = makeNameLookup(allTechs);
 
     select(SELECTORS.name).text(tech.name || tech.id);
@@ -145,6 +147,9 @@ function populateTooltip(tech, allTechs, game, folder) {
     const optional = (tech.optTo || []).map((r) => nameOf(r.id));
 
     const noPrereqs = required.length === 0 && optional.length === 0;
+    if (noPrereqs) {
+        select(SELECTORS.noLine).text(availabilityText(tech, eraRanges, game));
+    }
     select(SELECTORS.noLine).classed("hidden", !noPrereqs);
 
     if (required.length > 0) {
@@ -292,6 +297,43 @@ function orderedSources(bySource) {
     const known = SOURCE_ORDER.filter((k) => bySource.has(k));
     const extras = [...bySource.keys()].filter((k) => !SOURCE_ORDER.includes(k)).sort();
     return [...known, ...extras];
+}
+
+
+/**
+ * Wording for a node with no prerequisite edges. "Available at game
+ * start" is only true in the wheel's FIRST era — Civ 3 techs whose sole
+ * prereq was an era pseudo-node (stripped at load), and Civ 7 techs that
+ * root a later Age's self-contained tree, unlock when their era begins,
+ * not at game start. The node's own era field is dropped by
+ * createUnlocks, so the era is recovered from its wheel position via
+ * eraRanges. Games without era data (empty eraRanges) keep the
+ * game-start wording.
+ */
+function availabilityText(tech, eraRanges, game) {
+    if (eraRanges && eraRanges.length > 1 && typeof tech.position === "number") {
+        const range = eraRanges.find(
+            (r) => tech.position >= r.first && tech.position <= r.last
+        );
+        if (range && range !== eraRanges[0]) {
+            const name = eraDisplayName(range.era);
+            // Per-game grammar, reluctantly: Civ 3's descriptive era
+            // names ("Middle Ages", "Modern Times") are complete noun
+            // phrases that read wrong with a trailing noun, while
+            // Civ 7's single-word Age names need one — and that game's
+            // own term for them is "Age". Everything else keeps the
+            // site's generic "era" (currently unreachable: only Civ 3
+            // and Civ 7 have prereq-less techs beyond the first era).
+            if (game && game.startsWith("civ3")) {
+                return `Available at the start of the ${name}`;
+            }
+            if (game && game.startsWith("civ7")) {
+                return `Available at the start of the ${name} Age`;
+            }
+            return `Available at the start of the ${name} era`;
+        }
+    }
+    return "Available at game start";
 }
 
 
