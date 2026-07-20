@@ -31,6 +31,14 @@ Source pages, expected structure:
     we cross-reference the tech and civic pages' Unlocks columns to
     figure out which tech (or civic) unlocks each unit.
 
+    "List of unique units in Civ7" (optional, --unique-units-html) —
+    Age <h2>s over tables with columns Unit | Unique to | Class-or-
+    Replaces | Special abilities. Supplies civ attribution: military
+    uniques become owner-wrapped exclusives, civilian uniques with a
+    real Replaces link fold into their base unit as variant chips
+    (see parse_unique_owners / parse_units), and the owners land in a
+    `civilizations` output array.
+
 Wheel-renderer integration:
     - era field is the Age name in plain English ("Antiquity",
       "Exploration", "Modern"). The eraDisplayName helper passes plain
@@ -349,6 +357,7 @@ def _building_table_columns(table: Tag) -> Optional[dict]:
         'name':      0,
         'unlocked':  unlocked_idx,
         'cost':      cost_idx,
+        'unique_to': next((i for t, i in idx.items() if t.startswith('Unique to')), None),
         'is_unique': any(t.startswith('Unique to') for t in titles),
         'n_headers': len(ths),
     }
@@ -356,8 +365,13 @@ def _building_table_columns(table: Tag) -> Optional[dict]:
 
 def parse_buildings(html_path: str,
                     tech_ids: Dict[str, str],
-                    civic_ids: Dict[str, str]) -> List[dict]:
-    """Parse the buildings list page into building node dicts."""
+                    civic_ids: Dict[str, str]) -> Tuple[List[dict], Dict[str, str]]:
+    """Parse the buildings list page into building node dicts.
+
+    Returns (nodes, {owner_key: owner_display_name}); civ-unique
+    buildings that survive prereq resolution come back owner-wrapped
+    (see the fold in the row loop) and their owners feed the output's
+    `civilizations` array."""
     with open(html_path, encoding='utf-8') as f:
         soup = BeautifulSoup(f, 'html.parser')
 
@@ -368,7 +382,7 @@ def parse_buildings(html_path: str,
                      key=lambda kv: list(soup.descendants).index(kv[1]))
 
     per_age_names: Dict[str, List[str]] = {a: [] for a in AGES}
-    per_age_rows: Dict[str, List[Tuple[str, Optional[int], Optional[str]]]] = {a: [] for a in AGES}
+    per_age_rows: Dict[str, List[Tuple[str, Optional[int], Optional[str], Optional[str]]]] = {a: [] for a in AGES}
 
     for i, (age, hd) in enumerate(ordered):
         end = ordered[i + 1][1] if i + 1 < len(ordered) else None
@@ -376,6 +390,10 @@ def parse_buildings(html_path: str,
             cols = _building_table_columns(tbl)
             if cols is None:
                 continue
+            # "Unique to" cells are rowspan-merged when a civ's two
+            # quarter buildings sit in consecutive rows; carry the last
+            # seen owner into rows whose cell was absorbed by the span.
+            last_owner: Optional[str] = None
             for tr in tbl.find_all('tr')[1:]:
                 tds = tr.find_all('td', recursive=False)
                 if len(tds) <= cols['name']:
@@ -408,15 +426,26 @@ def parse_buildings(html_path: str,
                         if n:
                             prereq_name = n
                             break
+                # Owner of a civ-unique building. A shifted row (see
+                # above) lost its "Unique to" cell to a rowspan, so it
+                # inherits the previous row's owner.
+                owner: Optional[str] = None
+                if cols['is_unique']:
+                    if shift == 1:
+                        owner = last_owner
+                    elif cols['unique_to'] is not None and cols['unique_to'] < len(tds):
+                        owner = _owner_text(tds[cols['unique_to']]) or last_owner
+                        last_owner = owner
                 per_age_names[age].append(name)
-                per_age_rows[age].append((name, cost, prereq_name))
+                per_age_rows[age].append((name, cost, prereq_name, owner))
 
     _, by_age = assign_ids(per_age_names, 'BUILDING')
 
     nodes: List[dict] = []
+    owners_used: Dict[str, str] = {}
     skipped: List[Tuple[str, str, str]] = []  # (age, name, raw prereq we couldn't resolve)
     for age in AGES:
-        for name, cost, prereq_name in per_age_rows[age]:
+        for name, cost, prereq_name, owner in per_age_rows[age]:
             # Drop civ-unique buildings whose prereq is a civ-specific
             # tradition (Wisdom of Tanit, Birtūtu, Scales of Anubis) that
             # doesn't map to any tech or civic. The wheel can't attach
@@ -437,6 +466,14 @@ def parse_buildings(html_path: str,
                 node['cost'] = cost
             if pid:
                 node['requires'] = [pid]
+            # Civ-unique buildings have no shared base counterpart in
+            # Civ 7 (they come in per-civ "unique quarter" pairs), so an
+            # owner turns the node into an owner-wrapped exclusive: the
+            # tooltip renders it as "Name (Owner)".
+            if owner:
+                key = owner_key(owner)
+                owners_used[key] = owner
+                node[key] = {'id': node['id'], 'name': node.pop('name')}
             nodes.append(node)
 
     if skipped:
@@ -445,7 +482,7 @@ def parse_buildings(html_path: str,
             print(f'    [{age}] {name}: {raw!r} not in tech/civic')
         if len(skipped) > 5:
             print(f'    ... and {len(skipped) - 5} more')
-    return nodes
+    return nodes, owners_used
 
 
 # --------------------------- Wonders ---------------------------
@@ -557,7 +594,7 @@ def parse_wonders(html_path: str,
 def parse_improvements(html_path: str,
                        tech_ids: Dict[str, str],
                        civic_ids: Dict[str, str],
-                       reverse_index: Dict[str, str]) -> List[dict]:
+                       reverse_index: Dict[str, Dict[str, str]]) -> List[dict]:
     """Parse the improvements list page. Structure differs from wonders:
     each Age has three sub-sections (Standard, Civilization unique,
     City-state unique) and the standard tables have no prereq column at
@@ -619,7 +656,7 @@ def parse_improvements(html_path: str,
                             prereq_name = n
                             break
                 else:
-                    prereq_name = reverse_index.get(name)
+                    prereq_name = reverse_index.get(age, {}).get(name)
                 per_age_names[age].append(name)
                 per_age_prereqs[age][name] = prereq_name
                 seen.add(name)
@@ -653,23 +690,30 @@ def parse_improvements(html_path: str,
 
 # --------------------------- Units ---------------------------
 
-def build_reverse_unlock_index(html_paths: List[str]) -> Dict[str, str]:
+def build_reverse_unlock_index(html_paths: List[str]) -> Dict[str, Dict[str, str]]:
     """Walk the Unlocks + Mastery unlocks columns of the tech/civic list
-    pages, returning {unlocked_item_name -> unlocking_tech_or_civic_name}.
+    pages, returning a per-Age map
+    {age: {unlocked_item_name -> unlocking_tech_or_civic_name}}.
 
     Tech and civic list pages have 6 columns; column 3 is "Unlocks"
     (base-tier unlocks) and column 4 is "Mastery unlocks" (post-mastery
     unlocks). Both list wiki-anchors to buildings / units / mechanics.
 
-    Two-pass to prefer BASE unlocks over Mastery. Civ 7 improvements
-    typically get "re-listed" in later Ages' techs' Mastery columns as
-    they receive upgrades — Fishing Boat originally unlocks with Sailing
-    (Antiquity) but is mentioned again as a Mastery unlock of Mass
-    Production (Modern). We want the true base tech, so we walk every
-    Unlocks column first and only fall back to Mastery for items that
-    never showed up in a base Unlocks anywhere.
+    The index is Age-scoped because Civ 7 reuses item names across its
+    three Ages — the units page lists a "Merchant" in all three Ages,
+    but only Antiquity's civics unlock one (Code of Laws). A flat
+    name-keyed map would hand every same-named copy the first Age's
+    prereq (three Merchants all gated on Code of Laws); keying by the
+    Age whose table the Unlocks entry sits in lets each Age's copy
+    resolve only against its own trees, and copies whose Age lists no
+    unlock fall out downstream as prereq-less.
+
+    Two-pass to prefer BASE unlocks over Mastery within each Age. Civ 7
+    items are sometimes "re-listed" in a Mastery column as they receive
+    upgrades; we walk every Unlocks column first and only fall back to
+    Mastery for items that never showed up in that Age's base Unlocks.
     """
-    idx: Dict[str, str] = {}
+    idx: Dict[str, Dict[str, str]] = {age: {} for age in AGES}
     # Two passes: cols=(3,) then cols=(4,). First-wins semantics within
     # each pass; only-if-absent semantics for the fallback pass.
     for cols in ((3,), (4,)):
@@ -693,9 +737,75 @@ def build_reverse_unlock_index(html_paths: List[str]) -> Dict[str, str]:
                     for col in cols:
                         for a in tds[col].find_all('a'):
                             n = slug_from_href(a.get('href'))
-                            if n and n != parent and n not in idx:
-                                idx[n] = parent
+                            if n and n != parent and n not in idx[age]:
+                                idx[age][n] = parent
     return idx
+
+
+def owner_key(owner_display: str) -> str:
+    """Owner display name -> the CIVILIZATION_* wrapper key used in the
+    output JSON ('Achaemenid Persian' -> CIVILIZATION_ACHAEMENID_PERSIAN).
+    Civ 7 has no leader-owned uniques, so everything gets the
+    CIVILIZATION_ prefix the site's buildUnlockIndex.js already knows."""
+    return make_id('CIVILIZATION', owner_display)
+
+
+def _owner_text(td: Tag) -> Optional[str]:
+    """Display name from a 'Unique to' cell: the first link with visible
+    text (the first anchor is usually an icon-only image link), falling
+    back to the cell's own text."""
+    for a in td.find_all('a'):
+        txt = a.get_text(strip=True)
+        if txt:
+            return txt
+    txt = td.get_text(' ', strip=True)
+    return txt or None
+
+
+def parse_unique_owners(html_path: str) -> Dict[str, dict]:
+    """Parse the 'List of unique units in Civ7' page.
+
+    Every table on it has columns Unit | Unique to | Class-or-Replaces |
+    Special abilities. Military tables carry a unit *category* in the
+    third column (Civ 7 military uniques don't replace a specific base
+    unit); civilian tables carry a real 'Replaces' link (Colonist ->
+    Settler). Returns {unit_name: {'owner': display_name,
+    'replaces': base_unit_name | None}}.
+
+    This page only supplies attribution — membership in the wheel still
+    comes from the tech/civic pages' Unlocks columns via parse_units, so
+    uniques with no tech/civic gate (starter units, city-state levies)
+    never reach the output and need no filtering here.
+    """
+    with open(html_path, encoding='utf-8') as f:
+        soup = BeautifulSoup(f, 'html.parser')
+
+    out: Dict[str, dict] = {}
+    for tbl in soup.find_all('table'):
+        trs = tbl.find_all('tr')
+        if not trs:
+            continue
+        ths = [th.get_text(' ', strip=True) for th in trs[0].find_all('th')]
+        if not ths or not ths[0].startswith('Unit') or 'Unique to' not in ths:
+            continue
+        unique_idx = ths.index('Unique to')
+        replaces_idx = ths.index('Replaces') if 'Replaces' in ths else None
+
+        for tr in trs[1:]:
+            tds = tr.find_all('td', recursive=False)
+            if len(tds) <= unique_idx:
+                continue
+            name = _first_node_link(tds[0])
+            if not name:
+                continue
+            owner = _owner_text(tds[unique_idx])
+            if not owner:
+                continue
+            replaces = None
+            if replaces_idx is not None and replaces_idx < len(tds):
+                replaces = _first_node_link(tds[replaces_idx])
+            out[name] = {'owner': owner, 'replaces': replaces}
+    return out
 
 
 def _walk_unit_names_under(start: Tag, end: Optional[Tag]) -> List[str]:
@@ -720,9 +830,21 @@ def _walk_unit_names_under(start: Tag, end: Optional[Tag]) -> List[str]:
 def parse_units(units_html_path: str,
                 tech_ids: Dict[str, str],
                 civic_ids: Dict[str, str],
-                reverse_index: Dict[str, str]) -> List[dict]:
+                reverse_index: Dict[str, Dict[str, str]],
+                unique_owners: Optional[Dict[str, dict]] = None,
+                ) -> Tuple[List[dict], Dict[str, str]]:
     """Parse the units list page. Prereqs come from `reverse_index`
-    (built off the tech and civic pages)."""
+    (built per-Age off the tech and civic pages); a unit only matches
+    Unlocks entries from its own Age's tables, since same-named units
+    recur across Ages with different gates.
+
+    When `unique_owners` (from parse_unique_owners) is given, units it
+    names are restructured into the owner-wrapped shape the site's
+    tooltip renders as unique-variant chips: a unique with a Replaces
+    target that's also on the wheel folds into that base unit's entry;
+    everything else becomes its own entry with an owner-keyed
+    sub-object. Returns (nodes, {owner_key: owner_display_name}) — the
+    second element feeds the output's `civilizations` array."""
     with open(units_html_path, encoding='utf-8') as f:
         soup = BeautifulSoup(f, 'html.parser')
 
@@ -751,11 +873,13 @@ def parse_units(units_html_path: str,
             # The units-page walker picks up every wiki-anchor in the
             # Age region, which includes accidental hits like civ names
             # (the "Foederati (Greek)" annotation contributes both). Only
-            # keep names that are actually the child of an Unlocks entry
-            # somewhere in the tech or civic pages — that filters civ
-            # names, starter units (Warrior), and civ-unique units whose
-            # prereq is a civ-specific tradition rather than a tech.
-            prereq_name = reverse_index.get(name)
+            # keep names that are the child of an Unlocks entry in this
+            # Age's tech or civic tables — that filters civ names,
+            # starter units (Warrior), civ-unique units whose prereq is
+            # a civ-specific tradition rather than a tech, and same-named
+            # units from other Ages (each Age's Merchant has its own
+            # gate; an Age with no matching unlock drops its copy).
+            prereq_name = reverse_index.get(age, {}).get(name)
             pid = resolve_prereq(prereq_name, tech_ids, civic_ids) if prereq_name else None
             if pid is None:
                 dropped.append((age, name))
@@ -773,7 +897,32 @@ def parse_units(units_html_path: str,
             print(f'    [{age}] {name}')
         if len(dropped) > 5:
             print(f'    ... and {len(dropped) - 5} more')
-    return nodes
+
+    # Attribute civ-unique units. Names are looked up before any node is
+    # wrapped (wrapping pops the flat name), so build the map first.
+    owners_used: Dict[str, str] = {}
+    if unique_owners:
+        # Key by (name, era): a base like Settler can exist in several
+        # Ages, and a unique must fold into its own Age's copy.
+        by_name = {(n['name'], n['era']): n for n in nodes}
+        folded: set = set()
+        for n in list(nodes):
+            info = unique_owners.get(n.get('name'))
+            if not info:
+                continue
+            key = owner_key(info['owner'])
+            owners_used[key] = info['owner']
+            base = by_name.get((info.get('replaces') or '', n['era']))
+            if base is not None and base is not n:
+                if 'CIVILIZATION_ALL' not in base:
+                    base['CIVILIZATION_ALL'] = {'id': base['id'], 'name': base.pop('name')}
+                base[key] = {'id': n['id'], 'name': n['name']}
+                folded.add(n['id'])
+            else:
+                n[key] = {'id': n['id'], 'name': n.pop('name')}
+        nodes = [n for n in nodes if n['id'] not in folded]
+
+    return nodes, owners_used
 
 
 # --------------------------- Driver ---------------------------
@@ -793,6 +942,11 @@ def main():
                     help='path to the saved "List of units in Civ7" HTML '
                          '(needs --tech-html and/or --civic-html this run so '
                          'we can build the reverse-unlock index for prereqs)')
+    ap.add_argument('--unique-units-html',
+                    help='path to the saved "List of unique units in Civ7" '
+                         'HTML; enables civ attribution (owner tags and '
+                         'Replaces folding) on the units parsed via '
+                         '--units-html')
     ap.add_argument('--wonders-html',
                     help='path to the saved "List of wonders in Civ7" HTML '
                          '(needs technologies + civics either already in '
@@ -838,15 +992,25 @@ def main():
     tech_ids = name_index_from_nodes(out.get('technologies', []))
     civic_ids = name_index_from_nodes(out.get('civics', []))
 
+    # Owners referenced by civ-unique buildings/units this run, merged
+    # over whatever a previous partial run already recorded so the
+    # `civilizations` array survives re-scraping one category at a time.
+    owners: Dict[str, str] = {
+        c['id']: c['name'] for c in out.get('civilizations', [])
+        if isinstance(c, dict) and c.get('id') and c.get('name')
+    }
+
     if args.buildings_html:
         if not tech_ids and not civic_ids:
             ap.error('--buildings-html needs techs + civics; provide '
                      '--tech-html/--civic-html this run or ensure they are '
                      'already in the output JSON')
-        buildings = parse_buildings(args.buildings_html, tech_ids, civic_ids)
+        buildings, b_owners = parse_buildings(args.buildings_html, tech_ids, civic_ids)
         out['buildings'] = buildings
+        owners.update(b_owners)
         eras = sorted({b['era'] for b in buildings})
-        print(f'buildings: {len(buildings)} parsed, ages: {", ".join(eras)}')
+        print(f'buildings: {len(buildings)} parsed, ages: {", ".join(eras)}; '
+              f'{len(b_owners)} owning civs')
 
     if args.units_html:
         # For unit prereqs we need to walk the tech/civic list pages'
@@ -858,10 +1022,22 @@ def main():
             ap.error('--units-html needs --tech-html and/or --civic-html the '
                      'same run so the reverse-unlock index can be built')
         reverse = build_reverse_unlock_index(index_paths)
-        units = parse_units(args.units_html, tech_ids, civic_ids, reverse)
+        unique_owners = None
+        if args.unique_units_html:
+            unique_owners = parse_unique_owners(args.unique_units_html)
+            print(f'unique-units page: {len(unique_owners)} attribution rows')
+        units, u_owners = parse_units(args.units_html, tech_ids, civic_ids,
+                                      reverse, unique_owners)
         out['units'] = units
+        owners.update(u_owners)
         eras = sorted({u['era'] for u in units})
-        print(f'units: {len(units)} parsed, ages: {", ".join(eras)}')
+        print(f'units: {len(units)} parsed, ages: {", ".join(eras)}; '
+              f'{len(u_owners)} owning civs')
+
+    if owners:
+        out['civilizations'] = [
+            {'id': k, 'name': v} for k, v in sorted(owners.items())
+        ]
 
     if args.wonders_html:
         if not tech_ids and not civic_ids:

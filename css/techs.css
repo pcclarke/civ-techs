@@ -670,6 +670,48 @@ body[data-game="civ7"] {
   white-space: nowrap;
 }
 
+/* Items with civ-unique variants span the full tooltip width so their
+ * variant chips read as belonging to them; the chips wrap as needed. */
+.tipItem.tipItemWide {
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+}
+
+.tipUniques {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 10px;
+  font-size: 12px;
+}
+
+.tipUniquesLabel {
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--game-ink-muted);
+}
+
+.tipUnique {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.tipUniqueIcon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.tipUniqueCiv {
+  color: var(--game-ink-muted);
+  font-size: 12px;
+}
+
 .clear {
   clear: both;
 }

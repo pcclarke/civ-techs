@@ -239,7 +239,13 @@ function renderItemSection(items, sectionSel, contentSel, game) {
 
         const list = group.append("ul").attr("class", "tipItemList");
         for (const it of bySource.get(source)) {
-            const li = list.append("li").attr("class", "tipItem");
+            const hasUniques = it.uniques && it.uniques.length > 0;
+            const li = list.append("li")
+                .attr("class", "tipItem")
+                // Items with unique variants span both grid columns so
+                // the variant chips sit unambiguously with their base
+                // item instead of interleaving the two-column packing.
+                .classed("tipItemWide", hasUniques);
             li.append("img")
                 .attr("class", "tipItemIcon")
                 .attr("src", `${game}/img/${source}/${it.id}.png`)
@@ -250,6 +256,31 @@ function renderItemSection(items, sectionSel, contentSel, game) {
                 // ellipsis-truncates a long item.
                 .attr("title", it.name)
                 .text(it.name);
+            // Civ-exclusive item (no shared base version): tag its owner.
+            if (it.civ) {
+                li.append("span")
+                    .attr("class", "tipUniqueCiv")
+                    .text(`(${it.civ})`);
+            }
+            // Unique replacements of a shared item: icon + name + owner
+            // for each, inline after the base item.
+            if (hasUniques) {
+                const chips = li.append("span").attr("class", "tipUniques");
+                chips.append("span")
+                    .attr("class", "tipUniquesLabel")
+                    .text("unique:");
+                for (const u of it.uniques) {
+                    const chip = chips.append("span").attr("class", "tipUnique");
+                    chip.append("img")
+                        .attr("class", "tipUniqueIcon")
+                        .attr("src", `${game}/img/${source}/${u.id}.png`)
+                        .attr("alt", "");
+                    chip.append("span").text(u.name);
+                    chip.append("span")
+                        .attr("class", "tipUniqueCiv")
+                        .text(`(${u.civ})`);
+                }
+            }
         }
     }
 }

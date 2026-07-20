@@ -1187,27 +1187,33 @@
     },
     {
       "id": "BUILDING_STABLE",
-      "name": "Stable",
       "cost": 120,
       "requires": [
         "TECH_HORSEBACK_RIDING"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_STABLE",
+        "name": "Stable"
+      },
+      "CIVILIZATION_MONGOLIA": {
+        "id": "BUILDING_ORDU",
+        "name": "Ordu"
+      }
     },
     {
       "id": "BUILDING_TEMPLE",
-      "name": "Temple",
       "cost": 120,
       "requires": [
         "CIVIC_THEOLOGY"
-      ]
-    },
-    {
-      "id": "BUILDING_STAVE_CHURCH",
-      "name": "Stave Church",
-      "cost": 120,
-      "requires": [
-        "CIVIC_THEOLOGY"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_TEMPLE",
+        "name": "Temple"
+      },
+      "CIVILIZATION_NORWAY": {
+        "id": "BUILDING_STAVE_CHURCH",
+        "name": "Stave Church"
+      }
     },
     {
       "id": "BUILDING_AMPHITHEATER",
@@ -1227,19 +1233,18 @@
     },
     {
       "id": "BUILDING_UNIVERSITY",
-      "name": "University",
       "cost": 250,
       "requires": [
         "TECH_EDUCATION"
-      ]
-    },
-    {
-      "id": "BUILDING_MADRASA",
-      "name": "Madrasa",
-      "cost": 250,
-      "requires": [
-        "CIVIC_THEOLOGY"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_UNIVERSITY",
+        "name": "University"
+      },
+      "CIVILIZATION_ARABIA": {
+        "id": "BUILDING_MADRASA",
+        "name": "Madrasa"
+      }
     },
     {
       "id": "BUILDING_WORKSHOP",
@@ -1275,11 +1280,18 @@
     },
     {
       "id": "BUILDING_STAR_FORT",
-      "name": "Renaissance Walls",
       "cost": 305,
       "requires": [
         "TECH_SIEGE_TACTICS"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_STAR_FORT",
+        "name": "Renaissance Walls"
+      },
+      "CIVILIZATION_GEORGIA": {
+        "id": "BUILDING_TSIKHE",
+        "name": "Tsikhe"
+      }
     },
     {
       "id": "BUILDING_MUSEUM_ART",
@@ -1299,19 +1311,18 @@
     },
     {
       "id": "BUILDING_FACTORY",
-      "name": "Factory",
       "cost": 390,
       "requires": [
         "TECH_INDUSTRIALIZATION"
-      ]
-    },
-    {
-      "id": "BUILDING_ELECTRONICS_FACTORY",
-      "name": "Electronics Factory",
-      "cost": 390,
-      "requires": [
-        "TECH_INDUSTRIALIZATION"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_FACTORY",
+        "name": "Factory"
+      },
+      "CIVILIZATION_JAPAN": {
+        "id": "BUILDING_ELECTRONICS_FACTORY",
+        "name": "Electronics Factory"
+      }
     },
     {
       "id": "BUILDING_STOCK_EXCHANGE",
@@ -1371,19 +1382,18 @@
     },
     {
       "id": "BUILDING_BROADCAST_CENTER",
-      "name": "Broadcast Center",
       "cost": 580,
       "requires": [
         "TECH_RADIO"
-      ]
-    },
-    {
-      "id": "BUILDING_FILM_STUDIO",
-      "name": "Film Studio",
-      "cost": 580,
-      "requires": [
-        "TECH_RADIO"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_BROADCAST_CENTER",
+        "name": "Broadcast Center"
+      },
+      "CIVILIZATION_AMERICA": {
+        "id": "BUILDING_FILM_STUDIO",
+        "name": "Film Studio"
+      }
     },
     {
       "id": "BUILDING_RESEARCH_LAB",
@@ -1552,22 +1562,6 @@
       "cost": 580,
       "requires": [
         "CIVIC_CAPITALISM"
-      ]
-    },
-    {
-      "id": "BUILDING_ORDU",
-      "name": "Ordu",
-      "cost": 120,
-      "requires": [
-        "TECH_HORSEBACK_RIDING"
-      ]
-    },
-    {
-      "id": "BUILDING_TSIKHE",
-      "name": "Tsikhe",
-      "cost": 260,
-      "requires": [
-        "TECH_SIEGE_TACTICS"
       ]
     }
   ],
@@ -1981,8 +1975,15 @@
     },
     {
       "id": "UNIT_SCOUT",
-      "name": "Scout",
-      "cost": 30
+      "cost": 30,
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_SCOUT",
+        "name": "Scout"
+      },
+      "CIVILIZATION_CREE": {
+        "id": "UNIT_CREE_OKIHTCITAW",
+        "name": "Okihtcitaw"
+      }
     },
     {
       "id": "UNIT_WARRIOR",
@@ -2006,24 +2007,26 @@
     },
     {
       "id": "UNIT_SUMERIAN_WAR_CART",
-      "name": "War-Cart",
-      "cost": 55
+      "cost": 55,
+      "CIVILIZATION_SUMERIA": {
+        "id": "UNIT_SUMERIAN_WAR_CART",
+        "name": "War-Cart"
+      }
     },
     {
       "id": "UNIT_GALLEY",
-      "name": "Galley",
       "cost": 65,
       "requires": [
         "TECH_SAILING"
-      ]
-    },
-    {
-      "id": "UNIT_NORWEGIAN_LONGSHIP",
-      "name": "Viking Longship",
-      "cost": 65,
-      "requires": [
-        "TECH_SAILING"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_GALLEY",
+        "name": "Galley"
+      },
+      "LEADER_HARDRADA": {
+        "id": "UNIT_NORWEGIAN_LONGSHIP",
+        "name": "Viking Longship"
+      }
     },
     {
       "id": "UNIT_ARCHER",
@@ -2035,19 +2038,33 @@
     },
     {
       "id": "UNIT_SPEARMAN",
-      "name": "Spearman",
       "cost": 65,
       "requires": [
         "TECH_BRONZE_WORKING"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_SPEARMAN",
+        "name": "Spearman"
+      },
+      "CIVILIZATION_GREECE": {
+        "id": "UNIT_GREEK_HOPLITE",
+        "name": "Hoplite"
+      }
     },
     {
       "id": "UNIT_HEAVY_CHARIOT",
-      "name": "Heavy Chariot",
       "cost": 65,
       "requires": [
         "TECH_THE_WHEEL"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_HEAVY_CHARIOT",
+        "name": "Heavy Chariot"
+      },
+      "CIVILIZATION_EGYPT": {
+        "id": "UNIT_EGYPTIAN_CHARIOT_ARCHER",
+        "name": "Maryannu Chariot Archer"
+      }
     },
     {
       "id": "UNIT_BATTERING_RAM",
@@ -2058,20 +2075,23 @@
       ]
     },
     {
-      "id": "UNIT_GREEK_HOPLITE",
-      "name": "Hoplite",
-      "cost": 65,
-      "requires": [
-        "TECH_BRONZE_WORKING"
-      ]
-    },
-    {
       "id": "UNIT_SWORDSMAN",
-      "name": "Swordsman",
       "cost": 90,
       "requires": [
         "TECH_IRON_WORKING"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_SWORDSMAN",
+        "name": "Swordsman"
+      },
+      "CIVILIZATION_ROME": {
+        "id": "UNIT_ROMAN_LEGION",
+        "name": "Legion"
+      },
+      "CIVILIZATION_KONGO": {
+        "id": "UNIT_KONGO_SHIELD_BEARER",
+        "name": "Ngao Mbeba"
+      }
     },
     {
       "id": "UNIT_HORSEMAN",
@@ -2083,27 +2103,14 @@
     },
     {
       "id": "UNIT_SCYTHIAN_HORSE_ARCHER",
-      "name": "Saka Horse Archer",
       "cost": 100,
       "requires": [
         "TECH_HORSEBACK_RIDING"
-      ]
-    },
-    {
-      "id": "UNIT_ROMAN_LEGION",
-      "name": "Legion",
-      "cost": 110,
-      "requires": [
-        "TECH_IRON_WORKING"
-      ]
-    },
-    {
-      "id": "UNIT_KONGO_SHIELD_BEARER",
-      "name": "Ngao Mbeba",
-      "cost": 110,
-      "requires": [
-        "TECH_IRON_WORKING"
-      ]
+      ],
+      "CIVILIZATION_SCYTHIA": {
+        "id": "UNIT_SCYTHIAN_HORSE_ARCHER",
+        "name": "Saka Horse Archer"
+      }
     },
     {
       "id": "UNIT_CATAPULT",
@@ -2130,52 +2137,30 @@
       ]
     },
     {
-      "id": "UNIT_EGYPTIAN_CHARIOT_ARCHER",
-      "name": "Maryannu Chariot Archer",
-      "cost": 120,
-      "requires": [
-        "TECH_THE_WHEEL"
-      ]
-    },
-    {
-      "id": "UNIT_JAPANESE_SAMURAI",
-      "name": "Samurai",
-      "cost": 160,
-      "requires": [
-        "CIVIC_FEUDALISM"
-      ]
-    },
-    {
-      "id": "UNIT_NORWEGIAN_BERSERKER",
-      "name": "Berserker",
-      "cost": 160,
-      "requires": [
-        "TECH_MILITARY_TACTICS"
-      ]
-    },
-    {
       "id": "UNIT_KNIGHT",
-      "name": "Knight",
       "cost": 180,
       "requires": [
         "TECH_STIRRUPS"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_KNIGHT",
+        "name": "Knight"
+      },
+      "CIVILIZATION_ARABIA": {
+        "id": "UNIT_ARABIAN_MAMLUK",
+        "name": "Mamluk"
+      }
     },
     {
       "id": "UNIT_INDIAN_VARU",
-      "name": "Varu",
       "cost": 120,
       "requires": [
         "TECH_HORSEBACK_RIDING"
-      ]
-    },
-    {
-      "id": "UNIT_ARABIAN_MAMLUK",
-      "name": "Mamluk",
-      "cost": 180,
-      "requires": [
-        "TECH_STIRRUPS"
-      ]
+      ],
+      "CIVILIZATION_INDIA": {
+        "id": "UNIT_INDIAN_VARU",
+        "name": "Varu"
+      }
     },
     {
       "id": "UNIT_CROSSBOWMAN",
@@ -2187,11 +2172,14 @@
     },
     {
       "id": "UNIT_CHINESE_CROUCHING_TIGER",
-      "name": "Crouching Tiger",
       "cost": 140,
       "requires": [
         "TECH_MACHINERY"
-      ]
+      ],
+      "CIVILIZATION_CHINA": {
+        "id": "UNIT_CHINESE_CROUCHING_TIGER",
+        "name": "Crouching Tiger"
+      }
     },
     {
       "id": "UNIT_MILITARY_ENGINEER",
@@ -2203,27 +2191,33 @@
     },
     {
       "id": "UNIT_PIKEMAN",
-      "name": "Pikeman",
       "cost": 200,
       "requires": [
         "TECH_MILITARY_TACTICS"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_PIKEMAN",
+        "name": "Pikeman"
+      },
+      "CIVILIZATION_ZULU": {
+        "id": "UNIT_ZULU_IMPI",
+        "name": "Impi"
+      }
     },
     {
       "id": "UNIT_MUSKETMAN",
-      "name": "Musketman",
       "cost": 240,
       "requires": [
         "TECH_GUNPOWDER"
-      ]
-    },
-    {
-      "id": "UNIT_SPANISH_CONQUISTADOR",
-      "name": "Conquistador",
-      "cost": 250,
-      "requires": [
-        "TECH_GUNPOWDER"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_MUSKETMAN",
+        "name": "Musketman"
+      },
+      "CIVILIZATION_SPAIN": {
+        "id": "UNIT_SPANISH_CONQUISTADOR",
+        "name": "Conquistador"
+      }
     },
     {
       "id": "UNIT_CARAVEL",
@@ -2243,67 +2237,63 @@
     },
     {
       "id": "UNIT_FRIGATE",
-      "name": "Frigate",
       "cost": 280,
       "requires": [
         "TECH_SQUARE_RIGGING"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_FRIGATE",
+        "name": "Frigate"
+      },
+      "CIVILIZATION_NETHERLANDS": {
+        "id": "UNIT_DE_ZEVEN_PROVINCIEN",
+        "name": "De Zeven Provinci\u00ebn"
+      }
     },
     {
       "id": "UNIT_PRIVATEER",
-      "name": "Privateer",
       "cost": 280,
       "requires": [
         "CIVIC_MERCANTILISM"
-      ]
-    },
-    {
-      "id": "UNIT_ENGLISH_SEADOG",
-      "name": "Sea Dog",
-      "cost": 280,
-      "requires": [
-        "CIVIC_MERCANTILISM"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_PRIVATEER",
+        "name": "Privateer"
+      },
+      "CIVILIZATION_ENGLAND": {
+        "id": "UNIT_ENGLISH_SEADOG",
+        "name": "Sea Dog"
+      }
     },
     {
       "id": "UNIT_FIELD_CANNON",
-      "name": "Field Cannon",
       "cost": 330,
       "requires": [
         "TECH_BALLISTICS"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_FIELD_CANNON",
+        "name": "Field Cannon"
+      },
+      "CIVILIZATION_KOREA": {
+        "id": "UNIT_KOREAN_HWACHA",
+        "name": "Hwacha"
+      }
     },
     {
       "id": "UNIT_CAVALRY",
-      "name": "Cavalry",
       "cost": 330,
       "requires": [
         "TECH_MILITARY_SCIENCE"
-      ]
-    },
-    {
-      "id": "UNIT_RUSSIAN_COSSACK",
-      "name": "Cossack",
-      "cost": 340,
-      "requires": [
-        "TECH_MILITARY_SCIENCE"
-      ]
-    },
-    {
-      "id": "UNIT_ENGLISH_REDCOAT",
-      "name": "Redcoat",
-      "cost": 360,
-      "requires": [
-        "TECH_MILITARY_SCIENCE"
-      ]
-    },
-    {
-      "id": "UNIT_FRENCH_GARDE_IMPERIALE",
-      "name": "Garde Imp\u00e9riale",
-      "cost": 360,
-      "requires": [
-        "TECH_MILITARY_SCIENCE"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_CAVALRY",
+        "name": "Cavalry"
+      },
+      "CIVILIZATION_RUSSIA": {
+        "id": "UNIT_RUSSIAN_COSSACK",
+        "name": "Cossack"
+      }
     },
     {
       "id": "UNIT_MEDIC",
@@ -2323,19 +2313,29 @@
     },
     {
       "id": "UNIT_AMERICAN_ROUGH_RIDER",
-      "name": "Rough Rider",
       "cost": 385,
       "requires": [
         "TECH_BALLISTICS"
-      ]
+      ],
+      "LEADER_T_ROOSEVELT": {
+        "id": "UNIT_AMERICAN_ROUGH_RIDER",
+        "name": "Rough Rider"
+      }
     },
     {
       "id": "UNIT_RANGER",
-      "name": "Ranger",
       "cost": 380,
       "requires": [
         "TECH_RIFLING"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_RANGER",
+        "name": "Ranger"
+      },
+      "CIVILIZATION_SCOTLAND": {
+        "id": "UNIT_SCOTTISH_HIGHLANDER",
+        "name": "Highlander"
+      }
     },
     {
       "id": "UNIT_OBSERVATION_BALLOON",
@@ -2371,35 +2371,33 @@
     },
     {
       "id": "UNIT_BATTLESHIP",
-      "name": "Battleship",
       "cost": 430,
       "requires": [
         "TECH_STEEL"
-      ]
-    },
-    {
-      "id": "UNIT_BRAZILIAN_MINAS_GERAES",
-      "name": "Minas Geraes",
-      "cost": 430,
-      "requires": [
-        "CIVIC_NATIONALISM"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_BATTLESHIP",
+        "name": "Battleship"
+      },
+      "CIVILIZATION_BRAZIL": {
+        "id": "UNIT_BRAZILIAN_MINAS_GERAES",
+        "name": "Minas Geraes"
+      }
     },
     {
       "id": "UNIT_SUBMARINE",
-      "name": "Submarine",
       "cost": 480,
       "requires": [
         "TECH_ELECTRICITY"
-      ]
-    },
-    {
-      "id": "UNIT_GERMAN_UBOAT",
-      "name": "U-Boat",
-      "cost": 430,
-      "requires": [
-        "TECH_ELECTRICITY"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_SUBMARINE",
+        "name": "Submarine"
+      },
+      "CIVILIZATION_GERMANY": {
+        "id": "UNIT_GERMAN_UBOAT",
+        "name": "U-Boat"
+      }
     },
     {
       "id": "UNIT_AT_CREW",
@@ -2419,19 +2417,18 @@
     },
     {
       "id": "UNIT_FIGHTER",
-      "name": "Fighter",
       "cost": 520,
       "requires": [
         "TECH_ADVANCED_FLIGHT"
-      ]
-    },
-    {
-      "id": "UNIT_AMERICAN_P51",
-      "name": "P-51 Mustang",
-      "cost": 520,
-      "requires": [
-        "TECH_ADVANCED_FLIGHT"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_FIGHTER",
+        "name": "Fighter"
+      },
+      "CIVILIZATION_AMERICA": {
+        "id": "UNIT_AMERICAN_P51",
+        "name": "P-51 Mustang"
+      }
     },
     {
       "id": "UNIT_BOMBER",
@@ -2555,19 +2552,45 @@
     },
     {
       "id": "UNIT_MAN_AT_ARMS",
-      "name": "Man-At-Arms",
       "cost": 160,
       "requires": [
         "TECH_APPRENTICESHIP"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_MAN_AT_ARMS",
+        "name": "Man-At-Arms"
+      },
+      "CIVILIZATION_JAPAN": {
+        "id": "UNIT_JAPANESE_SAMURAI",
+        "name": "Samurai"
+      },
+      "CIVILIZATION_NORWAY": {
+        "id": "UNIT_NORWEGIAN_BERSERKER",
+        "name": "Berserker"
+      },
+      "CIVILIZATION_GEORGIA": {
+        "id": "UNIT_GEORGIAN_KHEVSURETI",
+        "name": "Khevsur"
+      }
     },
     {
       "id": "UNIT_LINE_INFANTRY",
-      "name": "Line Infantry",
       "cost": 360,
       "requires": [
         "TECH_MILITARY_SCIENCE"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_LINE_INFANTRY",
+        "name": "Line Infantry"
+      },
+      "LEADER_VICTORIA": {
+        "id": "UNIT_ENGLISH_REDCOAT",
+        "name": "Redcoat"
+      },
+      "CIVILIZATION_FRANCE": {
+        "id": "UNIT_FRENCH_GARDE_IMPERIALE",
+        "name": "Garde Imp\u00e9riale"
+      }
     },
     {
       "id": "UNIT_TREBUCHET",
@@ -2610,65 +2633,26 @@
       ]
     },
     {
-      "id": "UNIT_ZULU_IMPI",
-      "name": "Zulu Impi",
-      "cost": 125,
-      "requires": [
-        "TECH_MILITARY_TACTICS"
-      ]
-    },
-    {
-      "id": "UNIT_KOREAN_HWACHA",
-      "name": "Korean Hwacha",
-      "cost": 250,
-      "requires": [
-        "TECH_GUNPOWDER"
-      ]
-    },
-    {
-      "id": "UNIT_SCOTTISH_HIGHLANDER",
-      "name": "Scottish Highlander",
-      "cost": 380,
-      "requires": [
-        "TECH_RIFLING"
-      ]
-    },
-    {
-      "id": "UNIT_DE_ZEVEN_PROVINCIEN",
-      "name": "De Zeven Provincien",
-      "cost": 280,
-      "requires": [
-        "TECH_SQUARE_RIGGING"
-      ]
-    },
-    {
       "id": "UNIT_MONGOLIAN_KESHIG",
-      "name": "Mongolian Keshig",
       "cost": 160,
       "requires": [
         "TECH_STIRRUPS"
-      ]
-    },
-    {
-      "id": "UNIT_GEORGIAN_KHEVSURETI",
-      "name": "Georgian Khevsureti",
-      "cost": 160,
-      "requires": [
-        "TECH_MILITARY_TACTICS"
-      ]
+      ],
+      "CIVILIZATION_MONGOLIA": {
+        "id": "UNIT_MONGOLIAN_KESHIG",
+        "name": "Keshig"
+      }
     },
     {
       "id": "UNIT_MAPUCHE_MALON_RAIDER",
-      "name": "Mapuche Malon Raider",
       "cost": 230,
       "requires": [
         "TECH_GUNPOWDER"
-      ]
-    },
-    {
-      "id": "UNIT_CREE_OKIHTCITAW",
-      "name": "Cree Okihtcitaw",
-      "cost": 40
+      ],
+      "CIVILIZATION_MAPUCHE": {
+        "id": "UNIT_MAPUCHE_MALON_RAIDER",
+        "name": "Mal\u00f3n Raider"
+      }
     }
   ],
   "districts": [
@@ -2679,35 +2663,63 @@
     },
     {
       "id": "DISTRICT_HOLY_SITE",
-      "name": "Holy Site",
       "cost": 54,
       "requires": [
         "TECH_ASTROLOGY"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_HOLY_SITE",
+        "name": "Holy Site"
+      },
+      "CIVILIZATION_RUSSIA": {
+        "id": "DISTRICT_LAVRA",
+        "name": "Lavra"
+      }
     },
     {
       "id": "DISTRICT_CAMPUS",
-      "name": "Campus",
       "cost": 54,
       "requires": [
         "TECH_WRITING"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_CAMPUS",
+        "name": "Campus"
+      },
+      "CIVILIZATION_KOREA": {
+        "id": "DISTRICT_SEOWON",
+        "name": "Seowon"
+      }
     },
     {
       "id": "DISTRICT_ENCAMPMENT",
-      "name": "Encampment",
       "cost": 54,
       "requires": [
         "TECH_BRONZE_WORKING"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_ENCAMPMENT",
+        "name": "Encampment"
+      },
+      "CIVILIZATION_ZULU": {
+        "id": "DISTRICT_IKANDA",
+        "name": "Ikanda"
+      }
     },
     {
       "id": "DISTRICT_HARBOR",
-      "name": "Harbor",
       "cost": 54,
       "requires": [
         "TECH_CELESTIAL_NAVIGATION"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_HARBOR",
+        "name": "Harbor"
+      },
+      "CIVILIZATION_ENGLAND": {
+        "id": "DISTRICT_ROYAL_NAVY_DOCKYARD",
+        "name": "Royal Navy Dockyard"
+      }
     },
     {
       "id": "DISTRICT_AERODROME",
@@ -2727,43 +2739,78 @@
     },
     {
       "id": "DISTRICT_ENTERTAINMENT_COMPLEX",
-      "name": "Entertainment Complex",
       "cost": 54,
       "requires": [
         "CIVIC_GAMES_RECREATION"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_ENTERTAINMENT_COMPLEX",
+        "name": "Entertainment Complex"
+      },
+      "CIVILIZATION_BRAZIL": {
+        "id": "DISTRICT_STREET_CARNIVAL",
+        "name": "Street Carnival"
+      }
     },
     {
       "id": "DISTRICT_THEATER",
-      "name": "Theater Square",
       "cost": 54,
       "requires": [
         "CIVIC_DRAMA_POETRY"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_THEATER",
+        "name": "Theater Square"
+      },
+      "CIVILIZATION_GREECE": {
+        "id": "DISTRICT_ACROPOLIS",
+        "name": "Acropolis"
+      }
     },
     {
       "id": "DISTRICT_INDUSTRIAL_ZONE",
-      "name": "Industrial Zone",
       "cost": 54,
       "requires": [
         "TECH_APPRENTICESHIP"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_INDUSTRIAL_ZONE",
+        "name": "Industrial Zone"
+      },
+      "CIVILIZATION_GERMANY": {
+        "id": "DISTRICT_HANSA",
+        "name": "Hansa"
+      }
     },
     {
       "id": "DISTRICT_NEIGHBORHOOD",
-      "name": "Neighborhood",
       "cost": 54,
       "requires": [
         "CIVIC_URBANIZATION"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_NEIGHBORHOOD",
+        "name": "Neighborhood"
+      },
+      "CIVILIZATION_KONGO": {
+        "id": "DISTRICT_MBANZA",
+        "name": "Mbanza"
+      }
     },
     {
       "id": "DISTRICT_AQUEDUCT",
-      "name": "Aqueduct",
       "cost": 36,
       "requires": [
         "TECH_ENGINEERING"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_AQUEDUCT",
+        "name": "Aqueduct"
+      },
+      "CIVILIZATION_ROME": {
+        "id": "DISTRICT_BATH",
+        "name": "Bath"
+      }
     },
     {
       "id": "DISTRICT_SPACEPORT",
@@ -2779,62 +2826,6 @@
       "cost": 0
     },
     {
-      "id": "DISTRICT_ACROPOLIS",
-      "name": "Acropolis",
-      "cost": 27,
-      "requires": [
-        "CIVIC_DRAMA_POETRY"
-      ]
-    },
-    {
-      "id": "DISTRICT_BATH",
-      "name": "Bath",
-      "cost": 18,
-      "requires": [
-        "TECH_ENGINEERING"
-      ]
-    },
-    {
-      "id": "DISTRICT_HANSA",
-      "name": "Hansa",
-      "cost": 27,
-      "requires": [
-        "TECH_APPRENTICESHIP"
-      ]
-    },
-    {
-      "id": "DISTRICT_LAVRA",
-      "name": "Lavra",
-      "cost": 27,
-      "requires": [
-        "TECH_ASTROLOGY"
-      ]
-    },
-    {
-      "id": "DISTRICT_MBANZA",
-      "name": "Mbanza",
-      "cost": 27,
-      "requires": [
-        "CIVIC_GUILDS"
-      ]
-    },
-    {
-      "id": "DISTRICT_STREET_CARNIVAL",
-      "name": "Street Carnival",
-      "cost": 27,
-      "requires": [
-        "CIVIC_GAMES_RECREATION"
-      ]
-    },
-    {
-      "id": "DISTRICT_ROYAL_NAVY_DOCKYARD",
-      "name": "Royal Navy Dockyard",
-      "cost": 27,
-      "requires": [
-        "TECH_CELESTIAL_NAVIGATION"
-      ]
-    },
-    {
       "id": "DISTRICT_GOVERNMENT",
       "name": "Government Plaza",
       "cost": 30,
@@ -2848,22 +2839,6 @@
       "cost": 54,
       "requires": [
         "CIVIC_NATURAL_HISTORY"
-      ]
-    },
-    {
-      "id": "DISTRICT_IKANDA",
-      "name": "Ikanda",
-      "cost": 27,
-      "requires": [
-        "TECH_BRONZE_WORKING"
-      ]
-    },
-    {
-      "id": "DISTRICT_SEOWON",
-      "name": "Seowon",
-      "cost": 27,
-      "requires": [
-        "TECH_WRITING"
       ]
     }
   ],
@@ -2973,35 +2948,50 @@
     },
     {
       "id": "IMPROVEMENT_CHATEAU",
-      "name": "Ch\u00e2teau",
       "requires": [
         "CIVIC_HUMANISM"
-      ]
+      ],
+      "CIVILIZATION_FRANCE": {
+        "id": "IMPROVEMENT_CHATEAU",
+        "name": "Ch\u00e2teau"
+      }
     },
     {
       "id": "IMPROVEMENT_COLOSSAL_HEAD",
-      "name": "Colossal Head"
+      "LEADER_MINOR_CIV_LA_VENTA": {
+        "id": "IMPROVEMENT_COLOSSAL_HEAD",
+        "name": "Colossal Head"
+      }
     },
     {
       "id": "IMPROVEMENT_GREAT_WALL",
-      "name": "Great Wall",
       "requires": [
         "TECH_MASONRY"
-      ]
+      ],
+      "CIVILIZATION_CHINA": {
+        "id": "IMPROVEMENT_GREAT_WALL",
+        "name": "Great Wall"
+      }
     },
     {
       "id": "IMPROVEMENT_KURGAN",
-      "name": "Kurgan",
       "requires": [
         "TECH_ANIMAL_HUSBANDRY"
-      ]
+      ],
+      "CIVILIZATION_SCYTHIA": {
+        "id": "IMPROVEMENT_KURGAN",
+        "name": "Kurgan"
+      }
     },
     {
       "id": "IMPROVEMENT_MISSION",
-      "name": "Mission",
       "requires": [
         "TECH_EDUCATION"
-      ]
+      ],
+      "CIVILIZATION_SPAIN": {
+        "id": "IMPROVEMENT_MISSION",
+        "name": "Mission"
+      }
     },
     {
       "id": "IMPROVEMENT_ROMAN_FORT",
@@ -3009,21 +2999,30 @@
     },
     {
       "id": "IMPROVEMENT_SPHINX",
-      "name": "Sphinx",
       "requires": [
         "CIVIC_CRAFTSMANSHIP"
-      ]
+      ],
+      "CIVILIZATION_EGYPT": {
+        "id": "IMPROVEMENT_SPHINX",
+        "name": "Sphinx"
+      }
     },
     {
       "id": "IMPROVEMENT_STEPWELL",
-      "name": "Stepwell",
       "requires": [
         "TECH_IRRIGATION"
-      ]
+      ],
+      "CIVILIZATION_INDIA": {
+        "id": "IMPROVEMENT_STEPWELL",
+        "name": "Stepwell"
+      }
     },
     {
       "id": "IMPROVEMENT_ZIGGURAT",
-      "name": "Ziggurat"
+      "CIVILIZATION_SUMERIA": {
+        "id": "IMPROVEMENT_ZIGGURAT",
+        "name": "Ziggurat"
+      }
     },
     {
       "id": "IMPROVEMENT_FISHERY",
@@ -3041,31 +3040,43 @@
     },
     {
       "id": "IMPROVEMENT_CHEMAMULL",
-      "name": "Chemamull",
       "requires": [
         "CIVIC_CRAFTSMANSHIP"
-      ]
+      ],
+      "CIVILIZATION_MAPUCHE": {
+        "id": "IMPROVEMENT_CHEMAMULL",
+        "name": "Chemamull"
+      }
     },
     {
       "id": "IMPROVEMENT_GOLF_COURSE",
-      "name": "Golf Course",
       "requires": [
         "CIVIC_REFORMED_CHURCH"
-      ]
+      ],
+      "CIVILIZATION_SCOTLAND": {
+        "id": "IMPROVEMENT_GOLF_COURSE",
+        "name": "Golf Course"
+      }
     },
     {
       "id": "IMPROVEMENT_MEKEWAP",
-      "name": "Mekewap",
       "requires": [
         "TECH_POTTERY"
-      ]
+      ],
+      "CIVILIZATION_CREE": {
+        "id": "IMPROVEMENT_MEKEWAP",
+        "name": "Mekewap"
+      }
     },
     {
       "id": "IMPROVEMENT_POLDER",
-      "name": "Polder",
       "requires": [
         "CIVIC_GUILDS"
-      ]
+      ],
+      "CIVILIZATION_NETHERLANDS": {
+        "id": "IMPROVEMENT_POLDER",
+        "name": "Polder"
+      }
     }
   ],
   "projects": [
@@ -4077,6 +4088,128 @@
       "requires": [
         "CIVIC_SUFFRAGE"
       ]
+    }
+  ],
+  "civilizations": [
+    {
+      "id": "CIVILIZATION_AMERICA",
+      "name": "America"
+    },
+    {
+      "id": "CIVILIZATION_ARABIA",
+      "name": "Arabia"
+    },
+    {
+      "id": "CIVILIZATION_BRAZIL",
+      "name": "Brazil"
+    },
+    {
+      "id": "CIVILIZATION_CHINA",
+      "name": "China"
+    },
+    {
+      "id": "CIVILIZATION_CREE",
+      "name": "Cree"
+    },
+    {
+      "id": "CIVILIZATION_EGYPT",
+      "name": "Egypt"
+    },
+    {
+      "id": "CIVILIZATION_ENGLAND",
+      "name": "England"
+    },
+    {
+      "id": "CIVILIZATION_FRANCE",
+      "name": "France"
+    },
+    {
+      "id": "CIVILIZATION_GEORGIA",
+      "name": "Georgia"
+    },
+    {
+      "id": "CIVILIZATION_GERMANY",
+      "name": "Germany"
+    },
+    {
+      "id": "CIVILIZATION_GREECE",
+      "name": "Greece"
+    },
+    {
+      "id": "CIVILIZATION_INDIA",
+      "name": "India"
+    },
+    {
+      "id": "CIVILIZATION_JAPAN",
+      "name": "Japan"
+    },
+    {
+      "id": "CIVILIZATION_KONGO",
+      "name": "Kongo"
+    },
+    {
+      "id": "CIVILIZATION_KOREA",
+      "name": "Korea"
+    },
+    {
+      "id": "CIVILIZATION_MAPUCHE",
+      "name": "Mapuche"
+    },
+    {
+      "id": "CIVILIZATION_MONGOLIA",
+      "name": "Mongolia"
+    },
+    {
+      "id": "CIVILIZATION_NETHERLANDS",
+      "name": "Netherlands"
+    },
+    {
+      "id": "CIVILIZATION_NORWAY",
+      "name": "Norway"
+    },
+    {
+      "id": "CIVILIZATION_ROME",
+      "name": "Rome"
+    },
+    {
+      "id": "CIVILIZATION_RUSSIA",
+      "name": "Russia"
+    },
+    {
+      "id": "CIVILIZATION_SCOTLAND",
+      "name": "Scotland"
+    },
+    {
+      "id": "CIVILIZATION_SCYTHIA",
+      "name": "Scythia"
+    },
+    {
+      "id": "CIVILIZATION_SPAIN",
+      "name": "Spain"
+    },
+    {
+      "id": "CIVILIZATION_SUMERIA",
+      "name": "Sumeria"
+    },
+    {
+      "id": "CIVILIZATION_ZULU",
+      "name": "Zulu"
+    },
+    {
+      "id": "LEADER_HARDRADA",
+      "name": "Harald Hardrada"
+    },
+    {
+      "id": "LEADER_MINOR_CIV_LA_VENTA",
+      "name": "La Venta"
+    },
+    {
+      "id": "LEADER_T_ROOSEVELT",
+      "name": "Teddy Roosevelt"
+    },
+    {
+      "id": "LEADER_VICTORIA",
+      "name": "Victoria"
     }
   ]
 }

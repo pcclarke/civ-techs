@@ -17,10 +17,18 @@
  * string id in Civ 1/2 era, or an array of ids in Civ 3+. Both are
  * normalised here so callers don't have to care.
  *
- * Item display: for cross-civ unlocks (Civ 4+) buildings/units may be
+ * Item display: for cross-civ unlocks (Civ 3+) buildings/units may be
  * wrapped in `{ CIVILIZATION_ALL: { name, id }, id, requires }` rather
  * than carrying name/id flat. We pick whichever is present, falling back
  * to id so something always renders.
+ *
+ * Civ-unique variants ride along: a class with per-civilization overrides
+ * (Swordsman → Praetorian for Rome) gets a `uniques` array of
+ * `{ id, name, civ }` where `civ` is the display name resolved from
+ * `data.civilizations`; a class with ONLY a civ-specific entry and no
+ * CIVILIZATION_ALL (Foreign Legion, Landsknecht) is itself exclusive and
+ * gets a `civ` tag instead. The tooltip renders both inline so the
+ * unique-unit story is visible without any civilization selector.
  *
  * `source` is the originating array key (e.g. "buildings"); the tooltip
  * groups by it and uses it to construct the icon path
@@ -60,6 +68,7 @@ const UNLOCK_KEYS = [
 export function buildUnlockIndex(data, dataKey) {
     const unlocksByTech = new Map();
     const obsoletesByTech = new Map();
+    const civName = buildCivNameLookup(data.civilizations);
 
     for (const source of UNLOCK_KEYS) {
         if (source === dataKey) continue;
@@ -67,7 +76,7 @@ export function buildUnlockIndex(data, dataKey) {
         if (!Array.isArray(items)) continue;
 
         for (const item of items) {
-            const display = displayFor(item, source);
+            const display = displayFor(item, source, civName);
 
             for (const tid of asList(item.requires)) {
                 bucket(unlocksByTech, tid).push(display);
@@ -90,24 +99,59 @@ export function buildUnlockIndex(data, dataKey) {
 /**
  * Normalise the {id, name, source} we'll show in the tooltip. Handles
  * three name/id conventions in our data:
- *   - flat: { id, name, ... }                       (Civ 1/2/3, civics, etc.)
- *   - civ-wrapped: { id: CLASS_ID, CIVILIZATION_ALL: { id, name } }
- *                                                   (Civ 4+ shared buildings/units)
+ *   - flat: { id, name, ... }                       (Civ 1/2, civics, etc.)
+ *   - civ-wrapped: { id: CLASS_ID, CIVILIZATION_ALL: { id, name },
+ *                    CIVILIZATION_ROME: { id, name }, ... }
+ *                                                   (Civ 3+ buildings/units)
  *   - civ-specific: { id: CLASS_ID, CIVILIZATION_GERMANY: { id, name } }
- *                                                   (Civ 4+ unique buildings/units)
+ *                                                   (Civ 3+ uniques with no
+ *                                                    shared base version)
  * For the wrapped shapes we prefer the inner concrete unit/building id
- * because that matches the icon filename on disk. Uniques land under
- * `CIVILIZATION_<CIV>` instead of `CIVILIZATION_ALL`; falling back to
- * "any CIVILIZATION_ key with an id" lets Foreign Legion / Landsknecht /
- * Dutch Sea Beggar / etc. resolve to their proper on-disk icons.
+ * because that matches the icon filename on disk.
+ *
+ * Civ-specific entries beyond CIVILIZATION_ALL become the `uniques`
+ * array ({id, name, civ} with civ resolved to a display name); when
+ * there's no CIVILIZATION_ALL at all, the first civ entry IS the item
+ * (Foreign Legion / Landsknecht / Dutch Sea Beggar) and its owner lands
+ * in `civ` instead.
  */
-function displayFor(item, source) {
-    const inner = pickCivWrapper(item);
-    if (inner && (inner.name || inner.id)) {
+function displayFor(item, source, civName) {
+    let all = null;
+    const civEntries = [];
+    for (const key of Object.keys(item)) {
+        // Civ 6 attributes some uniques to a leader rather than a
+        // civilization (Rough Rider is Teddy Roosevelt's, not America's);
+        // both key families are owner wrappers.
+        if (!key.startsWith("CIVILIZATION_") && !key.startsWith("LEADER_")) continue;
+        const v = item[key];
+        if (!v || typeof v !== "object" || !(v.id || v.name)) continue;
+        if (key === "CIVILIZATION_ALL") {
+            all = v;
+        } else {
+            civEntries.push({
+                id:   v.id || item.id,
+                name: v.name || v.id || item.id,
+                civ:  civName(key),
+            });
+        }
+    }
+
+    if (all) {
         return {
-            id:     inner.id || item.id,
-            name:   inner.name || inner.id || item.id,
+            id:      all.id || item.id,
+            name:    all.name || all.id || item.id,
             source,
+            uniques: civEntries.length > 0 ? civEntries : undefined,
+        };
+    }
+    if (civEntries.length > 0) {
+        const [first, ...rest] = civEntries;
+        return {
+            id:      first.id,
+            name:    first.name,
+            source,
+            civ:     first.civ,
+            uniques: rest.length > 0 ? rest : undefined,
         };
     }
     return {
@@ -119,21 +163,29 @@ function displayFor(item, source) {
 
 
 /**
- * Return the CIVILIZATION_ALL sub-object if present, otherwise the first
- * CIVILIZATION_<CIV> sub-object that carries a real id or name. Ignores
- * every other top-level key (id, name, requires, etc.) so we don't
- * misread cost/cat/etc. as a civ wrapper.
+ * Resolve CIVILIZATION_* keys to display names via data.civilizations.
+ * Civ 4/5 name their civs "<Adjective> Empire"; the suffix is dropped so
+ * inline tags stay short ("Praetorian (Roman)" rather than
+ * "(Roman Empire)"). Unknown keys fall back to title-casing the id so a
+ * data gap never renders as CIVILIZATION_HOLY_ROMAN.
  */
-function pickCivWrapper(item) {
-    if (item.CIVILIZATION_ALL && typeof item.CIVILIZATION_ALL === "object") {
-        return item.CIVILIZATION_ALL;
+function buildCivNameLookup(civilizations) {
+    const byId = new Map();
+    if (Array.isArray(civilizations)) {
+        for (const c of civilizations) {
+            if (c && c.id && c.name) {
+                byId.set(c.id, c.name.replace(/ Empire$/, ""));
+            }
+        }
     }
-    for (const key of Object.keys(item)) {
-        if (!key.startsWith("CIVILIZATION_")) continue;
-        const v = item[key];
-        if (v && typeof v === "object" && (v.id || v.name)) return v;
-    }
-    return null;
+    return (civKey) =>
+        byId.get(civKey) ||
+        civKey
+            .replace(/^(CIVILIZATION_|LEADER_)/, "")
+            .toLowerCase()
+            .split("_")
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(" ");
 }
 
 

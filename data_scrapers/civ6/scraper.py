@@ -15,7 +15,16 @@ civdata.json in the shape consumed by src/initWheelData.js:
       "projects":     [ ... ],
       "policies":     [ ... ],
       "governments":  [ ... ],
+      "civilizations": [ { "id", "name" }, ... ],
     }
+
+Civ/leader-unique items get the wrapped shape the older games' data uses
+(see fold_uniques): a base item grows `CIVILIZATION_ALL` plus
+CIVILIZATION_*/LEADER_*-keyed sub-objects for its unique replacements,
+and base-less uniques carry a single owner-keyed sub-object. The site's
+buildUnlockIndex.js renders these as inline "unique:" variant chips in
+the tooltip; `civilizations` provides owner display names (leaders
+included).
 
 The ./data subtree holds the raw game asset dumps and is gitignored — only
 the scripts in this directory are tracked.
@@ -89,11 +98,18 @@ PACKAGES: Dict[str, dict] = {
         },
         # Multiple text files contribute to one map; load all of these.
         # Types_Text holds the canonical short names for *most* nodes
-        # (techs, civics, districts, units, etc.); the per-category
-        # Buildings_Text / Civics_Text / Technologies_Text files top it up
-        # with civilopedia entries.
-        'text_files': ['Types_Text.xml', 'Civics_Text.xml', 'Technologies_Text.xml'],
+        # (techs, civics, districts, units, etc., and civilization names);
+        # the per-category Buildings_Text / Civics_Text / Technologies_Text
+        # files top it up with civilopedia entries, and Leaders_Text has
+        # the leader display names used for leader-unique attribution.
+        'text_files': ['Types_Text.xml', 'Civics_Text.xml', 'Technologies_Text.xml',
+                       'Leaders_Text.xml'],
         'text_parent': 'BaseGameText',
+        # Ownership tables for civ/leader-unique attribution: who owns
+        # which TRAIT_* (CivilizationTraits / LeaderTraits) and what the
+        # owner's display name is.
+        'civ_files':    ['Civilizations.xml'],
+        'leader_files': ['Leaders.xml'],
     },
     'rf': {
         'pkg': 'expansion1',
@@ -116,8 +132,15 @@ PACKAGES: Dict[str, dict] = {
             'Expansion1_Buildings_Text.xml',
             'Expansion1_Districts_Text.xml',
             'Expansion1_Units_Text.xml',
+            'Expansion1_Leaders_Text.xml',
+            # New civs' display names (Georgia et al.) live in ConfigText.
+            'Expansion1_ConfigText.xml',
         ],
         'text_parent': 'EnglishText',
+        'civ_files':    ['Expansion1_Civilizations.xml',
+                         'Expansion1_Civilizations_Major.xml'],
+        'leader_files': ['Expansion1_Leaders.xml',
+                         'Expansion1_Leaders_Major.xml'],
     },
     'gs': {
         'pkg': 'expansion2',
@@ -139,8 +162,20 @@ PACKAGES: Dict[str, dict] = {
             'Expansion2_Districts_Text.xml',
             'Expansion2_Improvements_Text.xml',
             'Expansion2_Units_Text.xml',
+            'Expansion1_Leaders_Text.xml',
+            'Expansion2_Leaders_Text.xml',
+            'Expansion2_ConfigText.xml',
         ],
         'text_parent': 'EnglishText',
+        # The expansion2 dir re-ships updated Expansion1 civ/leader files
+        # alongside its own; load both so the GS layering matches the way
+        # Firaxis stacks them.
+        'civ_files':    ['Expansion1_Civilizations.xml',
+                         'Expansion2_Civilizations.xml',
+                         'Expansion2_Civilizations_Major.xml'],
+        'leader_files': ['Expansion1_Leaders.xml',
+                         'Expansion2_Leaders.xml',
+                         'Expansion2_Leaders_Major.xml'],
     },
 }
 
@@ -185,18 +220,27 @@ UNLOCK_CATEGORIES: Dict[str, dict] = {
         'id_attr':          'BuildingType',
         'id_strip_prefix':  'BUILDING_',
         'is_wonder_split':  True,
+        'replaces_table':       'BuildingReplaces',
+        'replaces_unique_attr': 'CivUniqueBuildingType',
+        'replaces_base_attr':   'ReplacesBuildingType',
     },
     'units': {
         'file_key':         'unit',
         'table_name':       'Units',
         'id_attr':          'UnitType',
         'id_strip_prefix':  'UNIT_',
+        'replaces_table':       'UnitReplaces',
+        'replaces_unique_attr': 'CivUniqueUnitType',
+        'replaces_base_attr':   'ReplacesUnitType',
     },
     'districts': {
         'file_key':         'district',
         'table_name':       'Districts',
         'id_attr':          'DistrictType',
         'id_strip_prefix':  'DISTRICT_',
+        'replaces_table':       'DistrictReplaces',
+        'replaces_unique_attr': 'CivUniqueDistrictType',
+        'replaces_base_attr':   'ReplacesDistrictType',
     },
     'improvements': {
         'file_key':         'improvement',
@@ -478,6 +522,11 @@ def _apply_inline_attrs(entry: dict, attrs: Dict[str, str], *,
     if attrs.get('IsWonder') == 'true':
         entry['_is_wonder'] = True
 
+    # Trait marker for civ/leader-unique attribution. Resolved to an owner
+    # (and stripped) by fold_uniques after the whole category is built.
+    if attrs.get('TraitType'):
+        entry['_trait'] = attrs['TraitType']
+
 
 def _apply_inline_unlock_layer(
     items: Dict[str, dict],
@@ -560,6 +609,126 @@ def build_unlocks_for_category(
     return main, wonders
 
 
+# --------------------------- Civ/leader uniques ---------------------------
+
+# Owners whose "uniques" aren't player-facing content. Barbarian rows are
+# implementation detail; LEADER_DEFAULT is the shared major-civ template.
+IGNORED_OWNERS = {'CIVILIZATION_BARBARIAN', 'LEADER_BARBARIAN', 'LEADER_DEFAULT'}
+
+
+def _prettify_owner(owner_id: str) -> str:
+    return (owner_id
+            .replace('CIVILIZATION_', '')
+            .replace('LEADER_', '')
+            .replace('_', ' ')
+            .title())
+
+
+def collect_unique_owners(pkg_keys: List[str], text_map: Dict[str, str],
+                          ) -> Tuple[Dict[str, str], Dict[str, str]]:
+    """Walk the civilization and leader files for every layered package and
+    return (trait -> owner id, owner id -> display name). Owners are
+    CIVILIZATION_* or LEADER_* ids; traits come from CivilizationTraits /
+    LeaderTraits. Later layers win, matching the game's stacking."""
+    trait_owner: Dict[str, str] = {}
+    owner_name: Dict[str, str] = {}
+
+    tables = (
+        ('civ_files',    'Civilizations', 'CivilizationType', 'CivilizationTraits'),
+        ('leader_files', 'Leaders',       'LeaderType',       'LeaderTraits'),
+    )
+    for key in pkg_keys:
+        info = PACKAGES[key]
+        for files_key, main_table, id_attr, traits_table in tables:
+            for fn in info.get(files_key, []):
+                root = parse_xml(info['pkg'], fn)
+                if root is None:
+                    continue
+                main = root.find(main_table)
+                if main is not None:
+                    for row in main.findall('Row'):
+                        oid, name_key = row.get(id_attr), row.get('Name')
+                        if oid and name_key:
+                            owner_name[oid] = text_map.get(name_key) or _prettify_owner(oid)
+                traits = root.find(traits_table)
+                if traits is not None:
+                    for row in traits.findall('Row'):
+                        oid, trait = row.get(id_attr), row.get('TraitType')
+                        if oid and trait:
+                            trait_owner[trait] = oid
+    return trait_owner, owner_name
+
+
+def collect_replaces(pkg_keys: List[str], cfg: dict) -> Dict[str, str]:
+    """Unique-id -> base-id map from the category's *Replaces table (which
+    lives in the same XML files as the main unlock table). Empty for
+    categories without one (improvements etc. — their uniques have no
+    shared base version)."""
+    replaces: Dict[str, str] = {}
+    table = cfg.get('replaces_table')
+    if not table:
+        return replaces
+    for key in pkg_keys:
+        info = PACKAGES[key]
+        for filename in info.get('unlock_files', {}).get(cfg['file_key'], []):
+            root = parse_xml(info['pkg'], filename)
+            if root is None:
+                continue
+            t = root.find(table)
+            if t is None:
+                continue
+            for row in t.findall('Row'):
+                u = row.get(cfg['replaces_unique_attr'])
+                b = row.get(cfg['replaces_base_attr'])
+                if u and b:
+                    replaces[u] = b
+    return replaces
+
+
+def fold_uniques(items: List[dict], replaces: Dict[str, str],
+                 trait_owner: Dict[str, str], owner_name: Dict[str, str],
+                 used_owners: set) -> List[dict]:
+    """Restructure a category so civ/leader uniques ride on their base item,
+    matching the wrapped shape the Civ 3/4/5 data (and the tooltip's
+    unique-variant rendering) already uses:
+
+        replaced unique  -> base entry grows CIVILIZATION_ALL + owner-keyed
+                            sub-objects; the unique's own flat entry is
+                            dropped (its unlock now renders as a variant
+                            chip on the base item, under the base item's
+                            prereq — per-unique prereq differences are
+                            collapsed, same as the older games' data)
+        base-less unique -> stays its own entry, name moved into an
+                            owner-keyed sub-object so the tooltip tags it
+                            with its owner (Great Wall (China), Rough
+                            Rider (Teddy Roosevelt))
+
+    Entries whose trait has no known owner (or an IGNORED_OWNERS one, like
+    barbarians) just lose the marker and stay flat."""
+    by_id = {e['id']: e for e in items}
+    removed: set = set()
+
+    for entry in items:
+        trait = entry.pop('_trait', None)
+        if not trait:
+            continue
+        owner = trait_owner.get(trait)
+        if not owner or owner in IGNORED_OWNERS:
+            continue
+
+        used_owners.add(owner)
+        base = by_id.get(replaces.get(entry['id'], ''))
+        if base is not None and base is not entry:
+            if 'CIVILIZATION_ALL' not in base:
+                base['CIVILIZATION_ALL'] = {'id': base['id'], 'name': base.pop('name')}
+            base[owner] = {'id': entry['id'], 'name': entry['name']}
+            removed.add(entry['id'])
+        else:
+            entry[owner] = {'id': entry['id'], 'name': entry.pop('name')}
+
+    return [e for e in items if e['id'] not in removed]
+
+
 # --------------------------- Driver ---------------------------
 
 def build_civdata(game: str) -> dict:
@@ -594,16 +763,34 @@ def build_civdata(game: str) -> dict:
         text_map=text_map,
     )
 
+    # Civ/leader-unique attribution: who owns each TRAIT_*, and display
+    # names for the owners. Owners actually referenced by a unique are
+    # collected so the output's `civilizations` array stays minimal.
+    trait_owner, owner_name = collect_unique_owners(pkg_keys, text_map)
+    used_owners: set = set()
+
     for category, cfg in UNLOCK_CATEGORIES.items():
         main, wonders = build_unlocks_for_category(pkg_keys, cfg, text_map)
         # Strip excluded ids from both the main and wonders lists.
         # Wonders share their source key with buildings, so apply the
-        # `buildings` exclusion to both halves of the split.
+        # `buildings` exclusion to both halves of the split. Exclusion
+        # runs before the unique fold so an excluded unique doesn't come
+        # back as a variant chip on its base item.
         excl_main = EXCLUDE_IDS.get(category, set())
         excl_won = EXCLUDE_IDS.get('wonders' if category == 'buildings' else category, set())
-        out[category] = [n for n in main if n['id'] not in excl_main]
+        replaces = collect_replaces(pkg_keys, cfg)
+        out[category] = fold_uniques(
+            [n for n in main if n['id'] not in excl_main],
+            replaces, trait_owner, owner_name, used_owners)
         if cfg.get('is_wonder_split'):
-            out['wonders'] = [n for n in wonders if n['id'] not in excl_won]
+            out['wonders'] = fold_uniques(
+                [n for n in wonders if n['id'] not in excl_won],
+                replaces, trait_owner, owner_name, used_owners)
+
+    out['civilizations'] = [
+        {'id': oid, 'name': owner_name.get(oid) or _prettify_owner(oid)}
+        for oid in sorted(used_owners)
+    ]
 
     return out
 

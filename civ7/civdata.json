@@ -1300,27 +1300,36 @@
     },
     {
       "id": "UNIT_BURNING_ARROW",
-      "name": "Burning Arrow",
       "era": "Antiquity",
       "requires": [
         "TECH_ANIMAL_HUSBANDRY"
-      ]
+      ],
+      "CIVILIZATION_MISSISSIPPIAN": {
+        "id": "UNIT_BURNING_ARROW",
+        "name": "Burning Arrow"
+      }
     },
     {
       "id": "UNIT_CHU_KO_NU",
-      "name": "Chu-Ko-Nu",
       "era": "Antiquity",
       "requires": [
         "TECH_ANIMAL_HUSBANDRY"
-      ]
+      ],
+      "CIVILIZATION_HAN": {
+        "id": "UNIT_CHU_KO_NU",
+        "name": "Chu-Ko-Nu"
+      }
     },
     {
       "id": "UNIT_HUL_CHE",
-      "name": "Hul'che",
       "era": "Antiquity",
       "requires": [
         "TECH_ANIMAL_HUSBANDRY"
-      ]
+      ],
+      "CIVILIZATION_MAYA": {
+        "id": "UNIT_HUL_CHE",
+        "name": "Hul'che"
+      }
     },
     {
       "id": "UNIT_CHARIOT",
@@ -1364,43 +1373,58 @@
     },
     {
       "id": "UNIT_PURABHETTARAH",
-      "name": "Purabhettarah",
       "era": "Antiquity",
       "requires": [
         "TECH_THE_WHEEL"
-      ]
+      ],
+      "CIVILIZATION_MAURYAN": {
+        "id": "UNIT_PURABHETTARAH",
+        "name": "Purabhettarah"
+      }
     },
     {
       "id": "UNIT_YUTHAHATHI",
-      "name": "Yuthahathi",
       "era": "Antiquity",
       "requires": [
         "TECH_THE_WHEEL"
-      ]
+      ],
+      "CIVILIZATION_KHMER": {
+        "id": "UNIT_YUTHAHATHI",
+        "name": "Yuthahathi"
+      }
     },
     {
       "id": "UNIT_IMMORTAL",
-      "name": "Immortal",
       "era": "Antiquity",
       "requires": [
         "TECH_BRONZE_WORKING"
-      ]
+      ],
+      "CIVILIZATION_ACHAEMENID_PERSIAN": {
+        "id": "UNIT_IMMORTAL",
+        "name": "Immortal"
+      }
     },
     {
       "id": "UNIT_LEGION",
-      "name": "Legion",
       "era": "Antiquity",
       "requires": [
         "TECH_BRONZE_WORKING"
-      ]
+      ],
+      "CIVILIZATION_ROMAN": {
+        "id": "UNIT_LEGION",
+        "name": "Legion"
+      }
     },
     {
       "id": "UNIT_DHOW",
-      "name": "Dhow",
       "era": "Antiquity",
       "requires": [
         "TECH_SAILING"
-      ]
+      ],
+      "CIVILIZATION_AKSUMITE": {
+        "id": "UNIT_DHOW",
+        "name": "Dhow"
+      }
     },
     {
       "id": "UNIT_HORSEMAN",
@@ -1428,27 +1452,22 @@
     },
     {
       "id": "UNIT_MERCHANT_ANTIQUITY",
-      "name": "Merchant",
       "era": "Antiquity",
       "requires": [
         "CIVIC_CODE_OF_LAWS"
-      ]
-    },
-    {
-      "id": "UNIT_VAISHYA",
-      "name": "Vaishya",
-      "era": "Antiquity",
-      "requires": [
-        "CIVIC_CODE_OF_LAWS"
-      ]
-    },
-    {
-      "id": "UNIT_WATONATHI",
-      "name": "Watonathi",
-      "era": "Antiquity",
-      "requires": [
-        "CIVIC_CODE_OF_LAWS"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_MERCHANT_ANTIQUITY",
+        "name": "Merchant"
+      },
+      "CIVILIZATION_KHMER": {
+        "id": "UNIT_VAISHYA",
+        "name": "Vaishya"
+      },
+      "CIVILIZATION_MISSISSIPPIAN": {
+        "id": "UNIT_WATONATHI",
+        "name": "Watonathi"
+      }
     },
     {
       "id": "UNIT_ARMY_COMMANDER_ANTIQUITY",
@@ -1460,27 +1479,36 @@
     },
     {
       "id": "UNIT_HAZARAPATIS",
-      "name": "Hazarapatis",
       "era": "Antiquity",
       "requires": [
         "CIVIC_DISCIPLINE"
-      ]
+      ],
+      "CIVILIZATION_ACHAEMENID_PERSIAN": {
+        "id": "UNIT_HAZARAPATIS",
+        "name": "Hazarapatis"
+      }
     },
     {
       "id": "UNIT_LEGATUS",
-      "name": "Legatus",
       "era": "Antiquity",
       "requires": [
         "CIVIC_DISCIPLINE"
-      ]
+      ],
+      "CIVILIZATION_ROMAN": {
+        "id": "UNIT_LEGATUS",
+        "name": "Legatus"
+      }
     },
     {
       "id": "UNIT_TURTANU",
-      "name": "Turtanu",
       "era": "Antiquity",
       "requires": [
         "CIVIC_DISCIPLINE"
-      ]
+      ],
+      "CIVILIZATION_ASSYRIAN": {
+        "id": "UNIT_TURTANU",
+        "name": "Turtanu"
+      }
     },
     {
       "id": "UNIT_KNIGHT",
@@ -1571,22 +1599,6 @@
       ]
     },
     {
-      "id": "UNIT_MERCHANT_EXPLORATION",
-      "name": "Merchant",
-      "era": "Exploration",
-      "requires": [
-        "CIVIC_CODE_OF_LAWS"
-      ]
-    },
-    {
-      "id": "UNIT_ARMY_COMMANDER_EXPLORATION",
-      "name": "Army Commander",
-      "era": "Exploration",
-      "requires": [
-        "CIVIC_DISCIPLINE"
-      ]
-    },
-    {
       "id": "UNIT_FLEET_COMMANDER_EXPLORATION",
       "name": "Fleet Commander",
       "era": "Exploration",
@@ -1596,11 +1608,14 @@
     },
     {
       "id": "UNIT_OTTRU",
-      "name": "Ottru",
       "era": "Exploration",
       "requires": [
         "TECH_ASTRONOMY"
-      ]
+      ],
+      "CIVILIZATION_CHOLA": {
+        "id": "UNIT_OTTRU",
+        "name": "Ottru"
+      }
     },
     {
       "id": "UNIT_LANDSHIP",
@@ -1636,11 +1651,14 @@
     },
     {
       "id": "UNIT_KATYUSHA_ROCKET_LAUNCHER",
-      "name": "Katyusha Rocket Launcher",
       "era": "Modern",
       "requires": [
         "TECH_INDUSTRIALIZATION"
-      ]
+      ],
+      "CIVILIZATION_RUSSIAN": {
+        "id": "UNIT_KATYUSHA_ROCKET_LAUNCHER",
+        "name": "Katyusha Rocket Launcher"
+      }
     },
     {
       "id": "UNIT_TANK",
@@ -1700,19 +1718,25 @@
     },
     {
       "id": "UNIT_MIKASA",
-      "name": "Mikasa",
       "era": "Modern",
       "requires": [
         "TECH_COMBUSTION"
-      ]
+      ],
+      "CIVILIZATION_MEIJI_JAPANESE": {
+        "id": "UNIT_MIKASA",
+        "name": "Mikasa"
+      }
     },
     {
       "id": "UNIT_REVENGE",
-      "name": "Revenge",
       "era": "Modern",
       "requires": [
         "TECH_COMBUSTION"
-      ]
+      ],
+      "CIVILIZATION_BRITISH": {
+        "id": "UNIT_REVENGE",
+        "name": "Revenge"
+      }
     },
     {
       "id": "UNIT_BATTLESHIP",
@@ -1764,19 +1788,25 @@
     },
     {
       "id": "UNIT_ZERO",
-      "name": "Zero",
       "era": "Modern",
       "requires": [
         "TECH_FLIGHT"
-      ]
+      ],
+      "CIVILIZATION_MEIJI_JAPANESE": {
+        "id": "UNIT_ZERO",
+        "name": "Zero"
+      }
     },
     {
       "id": "UNIT_STUKA",
-      "name": "Stuka",
       "era": "Modern",
       "requires": [
         "TECH_FLIGHT"
-      ]
+      ],
+      "CIVILIZATION_PRUSSIAN": {
+        "id": "UNIT_STUKA",
+        "name": "Stuka"
+      }
     },
     {
       "id": "UNIT_DIVE_BOMBER",
@@ -1796,27 +1826,18 @@
     },
     {
       "id": "UNIT_EXPLORER",
-      "name": "Explorer",
       "era": "Modern",
       "requires": [
         "CIVIC_HEGEMONY"
-      ]
-    },
-    {
-      "id": "UNIT_ANTIQUARIAN",
-      "name": "Antiquarian",
-      "era": "Modern",
-      "requires": [
-        "CIVIC_NATURAL_HISTORY"
-      ]
-    },
-    {
-      "id": "UNIT_MERCHANT_MODERN",
-      "name": "Merchant",
-      "era": "Modern",
-      "requires": [
-        "CIVIC_CODE_OF_LAWS"
-      ]
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_EXPLORER",
+        "name": "Explorer"
+      },
+      "CIVILIZATION_BRITISH": {
+        "id": "UNIT_ANTIQUARIAN",
+        "name": "Antiquarian"
+      }
     },
     {
       "id": "UNIT_AIRCRAFT_CARRIER",
@@ -1824,22 +1845,6 @@
       "era": "Modern",
       "requires": [
         "TECH_MOBILIZATION"
-      ]
-    },
-    {
-      "id": "UNIT_ARMY_COMMANDER_MODERN",
-      "name": "Army Commander",
-      "era": "Modern",
-      "requires": [
-        "CIVIC_DISCIPLINE"
-      ]
-    },
-    {
-      "id": "UNIT_FLEET_COMMANDER_MODERN",
-      "name": "Fleet Commander",
-      "era": "Modern",
-      "requires": [
-        "TECH_ASTRONOMY"
       ]
     },
     {
@@ -2436,6 +2441,64 @@
       "requires": [
         "CIVIC_HEGEMONY"
       ]
+    }
+  ],
+  "civilizations": [
+    {
+      "id": "CIVILIZATION_ACHAEMENID_PERSIAN",
+      "name": "Achaemenid Persian"
+    },
+    {
+      "id": "CIVILIZATION_AKSUMITE",
+      "name": "Aksumite"
+    },
+    {
+      "id": "CIVILIZATION_ASSYRIAN",
+      "name": "Assyrian"
+    },
+    {
+      "id": "CIVILIZATION_BRITISH",
+      "name": "British"
+    },
+    {
+      "id": "CIVILIZATION_CHOLA",
+      "name": "Chola"
+    },
+    {
+      "id": "CIVILIZATION_HAN",
+      "name": "Han"
+    },
+    {
+      "id": "CIVILIZATION_KHMER",
+      "name": "Khmer"
+    },
+    {
+      "id": "CIVILIZATION_MAURYAN",
+      "name": "Mauryan"
+    },
+    {
+      "id": "CIVILIZATION_MAYA",
+      "name": "Maya"
+    },
+    {
+      "id": "CIVILIZATION_MEIJI_JAPANESE",
+      "name": "Meiji Japanese"
+    },
+    {
+      "id": "CIVILIZATION_MISSISSIPPIAN",
+      "name": "Mississippian"
+    },
+    {
+      "id": "CIVILIZATION_PRUSSIAN",
+      "name": "Prussian"
+    },
+    {
+      "id": "CIVILIZATION_ROMAN",
+      "name": "Roman"
+    },
+    {
+      "id": "CIVILIZATION_RUSSIAN",
+      "name": "Russian"
     }
   ]
 }
