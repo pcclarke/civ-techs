@@ -77,6 +77,9 @@ from typing import Dict, List, Optional, Tuple
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(HERE, 'data')
 REPO_ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
+# Game data and icons live under public/ so Vite copies them verbatim
+# into the build output; the paths below are relative to that.
+PUBLIC_DIR = os.path.join(REPO_ROOT, 'public')
 
 # Per-package layout. Each package contributes XML files for several
 # categories (tech/civic + unlock tables) plus matching text files.
@@ -804,7 +807,7 @@ def write_output(out_path: str, data: dict, indent: int) -> None:
 def run_one(game: str, indent: int) -> None:
     _, rel_out = GAMES[game]
     data = build_civdata(game)
-    out_path = os.path.join(REPO_ROOT, rel_out)
+    out_path = os.path.join(PUBLIC_DIR, rel_out)
     write_output(out_path, data, indent)
     counts = ', '.join(f'{len(data[k])} {k}' for k in data if isinstance(data[k], list) and data[k])
     print(f'[{game}] -> {rel_out}')

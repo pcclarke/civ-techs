@@ -77,7 +77,10 @@ from bs4 import BeautifulSoup, Tag
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
-DEFAULT_OUT = os.path.join(REPO_ROOT, 'civ7', 'civdata.json')
+# Game data and icons live under public/ so Vite copies them verbatim
+# into the build output; the paths below are relative to that.
+PUBLIC_DIR = os.path.join(REPO_ROOT, 'public')
+DEFAULT_OUT = os.path.join(PUBLIC_DIR, 'civ7', 'civdata.json')
 
 AGES = ['Antiquity', 'Exploration', 'Modern']
 AGE_HEADINGS = {f'{age} Age': age for age in AGES}

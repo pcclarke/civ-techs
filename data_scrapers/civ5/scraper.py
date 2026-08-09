@@ -51,6 +51,9 @@ from typing import Dict, List, Optional
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
+# Game data and icons live under public/ so Vite copies them verbatim
+# into the build output; the paths below are relative to that.
+PUBLIC_DIR = os.path.join(REPO_ROOT, 'public')
 
 # Per-variant config:
 #   text_dir: relative path under <package>/XML/ that holds the LOC files
@@ -549,7 +552,7 @@ def run_one(game: str, indent: int) -> None:
     out_rel = PACKAGES[game]['out_rel']
     print(f'== {game} ==')
     data = build_civdata(game)
-    out_path = os.path.join(REPO_ROOT, out_rel)
+    out_path = os.path.join(PUBLIC_DIR, out_rel)
     write_output(out_path, data, indent)
     counts = ', '.join(f'{len(data[k])} {k}' for k in DATA_KEYS if data.get(k))
     print(f'   wrote {out_rel}: {counts}')

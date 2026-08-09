@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Civilization Technologies Wheel</title>
+      <script type="module" crossorigin src="./assets/index-GX1rcSKY.js"></script>
+      <link rel="stylesheet" crossorigin href="./assets/index-BLivMZ2E.css">
+    </head>
+    
+    <body>
+        <div class="container">
+            <h1 class="title">Civilization Technologies Wheel</h1>
+
+            <div id="intro">
+                <div class="col">
+                    <h2>The Challenge of History</h2>
+                    <p>In Sid Meier's Civilization, advances in knowledge are represented by the technology tree, the diagram that shows what you can build and when. It spans the whole of human history from agriculture to space flight. Representing so much of it at once has made for some very complex, albeit attractive, diagrams. Many a Civilization player has had the experience of bouncing back and forth across the technology tree because of relationships left unclear and spread out.</p>
+                    <p>This project makes the encoding of that information consistent, explicit, and as much as possible, condensed on to one screen: every advance in a game, and every relationship between them, in one place. All seven Civilization games are here with their expansions. For Civilization VI and VII the civics tree sits alongside the technologies.</p>
+                    <p>Advances run clockwise from the marked start at the top of the wheel, ordered by era and then by how far back their prerequisites reach, so reading around the rim roughly follows the order in which you would research them. Where a game divides its advances into eras, each era appears as a tinted band with its name inside.</p>
+                </div>
+                <div class="col">
+                    <h2>How to Read the Wheel</h2>
+                    <p>The wheel is divided into two types of relationship components, spokes and arcs:</p>
+
+                    <h3>Spokes</h3>
+                    <ul>
+                        <li><img src="data:image/gif;base64,R0lGODlhMgAUAJECAN7e372+wP///wAAACH5BAEAAAIALAAAAAAyABQAAAIqlI+py+0Po5y02ouz3rz7D4YUEJTmiabqygYH2cayLNb2jef6zvf+7ykAADs=" /> <p>There is one spoke for every advance in Civilization</p></li>
+                        <li><img src="data:image/gif;base64,R0lGODlhMgAUANU6ABKXfROWgROUhRKZeRWSiRKadRaPjRObcBeOkRacbBaMlReeaBGKmRefZQ+InhagYBWiXRGGoRSjWhWDpZ+goxOkVxeBqRp+rd7e30uUbBSlVUyQdUuPeU5/mkqLhEmGj0yHjUuKhkiFkUqOfk5+nUuScEyCl0qNgkqTbkuScU2BmUqOe0qMg0qNgBt8sUyQd0uDlUyRc0mEk0yIihSmU0yJiEqUbsDAwoGChb2+wP///wAAAAAAAAAAAAAAAAAAACH5BAEAADoALAAAAAAyABQAAAbNQJ1wSCwaj8ikcslsOm+4qHRKvTmvxNspICAYEAqGIzKxXFwkKxZ7awG4XrCYbO6o18/R4N39hsdlKnd4TDcrBXtwfnMTJoOESjccB4h8cX8RMI+QSDcvCZSJfXIOMpucQhg5qxQbC6CVinIiFKu2t7i5uUOqrDENr6GWfh+1usfIOUc3KQ/AsKJxIKeoWSUQzsGxfTPU1UI3KBLYz8JwNd7fNzYV49nQfCHp1TcZGu3k2oke86j1NPfclavEoh8nKFQSSjH4raHDh02CAAA7" /> <p>Icons show what advance the spoke represents</p></li>
+                    </ul>
+                    <h3>Arcs</h3>
+                    <ul>
+                        <li><img src="data:image/gif;base64,R0lGODlhMgAUALMOAL/p00C8fSCxZ5/dvd/06Y/Ys2DIk1DCiO/59K/jyDC3cs/u3n/SqACmUf///wAAACH5BAEAAA4ALAAAAAAyABQAAARe0MlJq7046827/2AojmRpnmiqbgjgJkwsz3Thuh8BDHEQCI2gcEgsGoO+Q8yFmByO0Kj0CJAwptiscSEZSH0+mnhmAAOjE0AjzEjgVg4doMAoKwTwvH7P7/v/gIErEQA7" /> <p>Arcs show relationships between advances</p></li>
+                        <li><img src="data:image/gif;base64,R0lGODlhMgAUAMQSAL/p00C8fb2+wF+yic/u3p/dvXDNnVDCiI/Ys9/06a/jyGDIk+/59DC3chCsXCCxZ3/SqACmUf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAyABQAAAWIoCSOZGmOgnCubOuK0DBAb22fUR7d/K3vvWDrJyzidMbkiKhkAZ4IiNQQqFZ/1qpUqngmXASFtOr4mc/o9K8ROEAQAIZooa7b7z8ADM/v/74SBWkPVW5bT4h5iAVbVFdpIwQBBhAFAAQ+SDUMUBAHC00STKFCo6Q9pqeZOapBqa0vMTOwPSlNIQA7" /> <p>Perpendicular lines point to the spoke with the arc's origin advance</p></li>
+                        <li><img src="data:image/gif;base64,R0lGODlhMgAUAMQZAO7v772+wM7O0M/u3p/dve/59GDIk1DCiCCxZ4/Ys3DNnd/06a/jyBCsXDy4eZrFsI64pDSwcbPcyC+sbTC3cr/p03/SqEC8fQCmUf///wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABkALAAAAAAyABQAAAWbYCaOZGmKQCCcbOu+qArPNJuude4OVV9JkIevt9AZMxeMcslUWo66ZHP6hNakU2bVOsNmnVxTwWcpWxBf5sVM8MF4CYvhQknb78vG5aKwtAsiB3iDhFkVIhaFioVFGQRpexcGZmh3a2UHe5VZIwMXBxYJPYAsXl9bJjwMZZJQplmoYS2vVLIwCpEXDhMRuRcEtjk3wVbDxEfGXCEAOw==" /> <p>Squares on a spoke indicate that the arc's origin is required for this advance</p></li>
+                        <li><img src="data:image/gif;base64,R0lGODlhMgAUAMQdAEC8fb/p03/SqDC3cu/59M/u3hCsXN/06Z/dvVDCiO7v7yCxZ72+wM7O0IDTqK/jyI/Ys2DHknDNnY64pGDIk7PcyJrFsJfVtl+yiWe6kb/p1P///wCmUf///wAAAAAAACH5BAEAAB0ALAAAAAAyABQAAAW9YCeOZGmKCtOcbOu+qArPNFtNVlHvMEEZnCBngeAZSwWgcJkgHI0H5ZL55AGWBsB1WazOCssIYbNJCgdeUSEQELi1gMF0Qa5rphx4wg1hO00IWniDSw51dXKEgwsACQciEoqShocbiZKDASICmIQAlQedhCMBWFoSbg9smmBClBsElwsdB6sQbglxUyMHCAGPMJccAw4RUhxdL2wPT62KaGk0CM9/0V9bQgYC1dY0BxcYGQ/c3TUpK+VH59EhADs=" /> <p>Circles on a spoke indicate that the arc's origin is optional for this advance</p></li>
+                    </ul>
+
+                    <h3>Exploring</h3>
+                    <p>Hover an advance (its icon, its label, or any of its arcs) to focus on what it requires, what it leads to, and everything it unlocks, while the rest of the wheel dims. Click to pin that view in place while you read it, then click the same advance again, or the background, to release it.</p>
+                </div>
+            </div>
+
+            <!-- The wrapper reserves the panel's expanded height in normal
+                 flow (frozen by main.js while the panel is pinned), so the
+                 sticky panel can collapse to a slim toolbar without changing
+                 the document height — no content jump, no scroll clamping.
+                 Its position also tells main.js when the panel is pinned. -->
+            <div id="select-wrap">
+            <div id="select-options">
+                <!-- Game tabs: each label wraps its radio so clicking anywhere on
+                     the tab selects it; the input stays in the DOM (visually
+                     hidden via CSS) so keyboard and existing JS bindings on
+                     input[name="game"] keep working. Emblems are the same
+                     center-of-wheel images the chart uses. Only the default
+                     game (see DEFAULT_GAME in src/constants.js) is checked. -->
+                <div id="game-tabs" role="radiogroup" aria-label="Game">
+                    <label class="game-tab">
+                        <input type="radio" id="civ1-select" name="game" value="civ1" />
+                        <img src="civ1/img/civ1-center.png" alt="" />
+                        <span>Civ I</span>
+                    </label>
+                    <label class="game-tab">
+                        <input type="radio" id="civ2-select" name="game" value="civ2" />
+                        <img src="civ2/img/civ2-center.png" alt="" />
+                        <span>Civ II</span>
+                    </label>
+                    <label class="game-tab">
+                        <input type="radio" id="civ3-select" name="game" value="civ3" />
+                        <img src="civ3/img/civ3-center.png" alt="" />
+                        <span>Civ III</span>
+                    </label>
+                    <label class="game-tab">
+                        <input type="radio" id="civ4-select" name="game" value="civ4" checked />
+                        <img src="civ4/img/civ4-center.png" alt="" />
+                        <span>Civ IV</span>
+                    </label>
+                    <label class="game-tab">
+                        <input type="radio" id="civ5-select" name="game" value="civ5" />
+                        <img src="civ5/img/civ5-center.png" alt="" />
+                        <span>Civ V</span>
+                    </label>
+                    <label class="game-tab">
+                        <input type="radio" id="civ6-select" name="game" value="civ6" />
+                        <img src="civ6/img/civ6-center.png" alt="" />
+                        <span>Civ VI</span>
+                    </label>
+                    <label class="game-tab">
+                        <input type="radio" id="civ7-select" name="game" value="civ7" />
+                        <img src="civ7/img/civ7-center.png" alt="" />
+                        <span>Civ VII</span>
+                    </label>
+                </div>
+
+                <!-- Expansion / tree pills are rendered into these containers
+                     by src/main.js; the rows hide when the active game has no
+                     choice to make. -->
+                <div id="expansion" class="pill-row">
+                    <span class="pill-row-label">Expansion</span>
+                    <div id="select-expansion" class="pill-group"></div>
+                </div>
+
+                <div id="tree" class="pill-row hidden">
+                    <span class="pill-row-label">Tree</span>
+                    <div id="select-tree" class="pill-group"></div>
+                </div>
+            </div>
+            </div>
+
+            <div id="chart"></div>
+
+            <div id="tooltip" class="hidden">
+                <div id="tipHead">
+                    <img id="tipImg"></img>
+                    <p id="tipName"></p>
+                    <button id="tipCloseButton" name="reset">X</button>
+                    <p id="tipKind"></p>
+                    <div class="clear"></div>
+                </div>
+                <div id="tipTraits">
+                    <p id="tipCostLine" class="hidden">Cost: <span id="tipCost"></span> <span id="tipCostType"></span></p>
+                </div>
+                <div id="tipReqs">
+                    <p class="tipSubTitle">Requirements</p>
+                    <div class="desc">
+                        <p id="tipNoLine" class="hidden">Available at game start</p>
+                        <p id="tipMandLine" class="hidden">You must have: <span id="tipMand"></span></p>
+                        <p id="tipPlusLine" class="hidden">plus</p>
+                        <p id="tipOptLine" class="hidden">You need one of: <span id="tipOpt"></span></p>
+                    </div>
+                </div>
+                <div id="tipLeads" class="hidden">
+                    <p class="tipSubTitle">Leads to</p>
+                    <div class="desc">
+                        <p id="tipMldLine" class="hidden">Must have for: <span id="tipMld"></span></p>
+                        <p id="tipOldLine" class="hidden">Optional for: <span id="tipOld"></span></p>
+                    </div>
+                </div>
+                <div id="tipUnlocks" class="hidden">
+                    <p class="tipSubTitle">Unlocks</p>
+                    <div class="desc" id="tipUnlocksContent"></div>
+                </div>
+                <div id="tipObsoletes" class="hidden">
+                    <p class="tipSubTitle">Makes obsolete</p>
+                    <div class="desc" id="tipObsoletesContent"></div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

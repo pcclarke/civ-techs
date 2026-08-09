@@ -9,6 +9,11 @@ import {
     TOTAL_WIDTH,
     TOTAL_HEIGHT
 } from "./constants";
+// Imported rather than referenced by path so Vite resolves it in dev and
+// emits a hashed, base-prefixed asset in the build. The game icons under
+// public/ can't work this way — their paths are built at runtime from the
+// selected game — which is exactly why they live in public/ instead.
+import startSliceUrl from "../img/startSlice.png";
 
 export default function() {
     const groupObj = {};
@@ -35,7 +40,7 @@ export default function() {
         .attr("y", -CENTER_Y)
         .attr("width", 167)
         .attr("height", CENTER_Y)
-        .attr("xlink:href", "img/startSlice.png");
+        .attr("xlink:href", startSliceUrl);
 
     // SVG groups to organize shapes. Order is paint order — earlier groups
     // sit behind later ones. eraBackgrounds is first so its faint coloured

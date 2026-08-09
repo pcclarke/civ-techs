@@ -54,6 +54,8 @@ from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, '..', '..'))
+# Game data and icons live under public/ (see the site's vite.config.js).
+PUBLIC = os.path.join(REPO, 'public')
 DATA_DIR = os.path.join(HERE, 'data')
 
 # All output PNGs are normalised to this size — picked to match the existing
@@ -205,18 +207,18 @@ KINDS: Dict[str, Dict] = {
 # and which icon layers to load.
 GAMES: Dict[str, Dict] = {
     'base': {
-        'civdata_path': os.path.join(REPO, 'civ6', 'civdata.json'),
-        'outdir_base':  os.path.join(REPO, 'civ6', 'img'),
+        'civdata_path': os.path.join(PUBLIC, 'civ6', 'civdata.json'),
+        'outdir_base':  os.path.join(PUBLIC, 'civ6', 'img'),
         'icon_layers':  ['base'],
     },
     'rf': {
-        'civdata_path': os.path.join(REPO, 'civ6rf', 'civdata.json'),
-        'outdir_base':  os.path.join(REPO, 'civ6rf', 'img'),
+        'civdata_path': os.path.join(PUBLIC, 'civ6rf', 'civdata.json'),
+        'outdir_base':  os.path.join(PUBLIC, 'civ6rf', 'img'),
         'icon_layers':  ['base', 'xp1'],
     },
     'gs': {
-        'civdata_path': os.path.join(REPO, 'civ6gs', 'civdata.json'),
-        'outdir_base':  os.path.join(REPO, 'civ6gs', 'img'),
+        'civdata_path': os.path.join(PUBLIC, 'civ6gs', 'civdata.json'),
+        'outdir_base':  os.path.join(PUBLIC, 'civ6gs', 'img'),
         'icon_layers':  ['base', 'xp1', 'xp2'],
     },
 }

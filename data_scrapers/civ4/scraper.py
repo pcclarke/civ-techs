@@ -46,6 +46,9 @@ PACKAGES = {
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
+# Game data and icons live under public/ so Vite copies them verbatim
+# into the build output; the paths below are relative to that.
+PUBLIC_DIR = os.path.join(REPO_ROOT, 'public')
 
 
 # --------------------------- XML helpers ---------------------------
@@ -279,7 +282,7 @@ def run_one(game: str, indent: int) -> None:
     techs = prep_technologies(pkg_dir, text_map)
     civics = prep_civics(pkg_dir, text_map)
 
-    out_path = os.path.join(REPO_ROOT, rel_out)
+    out_path = os.path.join(PUBLIC_DIR, rel_out)
     n_t, n_c, merged = update_civdata(out_path, techs, civics, indent)
     note = '(merged into existing JSON)' if merged else '(created new JSON)'
     eras = sorted({t['era'] for t in techs if 'era' in t})

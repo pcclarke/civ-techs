@@ -1,0 +1,5021 @@
+{
+  "technologies": [
+    {
+      "id": "TECH_POTTERY",
+      "cost": 25,
+      "era": "ERA_ANCIENT",
+      "name": "Pottery"
+    },
+    {
+      "id": "TECH_ANIMAL_HUSBANDRY",
+      "cost": 25,
+      "era": "ERA_ANCIENT",
+      "name": "Animal Husbandry"
+    },
+    {
+      "id": "TECH_MINING",
+      "cost": 25,
+      "era": "ERA_ANCIENT",
+      "name": "Mining"
+    },
+    {
+      "id": "TECH_SAILING",
+      "cost": 50,
+      "era": "ERA_ANCIENT",
+      "name": "Sailing"
+    },
+    {
+      "id": "TECH_ASTROLOGY",
+      "cost": 50,
+      "era": "ERA_ANCIENT",
+      "name": "Astrology"
+    },
+    {
+      "id": "TECH_IRRIGATION",
+      "cost": 50,
+      "era": "ERA_ANCIENT",
+      "name": "Irrigation",
+      "requires": [
+        "TECH_POTTERY"
+      ]
+    },
+    {
+      "id": "TECH_ARCHERY",
+      "cost": 50,
+      "era": "ERA_ANCIENT",
+      "name": "Archery",
+      "requires": [
+        "TECH_ANIMAL_HUSBANDRY"
+      ]
+    },
+    {
+      "id": "TECH_WRITING",
+      "cost": 50,
+      "era": "ERA_ANCIENT",
+      "name": "Writing",
+      "requires": [
+        "TECH_POTTERY"
+      ]
+    },
+    {
+      "id": "TECH_MASONRY",
+      "cost": 80,
+      "era": "ERA_ANCIENT",
+      "name": "Masonry",
+      "requires": [
+        "TECH_MINING"
+      ]
+    },
+    {
+      "id": "TECH_BRONZE_WORKING",
+      "cost": 80,
+      "era": "ERA_ANCIENT",
+      "name": "Bronze Working",
+      "requires": [
+        "TECH_MINING"
+      ]
+    },
+    {
+      "id": "TECH_THE_WHEEL",
+      "cost": 80,
+      "era": "ERA_ANCIENT",
+      "name": "Wheel",
+      "requires": [
+        "TECH_MINING"
+      ]
+    },
+    {
+      "id": "TECH_CELESTIAL_NAVIGATION",
+      "cost": 120,
+      "era": "ERA_CLASSICAL",
+      "name": "Celestial Navigation",
+      "requires": [
+        "TECH_SAILING",
+        "TECH_ASTROLOGY"
+      ]
+    },
+    {
+      "id": "TECH_CURRENCY",
+      "cost": 120,
+      "era": "ERA_CLASSICAL",
+      "name": "Currency",
+      "requires": [
+        "TECH_WRITING"
+      ]
+    },
+    {
+      "id": "TECH_HORSEBACK_RIDING",
+      "cost": 120,
+      "era": "ERA_CLASSICAL",
+      "name": "Horseback Riding",
+      "requires": [
+        "TECH_ARCHERY"
+      ]
+    },
+    {
+      "id": "TECH_IRON_WORKING",
+      "cost": 120,
+      "era": "ERA_CLASSICAL",
+      "name": "Iron Working",
+      "requires": [
+        "TECH_BRONZE_WORKING"
+      ]
+    },
+    {
+      "id": "TECH_SHIPBUILDING",
+      "cost": 200,
+      "era": "ERA_CLASSICAL",
+      "name": "Shipbuilding",
+      "requires": [
+        "TECH_SAILING"
+      ]
+    },
+    {
+      "id": "TECH_MATHEMATICS",
+      "cost": 200,
+      "era": "ERA_CLASSICAL",
+      "name": "Mathematics",
+      "requires": [
+        "TECH_CURRENCY"
+      ]
+    },
+    {
+      "id": "TECH_CONSTRUCTION",
+      "cost": 200,
+      "era": "ERA_CLASSICAL",
+      "name": "Construction",
+      "requires": [
+        "TECH_MASONRY",
+        "TECH_HORSEBACK_RIDING"
+      ]
+    },
+    {
+      "id": "TECH_ENGINEERING",
+      "cost": 200,
+      "era": "ERA_CLASSICAL",
+      "name": "Engineering",
+      "requires": [
+        "TECH_THE_WHEEL"
+      ]
+    },
+    {
+      "id": "TECH_MILITARY_TACTICS",
+      "cost": 300,
+      "era": "ERA_MEDIEVAL",
+      "name": "Military Tactics",
+      "requires": [
+        "TECH_MATHEMATICS"
+      ]
+    },
+    {
+      "id": "TECH_APPRENTICESHIP",
+      "cost": 300,
+      "era": "ERA_MEDIEVAL",
+      "name": "Apprenticeship",
+      "requires": [
+        "TECH_CURRENCY",
+        "TECH_HORSEBACK_RIDING"
+      ]
+    },
+    {
+      "id": "TECH_MACHINERY",
+      "cost": 300,
+      "era": "ERA_MEDIEVAL",
+      "name": "Machinery",
+      "requires": [
+        "TECH_IRON_WORKING",
+        "TECH_ENGINEERING"
+      ]
+    },
+    {
+      "id": "TECH_EDUCATION",
+      "cost": 390,
+      "era": "ERA_MEDIEVAL",
+      "name": "Education",
+      "requires": [
+        "TECH_MATHEMATICS",
+        "TECH_APPRENTICESHIP"
+      ]
+    },
+    {
+      "id": "TECH_STIRRUPS",
+      "cost": 390,
+      "era": "ERA_MEDIEVAL",
+      "name": "Stirrups",
+      "requires": [
+        "TECH_HORSEBACK_RIDING",
+        "TECH_APPRENTICESHIP"
+      ]
+    },
+    {
+      "id": "TECH_MILITARY_ENGINEERING",
+      "cost": 390,
+      "era": "ERA_MEDIEVAL",
+      "name": "Military Engineering",
+      "requires": [
+        "TECH_CONSTRUCTION"
+      ]
+    },
+    {
+      "id": "TECH_CASTLES",
+      "cost": 390,
+      "era": "ERA_MEDIEVAL",
+      "name": "Castles",
+      "requires": [
+        "TECH_CONSTRUCTION"
+      ]
+    },
+    {
+      "id": "TECH_CARTOGRAPHY",
+      "cost": 600,
+      "era": "ERA_RENAISSANCE",
+      "name": "Cartography",
+      "requires": [
+        "TECH_SHIPBUILDING",
+        "TECH_BUTTRESS"
+      ]
+    },
+    {
+      "id": "TECH_MASS_PRODUCTION",
+      "cost": 600,
+      "era": "ERA_RENAISSANCE",
+      "name": "Mass Production",
+      "requires": [
+        "TECH_EDUCATION",
+        "TECH_SHIPBUILDING",
+        "TECH_BUTTRESS",
+        "TECH_MILITARY_TACTICS"
+      ]
+    },
+    {
+      "id": "TECH_BANKING",
+      "cost": 600,
+      "era": "ERA_RENAISSANCE",
+      "name": "Banking",
+      "requires": [
+        "TECH_EDUCATION",
+        "TECH_STIRRUPS"
+      ]
+    },
+    {
+      "id": "TECH_GUNPOWDER",
+      "cost": 600,
+      "era": "ERA_RENAISSANCE",
+      "name": "Gunpowder",
+      "requires": [
+        "TECH_APPRENTICESHIP",
+        "TECH_STIRRUPS",
+        "TECH_MILITARY_ENGINEERING"
+      ]
+    },
+    {
+      "id": "TECH_PRINTING",
+      "cost": 600,
+      "era": "ERA_RENAISSANCE",
+      "name": "Printing",
+      "requires": [
+        "TECH_MACHINERY"
+      ]
+    },
+    {
+      "id": "TECH_SQUARE_RIGGING",
+      "cost": 730,
+      "era": "ERA_RENAISSANCE",
+      "name": "Square Rigging",
+      "requires": [
+        "TECH_CARTOGRAPHY"
+      ]
+    },
+    {
+      "id": "TECH_ASTRONOMY",
+      "cost": 730,
+      "era": "ERA_RENAISSANCE",
+      "name": "Astronomy",
+      "requires": [
+        "TECH_EDUCATION"
+      ]
+    },
+    {
+      "id": "TECH_METAL_CASTING",
+      "cost": 730,
+      "era": "ERA_RENAISSANCE",
+      "name": "Metal Casting",
+      "requires": [
+        "TECH_GUNPOWDER"
+      ]
+    },
+    {
+      "id": "TECH_SIEGE_TACTICS",
+      "cost": 730,
+      "era": "ERA_RENAISSANCE",
+      "name": "Siege Tactics",
+      "requires": [
+        "TECH_CASTLES"
+      ]
+    },
+    {
+      "id": "TECH_INDUSTRIALIZATION",
+      "cost": 930,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Industrialization",
+      "requires": [
+        "TECH_SQUARE_RIGGING",
+        "TECH_MASS_PRODUCTION"
+      ]
+    },
+    {
+      "id": "TECH_SCIENTIFIC_THEORY",
+      "cost": 930,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Scientific Theory",
+      "requires": [
+        "TECH_ASTRONOMY",
+        "TECH_BANKING"
+      ]
+    },
+    {
+      "id": "TECH_BALLISTICS",
+      "cost": 930,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Ballistics",
+      "requires": [
+        "TECH_METAL_CASTING"
+      ]
+    },
+    {
+      "id": "TECH_MILITARY_SCIENCE",
+      "cost": 930,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Military Science",
+      "requires": [
+        "TECH_SIEGE_TACTICS",
+        "TECH_PRINTING"
+      ]
+    },
+    {
+      "id": "TECH_STEAM_POWER",
+      "cost": 1070,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Steam Power",
+      "requires": [
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "id": "TECH_SANITATION",
+      "cost": 1070,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Sanitation",
+      "requires": [
+        "TECH_SCIENTIFIC_THEORY"
+      ]
+    },
+    {
+      "id": "TECH_ECONOMICS",
+      "cost": 1070,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Economics",
+      "requires": [
+        "TECH_SCIENTIFIC_THEORY",
+        "TECH_METAL_CASTING"
+      ]
+    },
+    {
+      "id": "TECH_RIFLING",
+      "cost": 1070,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Rifling",
+      "requires": [
+        "TECH_BALLISTICS",
+        "TECH_MILITARY_SCIENCE"
+      ]
+    },
+    {
+      "id": "TECH_FLIGHT",
+      "cost": 1250,
+      "era": "ERA_MODERN",
+      "name": "Flight",
+      "requires": [
+        "TECH_INDUSTRIALIZATION",
+        "TECH_SCIENTIFIC_THEORY"
+      ]
+    },
+    {
+      "id": "TECH_REPLACEABLE_PARTS",
+      "cost": 1250,
+      "era": "ERA_MODERN",
+      "name": "Replaceable Parts",
+      "requires": [
+        "TECH_ECONOMICS"
+      ]
+    },
+    {
+      "id": "TECH_STEEL",
+      "cost": 1250,
+      "era": "ERA_MODERN",
+      "name": "Steel",
+      "requires": [
+        "TECH_RIFLING"
+      ]
+    },
+    {
+      "id": "TECH_ELECTRICITY",
+      "cost": 1370,
+      "era": "ERA_MODERN",
+      "name": "Electricity",
+      "requires": [
+        "TECH_STEAM_POWER"
+      ]
+    },
+    {
+      "id": "TECH_RADIO",
+      "cost": 1370,
+      "era": "ERA_MODERN",
+      "name": "Radio",
+      "requires": [
+        "TECH_STEAM_POWER",
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "TECH_CHEMISTRY",
+      "cost": 1370,
+      "era": "ERA_MODERN",
+      "name": "Chemistry",
+      "requires": [
+        "TECH_SANITATION",
+        "TECH_REPLACEABLE_PARTS"
+      ]
+    },
+    {
+      "id": "TECH_COMBUSTION",
+      "cost": 1370,
+      "era": "ERA_MODERN",
+      "name": "Combustion",
+      "requires": [
+        "TECH_STEEL",
+        "TECH_REFINING"
+      ]
+    },
+    {
+      "id": "TECH_ADVANCED_FLIGHT",
+      "cost": 1480,
+      "era": "ERA_ATOMIC",
+      "name": "Advanced Flight",
+      "requires": [
+        "TECH_RADIO"
+      ]
+    },
+    {
+      "id": "TECH_ROCKETRY",
+      "cost": 1480,
+      "era": "ERA_ATOMIC",
+      "name": "Rocketry",
+      "requires": [
+        "TECH_RADIO",
+        "TECH_CHEMISTRY"
+      ]
+    },
+    {
+      "id": "TECH_ADVANCED_BALLISTICS",
+      "cost": 1480,
+      "era": "ERA_ATOMIC",
+      "name": "Advanced Ballistics",
+      "requires": [
+        "TECH_REPLACEABLE_PARTS",
+        "TECH_STEEL"
+      ]
+    },
+    {
+      "id": "TECH_COMBINED_ARMS",
+      "cost": 1480,
+      "era": "ERA_ATOMIC",
+      "name": "Combined Arms",
+      "requires": [
+        "TECH_STEEL",
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "id": "TECH_PLASTICS",
+      "cost": 1480,
+      "era": "ERA_ATOMIC",
+      "name": "Plastics",
+      "requires": [
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "id": "TECH_COMPUTERS",
+      "cost": 1660,
+      "era": "ERA_ATOMIC",
+      "name": "Computers",
+      "requires": [
+        "TECH_ELECTRICITY",
+        "TECH_RADIO"
+      ]
+    },
+    {
+      "id": "TECH_NUCLEAR_FISSION",
+      "cost": 1660,
+      "era": "ERA_ATOMIC",
+      "name": "Nuclear Fission",
+      "requires": [
+        "TECH_ADVANCED_BALLISTICS",
+        "TECH_COMBINED_ARMS"
+      ]
+    },
+    {
+      "id": "TECH_SYNTHETIC_MATERIALS",
+      "cost": 1660,
+      "era": "ERA_ATOMIC",
+      "name": "Synthetic Materials",
+      "requires": [
+        "TECH_PLASTICS"
+      ]
+    },
+    {
+      "id": "TECH_TELECOMMUNICATIONS",
+      "cost": 1850,
+      "era": "ERA_INFORMATION",
+      "name": "Telecommunications",
+      "requires": [
+        "TECH_COMPUTERS"
+      ]
+    },
+    {
+      "id": "TECH_SATELLITES",
+      "cost": 1850,
+      "era": "ERA_INFORMATION",
+      "name": "Satellites",
+      "requires": [
+        "TECH_ADVANCED_FLIGHT",
+        "TECH_ROCKETRY"
+      ]
+    },
+    {
+      "id": "TECH_GUIDANCE_SYSTEMS",
+      "cost": 1850,
+      "era": "ERA_INFORMATION",
+      "name": "Guidance Systems",
+      "requires": [
+        "TECH_ROCKETRY",
+        "TECH_ADVANCED_BALLISTICS"
+      ]
+    },
+    {
+      "id": "TECH_LASERS",
+      "cost": 1850,
+      "era": "ERA_INFORMATION",
+      "name": "Lasers",
+      "requires": [
+        "TECH_NUCLEAR_FISSION"
+      ]
+    },
+    {
+      "id": "TECH_COMPOSITES",
+      "cost": 1850,
+      "era": "ERA_INFORMATION",
+      "name": "Composites",
+      "requires": [
+        "TECH_SYNTHETIC_MATERIALS"
+      ]
+    },
+    {
+      "id": "TECH_STEALTH_TECHNOLOGY",
+      "cost": 1850,
+      "era": "ERA_INFORMATION",
+      "name": "Stealth Technology",
+      "requires": [
+        "TECH_SYNTHETIC_MATERIALS"
+      ]
+    },
+    {
+      "id": "TECH_ROBOTICS",
+      "cost": 2155,
+      "era": "ERA_INFORMATION",
+      "name": "Robotics",
+      "requires": [
+        "TECH_COMPUTERS",
+        "TECH_SATELLITES",
+        "TECH_GUIDANCE_SYSTEMS",
+        "TECH_LASERS"
+      ]
+    },
+    {
+      "id": "TECH_NANOTECHNOLOGY",
+      "cost": 2155,
+      "era": "ERA_INFORMATION",
+      "name": "Nanotechnology",
+      "requires": [
+        "TECH_COMPOSITES"
+      ]
+    },
+    {
+      "id": "TECH_NUCLEAR_FUSION",
+      "cost": 2155,
+      "era": "ERA_INFORMATION",
+      "name": "Nuclear Fusion",
+      "requires": [
+        "TECH_LASERS"
+      ]
+    },
+    {
+      "id": "TECH_FUTURE_TECH",
+      "cost": 2600,
+      "era": "ERA_FUTURE",
+      "name": "Future Tech",
+      "requires": [
+        "TECH_SATELLITES",
+        "TECH_ROBOTICS",
+        "TECH_NANOTECHNOLOGY",
+        "TECH_NUCLEAR_FUSION"
+      ]
+    },
+    {
+      "id": "TECH_BUTTRESS",
+      "cost": 300,
+      "era": "ERA_MEDIEVAL",
+      "name": "Buttress",
+      "requires": [
+        "TECH_SHIPBUILDING",
+        "TECH_MATHEMATICS"
+      ]
+    },
+    {
+      "id": "TECH_REFINING",
+      "cost": 1250,
+      "era": "ERA_MODERN",
+      "name": "Refining",
+      "requires": [
+        "TECH_RIFLING"
+      ]
+    },
+    {
+      "id": "TECH_SEASTEADS",
+      "cost": 2200,
+      "era": "ERA_FUTURE",
+      "name": "Seasteads"
+    },
+    {
+      "id": "TECH_ADVANCED_AI",
+      "cost": 2200,
+      "era": "ERA_FUTURE",
+      "name": "Advanced AI"
+    },
+    {
+      "id": "TECH_ADVANCED_POWER_CELLS",
+      "cost": 2200,
+      "era": "ERA_FUTURE",
+      "name": "Advanced Power Cells"
+    },
+    {
+      "id": "TECH_CYBERNETICS",
+      "cost": 2200,
+      "era": "ERA_FUTURE",
+      "name": "Cybernetics"
+    },
+    {
+      "id": "TECH_SMART_MATERIALS",
+      "cost": 2200,
+      "era": "ERA_FUTURE",
+      "name": "Smart Materials"
+    },
+    {
+      "id": "TECH_PREDICTIVE_SYSTEMS",
+      "cost": 2200,
+      "era": "ERA_FUTURE",
+      "name": "Predictive Systems"
+    },
+    {
+      "id": "TECH_OFFWORLD_MISSION",
+      "cost": 2500,
+      "era": "ERA_FUTURE",
+      "name": "Offworld Mission"
+    }
+  ],
+  "civics": [
+    {
+      "id": "CIVIC_CODE_OF_LAWS",
+      "cost": 20,
+      "era": "ERA_ANCIENT",
+      "name": "Code of Laws"
+    },
+    {
+      "id": "CIVIC_CRAFTSMANSHIP",
+      "cost": 40,
+      "era": "ERA_ANCIENT",
+      "name": "Craftsmanship",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "CIVIC_FOREIGN_TRADE",
+      "cost": 40,
+      "era": "ERA_ANCIENT",
+      "name": "Foreign Trade",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "CIVIC_MILITARY_TRADITION",
+      "cost": 50,
+      "era": "ERA_ANCIENT",
+      "name": "Military Tradition",
+      "requires": [
+        "CIVIC_CRAFTSMANSHIP"
+      ]
+    },
+    {
+      "id": "CIVIC_STATE_WORKFORCE",
+      "cost": 70,
+      "era": "ERA_ANCIENT",
+      "name": "State Workforce",
+      "requires": [
+        "CIVIC_CRAFTSMANSHIP"
+      ]
+    },
+    {
+      "id": "CIVIC_EARLY_EMPIRE",
+      "cost": 70,
+      "era": "ERA_ANCIENT",
+      "name": "Early Empire",
+      "requires": [
+        "CIVIC_FOREIGN_TRADE"
+      ]
+    },
+    {
+      "id": "CIVIC_MYSTICISM",
+      "cost": 50,
+      "era": "ERA_ANCIENT",
+      "name": "Mysticism",
+      "requires": [
+        "CIVIC_FOREIGN_TRADE"
+      ]
+    },
+    {
+      "id": "CIVIC_GAMES_RECREATION",
+      "cost": 110,
+      "era": "ERA_CLASSICAL",
+      "name": "Games and Recreation",
+      "requires": [
+        "CIVIC_STATE_WORKFORCE"
+      ]
+    },
+    {
+      "id": "CIVIC_POLITICAL_PHILOSOPHY",
+      "cost": 110,
+      "era": "ERA_CLASSICAL",
+      "name": "Political Philosophy",
+      "requires": [
+        "CIVIC_STATE_WORKFORCE",
+        "CIVIC_EARLY_EMPIRE"
+      ]
+    },
+    {
+      "id": "CIVIC_DRAMA_POETRY",
+      "cost": 110,
+      "era": "ERA_CLASSICAL",
+      "name": "Drama and Poetry",
+      "requires": [
+        "CIVIC_EARLY_EMPIRE"
+      ]
+    },
+    {
+      "id": "CIVIC_MILITARY_TRAINING",
+      "cost": 120,
+      "era": "ERA_CLASSICAL",
+      "name": "Military Training",
+      "requires": [
+        "CIVIC_MILITARY_TRADITION",
+        "CIVIC_GAMES_RECREATION"
+      ]
+    },
+    {
+      "id": "CIVIC_DEFENSIVE_TACTICS",
+      "cost": 175,
+      "era": "ERA_CLASSICAL",
+      "name": "Defensive Tactics",
+      "requires": [
+        "CIVIC_GAMES_RECREATION",
+        "CIVIC_POLITICAL_PHILOSOPHY"
+      ]
+    },
+    {
+      "id": "CIVIC_RECORDED_HISTORY",
+      "cost": 175,
+      "era": "ERA_CLASSICAL",
+      "name": "Recorded History",
+      "requires": [
+        "CIVIC_POLITICAL_PHILOSOPHY",
+        "CIVIC_DRAMA_POETRY"
+      ]
+    },
+    {
+      "id": "CIVIC_THEOLOGY",
+      "cost": 120,
+      "era": "ERA_CLASSICAL",
+      "name": "Theology",
+      "requires": [
+        "CIVIC_DRAMA_POETRY",
+        "CIVIC_MYSTICISM"
+      ]
+    },
+    {
+      "id": "CIVIC_NAVAL_TRADITION",
+      "cost": 220,
+      "era": "ERA_MEDIEVAL",
+      "name": "Naval Tradition",
+      "requires": [
+        "CIVIC_DEFENSIVE_TACTICS"
+      ]
+    },
+    {
+      "id": "CIVIC_FEUDALISM",
+      "cost": 300,
+      "era": "ERA_MEDIEVAL",
+      "name": "Feudalism",
+      "requires": [
+        "CIVIC_DEFENSIVE_TACTICS"
+      ]
+    },
+    {
+      "id": "CIVIC_CIVIL_SERVICE",
+      "cost": 300,
+      "era": "ERA_MEDIEVAL",
+      "name": "Civil Service",
+      "requires": [
+        "CIVIC_DEFENSIVE_TACTICS",
+        "CIVIC_RECORDED_HISTORY"
+      ]
+    },
+    {
+      "id": "CIVIC_MERCENARIES",
+      "cost": 340,
+      "era": "ERA_MEDIEVAL",
+      "name": "Mercenaries",
+      "requires": [
+        "CIVIC_MILITARY_TRAINING",
+        "CIVIC_FEUDALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_MEDIEVAL_FAIRES",
+      "cost": 420,
+      "era": "ERA_MEDIEVAL",
+      "name": "Medieval Faires",
+      "requires": [
+        "CIVIC_FEUDALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_GUILDS",
+      "cost": 420,
+      "era": "ERA_MEDIEVAL",
+      "name": "Guilds",
+      "requires": [
+        "CIVIC_FEUDALISM",
+        "CIVIC_CIVIL_SERVICE"
+      ]
+    },
+    {
+      "id": "CIVIC_DIVINE_RIGHT",
+      "cost": 340,
+      "era": "ERA_MEDIEVAL",
+      "name": "Divine Right",
+      "requires": [
+        "CIVIC_CIVIL_SERVICE",
+        "CIVIC_THEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_EXPLORATION",
+      "cost": 440,
+      "era": "ERA_RENAISSANCE",
+      "name": "Exploration",
+      "requires": [
+        "CIVIC_MERCENARIES",
+        "CIVIC_MEDIEVAL_FAIRES"
+      ]
+    },
+    {
+      "id": "CIVIC_HUMANISM",
+      "cost": 600,
+      "era": "ERA_RENAISSANCE",
+      "name": "Humanism",
+      "requires": [
+        "CIVIC_MEDIEVAL_FAIRES",
+        "CIVIC_GUILDS"
+      ]
+    },
+    {
+      "id": "CIVIC_DIPLOMATIC_SERVICE",
+      "cost": 600,
+      "era": "ERA_RENAISSANCE",
+      "name": "Diplomatic Service",
+      "requires": [
+        "CIVIC_GUILDS"
+      ]
+    },
+    {
+      "id": "CIVIC_REFORMED_CHURCH",
+      "cost": 440,
+      "era": "ERA_RENAISSANCE",
+      "name": "Reformed Church",
+      "requires": [
+        "CIVIC_GUILDS",
+        "CIVIC_DIVINE_RIGHT"
+      ]
+    },
+    {
+      "id": "CIVIC_MERCANTILISM",
+      "cost": 720,
+      "era": "ERA_RENAISSANCE",
+      "name": "Mercantilism",
+      "requires": [
+        "CIVIC_HUMANISM"
+      ]
+    },
+    {
+      "id": "CIVIC_THE_ENLIGHTENMENT",
+      "cost": 720,
+      "era": "ERA_RENAISSANCE",
+      "name": "The Enlightenment",
+      "requires": [
+        "CIVIC_HUMANISM",
+        "CIVIC_DIPLOMATIC_SERVICE"
+      ]
+    },
+    {
+      "id": "CIVIC_COLONIALISM",
+      "cost": 800,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Colonialism",
+      "requires": [
+        "CIVIC_MERCANTILISM"
+      ]
+    },
+    {
+      "id": "CIVIC_CIVIL_ENGINEERING",
+      "cost": 1010,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Civil Engineering",
+      "requires": [
+        "CIVIC_MERCANTILISM"
+      ]
+    },
+    {
+      "id": "CIVIC_NATIONALISM",
+      "cost": 1010,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Nationalism",
+      "requires": [
+        "CIVIC_THE_ENLIGHTENMENT"
+      ]
+    },
+    {
+      "id": "CIVIC_OPERA_BALLET",
+      "cost": 800,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Opera and Ballet",
+      "requires": [
+        "CIVIC_THE_ENLIGHTENMENT"
+      ]
+    },
+    {
+      "id": "CIVIC_NATURAL_HISTORY",
+      "cost": 1050,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Natural History",
+      "requires": [
+        "CIVIC_COLONIALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_SCORCHED_EARTH",
+      "cost": 1210,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Scorched Earth",
+      "requires": [
+        "CIVIC_NATIONALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_URBANIZATION",
+      "cost": 1210,
+      "era": "ERA_INDUSTRIAL",
+      "name": "Urbanization",
+      "requires": [
+        "CIVIC_CIVIL_ENGINEERING",
+        "CIVIC_NATIONALISM"
+      ]
+    },
+    {
+      "id": "CIVIC_CONSERVATION",
+      "cost": 1540,
+      "era": "ERA_MODERN",
+      "name": "Conservation",
+      "requires": [
+        "CIVIC_NATURAL_HISTORY"
+      ]
+    },
+    {
+      "id": "CIVIC_CAPITALISM",
+      "cost": 1580,
+      "era": "ERA_MODERN",
+      "name": "Capitalism",
+      "requires": [
+        "CIVIC_MASS_MEDIA"
+      ]
+    },
+    {
+      "id": "CIVIC_NUCLEAR_PROGRAM",
+      "cost": 1715,
+      "era": "ERA_MODERN",
+      "name": " Nuclear Program",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_MASS_MEDIA",
+      "cost": 1540,
+      "era": "ERA_MODERN",
+      "name": "Mass Media",
+      "requires": [
+        "CIVIC_NATURAL_HISTORY",
+        "CIVIC_URBANIZATION"
+      ]
+    },
+    {
+      "id": "CIVIC_MOBILIZATION",
+      "cost": 1540,
+      "era": "ERA_MODERN",
+      "name": "Mobilization",
+      "requires": [
+        "CIVIC_URBANIZATION",
+        "CIVIC_SCORCHED_EARTH"
+      ]
+    },
+    {
+      "id": "CIVIC_IDEOLOGY",
+      "cost": 1640,
+      "era": "ERA_MODERN",
+      "name": "Ideology",
+      "requires": [
+        "CIVIC_MASS_MEDIA",
+        "CIVIC_MOBILIZATION"
+      ]
+    },
+    {
+      "id": "CIVIC_SUFFRAGE",
+      "cost": 1640,
+      "era": "ERA_MODERN",
+      "name": "Suffrage",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_TOTALITARIANISM",
+      "cost": 1640,
+      "era": "ERA_MODERN",
+      "name": "Totalitarianism",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_CLASS_STRUGGLE",
+      "cost": 1640,
+      "era": "ERA_MODERN",
+      "name": "Class Struggle",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_COLD_WAR",
+      "cost": 2185,
+      "era": "ERA_ATOMIC",
+      "name": "Cold War",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_PROFESSIONAL_SPORTS",
+      "cost": 2185,
+      "era": "ERA_ATOMIC",
+      "name": "Professional Sports",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "CIVIC_CULTURAL_HERITAGE",
+      "cost": 1955,
+      "era": "ERA_ATOMIC",
+      "name": "Cultural Heritage",
+      "requires": [
+        "CIVIC_CONSERVATION"
+      ]
+    },
+    {
+      "id": "CIVIC_RAPID_DEPLOYMENT",
+      "cost": 2415,
+      "era": "ERA_ATOMIC",
+      "name": "Rapid Deployment",
+      "requires": [
+        "CIVIC_COLD_WAR"
+      ]
+    },
+    {
+      "id": "CIVIC_SPACE_RACE",
+      "cost": 2415,
+      "era": "ERA_ATOMIC",
+      "name": "Space Race",
+      "requires": [
+        "CIVIC_COLD_WAR"
+      ]
+    },
+    {
+      "id": "CIVIC_GLOBALIZATION",
+      "cost": 2880,
+      "era": "ERA_INFORMATION",
+      "name": "Globalization",
+      "requires": [
+        "CIVIC_RAPID_DEPLOYMENT",
+        "CIVIC_SPACE_RACE"
+      ]
+    },
+    {
+      "id": "CIVIC_SOCIAL_MEDIA",
+      "cost": 2880,
+      "era": "ERA_INFORMATION",
+      "name": "Social Media",
+      "requires": [
+        "CIVIC_SPACE_RACE",
+        "CIVIC_PROFESSIONAL_SPORTS"
+      ]
+    },
+    {
+      "id": "CIVIC_FUTURE_CIVIC",
+      "cost": 3500,
+      "era": "ERA_FUTURE",
+      "name": "Future Civic",
+      "requires": [
+        "CIVIC_GLOBALIZATION",
+        "CIVIC_SOCIAL_MEDIA"
+      ]
+    },
+    {
+      "id": "CIVIC_ENVIRONMENTALISM",
+      "cost": 2880,
+      "era": "ERA_INFORMATION",
+      "name": "Environmentalism",
+      "requires": [
+        "CIVIC_CULTURAL_HERITAGE",
+        "CIVIC_RAPID_DEPLOYMENT"
+      ]
+    },
+    {
+      "id": "CIVIC_CORPORATE_LIBERTARIANISM",
+      "cost": 3000,
+      "era": "ERA_INFORMATION",
+      "name": "Venture Politics",
+      "requires": [
+        "CIVIC_GLOBALIZATION",
+        "CIVIC_SOCIAL_MEDIA"
+      ]
+    },
+    {
+      "id": "CIVIC_DIGITAL_DEMOCRACY",
+      "cost": 3000,
+      "era": "ERA_INFORMATION",
+      "name": "Distributed Sovereignty",
+      "requires": [
+        "CIVIC_GLOBALIZATION",
+        "CIVIC_SOCIAL_MEDIA"
+      ]
+    },
+    {
+      "id": "CIVIC_SYNTHETIC_TECHNOCRACY",
+      "cost": 3000,
+      "era": "ERA_INFORMATION",
+      "name": "Optimization Imperative",
+      "requires": [
+        "CIVIC_GLOBALIZATION",
+        "CIVIC_SOCIAL_MEDIA"
+      ]
+    },
+    {
+      "id": "CIVIC_NEAR_FUTURE_GOVERNANCE",
+      "cost": 3100,
+      "era": "ERA_INFORMATION",
+      "name": "Near Future Governance",
+      "requires": [
+        "CIVIC_ENVIRONMENTALISM",
+        "CIVIC_GLOBALIZATION"
+      ]
+    },
+    {
+      "id": "CIVIC_GLOBAL_WARMING_MITIGATION",
+      "cost": 3200,
+      "era": "ERA_FUTURE",
+      "name": "Global Warming Mitigation"
+    },
+    {
+      "id": "CIVIC_SMART_POWER_DOCTRINE",
+      "cost": 3200,
+      "era": "ERA_FUTURE",
+      "name": "Smart Power Doctrine"
+    },
+    {
+      "id": "CIVIC_INFORMATION_WARFARE",
+      "cost": 3200,
+      "era": "ERA_FUTURE",
+      "name": "Information Warfare"
+    },
+    {
+      "id": "CIVIC_EXODUS_IMPERATIVE",
+      "cost": 3200,
+      "era": "ERA_FUTURE",
+      "name": "Exodus Imperative"
+    },
+    {
+      "id": "CIVIC_CULTURAL_HEGEMONY",
+      "cost": 3200,
+      "era": "ERA_FUTURE",
+      "name": "Cultural Hegemony"
+    }
+  ],
+  "buildings": [
+    {
+      "id": "BUILDING_MONUMENT",
+      "name": "Monument",
+      "cost": 60
+    },
+    {
+      "id": "BUILDING_PALACE",
+      "name": "Palace",
+      "cost": 1
+    },
+    {
+      "id": "BUILDING_BARRACKS",
+      "name": "Barracks",
+      "cost": 90,
+      "requires": [
+        "TECH_BRONZE_WORKING"
+      ]
+    },
+    {
+      "id": "BUILDING_GRANARY",
+      "name": "Granary",
+      "cost": 65,
+      "requires": [
+        "TECH_POTTERY"
+      ]
+    },
+    {
+      "id": "BUILDING_LIBRARY",
+      "name": "Library",
+      "cost": 90,
+      "requires": [
+        "TECH_WRITING"
+      ]
+    },
+    {
+      "id": "BUILDING_SHRINE",
+      "name": "Shrine",
+      "cost": 70,
+      "requires": [
+        "TECH_ASTROLOGY"
+      ]
+    },
+    {
+      "id": "BUILDING_WALLS",
+      "name": "Ancient Walls",
+      "cost": 80,
+      "requires": [
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "id": "BUILDING_WATER_MILL",
+      "name": "Water Mill",
+      "cost": 80,
+      "requires": [
+        "TECH_THE_WHEEL"
+      ]
+    },
+    {
+      "id": "BUILDING_ARENA",
+      "name": "Arena",
+      "cost": 150,
+      "requires": [
+        "CIVIC_GAMES_RECREATION"
+      ]
+    },
+    {
+      "id": "BUILDING_LIGHTHOUSE",
+      "name": "Lighthouse",
+      "cost": 120,
+      "requires": [
+        "TECH_CELESTIAL_NAVIGATION"
+      ]
+    },
+    {
+      "id": "BUILDING_MARKET",
+      "name": "Market",
+      "cost": 120,
+      "requires": [
+        "TECH_CURRENCY"
+      ]
+    },
+    {
+      "id": "BUILDING_STABLE",
+      "cost": 120,
+      "requires": [
+        "TECH_HORSEBACK_RIDING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_STABLE",
+        "name": "Stable"
+      },
+      "CIVILIZATION_MONGOLIA": {
+        "id": "BUILDING_ORDU",
+        "name": "Ordu"
+      }
+    },
+    {
+      "id": "BUILDING_TEMPLE",
+      "cost": 120,
+      "requires": [
+        "CIVIC_THEOLOGY"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_TEMPLE",
+        "name": "Temple"
+      },
+      "CIVILIZATION_NORWAY": {
+        "id": "BUILDING_STAVE_CHURCH",
+        "name": "Stave Church"
+      }
+    },
+    {
+      "id": "BUILDING_AMPHITHEATER",
+      "cost": 150,
+      "requires": [
+        "CIVIC_DRAMA_POETRY"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_AMPHITHEATER",
+        "name": "Amphitheater"
+      },
+      "CIVILIZATION_MAORI": {
+        "id": "BUILDING_MARAE",
+        "name": "Marae"
+      }
+    },
+    {
+      "id": "BUILDING_CASTLE",
+      "name": "Medieval Walls",
+      "cost": 220,
+      "requires": [
+        "TECH_CASTLES"
+      ]
+    },
+    {
+      "id": "BUILDING_UNIVERSITY",
+      "cost": 250,
+      "requires": [
+        "TECH_EDUCATION"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_UNIVERSITY",
+        "name": "University"
+      },
+      "CIVILIZATION_ARABIA": {
+        "id": "BUILDING_MADRASA",
+        "name": "Madrasa"
+      }
+    },
+    {
+      "id": "BUILDING_WORKSHOP",
+      "name": "Workshop",
+      "cost": 195,
+      "requires": [
+        "TECH_APPRENTICESHIP"
+      ]
+    },
+    {
+      "id": "BUILDING_ARMORY",
+      "name": "Armory",
+      "cost": 195,
+      "requires": [
+        "TECH_MILITARY_ENGINEERING"
+      ]
+    },
+    {
+      "id": "BUILDING_SHIPYARD",
+      "name": "Shipyard",
+      "cost": 290,
+      "requires": [
+        "TECH_MASS_PRODUCTION"
+      ]
+    },
+    {
+      "id": "BUILDING_BANK",
+      "cost": 290,
+      "requires": [
+        "TECH_BANKING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_BANK",
+        "name": "Bank"
+      },
+      "CIVILIZATION_OTTOMAN": {
+        "id": "BUILDING_GRAND_BAZAAR",
+        "name": "Grand Bazaar"
+      }
+    },
+    {
+      "id": "BUILDING_STAR_FORT",
+      "cost": 300,
+      "requires": [
+        "TECH_SIEGE_TACTICS"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_STAR_FORT",
+        "name": "Renaissance Walls"
+      },
+      "CIVILIZATION_GEORGIA": {
+        "id": "BUILDING_TSIKHE",
+        "name": "Tsikhe"
+      }
+    },
+    {
+      "id": "BUILDING_MUSEUM_ART",
+      "name": "Art Museum",
+      "cost": 290,
+      "requires": [
+        "CIVIC_HUMANISM"
+      ]
+    },
+    {
+      "id": "BUILDING_MUSEUM_ARTIFACT",
+      "name": "Archaeological Museum",
+      "cost": 290,
+      "requires": [
+        "CIVIC_HUMANISM"
+      ]
+    },
+    {
+      "id": "BUILDING_FACTORY",
+      "cost": 330,
+      "requires": [
+        "TECH_INDUSTRIALIZATION"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_FACTORY",
+        "name": "Factory"
+      },
+      "CIVILIZATION_JAPAN": {
+        "id": "BUILDING_ELECTRONICS_FACTORY",
+        "name": "Electronics Factory"
+      }
+    },
+    {
+      "id": "BUILDING_STOCK_EXCHANGE",
+      "name": "Stock Exchange",
+      "cost": 330,
+      "requires": [
+        "TECH_ECONOMICS"
+      ]
+    },
+    {
+      "id": "BUILDING_MILITARY_ACADEMY",
+      "name": "Military Academy",
+      "cost": 330,
+      "requires": [
+        "TECH_MILITARY_SCIENCE"
+      ]
+    },
+    {
+      "id": "BUILDING_SEWER",
+      "name": "Sewer",
+      "cost": 200,
+      "requires": [
+        "TECH_SANITATION"
+      ]
+    },
+    {
+      "id": "BUILDING_ZOO",
+      "cost": 360,
+      "requires": [
+        "CIVIC_NATURAL_HISTORY"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_ZOO",
+        "name": "Zoo"
+      },
+      "CIVILIZATION_HUNGARY": {
+        "id": "BUILDING_THERMAL_BATH",
+        "name": "Thermal Bath"
+      }
+    },
+    {
+      "id": "BUILDING_HANGAR",
+      "name": "Hangar",
+      "cost": 380,
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "BUILDING_SEAPORT",
+      "name": "Seaport",
+      "cost": 440,
+      "requires": [
+        "TECH_ELECTRICITY"
+      ]
+    },
+    {
+      "id": "BUILDING_POWER_PLANT",
+      "name": "Nuclear Power Plant",
+      "cost": 480,
+      "requires": [
+        "TECH_ELECTRICITY",
+        "TECH_NUCLEAR_FISSION"
+      ]
+    },
+    {
+      "id": "BUILDING_BROADCAST_CENTER",
+      "cost": 440,
+      "requires": [
+        "TECH_RADIO"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "BUILDING_BROADCAST_CENTER",
+        "name": "Broadcast Center"
+      },
+      "CIVILIZATION_AMERICA": {
+        "id": "BUILDING_FILM_STUDIO",
+        "name": "Film Studio"
+      }
+    },
+    {
+      "id": "BUILDING_RESEARCH_LAB",
+      "name": "Research Lab",
+      "cost": 440,
+      "requires": [
+        "TECH_CHEMISTRY"
+      ]
+    },
+    {
+      "id": "BUILDING_AIRPORT",
+      "name": "Airport",
+      "cost": 480,
+      "requires": [
+        "TECH_ADVANCED_FLIGHT"
+      ]
+    },
+    {
+      "id": "BUILDING_STADIUM",
+      "name": "Stadium",
+      "cost": 480,
+      "requires": [
+        "CIVIC_PROFESSIONAL_SPORTS"
+      ]
+    },
+    {
+      "id": "BUILDING_CATHEDRAL",
+      "name": "Cathedral",
+      "cost": 190
+    },
+    {
+      "id": "BUILDING_GURDWARA",
+      "name": "Gurdwara",
+      "cost": 190
+    },
+    {
+      "id": "BUILDING_MEETING_HOUSE",
+      "name": "Meeting House",
+      "cost": 190
+    },
+    {
+      "id": "BUILDING_MOSQUE",
+      "name": "Mosque",
+      "cost": 190
+    },
+    {
+      "id": "BUILDING_PAGODA",
+      "name": "Pagoda",
+      "cost": 190
+    },
+    {
+      "id": "BUILDING_SYNAGOGUE",
+      "name": "Synagogue",
+      "cost": 190
+    },
+    {
+      "id": "BUILDING_WAT",
+      "name": "Wat",
+      "cost": 190
+    },
+    {
+      "id": "BUILDING_STUPA",
+      "name": "Stupa",
+      "cost": 190
+    },
+    {
+      "id": "BUILDING_DAR_E_MEHR",
+      "name": "Dar-e Mehr",
+      "cost": 190
+    },
+    {
+      "id": "BUILDING_SMALL_ROCKET",
+      "name": "Small Rocket",
+      "cost": 1
+    },
+    {
+      "id": "BUILDING_MEDIUM_ROCKET",
+      "name": "Medium Rocket",
+      "cost": 1
+    },
+    {
+      "id": "BUILDING_LARGE_ROCKET",
+      "name": "Large Rocket",
+      "cost": 1
+    },
+    {
+      "id": "BUILDING_FERRIS_WHEEL",
+      "name": "Ferris Wheel",
+      "cost": 290,
+      "requires": [
+        "CIVIC_NATURAL_HISTORY"
+      ]
+    },
+    {
+      "id": "BUILDING_AQUARIUM",
+      "name": "Aquarium",
+      "cost": 360,
+      "requires": [
+        "CIVIC_NATURAL_HISTORY"
+      ]
+    },
+    {
+      "id": "BUILDING_AQUATICS_CENTER",
+      "name": "Aquatics Center",
+      "cost": 480,
+      "requires": [
+        "CIVIC_PROFESSIONAL_SPORTS"
+      ]
+    },
+    {
+      "id": "BUILDING_GOV_TALL",
+      "name": "Audience Chamber",
+      "cost": 150
+    },
+    {
+      "id": "BUILDING_GOV_WIDE",
+      "name": "Ancestral Hall",
+      "cost": 150
+    },
+    {
+      "id": "BUILDING_GOV_CONQUEST",
+      "name": "Warlord's Throne",
+      "cost": 150
+    },
+    {
+      "id": "BUILDING_GOV_CITYSTATES",
+      "name": "Foreign Ministry",
+      "cost": 290
+    },
+    {
+      "id": "BUILDING_GOV_SPIES",
+      "name": "Intelligence Agency",
+      "cost": 290
+    },
+    {
+      "id": "BUILDING_GOV_FAITH",
+      "name": "Grand Master's Chapel",
+      "cost": 290
+    },
+    {
+      "id": "BUILDING_GOV_MILITARY",
+      "name": "War Department",
+      "cost": 440
+    },
+    {
+      "id": "BUILDING_GOV_CULTURE",
+      "name": "National History Museum",
+      "cost": 440
+    },
+    {
+      "id": "BUILDING_GOV_SCIENCE",
+      "name": "Royal Society",
+      "cost": 440
+    },
+    {
+      "id": "BUILDING_FOOD_MARKET",
+      "name": "Food Market",
+      "cost": 380,
+      "requires": [
+        "TECH_REPLACEABLE_PARTS"
+      ]
+    },
+    {
+      "id": "BUILDING_SHOPPING_MALL",
+      "name": "Shopping Mall",
+      "cost": 440,
+      "requires": [
+        "CIVIC_CAPITALISM"
+      ]
+    },
+    {
+      "id": "BUILDING_FLOOD_BARRIER",
+      "name": "Flood Barrier",
+      "cost": 80,
+      "requires": [
+        "TECH_COMPUTERS"
+      ]
+    },
+    {
+      "id": "BUILDING_HYDROELECTRIC_DAM",
+      "name": "Hydroelectric Dam",
+      "cost": 440,
+      "requires": [
+        "TECH_ELECTRICITY"
+      ]
+    },
+    {
+      "id": "BUILDING_COAL_POWER_PLANT",
+      "name": "Coal Power Plant",
+      "cost": 300,
+      "requires": [
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "id": "BUILDING_FOSSIL_FUEL_POWER_PLANT",
+      "name": "Oil Power Plant",
+      "cost": 360,
+      "requires": [
+        "TECH_ELECTRICITY"
+      ]
+    },
+    {
+      "id": "BUILDING_QUEENS_BIBLIOTHEQUE",
+      "cost": 217,
+      "LEADER_KRISTINA": {
+        "id": "BUILDING_QUEENS_BIBLIOTHEQUE",
+        "name": "Queen's Bibliotheque"
+      }
+    }
+  ],
+  "wonders": [
+    {
+      "id": "BUILDING_STONEHENGE",
+      "name": "Stonehenge",
+      "cost": 180,
+      "requires": [
+        "TECH_ASTROLOGY"
+      ]
+    },
+    {
+      "id": "BUILDING_HANGING_GARDENS",
+      "name": "Hanging Gardens",
+      "cost": 180,
+      "requires": [
+        "TECH_IRRIGATION"
+      ]
+    },
+    {
+      "id": "BUILDING_PYRAMIDS",
+      "name": "Pyramids",
+      "cost": 220,
+      "requires": [
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "id": "BUILDING_ORACLE",
+      "name": "Oracle",
+      "cost": 290,
+      "requires": [
+        "CIVIC_MYSTICISM"
+      ]
+    },
+    {
+      "id": "BUILDING_GREAT_LIGHTHOUSE",
+      "name": "Great Lighthouse",
+      "cost": 290,
+      "requires": [
+        "TECH_CELESTIAL_NAVIGATION"
+      ]
+    },
+    {
+      "id": "BUILDING_COLOSSUS",
+      "name": "Colossus",
+      "cost": 400,
+      "requires": [
+        "TECH_SHIPBUILDING"
+      ]
+    },
+    {
+      "id": "BUILDING_PETRA",
+      "name": "Petra",
+      "cost": 400,
+      "requires": [
+        "TECH_MATHEMATICS"
+      ]
+    },
+    {
+      "id": "BUILDING_COLOSSEUM",
+      "name": "Colosseum",
+      "cost": 400,
+      "requires": [
+        "CIVIC_GAMES_RECREATION"
+      ]
+    },
+    {
+      "id": "BUILDING_GREAT_LIBRARY",
+      "name": "Great Library",
+      "cost": 400,
+      "requires": [
+        "CIVIC_RECORDED_HISTORY"
+      ]
+    },
+    {
+      "id": "BUILDING_MAHABODHI_TEMPLE",
+      "name": "Mahabodhi Temple",
+      "cost": 400,
+      "requires": [
+        "CIVIC_THEOLOGY"
+      ]
+    },
+    {
+      "id": "BUILDING_TERRACOTTA_ARMY",
+      "name": "Terracotta Army",
+      "cost": 400,
+      "requires": [
+        "TECH_CONSTRUCTION"
+      ]
+    },
+    {
+      "id": "BUILDING_HAGIA_SOPHIA",
+      "name": "Hagia Sophia",
+      "cost": 710,
+      "requires": [
+        "TECH_EDUCATION",
+        "TECH_BUTTRESS"
+      ]
+    },
+    {
+      "id": "BUILDING_ALHAMBRA",
+      "name": "Alhambra",
+      "cost": 710,
+      "requires": [
+        "TECH_CASTLES"
+      ]
+    },
+    {
+      "id": "BUILDING_CHICHEN_ITZA",
+      "name": "Chichen Itza",
+      "cost": 710,
+      "requires": [
+        "CIVIC_GUILDS"
+      ]
+    },
+    {
+      "id": "BUILDING_MONT_ST_MICHEL",
+      "name": "Mont St. Michel",
+      "cost": 710,
+      "requires": [
+        "CIVIC_DIVINE_RIGHT"
+      ]
+    },
+    {
+      "id": "BUILDING_VENETIAN_ARSENAL",
+      "name": "Venetian Arsenal",
+      "cost": 920,
+      "requires": [
+        "TECH_MASS_PRODUCTION"
+      ]
+    },
+    {
+      "id": "BUILDING_GREAT_ZIMBABWE",
+      "name": "Great Zimbabwe",
+      "cost": 920,
+      "requires": [
+        "TECH_BANKING"
+      ]
+    },
+    {
+      "id": "BUILDING_FORBIDDEN_CITY",
+      "name": "Forbidden City",
+      "cost": 920,
+      "requires": [
+        "TECH_PRINTING"
+      ]
+    },
+    {
+      "id": "BUILDING_POTALA_PALACE",
+      "name": "Potala Palace",
+      "cost": 1060,
+      "requires": [
+        "TECH_ASTRONOMY"
+      ]
+    },
+    {
+      "id": "BUILDING_RUHR_VALLEY",
+      "name": "Ruhr Valley",
+      "cost": 1240,
+      "requires": [
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "id": "BUILDING_BOLSHOI_THEATRE",
+      "name": "Bolshoi Theatre",
+      "cost": 1240,
+      "requires": [
+        "CIVIC_OPERA_BALLET"
+      ]
+    },
+    {
+      "id": "BUILDING_OXFORD_UNIVERSITY",
+      "name": "Oxford University",
+      "cost": 1240,
+      "requires": [
+        "TECH_SCIENTIFIC_THEORY"
+      ]
+    },
+    {
+      "id": "BUILDING_BIG_BEN",
+      "name": "Big Ben",
+      "cost": 1450,
+      "requires": [
+        "TECH_ECONOMICS"
+      ]
+    },
+    {
+      "id": "BUILDING_HERMITAGE",
+      "name": "Hermitage",
+      "cost": 1450,
+      "requires": [
+        "CIVIC_NATURAL_HISTORY"
+      ]
+    },
+    {
+      "id": "BUILDING_EIFFEL_TOWER",
+      "name": "Eiffel Tower",
+      "cost": 1620,
+      "requires": [
+        "TECH_STEEL"
+      ]
+    },
+    {
+      "id": "BUILDING_BROADWAY",
+      "name": "Broadway",
+      "cost": 1620,
+      "requires": [
+        "CIVIC_MASS_MEDIA"
+      ]
+    },
+    {
+      "id": "BUILDING_CRISTO_REDENTOR",
+      "name": "Cristo Redentor",
+      "cost": 1620,
+      "requires": [
+        "CIVIC_MASS_MEDIA"
+      ]
+    },
+    {
+      "id": "BUILDING_ESTADIO_DO_MARACANA",
+      "name": "Est\u00e1dio do Maracan\u00e3",
+      "cost": 1740,
+      "requires": [
+        "CIVIC_PROFESSIONAL_SPORTS"
+      ]
+    },
+    {
+      "id": "BUILDING_SYDNEY_OPERA_HOUSE",
+      "name": "Sydney Opera House",
+      "cost": 1850,
+      "requires": [
+        "CIVIC_CULTURAL_HERITAGE"
+      ]
+    },
+    {
+      "id": "BUILDING_TEMPLE_ARTEMIS",
+      "name": "Temple of Artemis",
+      "cost": 180,
+      "requires": [
+        "TECH_ARCHERY"
+      ]
+    },
+    {
+      "id": "BUILDING_KILWA_KISIWANI",
+      "name": "Kilwa Kisiwani",
+      "cost": 710,
+      "requires": [
+        "TECH_MACHINERY"
+      ]
+    },
+    {
+      "id": "BUILDING_KOTOKU_IN",
+      "name": "Kotoku-in",
+      "cost": 710,
+      "requires": [
+        "CIVIC_DIVINE_RIGHT"
+      ]
+    },
+    {
+      "id": "BUILDING_CASA_DE_CONTRATACION",
+      "name": "Casa de Contrataci\u00f3n ",
+      "cost": 920,
+      "requires": [
+        "TECH_CARTOGRAPHY"
+      ]
+    },
+    {
+      "id": "BUILDING_ST_BASILS_CATHEDRAL",
+      "name": "St. Basil's Cathedral",
+      "cost": 920,
+      "requires": [
+        "CIVIC_REFORMED_CHURCH"
+      ]
+    },
+    {
+      "id": "BUILDING_TAJ_MAHAL",
+      "name": "Taj Mahal",
+      "cost": 920,
+      "requires": [
+        "CIVIC_HUMANISM"
+      ]
+    },
+    {
+      "id": "BUILDING_STATUE_LIBERTY",
+      "name": "Statue of Liberty",
+      "cost": 1240,
+      "requires": [
+        "CIVIC_CIVIL_ENGINEERING"
+      ]
+    },
+    {
+      "id": "BUILDING_AMUNDSEN_SCOTT_RESEARCH_STATION",
+      "name": "Amundsen-Scott Research Station",
+      "cost": 1620,
+      "requires": [
+        "CIVIC_COLD_WAR",
+        "CIVIC_RAPID_DEPLOYMENT"
+      ]
+    },
+    {
+      "id": "BUILDING_GREAT_BATH",
+      "name": "Great Bath",
+      "cost": 180,
+      "requires": [
+        "TECH_POTTERY"
+      ]
+    },
+    {
+      "id": "BUILDING_MACHU_PICCHU",
+      "name": "Machu Picchu",
+      "cost": 400,
+      "requires": [
+        "TECH_ENGINEERING"
+      ]
+    },
+    {
+      "id": "BUILDING_MEENAKSHI_TEMPLE",
+      "name": "Meenakshi Temple",
+      "cost": 710,
+      "requires": [
+        "CIVIC_CIVIL_SERVICE"
+      ]
+    },
+    {
+      "id": "BUILDING_UNIVERSITY_SANKORE",
+      "name": "University of Sankore",
+      "cost": 710,
+      "requires": [
+        "TECH_EDUCATION"
+      ]
+    },
+    {
+      "id": "BUILDING_ORSZAGHAZ",
+      "name": "Orsz\u00e1gh\u00e1z",
+      "cost": 920,
+      "requires": [
+        "TECH_SANITATION"
+      ]
+    },
+    {
+      "id": "BUILDING_PANAMA_CANAL",
+      "name": "Panama Canal",
+      "cost": 920,
+      "requires": [
+        "TECH_STEAM_POWER"
+      ]
+    },
+    {
+      "id": "BUILDING_GOLDEN_GATE_BRIDGE",
+      "name": "Golden Gate Bridge",
+      "cost": 1620,
+      "requires": [
+        "TECH_COMBUSTION"
+      ]
+    }
+  ],
+  "units": [
+    {
+      "id": "UNIT_SETTLER",
+      "name": "Settler",
+      "cost": 80
+    },
+    {
+      "id": "UNIT_BUILDER",
+      "name": "Builder",
+      "cost": 50
+    },
+    {
+      "id": "UNIT_TRADER",
+      "name": "Trader",
+      "cost": 40,
+      "requires": [
+        "CIVIC_FOREIGN_TRADE"
+      ]
+    },
+    {
+      "id": "UNIT_MISSIONARY",
+      "name": "Missionary",
+      "cost": 75
+    },
+    {
+      "id": "UNIT_APOSTLE",
+      "name": "Apostle",
+      "cost": 200
+    },
+    {
+      "id": "UNIT_INQUISITOR",
+      "name": "Inquisitor",
+      "cost": 75
+    },
+    {
+      "id": "UNIT_GURU",
+      "name": "Guru",
+      "cost": 120
+    },
+    {
+      "id": "UNIT_WARRIOR_MONK",
+      "name": "Warrior Monk",
+      "cost": 100
+    },
+    {
+      "id": "UNIT_ARCHAEOLOGIST",
+      "name": "Archaeologist",
+      "cost": 400,
+      "requires": [
+        "CIVIC_NATURAL_HISTORY"
+      ]
+    },
+    {
+      "id": "UNIT_GREAT_GENERAL",
+      "name": "Great General",
+      "cost": 1
+    },
+    {
+      "id": "UNIT_GREAT_ADMIRAL",
+      "name": "Great Admiral",
+      "cost": 1
+    },
+    {
+      "id": "UNIT_GREAT_ENGINEER",
+      "name": "Great Engineer",
+      "cost": 1
+    },
+    {
+      "id": "UNIT_GREAT_MERCHANT",
+      "name": "Great Merchant",
+      "cost": 1
+    },
+    {
+      "id": "UNIT_GREAT_PROPHET",
+      "name": "Great Prophet",
+      "cost": 1
+    },
+    {
+      "id": "UNIT_GREAT_SCIENTIST",
+      "name": "Great Scientist",
+      "cost": 1
+    },
+    {
+      "id": "UNIT_GREAT_WRITER",
+      "name": "Great Writer",
+      "cost": 1
+    },
+    {
+      "id": "UNIT_GREAT_ARTIST",
+      "name": "Great Artist",
+      "cost": 1
+    },
+    {
+      "id": "UNIT_GREAT_MUSICIAN",
+      "name": "Great Musician",
+      "cost": 1
+    },
+    {
+      "id": "UNIT_SPY",
+      "name": "Spy",
+      "cost": 225
+    },
+    {
+      "id": "UNIT_NATURALIST",
+      "name": "Naturalist",
+      "cost": 300,
+      "requires": [
+        "CIVIC_CONSERVATION"
+      ]
+    },
+    {
+      "id": "UNIT_SCOUT",
+      "cost": 30,
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_SCOUT",
+        "name": "Scout"
+      },
+      "CIVILIZATION_CREE": {
+        "id": "UNIT_CREE_OKIHTCITAW",
+        "name": "Okihtcitaw"
+      }
+    },
+    {
+      "id": "UNIT_WARRIOR",
+      "name": "Warrior",
+      "cost": 40
+    },
+    {
+      "id": "UNIT_SLINGER",
+      "name": "Slinger",
+      "cost": 35
+    },
+    {
+      "id": "UNIT_BARBARIAN_HORSEMAN",
+      "name": "Barbarian Horseman",
+      "cost": 40
+    },
+    {
+      "id": "UNIT_BARBARIAN_HORSE_ARCHER",
+      "name": "Barbarian Horse Archer",
+      "cost": 35
+    },
+    {
+      "id": "UNIT_SUMERIAN_WAR_CART",
+      "cost": 55,
+      "CIVILIZATION_SUMERIA": {
+        "id": "UNIT_SUMERIAN_WAR_CART",
+        "name": "War-Cart"
+      }
+    },
+    {
+      "id": "UNIT_GALLEY",
+      "cost": 65,
+      "requires": [
+        "TECH_SAILING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_GALLEY",
+        "name": "Galley"
+      },
+      "LEADER_HARDRADA": {
+        "id": "UNIT_NORWEGIAN_LONGSHIP",
+        "name": "Viking Longship"
+      },
+      "CIVILIZATION_PHOENICIA": {
+        "id": "UNIT_PHOENICIA_BIREME",
+        "name": "Bireme"
+      }
+    },
+    {
+      "id": "UNIT_ARCHER",
+      "name": "Archer",
+      "cost": 60,
+      "requires": [
+        "TECH_ARCHERY"
+      ]
+    },
+    {
+      "id": "UNIT_SPEARMAN",
+      "cost": 65,
+      "requires": [
+        "TECH_BRONZE_WORKING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_SPEARMAN",
+        "name": "Spearman"
+      },
+      "CIVILIZATION_GREECE": {
+        "id": "UNIT_GREEK_HOPLITE",
+        "name": "Hoplite"
+      }
+    },
+    {
+      "id": "UNIT_HEAVY_CHARIOT",
+      "cost": 65,
+      "requires": [
+        "TECH_THE_WHEEL"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_HEAVY_CHARIOT",
+        "name": "Heavy Chariot"
+      },
+      "CIVILIZATION_EGYPT": {
+        "id": "UNIT_EGYPTIAN_CHARIOT_ARCHER",
+        "name": "Maryannu Chariot Archer"
+      }
+    },
+    {
+      "id": "UNIT_BATTERING_RAM",
+      "name": "Battering Ram",
+      "cost": 65,
+      "requires": [
+        "TECH_MASONRY"
+      ]
+    },
+    {
+      "id": "UNIT_SWORDSMAN",
+      "cost": 90,
+      "requires": [
+        "TECH_IRON_WORKING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_SWORDSMAN",
+        "name": "Swordsman"
+      },
+      "CIVILIZATION_ROME": {
+        "id": "UNIT_ROMAN_LEGION",
+        "name": "Legion"
+      },
+      "CIVILIZATION_KONGO": {
+        "id": "UNIT_KONGO_SHIELD_BEARER",
+        "name": "Ngao Mbeba"
+      },
+      "CIVILIZATION_MAORI": {
+        "id": "UNIT_MAORI_TOA",
+        "name": "Toa"
+      }
+    },
+    {
+      "id": "UNIT_HORSEMAN",
+      "name": "Horseman",
+      "cost": 80,
+      "requires": [
+        "TECH_HORSEBACK_RIDING"
+      ]
+    },
+    {
+      "id": "UNIT_SCYTHIAN_HORSE_ARCHER",
+      "cost": 100,
+      "requires": [
+        "TECH_HORSEBACK_RIDING"
+      ],
+      "CIVILIZATION_SCYTHIA": {
+        "id": "UNIT_SCYTHIAN_HORSE_ARCHER",
+        "name": "Saka Horse Archer"
+      }
+    },
+    {
+      "id": "UNIT_CATAPULT",
+      "name": "Catapult",
+      "cost": 120,
+      "requires": [
+        "TECH_ENGINEERING"
+      ]
+    },
+    {
+      "id": "UNIT_SIEGE_TOWER",
+      "name": "Siege Tower",
+      "cost": 100,
+      "requires": [
+        "TECH_CONSTRUCTION",
+        "TECH_MACHINERY"
+      ]
+    },
+    {
+      "id": "UNIT_QUADRIREME",
+      "name": "Quadrireme",
+      "cost": 120,
+      "requires": [
+        "TECH_SHIPBUILDING"
+      ]
+    },
+    {
+      "id": "UNIT_KNIGHT",
+      "cost": 220,
+      "requires": [
+        "TECH_STIRRUPS"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_KNIGHT",
+        "name": "Knight"
+      },
+      "CIVILIZATION_ARABIA": {
+        "id": "UNIT_ARABIAN_MAMLUK",
+        "name": "Mamluk"
+      },
+      "CIVILIZATION_MALI": {
+        "id": "UNIT_MALI_MANDEKALU_CAVALRY",
+        "name": "Mandekalu Cavalry"
+      }
+    },
+    {
+      "id": "UNIT_INDIAN_VARU",
+      "cost": 120,
+      "requires": [
+        "TECH_HORSEBACK_RIDING"
+      ],
+      "CIVILIZATION_INDIA": {
+        "id": "UNIT_INDIAN_VARU",
+        "name": "Varu"
+      }
+    },
+    {
+      "id": "UNIT_CROSSBOWMAN",
+      "name": "Crossbowman",
+      "cost": 180,
+      "requires": [
+        "TECH_MACHINERY"
+      ]
+    },
+    {
+      "id": "UNIT_CHINESE_CROUCHING_TIGER",
+      "cost": 140,
+      "requires": [
+        "TECH_MACHINERY"
+      ],
+      "CIVILIZATION_CHINA": {
+        "id": "UNIT_CHINESE_CROUCHING_TIGER",
+        "name": "Crouching Tiger"
+      }
+    },
+    {
+      "id": "UNIT_MILITARY_ENGINEER",
+      "name": "Military Engineer",
+      "cost": 170,
+      "requires": [
+        "TECH_MILITARY_ENGINEERING"
+      ]
+    },
+    {
+      "id": "UNIT_PIKEMAN",
+      "cost": 180,
+      "requires": [
+        "TECH_MILITARY_TACTICS"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_PIKEMAN",
+        "name": "Pikeman"
+      },
+      "CIVILIZATION_ZULU": {
+        "id": "UNIT_ZULU_IMPI",
+        "name": "Impi"
+      }
+    },
+    {
+      "id": "UNIT_MUSKETMAN",
+      "cost": 240,
+      "requires": [
+        "TECH_GUNPOWDER"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_MUSKETMAN",
+        "name": "Musketman"
+      },
+      "CIVILIZATION_SPAIN": {
+        "id": "UNIT_SPANISH_CONQUISTADOR",
+        "name": "Conquistador"
+      },
+      "LEADER_SULEIMAN": {
+        "id": "UNIT_SULEIMAN_JANISSARY",
+        "name": "Janissary"
+      }
+    },
+    {
+      "id": "UNIT_CARAVEL",
+      "name": "Caravel",
+      "cost": 240,
+      "requires": [
+        "TECH_CARTOGRAPHY"
+      ]
+    },
+    {
+      "id": "UNIT_BOMBARD",
+      "name": "Bombard",
+      "cost": 280,
+      "requires": [
+        "TECH_METAL_CASTING"
+      ]
+    },
+    {
+      "id": "UNIT_FRIGATE",
+      "cost": 280,
+      "requires": [
+        "TECH_SQUARE_RIGGING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_FRIGATE",
+        "name": "Frigate"
+      },
+      "CIVILIZATION_NETHERLANDS": {
+        "id": "UNIT_DE_ZEVEN_PROVINCIEN",
+        "name": "De Zeven Provinci\u00ebn"
+      }
+    },
+    {
+      "id": "UNIT_PRIVATEER",
+      "cost": 280,
+      "requires": [
+        "CIVIC_MERCANTILISM"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_PRIVATEER",
+        "name": "Privateer"
+      },
+      "CIVILIZATION_ENGLAND": {
+        "id": "UNIT_ENGLISH_SEADOG",
+        "name": "Sea Dog"
+      },
+      "CIVILIZATION_OTTOMAN": {
+        "id": "UNIT_OTTOMAN_BARBARY_CORSAIR",
+        "name": "Barbary Corsair"
+      }
+    },
+    {
+      "id": "UNIT_FIELD_CANNON",
+      "cost": 330,
+      "requires": [
+        "TECH_BALLISTICS"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_FIELD_CANNON",
+        "name": "Field Cannon"
+      },
+      "CIVILIZATION_KOREA": {
+        "id": "UNIT_KOREAN_HWACHA",
+        "name": "Hwacha"
+      }
+    },
+    {
+      "id": "UNIT_CAVALRY",
+      "cost": 330,
+      "requires": [
+        "TECH_MILITARY_SCIENCE"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_CAVALRY",
+        "name": "Cavalry"
+      },
+      "CIVILIZATION_RUSSIA": {
+        "id": "UNIT_RUSSIAN_COSSACK",
+        "name": "Cossack"
+      },
+      "CIVILIZATION_HUNGARY": {
+        "id": "UNIT_HUNGARY_HUSZAR",
+        "name": "Husz\u00e1r"
+      }
+    },
+    {
+      "id": "UNIT_MEDIC",
+      "name": "Medic",
+      "cost": 370,
+      "requires": [
+        "TECH_SANITATION"
+      ]
+    },
+    {
+      "id": "UNIT_IRONCLAD",
+      "name": "Ironclad",
+      "cost": 380,
+      "requires": [
+        "TECH_STEAM_POWER"
+      ]
+    },
+    {
+      "id": "UNIT_RANGER",
+      "cost": 380,
+      "requires": [
+        "TECH_RIFLING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_RANGER",
+        "name": "Ranger"
+      },
+      "CIVILIZATION_SCOTLAND": {
+        "id": "UNIT_SCOTTISH_HIGHLANDER",
+        "name": "Highlander"
+      }
+    },
+    {
+      "id": "UNIT_OBSERVATION_BALLOON",
+      "name": "Observation Balloon",
+      "cost": 240,
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "UNIT_BIPLANE",
+      "name": "Biplane",
+      "cost": 430,
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "UNIT_INFANTRY",
+      "name": "Infantry",
+      "cost": 430,
+      "requires": [
+        "TECH_REPLACEABLE_PARTS"
+      ]
+    },
+    {
+      "id": "UNIT_ARTILLERY",
+      "name": "Artillery",
+      "cost": 430,
+      "requires": [
+        "TECH_STEEL"
+      ]
+    },
+    {
+      "id": "UNIT_BATTLESHIP",
+      "cost": 430,
+      "requires": [
+        "TECH_STEEL",
+        "TECH_REFINING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_BATTLESHIP",
+        "name": "Battleship"
+      },
+      "CIVILIZATION_BRAZIL": {
+        "id": "UNIT_BRAZILIAN_MINAS_GERAES",
+        "name": "Minas Geraes"
+      }
+    },
+    {
+      "id": "UNIT_SUBMARINE",
+      "cost": 480,
+      "requires": [
+        "TECH_ELECTRICITY"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_SUBMARINE",
+        "name": "Submarine"
+      },
+      "CIVILIZATION_GERMANY": {
+        "id": "UNIT_GERMAN_UBOAT",
+        "name": "U-Boat"
+      }
+    },
+    {
+      "id": "UNIT_AT_CREW",
+      "name": "AT Crew",
+      "cost": 400,
+      "requires": [
+        "TECH_CHEMISTRY"
+      ]
+    },
+    {
+      "id": "UNIT_TANK",
+      "name": "Tank",
+      "cost": 480,
+      "requires": [
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "id": "UNIT_FIGHTER",
+      "cost": 520,
+      "requires": [
+        "TECH_ADVANCED_FLIGHT"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_FIGHTER",
+        "name": "Fighter"
+      },
+      "CIVILIZATION_AMERICA": {
+        "id": "UNIT_AMERICAN_P51",
+        "name": "P-51 Mustang"
+      }
+    },
+    {
+      "id": "UNIT_BOMBER",
+      "name": "Bomber",
+      "cost": 560,
+      "requires": [
+        "TECH_ADVANCED_FLIGHT"
+      ]
+    },
+    {
+      "id": "UNIT_ANTIAIR_GUN",
+      "name": "Anti-Air Gun",
+      "cost": 455,
+      "requires": [
+        "TECH_ADVANCED_BALLISTICS"
+      ]
+    },
+    {
+      "id": "UNIT_MACHINE_GUN",
+      "name": "Machine Gun",
+      "cost": 540,
+      "requires": [
+        "TECH_ADVANCED_BALLISTICS"
+      ]
+    },
+    {
+      "id": "UNIT_AIRCRAFT_CARRIER",
+      "name": "Aircraft Carrier",
+      "cost": 540,
+      "requires": [
+        "TECH_COMBINED_ARMS"
+      ]
+    },
+    {
+      "id": "UNIT_DESTROYER",
+      "name": "Destroyer",
+      "cost": 540,
+      "requires": [
+        "TECH_COMBINED_ARMS"
+      ]
+    },
+    {
+      "id": "UNIT_HELICOPTER",
+      "name": "Helicopter",
+      "cost": 600,
+      "requires": [
+        "TECH_SYNTHETIC_MATERIALS"
+      ]
+    },
+    {
+      "id": "UNIT_NUCLEAR_SUBMARINE",
+      "name": "Nuclear Submarine",
+      "cost": 680,
+      "requires": [
+        "TECH_TELECOMMUNICATIONS"
+      ]
+    },
+    {
+      "id": "UNIT_MECHANIZED_INFANTRY",
+      "name": "Mechanized Infantry",
+      "cost": 650,
+      "requires": [
+        "TECH_SATELLITES"
+      ]
+    },
+    {
+      "id": "UNIT_ROCKET_ARTILLERY",
+      "name": "Rocket Artillery",
+      "cost": 680,
+      "requires": [
+        "TECH_GUIDANCE_SYSTEMS"
+      ]
+    },
+    {
+      "id": "UNIT_MOBILE_SAM",
+      "name": "Mobile SAM",
+      "cost": 590,
+      "requires": [
+        "TECH_GUIDANCE_SYSTEMS"
+      ]
+    },
+    {
+      "id": "UNIT_JET_FIGHTER",
+      "name": "Jet Fighter",
+      "cost": 650,
+      "requires": [
+        "TECH_LASERS"
+      ]
+    },
+    {
+      "id": "UNIT_JET_BOMBER",
+      "name": "Jet Bomber",
+      "cost": 700,
+      "requires": [
+        "TECH_STEALTH_TECHNOLOGY"
+      ]
+    },
+    {
+      "id": "UNIT_MISSILE_CRUISER",
+      "name": "Missile Cruiser",
+      "cost": 680,
+      "requires": [
+        "TECH_LASERS"
+      ]
+    },
+    {
+      "id": "UNIT_MODERN_AT",
+      "name": "Modern AT",
+      "cost": 580,
+      "requires": [
+        "TECH_COMPOSITES"
+      ]
+    },
+    {
+      "id": "UNIT_MODERN_ARMOR",
+      "name": "Modern Armor",
+      "cost": 680,
+      "requires": [
+        "TECH_COMPOSITES"
+      ]
+    },
+    {
+      "id": "UNIT_MAN_AT_ARMS",
+      "cost": 160,
+      "requires": [
+        "TECH_APPRENTICESHIP"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_MAN_AT_ARMS",
+        "name": "Man-At-Arms"
+      },
+      "CIVILIZATION_JAPAN": {
+        "id": "UNIT_JAPANESE_SAMURAI",
+        "name": "Samurai"
+      },
+      "CIVILIZATION_NORWAY": {
+        "id": "UNIT_NORWEGIAN_BERSERKER",
+        "name": "Berserker"
+      },
+      "CIVILIZATION_GEORGIA": {
+        "id": "UNIT_GEORGIAN_KHEVSURETI",
+        "name": "Khevsur"
+      }
+    },
+    {
+      "id": "UNIT_LINE_INFANTRY",
+      "cost": 360,
+      "requires": [
+        "TECH_MILITARY_SCIENCE"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_LINE_INFANTRY",
+        "name": "Line Infantry"
+      },
+      "LEADER_VICTORIA": {
+        "id": "UNIT_ENGLISH_REDCOAT",
+        "name": "Redcoat"
+      },
+      "CIVILIZATION_FRANCE": {
+        "id": "UNIT_FRENCH_GARDE_IMPERIALE",
+        "name": "Garde Imp\u00e9riale"
+      }
+    },
+    {
+      "id": "UNIT_TREBUCHET",
+      "name": "Trebuchet",
+      "cost": 200,
+      "requires": [
+        "TECH_MILITARY_ENGINEERING"
+      ]
+    },
+    {
+      "id": "UNIT_SPEC_OPS",
+      "name": "Spec Ops",
+      "cost": 520,
+      "requires": [
+        "TECH_PLASTICS"
+      ]
+    },
+    {
+      "id": "UNIT_DRONE",
+      "name": "Drone",
+      "cost": 420,
+      "requires": [
+        "TECH_COMPUTERS"
+      ]
+    },
+    {
+      "id": "UNIT_PIKE_AND_SHOT",
+      "cost": 250,
+      "requires": [
+        "TECH_METAL_CASTING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_PIKE_AND_SHOT",
+        "name": "Pike and Shot"
+      },
+      "CIVILIZATION_SWEDEN": {
+        "id": "UNIT_SWEDEN_CAROLEAN",
+        "name": "Carolean"
+      }
+    },
+    {
+      "id": "UNIT_SUPPLY_CONVOY",
+      "name": "Supply Convoy",
+      "cost": 450,
+      "requires": [
+        "TECH_COMBUSTION"
+      ]
+    },
+    {
+      "id": "UNIT_MONGOLIAN_KESHIG",
+      "cost": 160,
+      "requires": [
+        "TECH_STIRRUPS"
+      ],
+      "CIVILIZATION_MONGOLIA": {
+        "id": "UNIT_MONGOLIAN_KESHIG",
+        "name": "Keshig"
+      }
+    },
+    {
+      "id": "UNIT_MAPUCHE_MALON_RAIDER",
+      "cost": 230,
+      "requires": [
+        "TECH_GUNPOWDER"
+      ],
+      "CIVILIZATION_MAPUCHE": {
+        "id": "UNIT_MAPUCHE_MALON_RAIDER",
+        "name": "Mal\u00f3n Raider"
+      }
+    },
+    {
+      "id": "UNIT_SKIRMISHER",
+      "cost": 150,
+      "requires": [
+        "TECH_MACHINERY"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_SKIRMISHER",
+        "name": "Skirmisher"
+      },
+      "CIVILIZATION_INCA": {
+        "id": "UNIT_INCA_WARAKAQ",
+        "name": "Warak\u2019aq"
+      }
+    },
+    {
+      "id": "UNIT_COURSER",
+      "cost": 200,
+      "requires": [
+        "TECH_CASTLES"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_COURSER",
+        "name": "Courser"
+      },
+      "LEADER_MATTHIAS_CORVINUS": {
+        "id": "UNIT_HUNGARY_BLACK_ARMY",
+        "name": "Black Army"
+      }
+    },
+    {
+      "id": "UNIT_CUIRASSIER",
+      "cost": 330,
+      "requires": [
+        "TECH_BALLISTICS"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "UNIT_CUIRASSIER",
+        "name": "Cuirassier"
+      },
+      "LEADER_T_ROOSEVELT": {
+        "id": "UNIT_AMERICAN_ROUGH_RIDER",
+        "name": "Rough Rider"
+      }
+    },
+    {
+      "id": "UNIT_GIANT_DEATH_ROBOT",
+      "name": "Giant Death Robot",
+      "cost": 1500,
+      "requires": [
+        "TECH_ROBOTICS"
+      ]
+    },
+    {
+      "id": "UNIT_ROCK_BAND",
+      "name": "Rock Band",
+      "cost": 300,
+      "requires": [
+        "CIVIC_COLD_WAR"
+      ]
+    },
+    {
+      "id": "UNIT_CANADA_MOUNTIE",
+      "cost": 290,
+      "requires": [
+        "CIVIC_CONSERVATION"
+      ],
+      "CIVILIZATION_CANADA": {
+        "id": "UNIT_CANADA_MOUNTIE",
+        "name": "Mountie"
+      }
+    }
+  ],
+  "districts": [
+    {
+      "id": "DISTRICT_CITY_CENTER",
+      "name": "City Center",
+      "cost": 54
+    },
+    {
+      "id": "DISTRICT_HOLY_SITE",
+      "cost": 54,
+      "requires": [
+        "TECH_ASTROLOGY"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_HOLY_SITE",
+        "name": "Holy Site"
+      },
+      "CIVILIZATION_RUSSIA": {
+        "id": "DISTRICT_LAVRA",
+        "name": "Lavra"
+      }
+    },
+    {
+      "id": "DISTRICT_CAMPUS",
+      "cost": 54,
+      "requires": [
+        "TECH_WRITING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_CAMPUS",
+        "name": "Campus"
+      },
+      "CIVILIZATION_KOREA": {
+        "id": "DISTRICT_SEOWON",
+        "name": "Seowon"
+      }
+    },
+    {
+      "id": "DISTRICT_ENCAMPMENT",
+      "cost": 54,
+      "requires": [
+        "TECH_BRONZE_WORKING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_ENCAMPMENT",
+        "name": "Encampment"
+      },
+      "CIVILIZATION_ZULU": {
+        "id": "DISTRICT_IKANDA",
+        "name": "Ikanda"
+      }
+    },
+    {
+      "id": "DISTRICT_HARBOR",
+      "cost": 54,
+      "requires": [
+        "TECH_CELESTIAL_NAVIGATION"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_HARBOR",
+        "name": "Harbor"
+      },
+      "CIVILIZATION_ENGLAND": {
+        "id": "DISTRICT_ROYAL_NAVY_DOCKYARD",
+        "name": "Royal Navy Dockyard"
+      },
+      "CIVILIZATION_PHOENICIA": {
+        "id": "DISTRICT_COTHON",
+        "name": "Cothon"
+      }
+    },
+    {
+      "id": "DISTRICT_AERODROME",
+      "name": "Aerodrome",
+      "cost": 54,
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "DISTRICT_COMMERCIAL_HUB",
+      "cost": 54,
+      "requires": [
+        "TECH_CURRENCY"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_COMMERCIAL_HUB",
+        "name": "Commercial Hub"
+      },
+      "CIVILIZATION_MALI": {
+        "id": "DISTRICT_SUGUBA",
+        "name": "Suguba"
+      }
+    },
+    {
+      "id": "DISTRICT_ENTERTAINMENT_COMPLEX",
+      "cost": 54,
+      "requires": [
+        "CIVIC_GAMES_RECREATION"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_ENTERTAINMENT_COMPLEX",
+        "name": "Entertainment Complex"
+      },
+      "CIVILIZATION_BRAZIL": {
+        "id": "DISTRICT_STREET_CARNIVAL",
+        "name": "Street Carnival"
+      }
+    },
+    {
+      "id": "DISTRICT_THEATER",
+      "cost": 54,
+      "requires": [
+        "CIVIC_DRAMA_POETRY"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_THEATER",
+        "name": "Theater Square"
+      },
+      "CIVILIZATION_GREECE": {
+        "id": "DISTRICT_ACROPOLIS",
+        "name": "Acropolis"
+      }
+    },
+    {
+      "id": "DISTRICT_INDUSTRIAL_ZONE",
+      "cost": 54,
+      "requires": [
+        "TECH_APPRENTICESHIP"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_INDUSTRIAL_ZONE",
+        "name": "Industrial Zone"
+      },
+      "CIVILIZATION_GERMANY": {
+        "id": "DISTRICT_HANSA",
+        "name": "Hansa"
+      }
+    },
+    {
+      "id": "DISTRICT_NEIGHBORHOOD",
+      "cost": 54,
+      "requires": [
+        "CIVIC_URBANIZATION"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_NEIGHBORHOOD",
+        "name": "Neighborhood"
+      },
+      "CIVILIZATION_KONGO": {
+        "id": "DISTRICT_MBANZA",
+        "name": "Mbanza"
+      }
+    },
+    {
+      "id": "DISTRICT_AQUEDUCT",
+      "cost": 36,
+      "requires": [
+        "TECH_ENGINEERING"
+      ],
+      "CIVILIZATION_ALL": {
+        "id": "DISTRICT_AQUEDUCT",
+        "name": "Aqueduct"
+      },
+      "CIVILIZATION_ROME": {
+        "id": "DISTRICT_BATH",
+        "name": "Bath"
+      }
+    },
+    {
+      "id": "DISTRICT_SPACEPORT",
+      "name": "Spaceport",
+      "cost": 1800,
+      "requires": [
+        "TECH_ROCKETRY"
+      ]
+    },
+    {
+      "id": "DISTRICT_WONDER",
+      "name": "Wonder",
+      "cost": 0
+    },
+    {
+      "id": "DISTRICT_GOVERNMENT",
+      "name": "Government Plaza",
+      "cost": 30,
+      "requires": [
+        "CIVIC_STATE_WORKFORCE"
+      ]
+    },
+    {
+      "id": "DISTRICT_WATER_ENTERTAINMENT_COMPLEX",
+      "name": "Water Park",
+      "cost": 54,
+      "requires": [
+        "CIVIC_NATURAL_HISTORY"
+      ]
+    },
+    {
+      "id": "DISTRICT_CANAL",
+      "name": "Canal",
+      "cost": 81,
+      "requires": [
+        "TECH_STEAM_POWER"
+      ]
+    },
+    {
+      "id": "DISTRICT_DAM",
+      "name": "Dam",
+      "cost": 81,
+      "requires": [
+        "TECH_BUTTRESS"
+      ]
+    }
+  ],
+  "improvements": [
+    {
+      "id": "IMPROVEMENT_BARBARIAN_CAMP",
+      "name": "Barbarian Outpost"
+    },
+    {
+      "id": "IMPROVEMENT_FARM",
+      "name": "Farm"
+    },
+    {
+      "id": "IMPROVEMENT_MINE",
+      "name": "Mine",
+      "requires": [
+        "TECH_MINING"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_QUARRY",
+      "name": "Quarry",
+      "requires": [
+        "TECH_MINING"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_FISHING_BOATS",
+      "name": "Fishing Boats",
+      "requires": [
+        "TECH_SAILING"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_PASTURE",
+      "name": "Pasture",
+      "requires": [
+        "TECH_ANIMAL_HUSBANDRY"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_PLANTATION",
+      "name": "Plantation",
+      "requires": [
+        "TECH_IRRIGATION"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_CAMP",
+      "name": "Camp",
+      "requires": [
+        "TECH_ANIMAL_HUSBANDRY"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_LUMBER_MILL",
+      "name": "Lumber Mill",
+      "requires": [
+        "TECH_MACHINERY",
+        "TECH_CONSTRUCTION"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_GOODY_HUT",
+      "name": "Tribal Village"
+    },
+    {
+      "id": "IMPROVEMENT_OIL_WELL",
+      "name": "Oil Well",
+      "requires": [
+        "TECH_STEEL",
+        "TECH_REFINING"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_OFFSHORE_OIL_RIG",
+      "name": "Offshore Oil Rig",
+      "requires": [
+        "TECH_PLASTICS"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_FORT",
+      "name": "Fort",
+      "requires": [
+        "TECH_SIEGE_TACTICS"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_AIRSTRIP",
+      "name": "Airstrip",
+      "requires": [
+        "TECH_FLIGHT"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_BEACH_RESORT",
+      "name": "Seaside Resort",
+      "requires": [
+        "TECH_RADIO"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_MISSILE_SILO",
+      "name": "Missile Silo",
+      "requires": [
+        "TECH_ROCKETRY"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_CHATEAU",
+      "requires": [
+        "CIVIC_HUMANISM"
+      ],
+      "CIVILIZATION_FRANCE": {
+        "id": "IMPROVEMENT_CHATEAU",
+        "name": "Ch\u00e2teau"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_COLOSSAL_HEAD",
+      "LEADER_MINOR_CIV_LA_VENTA": {
+        "id": "IMPROVEMENT_COLOSSAL_HEAD",
+        "name": "Colossal Head"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_GREAT_WALL",
+      "requires": [
+        "TECH_MASONRY"
+      ],
+      "CIVILIZATION_CHINA": {
+        "id": "IMPROVEMENT_GREAT_WALL",
+        "name": "Great Wall"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_KURGAN",
+      "requires": [
+        "TECH_ANIMAL_HUSBANDRY"
+      ],
+      "CIVILIZATION_SCYTHIA": {
+        "id": "IMPROVEMENT_KURGAN",
+        "name": "Kurgan"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_MISSION",
+      "requires": [
+        "TECH_EDUCATION"
+      ],
+      "CIVILIZATION_SPAIN": {
+        "id": "IMPROVEMENT_MISSION",
+        "name": "Mission"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_ROMAN_FORT",
+      "name": "Roman Fort"
+    },
+    {
+      "id": "IMPROVEMENT_SPHINX",
+      "requires": [
+        "CIVIC_CRAFTSMANSHIP"
+      ],
+      "CIVILIZATION_EGYPT": {
+        "id": "IMPROVEMENT_SPHINX",
+        "name": "Sphinx"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_STEPWELL",
+      "requires": [
+        "TECH_IRRIGATION"
+      ],
+      "CIVILIZATION_INDIA": {
+        "id": "IMPROVEMENT_STEPWELL",
+        "name": "Stepwell"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_ZIGGURAT",
+      "CIVILIZATION_SUMERIA": {
+        "id": "IMPROVEMENT_ZIGGURAT",
+        "name": "Ziggurat"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_FISHERY",
+      "name": "Fishery",
+      "requires": [
+        "TECH_SAILING"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_CITY_PARK",
+      "name": "City Park",
+      "requires": [
+        "CIVIC_GAMES_RECREATION"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_CHEMAMULL",
+      "requires": [
+        "CIVIC_CRAFTSMANSHIP"
+      ],
+      "CIVILIZATION_MAPUCHE": {
+        "id": "IMPROVEMENT_CHEMAMULL",
+        "name": "Chemamull"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_GOLF_COURSE",
+      "requires": [
+        "CIVIC_REFORMED_CHURCH"
+      ],
+      "CIVILIZATION_SCOTLAND": {
+        "id": "IMPROVEMENT_GOLF_COURSE",
+        "name": "Golf Course"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_MEKEWAP",
+      "requires": [
+        "TECH_POTTERY"
+      ],
+      "CIVILIZATION_CREE": {
+        "id": "IMPROVEMENT_MEKEWAP",
+        "name": "Mekewap"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_POLDER",
+      "requires": [
+        "CIVIC_GUILDS"
+      ],
+      "CIVILIZATION_NETHERLANDS": {
+        "id": "IMPROVEMENT_POLDER",
+        "name": "Polder"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_GEOTHERMAL_PLANT",
+      "name": "Geothermal Plant",
+      "requires": [
+        "TECH_SYNTHETIC_MATERIALS"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_SOLAR_FARM",
+      "name": "Solar Farm",
+      "requires": [
+        "TECH_SATELLITES"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_WIND_FARM",
+      "name": "Wind Farm",
+      "requires": [
+        "TECH_COMPOSITES"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_OFFSHORE_WIND_FARM",
+      "name": "Offshore Wind Farm",
+      "requires": [
+        "TECH_PREDICTIVE_SYSTEMS"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_SEASTEAD",
+      "name": "Seastead",
+      "requires": [
+        "TECH_SEASTEADS"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_MOAI",
+      "LEADER_MINOR_CIV_RAPA_NUI": {
+        "id": "IMPROVEMENT_MOAI",
+        "name": "Moai"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_MOUND",
+      "LEADER_MINOR_CIV_CAHOKIA": {
+        "id": "IMPROVEMENT_MOUND",
+        "name": "Cahokia Mounds"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_NAZCA_LINE",
+      "LEADER_MINOR_CIV_NAZCA": {
+        "id": "IMPROVEMENT_NAZCA_LINE",
+        "name": "Nazca Line"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_SKI_RESORT",
+      "name": "Ski Resort",
+      "requires": [
+        "CIVIC_PROFESSIONAL_SPORTS"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_MOUNTAIN_TUNNEL",
+      "name": "Mountain Tunnel",
+      "requires": [
+        "TECH_CHEMISTRY"
+      ]
+    },
+    {
+      "id": "IMPROVEMENT_OPEN_AIR_MUSEUM",
+      "requires": [
+        "CIVIC_NATIONALISM"
+      ],
+      "CIVILIZATION_SWEDEN": {
+        "id": "IMPROVEMENT_OPEN_AIR_MUSEUM",
+        "name": "Open-Air Museum"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_ICE_HOCKEY_RINK",
+      "requires": [
+        "CIVIC_COLONIALISM"
+      ],
+      "CIVILIZATION_CANADA": {
+        "id": "IMPROVEMENT_ICE_HOCKEY_RINK",
+        "name": "Ice Hockey Rink"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_TERRACE_FARM",
+      "CIVILIZATION_INCA": {
+        "id": "IMPROVEMENT_TERRACE_FARM",
+        "name": "Terrace Farm"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_MAORI_PA",
+      "CIVILIZATION_MAORI": {
+        "id": "IMPROVEMENT_MAORI_PA",
+        "name": "P\u0101"
+      }
+    },
+    {
+      "id": "IMPROVEMENT_MOUNTAIN_ROAD",
+      "requires": [
+        "CIVIC_FOREIGN_TRADE"
+      ],
+      "LEADER_PACHACUTI": {
+        "id": "IMPROVEMENT_MOUNTAIN_ROAD",
+        "name": "Qhapaq \u00d1an"
+      }
+    }
+  ],
+  "projects": [
+    {
+      "id": "PROJECT_REPAIR_OUTER_DEFENSES",
+      "name": "Repair Outer Defenses",
+      "cost": 0
+    },
+    {
+      "id": "PROJECT_LAUNCH_EARTH_SATELLITE",
+      "name": "Launch Earth Satellite",
+      "cost": 900,
+      "requires": [
+        "TECH_ROCKETRY"
+      ]
+    },
+    {
+      "id": "PROJECT_LAUNCH_MOON_LANDING",
+      "name": "Launch Moon Landing",
+      "cost": 1500,
+      "requires": [
+        "TECH_SATELLITES"
+      ]
+    },
+    {
+      "id": "PROJECT_LAUNCH_MARS_REACTOR",
+      "name": "Launch Mars Reactor",
+      "cost": 1800,
+      "requires": [
+        "TECH_NUCLEAR_FUSION"
+      ]
+    },
+    {
+      "id": "PROJECT_LAUNCH_MARS_HABITATION",
+      "name": "Launch Mars Habitation",
+      "cost": 1800,
+      "requires": [
+        "TECH_ROBOTICS"
+      ]
+    },
+    {
+      "id": "PROJECT_LAUNCH_MARS_HYDROPONICS",
+      "name": "Launch Mars Hydroponics",
+      "cost": 1800,
+      "requires": [
+        "TECH_NANOTECHNOLOGY"
+      ]
+    },
+    {
+      "id": "PROJECT_MANHATTAN_PROJECT",
+      "name": "Manhattan Project",
+      "cost": 1000,
+      "requires": [
+        "TECH_NUCLEAR_FISSION"
+      ]
+    },
+    {
+      "id": "PROJECT_OPERATION_IVY",
+      "name": "Operation Ivy",
+      "cost": 1000,
+      "requires": [
+        "TECH_NUCLEAR_FUSION"
+      ]
+    },
+    {
+      "id": "PROJECT_BUILD_NUCLEAR_DEVICE",
+      "name": "Build Nuclear Device",
+      "cost": 800,
+      "requires": [
+        "TECH_NUCLEAR_FISSION"
+      ]
+    },
+    {
+      "id": "PROJECT_BUILD_THERMONUCLEAR_DEVICE",
+      "name": "Build Thermonuclear Device",
+      "cost": 1000,
+      "requires": [
+        "TECH_NUCLEAR_FUSION"
+      ]
+    },
+    {
+      "id": "PROJECT_CARNIVAL",
+      "name": "Carnival",
+      "cost": 25
+    },
+    {
+      "id": "PROJECT_ENHANCE_DISTRICT_ENCAMPMENT",
+      "name": "Encampment Training",
+      "cost": 25
+    },
+    {
+      "id": "PROJECT_ENHANCE_DISTRICT_HARBOR",
+      "name": "Harbor Shipping",
+      "cost": 25
+    },
+    {
+      "id": "PROJECT_ENHANCE_DISTRICT_INDUSTRIAL_ZONE",
+      "name": "Industrial Zone Logistics",
+      "cost": 25
+    },
+    {
+      "id": "PROJECT_ENHANCE_DISTRICT_COMMERCIAL_HUB",
+      "name": "Commercial Hub Investment",
+      "cost": 25
+    },
+    {
+      "id": "PROJECT_ENHANCE_DISTRICT_HOLY_SITE",
+      "name": "Holy Site Prayers",
+      "cost": 25
+    },
+    {
+      "id": "PROJECT_ENHANCE_DISTRICT_CAMPUS",
+      "name": "Campus Research Grants",
+      "cost": 25
+    },
+    {
+      "id": "PROJECT_ENHANCE_DISTRICT_THEATER",
+      "name": "Theater Square Festival",
+      "cost": 25
+    },
+    {
+      "id": "PROJECT_WATER_CARNIVAL",
+      "name": "Carnival",
+      "cost": 25
+    },
+    {
+      "id": "PROJECT_BREAD_AND_CIRCUSES",
+      "name": "Bread and Circuses",
+      "cost": 25
+    },
+    {
+      "id": "PROJECT_WATER_BREAD_AND_CIRCUSES",
+      "name": "Bread and Circuses",
+      "cost": 25
+    },
+    {
+      "id": "PROJECT_COTHON_CAPITAL_MOVE",
+      "name": "Move Capital",
+      "cost": 100
+    },
+    {
+      "id": "PROJECT_CARBON_RECAPTURE",
+      "name": "Carbon Recapture",
+      "cost": 400,
+      "requires": [
+        "CIVIC_GLOBAL_WARMING_MITIGATION"
+      ]
+    },
+    {
+      "id": "PROJECT_CONVERT_REACTOR_TO_COAL",
+      "name": "Convert to Coal Power",
+      "cost": 200,
+      "requires": [
+        "TECH_INDUSTRIALIZATION"
+      ]
+    },
+    {
+      "id": "PROJECT_CONVERT_REACTOR_TO_OIL",
+      "name": "Convert to Oil Power",
+      "cost": 300,
+      "requires": [
+        "TECH_ELECTRICITY"
+      ]
+    },
+    {
+      "id": "PROJECT_CONVERT_REACTOR_TO_URANIUM",
+      "name": "Convert to Nuclear Power",
+      "cost": 400,
+      "requires": [
+        "TECH_NUCLEAR_FISSION"
+      ]
+    },
+    {
+      "id": "PROJECT_LAUNCH_MARS_BASE",
+      "name": "Launch Mars Colony",
+      "cost": 1800,
+      "requires": [
+        "TECH_NANOTECHNOLOGY"
+      ]
+    },
+    {
+      "id": "PROJECT_LAUNCH_EXOPLANET_EXPEDITION",
+      "name": "Launch Exoplanet Expedition",
+      "cost": 2100,
+      "requires": [
+        "TECH_SMART_MATERIALS"
+      ]
+    },
+    {
+      "id": "PROJECT_ORBITAL_LASER",
+      "name": "Launch Lagrange Laser Station",
+      "cost": 600,
+      "requires": [
+        "TECH_OFFWORLD_MISSION"
+      ]
+    },
+    {
+      "id": "PROJECT_TERRESTRIAL_LASER",
+      "name": "Build Terrestrial Laser Station",
+      "cost": 600,
+      "requires": [
+        "TECH_OFFWORLD_MISSION"
+      ]
+    },
+    {
+      "id": "PROJECT_SEND_AID",
+      "name": "Send Aid",
+      "cost": 200
+    },
+    {
+      "id": "PROJECT_TRAIN_ATHLETES",
+      "name": "Train Athletes",
+      "cost": 200
+    },
+    {
+      "id": "PROJECT_TRAIN_ASTRONAUTS",
+      "name": "Train Astronauts",
+      "cost": 200
+    },
+    {
+      "id": "PROJECT_RECOMMISSION_REACTOR",
+      "name": "Recommission Nuclear Reactor",
+      "cost": 400,
+      "requires": [
+        "TECH_NUCLEAR_FISSION"
+      ]
+    },
+    {
+      "id": "PROJECT_DECOMMISSION_COAL_POWER_PLANT",
+      "name": "Decommission Coal Power Plant",
+      "cost": 400
+    },
+    {
+      "id": "PROJECT_DECOMMISSION_OIL_POWER_PLANT",
+      "name": "Decommission Oil Power Plant",
+      "cost": 400
+    },
+    {
+      "id": "PROJECT_DECOMMISSION_NUCLEAR_POWER_PLANT",
+      "name": "Decommission Nuclear Power Plant",
+      "cost": 400
+    }
+  ],
+  "policies": [
+    {
+      "id": "POLICY_DISCIPLINE",
+      "name": "Discipline",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "POLICY_SURVEY",
+      "name": "Survey",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "POLICY_GOD_KING",
+      "name": "God King",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "POLICY_URBAN_PLANNING",
+      "name": "Urban Planning",
+      "requires": [
+        "CIVIC_CODE_OF_LAWS"
+      ]
+    },
+    {
+      "id": "POLICY_ILKUM",
+      "name": "Ilkum",
+      "requires": [
+        "CIVIC_CRAFTSMANSHIP"
+      ]
+    },
+    {
+      "id": "POLICY_AGOGE",
+      "name": "Agoge",
+      "requires": [
+        "CIVIC_CRAFTSMANSHIP"
+      ]
+    },
+    {
+      "id": "POLICY_CARAVANSARIES",
+      "name": "Caravansaries",
+      "requires": [
+        "CIVIC_FOREIGN_TRADE"
+      ]
+    },
+    {
+      "id": "POLICY_MARITIME_INDUSTRIES",
+      "name": "Maritime Industries",
+      "requires": [
+        "CIVIC_FOREIGN_TRADE"
+      ]
+    },
+    {
+      "id": "POLICY_MANEUVER",
+      "name": "Maneuver",
+      "requires": [
+        "CIVIC_MILITARY_TRADITION"
+      ]
+    },
+    {
+      "id": "POLICY_STRATEGOS",
+      "name": "Strategos",
+      "requires": [
+        "CIVIC_MILITARY_TRADITION"
+      ]
+    },
+    {
+      "id": "POLICY_CORVEE",
+      "name": "Corv\u00e9e",
+      "requires": [
+        "CIVIC_STATE_WORKFORCE"
+      ]
+    },
+    {
+      "id": "POLICY_CONSCRIPTION",
+      "name": "Conscription",
+      "requires": [
+        "CIVIC_STATE_WORKFORCE"
+      ]
+    },
+    {
+      "id": "POLICY_LAND_SURVEYORS",
+      "name": "Land Surveyors",
+      "requires": [
+        "CIVIC_EARLY_EMPIRE"
+      ]
+    },
+    {
+      "id": "POLICY_COLONIZATION",
+      "name": "Colonization",
+      "requires": [
+        "CIVIC_EARLY_EMPIRE"
+      ]
+    },
+    {
+      "id": "POLICY_INSPIRATION",
+      "name": "Inspiration",
+      "requires": [
+        "CIVIC_MYSTICISM"
+      ]
+    },
+    {
+      "id": "POLICY_REVELATION",
+      "name": "Revelation",
+      "requires": [
+        "CIVIC_MYSTICISM"
+      ]
+    },
+    {
+      "id": "POLICY_INSULAE",
+      "name": "Insulae",
+      "requires": [
+        "CIVIC_GAMES_RECREATION"
+      ]
+    },
+    {
+      "id": "POLICY_CHARISMATIC_LEADER",
+      "name": "Charismatic Leader",
+      "requires": [
+        "CIVIC_POLITICAL_PHILOSOPHY"
+      ]
+    },
+    {
+      "id": "POLICY_DIPLOMATIC_LEAGUE",
+      "name": "Diplomatic League",
+      "requires": [
+        "CIVIC_POLITICAL_PHILOSOPHY"
+      ]
+    },
+    {
+      "id": "POLICY_LITERARY_TRADITION",
+      "name": "Literary Tradition",
+      "requires": [
+        "CIVIC_DRAMA_POETRY"
+      ]
+    },
+    {
+      "id": "POLICY_RAID",
+      "name": "Raid",
+      "requires": [
+        "CIVIC_MILITARY_TRAINING"
+      ]
+    },
+    {
+      "id": "POLICY_VETERANCY",
+      "name": "Veterancy",
+      "requires": [
+        "CIVIC_MILITARY_TRAINING"
+      ]
+    },
+    {
+      "id": "POLICY_BASTIONS",
+      "name": "Bastions",
+      "requires": [
+        "CIVIC_DEFENSIVE_TACTICS"
+      ]
+    },
+    {
+      "id": "POLICY_LIMES",
+      "name": "Limes",
+      "requires": [
+        "CIVIC_DEFENSIVE_TACTICS"
+      ]
+    },
+    {
+      "id": "POLICY_NATURAL_PHILOSOPHY",
+      "name": "Natural Philosophy",
+      "requires": [
+        "CIVIC_RECORDED_HISTORY"
+      ]
+    },
+    {
+      "id": "POLICY_SCRIPTURE",
+      "name": "Scripture",
+      "requires": [
+        "CIVIC_THEOLOGY"
+      ]
+    },
+    {
+      "id": "POLICY_NAVAL_INFRASTRUCTURE",
+      "name": "Naval Infrastructure",
+      "requires": [
+        "CIVIC_NAVAL_TRADITION"
+      ]
+    },
+    {
+      "id": "POLICY_NAVIGATION",
+      "name": "Navigation",
+      "requires": [
+        "CIVIC_NAVAL_TRADITION"
+      ]
+    },
+    {
+      "id": "POLICY_FEUDAL_CONTRACT",
+      "name": "Feudal Contract",
+      "requires": [
+        "CIVIC_FEUDALISM"
+      ]
+    },
+    {
+      "id": "POLICY_SERFDOM",
+      "name": "Serfdom",
+      "requires": [
+        "CIVIC_FEUDALISM"
+      ]
+    },
+    {
+      "id": "POLICY_RETAINERS",
+      "name": "Retainers",
+      "requires": [
+        "CIVIC_CIVIL_SERVICE"
+      ]
+    },
+    {
+      "id": "POLICY_MERITOCRACY",
+      "name": "Meritocracy",
+      "requires": [
+        "CIVIC_CIVIL_SERVICE"
+      ]
+    },
+    {
+      "id": "POLICY_SACK",
+      "name": "Sack",
+      "requires": [
+        "CIVIC_MERCENARIES"
+      ]
+    },
+    {
+      "id": "POLICY_PROFESSIONAL_ARMY",
+      "name": "Professional Army",
+      "requires": [
+        "CIVIC_MERCENARIES"
+      ]
+    },
+    {
+      "id": "POLICY_TRADE_CONFEDERATION",
+      "name": "Trade Confederation",
+      "requires": [
+        "CIVIC_MERCENARIES"
+      ]
+    },
+    {
+      "id": "POLICY_MERCHANT_CONFEDERATION",
+      "name": "Merchant Confederation",
+      "requires": [
+        "CIVIC_MEDIEVAL_FAIRES"
+      ]
+    },
+    {
+      "id": "POLICY_AESTHETICS",
+      "name": "Aesthetics",
+      "requires": [
+        "CIVIC_MEDIEVAL_FAIRES"
+      ]
+    },
+    {
+      "id": "POLICY_MEDINA_QUARTER",
+      "name": "Medina Quarter",
+      "requires": [
+        "CIVIC_MEDIEVAL_FAIRES"
+      ]
+    },
+    {
+      "id": "POLICY_CRAFTSMEN",
+      "name": "Craftsmen",
+      "requires": [
+        "CIVIC_GUILDS"
+      ]
+    },
+    {
+      "id": "POLICY_TOWN_CHARTERS",
+      "name": "Town Charters",
+      "requires": [
+        "CIVIC_GUILDS"
+      ]
+    },
+    {
+      "id": "POLICY_TRAVELING_MERCHANTS",
+      "name": "Traveling Merchants",
+      "requires": [
+        "CIVIC_GUILDS"
+      ]
+    },
+    {
+      "id": "POLICY_CHIVALRY",
+      "name": "Chivalry",
+      "requires": [
+        "CIVIC_DIVINE_RIGHT"
+      ]
+    },
+    {
+      "id": "POLICY_GOTHIC_ARCHITECTURE",
+      "name": "Gothic Architecture",
+      "requires": [
+        "CIVIC_DIVINE_RIGHT"
+      ]
+    },
+    {
+      "id": "POLICY_PRESS_GANGS",
+      "name": "Press Gangs",
+      "requires": [
+        "CIVIC_EXPLORATION"
+      ]
+    },
+    {
+      "id": "POLICY_COLONIAL_OFFICES",
+      "name": "Colonial Offices",
+      "requires": [
+        "CIVIC_EXPLORATION"
+      ]
+    },
+    {
+      "id": "POLICY_INVENTION",
+      "name": "Invention",
+      "requires": [
+        "CIVIC_HUMANISM"
+      ]
+    },
+    {
+      "id": "POLICY_FRESCOES",
+      "name": "Frescoes",
+      "requires": [
+        "CIVIC_HUMANISM"
+      ]
+    },
+    {
+      "id": "POLICY_MACHIAVELLIANISM",
+      "name": "Machiavellianism",
+      "requires": [
+        "CIVIC_DIPLOMATIC_SERVICE"
+      ]
+    },
+    {
+      "id": "POLICY_WARS_OF_RELIGION",
+      "name": "Wars of Religion",
+      "requires": [
+        "CIVIC_REFORMED_CHURCH"
+      ]
+    },
+    {
+      "id": "POLICY_RELIGIOUS_ORDERS",
+      "name": "Religious Orders",
+      "requires": [
+        "CIVIC_REFORMED_CHURCH"
+      ]
+    },
+    {
+      "id": "POLICY_SIMULTANEUM",
+      "name": "Simultaneum",
+      "requires": [
+        "CIVIC_REFORMED_CHURCH"
+      ]
+    },
+    {
+      "id": "POLICY_LOGISTICS",
+      "name": "Logistics",
+      "requires": [
+        "CIVIC_MERCANTILISM"
+      ]
+    },
+    {
+      "id": "POLICY_TRIANGULAR_TRADE",
+      "name": "Triangular Trade",
+      "requires": [
+        "CIVIC_MERCANTILISM"
+      ]
+    },
+    {
+      "id": "POLICY_RATIONALISM",
+      "name": "Rationalism",
+      "requires": [
+        "CIVIC_THE_ENLIGHTENMENT"
+      ]
+    },
+    {
+      "id": "POLICY_FREE_MARKET",
+      "name": "Free Market",
+      "requires": [
+        "CIVIC_THE_ENLIGHTENMENT"
+      ]
+    },
+    {
+      "id": "POLICY_LIBERALISM",
+      "name": "Liberalism",
+      "requires": [
+        "CIVIC_THE_ENLIGHTENMENT"
+      ]
+    },
+    {
+      "id": "POLICY_NATIVE_CONQUEST",
+      "name": "Native Conquest",
+      "requires": [
+        "CIVIC_COLONIALISM"
+      ]
+    },
+    {
+      "id": "POLICY_COLONIAL_TAXES",
+      "name": "Colonial Taxes",
+      "requires": [
+        "CIVIC_COLONIALISM"
+      ]
+    },
+    {
+      "id": "POLICY_RAJ",
+      "name": "Raj",
+      "requires": [
+        "CIVIC_COLONIALISM"
+      ]
+    },
+    {
+      "id": "POLICY_PUBLIC_WORKS",
+      "name": "Public Works",
+      "requires": [
+        "CIVIC_CIVIL_ENGINEERING"
+      ]
+    },
+    {
+      "id": "POLICY_SKYSCRAPERS",
+      "name": "Skyscrapers",
+      "requires": [
+        "CIVIC_CIVIL_ENGINEERING"
+      ]
+    },
+    {
+      "id": "POLICY_GRANDE_ARMEE",
+      "name": "Grande Arm\u00e9e",
+      "requires": [
+        "CIVIC_NATIONALISM"
+      ]
+    },
+    {
+      "id": "POLICY_NATIONAL_IDENTITY",
+      "name": "National Identity",
+      "requires": [
+        "CIVIC_NATIONALISM"
+      ]
+    },
+    {
+      "id": "POLICY_GRAND_OPERA",
+      "name": "Grand Opera",
+      "requires": [
+        "CIVIC_OPERA_BALLET"
+      ]
+    },
+    {
+      "id": "POLICY_SYMPHONIES",
+      "name": "Symphonies",
+      "requires": [
+        "CIVIC_OPERA_BALLET"
+      ]
+    },
+    {
+      "id": "POLICY_PUBLIC_TRANSPORT",
+      "name": "Public Transport",
+      "requires": [
+        "CIVIC_URBANIZATION"
+      ]
+    },
+    {
+      "id": "POLICY_TOTAL_WAR",
+      "name": "Total War",
+      "requires": [
+        "CIVIC_SCORCHED_EARTH"
+      ]
+    },
+    {
+      "id": "POLICY_EXPROPRIATION",
+      "name": "Expropriation",
+      "requires": [
+        "CIVIC_SCORCHED_EARTH"
+      ]
+    },
+    {
+      "id": "POLICY_MILITARY_ORGANIZATION",
+      "name": "Military Organization",
+      "requires": [
+        "CIVIC_SCORCHED_EARTH"
+      ]
+    },
+    {
+      "id": "POLICY_MILITARY_RESEARCH",
+      "name": "Military Research",
+      "requires": [
+        "CIVIC_URBANIZATION"
+      ]
+    },
+    {
+      "id": "POLICY_RESOURCE_MANAGEMENT",
+      "name": "Resource Management",
+      "requires": [
+        "CIVIC_CONSERVATION"
+      ]
+    },
+    {
+      "id": "POLICY_PROPAGANDA",
+      "name": "Propaganda",
+      "requires": [
+        "CIVIC_MASS_MEDIA"
+      ]
+    },
+    {
+      "id": "POLICY_LEVEE_EN_MASSE",
+      "name": "Lev\u00e9e en Masse",
+      "requires": [
+        "CIVIC_MOBILIZATION"
+      ]
+    },
+    {
+      "id": "POLICY_LAISSEZ_FAIRE",
+      "name": "Laissez-Faire",
+      "requires": [
+        "CIVIC_CAPITALISM"
+      ]
+    },
+    {
+      "id": "POLICY_MARKET_ECONOMY",
+      "name": "Market Economy",
+      "requires": [
+        "CIVIC_CAPITALISM"
+      ]
+    },
+    {
+      "id": "POLICY_NOBEL_PRIZE",
+      "name": "Science Foundations",
+      "requires": [
+        "CIVIC_NUCLEAR_PROGRAM"
+      ]
+    },
+    {
+      "id": "POLICY_NUCLEAR_ESPIONAGE",
+      "name": "Nuclear Espionage",
+      "requires": [
+        "CIVIC_NUCLEAR_PROGRAM"
+      ]
+    },
+    {
+      "id": "POLICY_POLICE_STATE",
+      "name": "Police State",
+      "requires": [
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "POLICY_ECONOMIC_UNION",
+      "name": "Economic Union",
+      "requires": [
+        "CIVIC_SUFFRAGE",
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "POLICY_FINEST_HOUR",
+      "name": "Their Finest Hour",
+      "requires": [
+        "CIVIC_SUFFRAGE"
+      ]
+    },
+    {
+      "id": "POLICY_ARSENAL_OF_DEMOCRACY",
+      "name": "Arsenal of Democracy",
+      "requires": [
+        "CIVIC_SUFFRAGE"
+      ]
+    },
+    {
+      "id": "POLICY_NEW_DEAL",
+      "name": "New Deal",
+      "requires": [
+        "CIVIC_SUFFRAGE"
+      ]
+    },
+    {
+      "id": "POLICY_LIGHTNING_WARFARE",
+      "name": "Lightning Warfare",
+      "requires": [
+        "CIVIC_TOTALITARIANISM",
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "POLICY_THIRD_ALTERNATIVE",
+      "name": "Third Alternative",
+      "requires": [
+        "CIVIC_TOTALITARIANISM"
+      ]
+    },
+    {
+      "id": "POLICY_MARTIAL_LAW",
+      "name": "Martial Law",
+      "requires": [
+        "CIVIC_TOTALITARIANISM"
+      ]
+    },
+    {
+      "id": "POLICY_GUNBOAT_DIPLOMACY",
+      "name": "Gunboat Diplomacy",
+      "requires": [
+        "CIVIC_TOTALITARIANISM",
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "POLICY_FIVE_YEAR_PLAN",
+      "name": "Five-Year Plan",
+      "requires": [
+        "CIVIC_CLASS_STRUGGLE",
+        "CIVIC_IDEOLOGY"
+      ]
+    },
+    {
+      "id": "POLICY_COLLECTIVIZATION",
+      "name": "Collectivization",
+      "requires": [
+        "CIVIC_CLASS_STRUGGLE"
+      ]
+    },
+    {
+      "id": "POLICY_PATRIOTIC_WAR",
+      "name": "Patriotic War",
+      "requires": [
+        "CIVIC_CLASS_STRUGGLE"
+      ]
+    },
+    {
+      "id": "POLICY_DEFENSE_OF_MOTHERLAND",
+      "name": "Defense of the Motherland",
+      "requires": [
+        "CIVIC_CLASS_STRUGGLE"
+      ]
+    },
+    {
+      "id": "POLICY_CRYPTOGRAPHY",
+      "name": "Cryptography",
+      "requires": [
+        "CIVIC_COLD_WAR"
+      ]
+    },
+    {
+      "id": "POLICY_INTERNATIONAL_WATERS",
+      "name": "International Waters",
+      "requires": [
+        "CIVIC_COLD_WAR"
+      ]
+    },
+    {
+      "id": "POLICY_CONTAINMENT",
+      "name": "Containment",
+      "requires": [
+        "CIVIC_COLD_WAR"
+      ]
+    },
+    {
+      "id": "POLICY_HERITAGE_TOURISM",
+      "name": "Heritage Tourism",
+      "requires": [
+        "CIVIC_CULTURAL_HERITAGE"
+      ]
+    },
+    {
+      "id": "POLICY_SPORTS_MEDIA",
+      "name": "Sports Media",
+      "requires": [
+        "CIVIC_PROFESSIONAL_SPORTS"
+      ]
+    },
+    {
+      "id": "POLICY_MILITARY_FIRST",
+      "name": "Military First",
+      "requires": [
+        "CIVIC_RAPID_DEPLOYMENT"
+      ]
+    },
+    {
+      "id": "POLICY_SATELLITE_BROADCASTS",
+      "name": "Satellite Broadcasts",
+      "requires": [
+        "CIVIC_SPACE_RACE"
+      ]
+    },
+    {
+      "id": "POLICY_INTEGRATED_SPACE_CELL",
+      "name": "Integrated Space Cell",
+      "requires": [
+        "CIVIC_SPACE_RACE"
+      ]
+    },
+    {
+      "id": "POLICY_STRATEGIC_AIR_FORCE",
+      "name": "Strategic Air Force",
+      "requires": [
+        "CIVIC_GLOBALIZATION"
+      ]
+    },
+    {
+      "id": "POLICY_ECOMMERCE",
+      "name": "Ecommerce",
+      "requires": [
+        "CIVIC_GLOBALIZATION"
+      ]
+    },
+    {
+      "id": "POLICY_INTERNATIONAL_SPACE_AGENCY",
+      "name": "International Space Agency",
+      "requires": [
+        "CIVIC_GLOBALIZATION"
+      ]
+    },
+    {
+      "id": "POLICY_ONLINE_COMMUNITIES",
+      "name": "Online Communities",
+      "requires": [
+        "CIVIC_SOCIAL_MEDIA"
+      ]
+    },
+    {
+      "id": "POLICY_COLLECTIVE_ACTIVISM",
+      "name": "Collective Activism",
+      "requires": [
+        "CIVIC_SOCIAL_MEDIA"
+      ]
+    },
+    {
+      "id": "POLICY_LIMITANEI",
+      "name": "Limitanei",
+      "requires": [
+        "CIVIC_EARLY_EMPIRE"
+      ]
+    },
+    {
+      "id": "POLICY_PRAETORIUM",
+      "name": "Praetorium",
+      "requires": [
+        "CIVIC_RECORDED_HISTORY"
+      ]
+    },
+    {
+      "id": "POLICY_CIVIL_PRESTIGE",
+      "name": "Civil Prestige",
+      "requires": [
+        "CIVIC_CIVIL_SERVICE"
+      ]
+    },
+    {
+      "id": "POLICY_WISSELBANKEN",
+      "name": "Wisselbanken",
+      "requires": [
+        "CIVIC_DIPLOMATIC_SERVICE"
+      ]
+    },
+    {
+      "id": "POLICY_SECOND_STRIKE_CAPABILITY",
+      "name": "Second Strike Capability",
+      "requires": [
+        "CIVIC_COLD_WAR"
+      ]
+    },
+    {
+      "id": "POLICY_AFTER_ACTION_REPORTS",
+      "name": "After Action Reports",
+      "requires": [
+        "CIVIC_RAPID_DEPLOYMENT"
+      ]
+    },
+    {
+      "id": "POLICY_COMMUNICATIONS_OFFICE",
+      "name": "Communications Office",
+      "requires": [
+        "CIVIC_SOCIAL_MEDIA"
+      ]
+    },
+    {
+      "id": "POLICY_MONASTICISM",
+      "name": "Monasticism"
+    },
+    {
+      "id": "POLICY_TWILIGHT_VALOR",
+      "name": "Twilight Valor"
+    },
+    {
+      "id": "POLICY_INQUISITION",
+      "name": "Inquisition"
+    },
+    {
+      "id": "POLICY_ISOLATIONISM",
+      "name": "Isolationism"
+    },
+    {
+      "id": "POLICY_LETTERS_OF_MARQUE",
+      "name": "Letters of Marque"
+    },
+    {
+      "id": "POLICY_ROBBER_BARONS",
+      "name": "Robber Barons"
+    },
+    {
+      "id": "POLICY_ELITE_FORCES",
+      "name": "Elite Forces"
+    },
+    {
+      "id": "POLICY_COLLECTIVISM",
+      "name": "Collectivism"
+    },
+    {
+      "id": "POLICY_ROGUE_STATE",
+      "name": "Rogue State"
+    },
+    {
+      "id": "POLICY_FUTURE_VICTORY_SCIENCE",
+      "name": "Aerospace Contractors",
+      "requires": [
+        "CIVIC_EXODUS_IMPERATIVE"
+      ]
+    },
+    {
+      "id": "POLICY_FUTURE_COUNTER_CULTURE",
+      "name": "Space Tourism",
+      "requires": [
+        "CIVIC_EXODUS_IMPERATIVE"
+      ]
+    },
+    {
+      "id": "POLICY_FUTURE_VICTORY_CULTURE",
+      "name": "Hallyu",
+      "requires": [
+        "CIVIC_CULTURAL_HEGEMONY"
+      ]
+    },
+    {
+      "id": "POLICY_FUTURE_COUNTER_SCIENCE",
+      "name": "Non-State Actors",
+      "requires": [
+        "CIVIC_CULTURAL_HEGEMONY"
+      ]
+    },
+    {
+      "id": "POLICY_FUTURE_VICTORY_DOMINATION",
+      "name": "Integrated Attack Logistics",
+      "requires": [
+        "CIVIC_INFORMATION_WARFARE"
+      ]
+    },
+    {
+      "id": "POLICY_FUTURE_COUNTER_DIPLOMATIC",
+      "name": "Rabblerousing",
+      "requires": [
+        "CIVIC_INFORMATION_WARFARE"
+      ]
+    },
+    {
+      "id": "POLICY_FUTURE_VICTORY_DIPLOMATIC",
+      "name": "Diplomatic Capital",
+      "requires": [
+        "CIVIC_SMART_POWER_DOCTRINE"
+      ]
+    },
+    {
+      "id": "POLICY_FUTURE_COUNTER_DOMINATION",
+      "name": "Global Coalition",
+      "requires": [
+        "CIVIC_SMART_POWER_DOCTRINE"
+      ]
+    },
+    {
+      "id": "POLICY_EQUESTRIAN_ORDERS",
+      "name": "Equestrian Orders",
+      "requires": [
+        "CIVIC_MILITARY_TRAINING"
+      ]
+    },
+    {
+      "id": "POLICY_DRILL_MANUALS",
+      "name": "Drill Manuals",
+      "requires": [
+        "CIVIC_MERCANTILISM"
+      ]
+    },
+    {
+      "id": "POLICY_RETINUES",
+      "name": "Retinues",
+      "requires": [
+        "CIVIC_MERCENARIES"
+      ]
+    },
+    {
+      "id": "POLICY_FORCE_MODERNIZATION",
+      "name": "Force Modernization",
+      "requires": [
+        "CIVIC_URBANIZATION"
+      ]
+    },
+    {
+      "id": "POLICY_MUSIC_CENSORSHIP",
+      "name": "Music Censorship",
+      "requires": [
+        "CIVIC_SPACE_RACE"
+      ]
+    },
+    {
+      "id": "POLICY_FLOWER_POWER",
+      "name": "Flower Power"
+    },
+    {
+      "id": "POLICY_CYBER_WARFARE",
+      "name": "Cyber Warfare"
+    },
+    {
+      "id": "POLICY_AUTOMATED_WORKFORCE",
+      "name": "Automated Workforce"
+    },
+    {
+      "id": "POLICY_DISINFORMATION_CAMPAIGN",
+      "name": "Disinformation Campaign"
+    }
+  ],
+  "governments": [
+    {
+      "id": "GOVERNMENT_CHIEFDOM",
+      "name": "Chiefdom"
+    },
+    {
+      "id": "GOVERNMENT_AUTOCRACY",
+      "name": "Autocracy",
+      "requires": [
+        "CIVIC_POLITICAL_PHILOSOPHY"
+      ]
+    },
+    {
+      "id": "GOVERNMENT_OLIGARCHY",
+      "name": "Oligarchy",
+      "requires": [
+        "CIVIC_POLITICAL_PHILOSOPHY"
+      ]
+    },
+    {
+      "id": "GOVERNMENT_CLASSICAL_REPUBLIC",
+      "name": "Classical Republic",
+      "requires": [
+        "CIVIC_POLITICAL_PHILOSOPHY"
+      ]
+    },
+    {
+      "id": "GOVERNMENT_MONARCHY",
+      "name": "Monarchy",
+      "requires": [
+        "CIVIC_DIVINE_RIGHT"
+      ]
+    },
+    {
+      "id": "GOVERNMENT_THEOCRACY",
+      "name": "Theocracy",
+      "requires": [
+        "CIVIC_REFORMED_CHURCH"
+      ]
+    },
+    {
+      "id": "GOVERNMENT_MERCHANT_REPUBLIC",
+      "name": "Merchant Republic",
+      "requires": [
+        "CIVIC_EXPLORATION"
+      ]
+    },
+    {
+      "id": "GOVERNMENT_FASCISM",
+      "name": "Fascism",
+      "requires": [
+        "CIVIC_TOTALITARIANISM"
+      ]
+    },
+    {
+      "id": "GOVERNMENT_COMMUNISM",
+      "name": "Communism",
+      "requires": [
+        "CIVIC_CLASS_STRUGGLE"
+      ]
+    },
+    {
+      "id": "GOVERNMENT_DEMOCRACY",
+      "name": "Democracy",
+      "requires": [
+        "CIVIC_SUFFRAGE"
+      ]
+    },
+    {
+      "id": "GOVERNMENT_CORPORATE_LIBERTARIANISM",
+      "name": "Corporate Libertarianism",
+      "requires": [
+        "CIVIC_CORPORATE_LIBERTARIANISM"
+      ]
+    },
+    {
+      "id": "GOVERNMENT_DIGITAL_DEMOCRACY",
+      "name": "Digital Democracy",
+      "requires": [
+        "CIVIC_DIGITAL_DEMOCRACY"
+      ]
+    },
+    {
+      "id": "GOVERNMENT_SYNTHETIC_TECHNOCRACY",
+      "name": "Synthetic Technocracy",
+      "requires": [
+        "CIVIC_SYNTHETIC_TECHNOCRACY"
+      ]
+    }
+  ],
+  "civilizations": [
+    {
+      "id": "CIVILIZATION_AMERICA",
+      "name": "America"
+    },
+    {
+      "id": "CIVILIZATION_ARABIA",
+      "name": "Arabia"
+    },
+    {
+      "id": "CIVILIZATION_BRAZIL",
+      "name": "Brazil"
+    },
+    {
+      "id": "CIVILIZATION_CANADA",
+      "name": "Canada"
+    },
+    {
+      "id": "CIVILIZATION_CHINA",
+      "name": "China"
+    },
+    {
+      "id": "CIVILIZATION_CREE",
+      "name": "Cree"
+    },
+    {
+      "id": "CIVILIZATION_EGYPT",
+      "name": "Egypt"
+    },
+    {
+      "id": "CIVILIZATION_ENGLAND",
+      "name": "England"
+    },
+    {
+      "id": "CIVILIZATION_FRANCE",
+      "name": "France"
+    },
+    {
+      "id": "CIVILIZATION_GEORGIA",
+      "name": "Georgia"
+    },
+    {
+      "id": "CIVILIZATION_GERMANY",
+      "name": "Germany"
+    },
+    {
+      "id": "CIVILIZATION_GREECE",
+      "name": "Greece"
+    },
+    {
+      "id": "CIVILIZATION_HUNGARY",
+      "name": "Hungary"
+    },
+    {
+      "id": "CIVILIZATION_INCA",
+      "name": "Inca"
+    },
+    {
+      "id": "CIVILIZATION_INDIA",
+      "name": "India"
+    },
+    {
+      "id": "CIVILIZATION_JAPAN",
+      "name": "Japan"
+    },
+    {
+      "id": "CIVILIZATION_KONGO",
+      "name": "Kongo"
+    },
+    {
+      "id": "CIVILIZATION_KOREA",
+      "name": "Korea"
+    },
+    {
+      "id": "CIVILIZATION_MALI",
+      "name": "Mali"
+    },
+    {
+      "id": "CIVILIZATION_MAORI",
+      "name": "M\u0101ori"
+    },
+    {
+      "id": "CIVILIZATION_MAPUCHE",
+      "name": "Mapuche"
+    },
+    {
+      "id": "CIVILIZATION_MONGOLIA",
+      "name": "Mongolia"
+    },
+    {
+      "id": "CIVILIZATION_NETHERLANDS",
+      "name": "Netherlands"
+    },
+    {
+      "id": "CIVILIZATION_NORWAY",
+      "name": "Norway"
+    },
+    {
+      "id": "CIVILIZATION_OTTOMAN",
+      "name": "Ottomans"
+    },
+    {
+      "id": "CIVILIZATION_PHOENICIA",
+      "name": "Phoenicia"
+    },
+    {
+      "id": "CIVILIZATION_ROME",
+      "name": "Rome"
+    },
+    {
+      "id": "CIVILIZATION_RUSSIA",
+      "name": "Russia"
+    },
+    {
+      "id": "CIVILIZATION_SCOTLAND",
+      "name": "Scotland"
+    },
+    {
+      "id": "CIVILIZATION_SCYTHIA",
+      "name": "Scythia"
+    },
+    {
+      "id": "CIVILIZATION_SPAIN",
+      "name": "Spain"
+    },
+    {
+      "id": "CIVILIZATION_SUMERIA",
+      "name": "Sumeria"
+    },
+    {
+      "id": "CIVILIZATION_SWEDEN",
+      "name": "Sweden"
+    },
+    {
+      "id": "CIVILIZATION_ZULU",
+      "name": "Zulu"
+    },
+    {
+      "id": "LEADER_HARDRADA",
+      "name": "Harald Hardrada"
+    },
+    {
+      "id": "LEADER_KRISTINA",
+      "name": "Kristina"
+    },
+    {
+      "id": "LEADER_MATTHIAS_CORVINUS",
+      "name": "Matthias Corvinus"
+    },
+    {
+      "id": "LEADER_MINOR_CIV_CAHOKIA",
+      "name": "Cahokia"
+    },
+    {
+      "id": "LEADER_MINOR_CIV_LA_VENTA",
+      "name": "La Venta"
+    },
+    {
+      "id": "LEADER_MINOR_CIV_NAZCA",
+      "name": "Nazca"
+    },
+    {
+      "id": "LEADER_MINOR_CIV_RAPA_NUI",
+      "name": "Rapa Nui"
+    },
+    {
+      "id": "LEADER_PACHACUTI",
+      "name": "Pachacuti"
+    },
+    {
+      "id": "LEADER_SULEIMAN",
+      "name": "Suleiman"
+    },
+    {
+      "id": "LEADER_T_ROOSEVELT",
+      "name": "Teddy Roosevelt"
+    },
+    {
+      "id": "LEADER_VICTORIA",
+      "name": "Victoria"
+    }
+  ]
+}
