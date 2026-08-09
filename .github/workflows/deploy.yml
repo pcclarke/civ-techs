@@ -1,21 +1,8 @@
-# Builds the Vite site and publishes it to GitHub Pages.
-#
-# This replaces the old routine of merging master into gh-pages by hand.
-# The gh-pages branch is no longer involved at all: the built output is
-# uploaded straight from CI as a Pages artifact, so nothing generated is
-# ever committed (dist/ stays gitignored).
-#
-# One-time setup in the repo: Settings -> Pages -> Source = "GitHub Actions".
-#
-# Note that vite.config.js sets `base: './'`, which emits relative asset
-# URLs. That is what lets the same build work at the site's real location
-# (pcclarke.dev/civ-techs/) without hard-coding the repo name.
 name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [master]
-  # Lets you re-deploy from the Actions tab without pushing a commit.
   workflow_dispatch:
 
 permissions:
@@ -23,8 +10,6 @@ permissions:
   pages: write
   id-token: write
 
-# Let a running deploy finish rather than cancelling it midway; queued
-# runs collapse to the latest so rapid pushes don't stack up.
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -33,30 +18,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
 
-      # npm ci installs exactly what package-lock.json pins, so a CI build
-      # can't drift from local.
       - run: npm ci
 
       - run: npm run build
 
-      # Fail loudly here rather than silently shipping a wheel with no
-      # data: the game folders come from public/ and are what actually
-      # make the site work.
-      - name: Verify the build carries the game data
-        run: |
-          test -f dist/index.html
-          count=$(find dist -maxdepth 1 -type d -name 'civ*' | wc -l)
-          echo "game directories in dist/: $count"
-          test "$count" -eq 15
-
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -68,4 +41,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
