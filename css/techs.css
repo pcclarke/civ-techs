@@ -98,190 +98,39 @@ p {
 }
 
 /* ------------------------------------------------------------------ */
-/* Per-game theme tokens. src/main.js stamps data-game="civN" on <body>
- * whenever the active game changes; each block below restyles the
- * selection panel, pills, and tooltip in that game's own UI idiom. The
- * :root defaults double as a neutral fallback and document what each
- * token controls. Values were picked in the theme mockup session:
- * fonts fall back gracefully where a system face (Copperplate, Tahoma)
- * isn't installed. */
+/* UI tokens for the site chrome — the selection panel, its tabs and
+ * pills, and the tooltip. One consistent style across every game; these
+ * exist so the chrome's surfaces, ink, accent, corners, and type are
+ * defined once rather than repeated across the component rules below. */
 :root {
   /* Selection panel (and compact toolbar) surface + text. */
-  --game-panel-bg: #fff;
-  --game-ink: #1f1f1f;
+  --ui-panel-bg: #fff;
+  --ui-ink: #1f1f1f;
   /* Secondary text: tooltip kind line, unlock group headings. Chosen
    * per game to stay readable on that game's tooltip background. */
-  --game-ink-muted: #555;
+  --ui-ink-muted: #555;
   /* Interactive highlight: active pill fill, checked tab ring, hover
-   * borders, compact toolbar rule. --game-on-accent is text on top. */
-  --game-accent: #1f1f1f;
-  --game-on-accent: #fff;
+   * borders, compact toolbar rule. --ui-on-accent is text on top. */
+  --ui-accent: #1f1f1f;
+  --ui-on-accent: #fff;
   /* Resting tabs and pills. */
-  --game-control-bg: #fff;
-  --game-control-ink: #1f1f1f;
-  --game-control-border: 1px solid #bcbec0;
+  --ui-control-bg: #fff;
+  --ui-control-ink: #1f1f1f;
+  --ui-control-border: 1px solid #bcbec0;
   /* Corner language: 0 for the hard-edged retro/deco games, round for
    * the friendly ones. Pills get their own radius so a theme can have
    * round tabs but squared pills (or vice versa). */
-  --game-radius: 8px;
-  --game-pill-radius: 999px;
+  --ui-radius: 8px;
+  --ui-pill-radius: 999px;
   /* Display face (tab captions, row labels, tooltip title) and body
    * face (pill text, tooltip body). */
-  --game-font-display: "Goudy Trajan Regular";
-  --game-font-body: "helvetica neue", Helvetica, Geneva, Tahoma, Arial, sans-serif;
+  --ui-font-display: "Goudy Trajan Regular";
+  --ui-font-body: "helvetica neue", Helvetica, Geneva, Tahoma, Arial, sans-serif;
   /* Tooltip surface. Kept separate from the panel so e.g. Civ 2 can
    * pair gray dialogs with a parchment Civilopedia page. */
-  --game-tip-bg: #fff;
-  --game-tip-ink: #000;
-  --game-tip-border: 1px solid #000;
-}
-
-/* Civ 1 — EGA menus: solid blue, cyan highlights, hard pixel edges,
- * monospace type; tooltip as a DOS-gray dialog. */
-body[data-game="civ1"] {
-  --game-panel-bg: #0000aa;
-  --game-ink: #ffffff;
-  --game-ink-muted: #444444;
-  --game-accent: #55ffff;
-  --game-on-accent: #0000aa;
-  --game-control-bg: #000066;
-  --game-control-ink: #ffffff;
-  --game-control-border: 2px solid #ffffff;
-  --game-radius: 0px;
-  --game-pill-radius: 0px;
-  --game-font-display: "Courier New", monospace;
-  --game-font-body: "Courier New", monospace;
-  --game-tip-bg: #c0c0c0;
-  --game-tip-ink: #000000;
-  --game-tip-border: 2px solid #ffffff;
-}
-
-/* Civ 2 — Win95 chrome: beveled gray dialogs, navy accents, parchment
- * Civilopedia tooltip. */
-body[data-game="civ2"] {
-  --game-panel-bg: #c0c0c0;
-  --game-ink: #000000;
-  --game-ink-muted: #5a4a33;
-  --game-accent: #000080;
-  --game-on-accent: #ffffff;
-  --game-control-bg: #d4d0c8;
-  --game-control-ink: #000000;
-  --game-control-border: 2px outset #ffffff;
-  --game-radius: 0px;
-  --game-pill-radius: 0px;
-  --game-font-display: Tahoma, Verdana, sans-serif;
-  --game-font-body: Tahoma, Verdana, sans-serif;
-  --game-tip-bg: #fff8dc;
-  --game-tip-ink: #3b2f1e;
-  --game-tip-border: 1px solid #808080;
-}
-
-/* Civ 3 — parchment and leather: tan papers, umber ink, serif headers. */
-body[data-game="civ3"] {
-  --game-panel-bg: #e8d9b0;
-  --game-ink: #4a3520;
-  --game-ink-muted: #7a6446;
-  --game-accent: #8b5e2a;
-  --game-on-accent: #f3e8c8;
-  --game-control-bg: #d9c48e;
-  --game-control-ink: #4a3520;
-  --game-control-border: 1px solid #8b5e2a;
-  --game-radius: 6px;
-  --game-pill-radius: 999px;
-  --game-font-display: Georgia, serif;
-  --game-font-body: Georgia, serif;
-  --game-tip-bg: #f3e8c8;
-  --game-tip-ink: #4a3520;
-  --game-tip-border: 1px solid #8b5e2a;
-}
-
-/* Civ 4 — deep navy and marble with gold trim. */
-body[data-game="civ4"] {
-  --game-panel-bg: #14243f;
-  --game-ink: #e8dfc8;
-  --game-ink-muted: #a89a76;
-  --game-accent: #c9a75c;
-  --game-on-accent: #14243f;
-  --game-control-bg: #1e3356;
-  --game-control-ink: #c9a75c;
-  --game-control-border: 1px solid #c9a75c;
-  --game-radius: 6px;
-  --game-pill-radius: 999px;
-  --game-font-display: Georgia, serif;
-  --game-font-body: Georgia, serif;
-  --game-tip-bg: #1b2e4e;
-  --game-tip-ink: #e8dfc8;
-  --game-tip-border: 1px solid #c9a75c;
-}
-
-/* Civ 5 — art deco: charcoal panels, gold geometric linework, teal
- * button accents. */
-body[data-game="civ5"] {
-  --game-panel-bg: #211d18;
-  --game-ink: #d9cfb8;
-  --game-ink-muted: #9a8f77;
-  --game-accent: #3fa8a0;
-  --game-on-accent: #211d18;
-  --game-control-bg: #2a2620;
-  --game-control-ink: #3fa8a0;
-  --game-control-border: 1px solid #c8a954;
-  --game-radius: 0px;
-  --game-pill-radius: 0px;
-  --game-font-display: Copperplate, "Goudy Trajan Regular", serif;
-  --game-font-body: Georgia, serif;
-  --game-tip-bg: #262119;
-  --game-tip-ink: #d9cfb8;
-  --game-tip-border: 1px solid #c8a954;
-}
-
-/* Civ 6 — bright cartographic flat design: cream, teal, round shapes. */
-body[data-game="civ6"] {
-  --game-panel-bg: #f2ebdc;
-  --game-ink: #2e3a46;
-  --game-ink-muted: #64707c;
-  --game-accent: #2c8c99;
-  --game-on-accent: #ffffff;
-  --game-control-bg: #ffffff;
-  --game-control-ink: #2c8c99;
-  --game-control-border: 2px solid #2c8c99;
-  --game-radius: 14px;
-  --game-pill-radius: 999px;
-  --game-font-display: "Segoe UI", system-ui, sans-serif;
-  --game-font-body: "Segoe UI", system-ui, sans-serif;
-  --game-tip-bg: #ffffff;
-  --game-tip-ink: #2e3a46;
-  --game-tip-border: 2px solid #2c8c99;
-}
-
-/* Civ 7's unit icons are pure-black masks with alpha — the game tints
- * them per context at runtime, and the wiki exports the black tint —
- * so on this theme's near-black tooltip they vanish. Re-tint them white
- * the way the game does. Scoped to unit icons only: every other Civ 7
- * icon category (buildings, wonders, techs, civics) is full-colour art
- * that already reads fine on dark. */
-body[data-game="civ7"] #tooltip img[src*="/units/"] {
-  filter: brightness(0) invert(1);
-}
-
-/* Civ 7 — near-black panels, gold Trajan capitals, restrained ornament.
- * Goudy Trajan is the site's own face, so this doubles as "the site
- * theme, turned up". */
-body[data-game="civ7"] {
-  --game-panel-bg: #0c0c0e;
-  --game-ink: #d8cba8;
-  --game-ink-muted: #97906f;
-  --game-accent: #b99a5b;
-  --game-on-accent: #0c0c0e;
-  --game-control-bg: #17171a;
-  --game-control-ink: #b99a5b;
-  --game-control-border: 1px solid #b99a5b;
-  --game-radius: 2px;
-  --game-pill-radius: 2px;
-  --game-font-display: "Goudy Trajan Regular", Georgia, serif;
-  --game-font-body: Georgia, serif;
-  --game-tip-bg: #101013;
-  --game-tip-ink: #d8cba8;
-  --game-tip-border: 1px solid #b99a5b;
+  --ui-tip-bg: #fff;
+  --ui-tip-ink: #000;
+  --ui-tip-border: 1px solid #000;
 }
 
 /* Game/expansion/tree selection. The game picker is a row of tabs (label
@@ -298,9 +147,9 @@ body[data-game="civ7"] {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  background: var(--game-panel-bg);
-  color: var(--game-ink);
-  border-radius: var(--game-radius);
+  background: var(--ui-panel-bg);
+  color: var(--ui-ink);
+  border-radius: var(--ui-radius);
   padding: 10px 12px;
 }
 
@@ -326,7 +175,7 @@ body[data-game="civ7"] {
   flex-direction: row;
   align-items: center;
   gap: 20px;
-  border-bottom: 1px solid var(--game-accent);
+  border-bottom: 1px solid var(--ui-accent);
   border-radius: 0;
 }
 
@@ -372,9 +221,9 @@ body[data-game="civ7"] {
   gap: 6px;
   min-width: 76px;
   padding: 12px 14px 9px;
-  border: var(--game-control-border);
-  border-radius: var(--game-radius);
-  background: var(--game-control-bg);
+  border: var(--ui-control-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-control-bg);
   cursor: pointer;
 }
 
@@ -385,9 +234,9 @@ body[data-game="civ7"] {
 }
 
 .game-tab span {
-  font-family: var(--game-font-display);
+  font-family: var(--ui-font-display);
   font-size: 13px;
-  color: var(--game-control-ink);
+  color: var(--ui-control-ink);
 }
 
 /* The radio still drives selection (keyboard, JS bindings) but the label
@@ -400,16 +249,16 @@ body[data-game="civ7"] {
 }
 
 .game-tab:hover {
-  border-color: var(--game-accent);
+  border-color: var(--ui-accent);
 }
 
 .game-tab:has(input:checked) {
-  border-color: var(--game-accent);
-  box-shadow: inset 0 0 0 1px var(--game-accent);
+  border-color: var(--ui-accent);
+  box-shadow: inset 0 0 0 1px var(--ui-accent);
 }
 
 .game-tab:has(input:focus-visible) {
-  outline: 2px solid var(--game-accent);
+  outline: 2px solid var(--ui-accent);
   outline-offset: 2px;
 }
 
@@ -420,10 +269,10 @@ body[data-game="civ7"] {
 }
 
 .pill-row-label {
-  font-family: var(--game-font-display);
+  font-family: var(--ui-font-display);
   font-size: 13px;
   letter-spacing: 0.05em;
-  color: var(--game-ink);
+  color: var(--ui-ink);
 }
 
 .pill-group {
@@ -434,23 +283,23 @@ body[data-game="civ7"] {
 
 .pill {
   padding: 5px 16px;
-  border: var(--game-control-border);
-  border-radius: var(--game-pill-radius);
-  background: var(--game-control-bg);
-  color: var(--game-control-ink);
-  font-family: var(--game-font-body);
+  border: var(--ui-control-border);
+  border-radius: var(--ui-pill-radius);
+  background: var(--ui-control-bg);
+  color: var(--ui-control-ink);
+  font-family: var(--ui-font-body);
   font-size: 13px;
   cursor: pointer;
 }
 
 .pill:hover {
-  border-color: var(--game-accent);
+  border-color: var(--ui-accent);
 }
 
 .pill.active {
-  background: var(--game-accent);
-  border-color: var(--game-accent);
-  color: var(--game-on-accent);
+  background: var(--ui-accent);
+  border-color: var(--ui-accent);
+  color: var(--ui-on-accent);
 }
 
 .tech-image,
@@ -536,11 +385,11 @@ body[data-game="civ7"] {
    * stealing their hover). */
   position: fixed;
   pointer-events: none;
-  border: var(--game-tip-border);
-  border-radius: var(--game-radius);
-  background-color: var(--game-tip-bg);
-  color: var(--game-tip-ink);
-  font-family: var(--game-font-body);
+  border: var(--ui-tip-border);
+  border-radius: var(--ui-radius);
+  background-color: var(--ui-tip-bg);
+  color: var(--ui-tip-ink);
+  font-family: var(--ui-font-body);
   width: 400px;
   height: auto;
   padding: 5px;
@@ -597,7 +446,7 @@ body[data-game="civ7"] {
 
 #tipName {
   float: left;
-  font-family: var(--game-font-display);
+  font-family: var(--ui-font-display);
   font-size: 20px;
   margin: 0;
   padding: 0;
@@ -642,7 +491,7 @@ body[data-game="civ7"] {
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--game-ink-muted);
+  color: var(--ui-ink-muted);
   margin: 0 0 2px;
 }
 
@@ -700,7 +549,7 @@ body[data-game="civ7"] {
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--game-ink-muted);
+  color: var(--ui-ink-muted);
 }
 
 .tipUnique {
@@ -718,7 +567,7 @@ body[data-game="civ7"] {
 }
 
 .tipUniqueCiv {
-  color: var(--game-ink-muted);
+  color: var(--ui-ink-muted);
   font-size: 12px;
 }
 

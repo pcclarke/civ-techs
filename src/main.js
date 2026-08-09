@@ -30,13 +30,6 @@ Object.defineProperty(window.app, 'selected', {
 
 window.app.svg = svgInit();
 
-// Per-game theming: css/techs.css defines a block of --game-* custom
-// properties for each body[data-game="civN"], and the selection panel,
-// pills, and tooltip all read those tokens. Expansions share their base
-// game's theme, so this tracks gameInfo.id (civ4), not window.app.game
-// (which becomes e.g. civ4bts when an expansion is picked).
-document.body.dataset.game = gameInfo.id;
-
 // Releasing a pin: clicking empty wheel space (node/arc clicks stop
 // propagation before reaching the SVG) or the tooltip's close button.
 // Both clear the highlight state entirely; hover takes over again.
@@ -60,7 +53,6 @@ const selectTree = select("#select-tree");
 selectAll("input[name='game']").on("change", (e) => {
     gameInfo = GAMES.find(g => g.id == e.target.value);
     window.app.game = gameInfo.id;
-    document.body.dataset.game = gameInfo.id;
     // Reset tree to the game's first tree (or the legacy single-tree default).
     window.app.tree = (gameInfo.trees && gameInfo.trees[0])
         || { id: "tech", folder: "technologies", dataKey: "technologies" };
