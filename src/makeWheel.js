@@ -51,6 +51,7 @@ export async function renderWheel() {
         labelRadius,
         techImgRadius,
         eraLabelRadius,
+        eraBackgroundRadius,
         eraRanges,
         arcSpace
     } = wheelData;
@@ -66,7 +67,7 @@ export async function renderWheel() {
   // between the centre image and the icons. For games without era data,
   // eraRanges is empty and both selections exit-clear, leaving no era
   // visuals.
-  drawEraBackgrounds(svg.eraBackgrounds, eraRanges, eraColor, labelRadius);
+  drawEraBackgrounds(svg.eraBackgrounds, eraRanges, eraColor, eraBackgroundRadius);
   // Era names fade alongside the unrelated techs while a tech is hovered,
   // so the highlighted prerequisite chain stands out against a quiet wheel.
   drawEraLabels(svg.eraLabels, eraRanges, eraColor, eraLabelRadius)

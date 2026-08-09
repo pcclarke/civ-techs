@@ -103,7 +103,9 @@ function maxLabelRadius(allTechs, widths, lineHeight, maxExtent) {
  * in that interior space (see drawEraLabels), so they claim no outer-edge
  * real estate from the tech labels.
  *
- * Returns { labelRadius, techImgRadius, eraLabelRadius }.
+ * `eraBackgroundRadius` is where the era wedges stop — see below.
+ *
+ * Returns { labelRadius, techImgRadius, eraLabelRadius, eraBackgroundRadius }.
  */
 export function computeWheelLayout(labelGroup, allTechs) {
     if (!allTechs.length) {
@@ -111,6 +113,7 @@ export function computeWheelLayout(labelGroup, allTechs) {
             labelRadius: TECH_IMG_RADIUS,
             techImgRadius: TECH_IMG_RADIUS,
             eraLabelRadius: TECH_IMG_RADIUS,
+            eraBackgroundRadius: TECH_IMG_RADIUS,
         };
     }
 
@@ -146,5 +149,12 @@ export function computeWheelLayout(labelGroup, allTechs) {
     const eraLabelRadius =
         (GAME_IMG_WIDTH / 2 + techImgRadius - TECH_IMG_WIDTH / 2) / 2;
 
-    return { labelRadius, techImgRadius, eraLabelRadius };
+    // Era wedges stop midway between the icon's outer edge and where the
+    // label text starts, so the tint clears the icons without running up
+    // against the labels. That gap is LABEL_PADDING wide, so the midpoint
+    // is half of it short of labelRadius.
+    const eraBackgroundRadius =
+        (techImgRadius + TECH_IMG_WIDTH / 2 + labelRadius) / 2;
+
+    return { labelRadius, techImgRadius, eraLabelRadius, eraBackgroundRadius };
 }

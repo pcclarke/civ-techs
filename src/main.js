@@ -10,7 +10,7 @@ let gameInfo = DEFAULT_GAME;
 
 window.app = {
   game: gameInfo.id,
-  // Tree picker (Civ 6 only). Always populated so downstream code can read
+  // Tree picker (Civ 6 and 7). Always populated so downstream code can read
   // it unconditionally; defaults match the legacy single-tree-per-game shape.
   tree: (gameInfo.trees && gameInfo.trees[0]) || { id: "tech", folder: "technologies", dataKey: "technologies" },
   _selected: null,

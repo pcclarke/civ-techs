@@ -45,7 +45,8 @@ function eraBackgroundArc(outerRadius) {
  * @param element       d3 selection for the era-backgrounds <g>
  * @param eraRanges     array from computeEraRanges
  * @param color         d3 ordinal scale, called with the era index
- * @param outerRadius   radius the wedge extends to (typically labelRadius)
+ * @param outerRadius   radius the wedge extends to (eraBackgroundRadius,
+ *                      which stops short of the tech labels)
  */
 export function drawEraBackgrounds(element, eraRanges, color, outerRadius) {
     const wedge = eraBackgroundArc(outerRadius);

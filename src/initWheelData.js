@@ -95,7 +95,7 @@ export async function initWheelData() {
   // because widths depend on the live font + the specific tech names.
   // Era labels render in the interior (between the centre image and the
   // icons), so they don't influence the tech label layout.
-  const { labelRadius, techImgRadius, eraLabelRadius } =
+  const { labelRadius, techImgRadius, eraLabelRadius, eraBackgroundRadius } =
       computeWheelLayout(window.app.svg.techLabels, allTechs);
 
   // Space the arc rings to fill the gap between ARC_BASE and the icon ring,
@@ -132,6 +132,7 @@ export async function initWheelData() {
       labelRadius,
       techImgRadius,
       eraLabelRadius,
+      eraBackgroundRadius,
       eraRanges,
       arcSpace,
       unlocksByTech,

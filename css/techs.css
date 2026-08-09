@@ -68,11 +68,14 @@ p {
 }
 
 #intro {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
   border-bottom: 1px solid #bcbec0;
   margin: 50px 0;
+
+  @media(width >= 720px) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+  }
 }
 
 .col {
@@ -580,7 +583,7 @@ p {
  * centre game image and the icon ring. Fill colours come from JS so the
  * styling here only handles typography and legibility. */
 .era-background {
-  opacity: 0.12;
+  opacity: 0.2;
   pointer-events: none;
 }
 
