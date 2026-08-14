@@ -11,7 +11,7 @@ import { computeWheelLayout } from "./computeWheelLayout";
 import { computeEraRanges, getEraOrdering } from "./eraData";
 import { depthSortTechnologies } from "./depthSortTechnologies";
 import createUnlocks from "./createUnlocks";
-import { renderWheel } from "./makeWheel";
+import { renderActiveView } from "./renderView";
 import { setupSpokes } from "./setupSpokes";
 import { hideTooltip } from "./tooltip";
 
@@ -139,5 +139,5 @@ export async function initWheelData() {
       obsoletesByTech,
   };
 
-  renderWheel();
+  renderActiveView();
 }

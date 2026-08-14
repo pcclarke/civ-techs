@@ -2,7 +2,7 @@ import { select, selectAll } from "d3-selection";
 
 import { DEFAULT_GAME, GAMES } from "./constants";
 import { initWheelData } from "./initWheelData";
-import { renderWheel } from "./makeWheel";
+import { renderActiveView } from "./renderView";
 import svgInit from "./svgInit";
 import { hideTooltip } from "./tooltip";
 
@@ -24,7 +24,7 @@ Object.defineProperty(window.app, 'selected', {
   get() { return window.app._selected; },
   set(value) {
     window.app._selected = value;
-    if (window.app.wheelData) renderWheel();
+    if (window.app.wheelData) renderActiveView();
   }
 });
 

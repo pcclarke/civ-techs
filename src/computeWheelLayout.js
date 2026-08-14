@@ -1,5 +1,8 @@
 import { calculatePointOnWheel } from "./helpers";
 import {
+    ARC_BASE,
+    ARC_GAP_FROM_ICONS,
+    ARC_SPACE_MAX,
     EDGE_PADDING,
     GAME_IMG_WIDTH,
     LABEL_PADDING,
@@ -157,4 +160,45 @@ export function computeWheelLayout(labelGroup, allTechs) {
         (techImgRadius + TECH_IMG_WIDTH / 2 + labelRadius) / 2;
 
     return { labelRadius, techImgRadius, eraLabelRadius, eraBackgroundRadius };
+}
+
+
+/**
+ * Recompute the wheel's radii and arc spacing from the current data and
+ * write them back onto window.app.wheelData.
+ *
+ * This has to be callable more than once per data load. The layout is
+ * derived from *measured* label widths, and getComputedTextLength()
+ * returns 0 for text inside a `display: none` subtree — so when the page
+ * loads at mobile width the wheel is hidden, every label measures as
+ * zero-width, and the radii collapse to their maximum-extent fallbacks.
+ * Widening the window would then reveal a wheel whose labels overflow
+ * the SVG. Calling this when the wheel becomes visible (see
+ * renderView.js) re-measures against a laid-out DOM and fixes it.
+ */
+export function refreshWheelLayout() {
+    const wd = window.app && window.app.wheelData;
+    if (!wd || !window.app.svg) return;
+
+    const { labelRadius, techImgRadius, eraLabelRadius, eraBackgroundRadius } =
+        computeWheelLayout(window.app.svg.techLabels, wd.allTechs);
+
+    // Space the arc rings to fill the gap between ARC_BASE and the icon
+    // ring, capped so trees with few steps don't spread absurdly wide.
+    let maxStep = 0;
+    for (const p of wd.prerequisites) {
+        if (p.step > maxStep) maxStep = p.step;
+    }
+    const iconInnerEdge = techImgRadius - TECH_IMG_WIDTH / 2;
+
+    wd.labelRadius = labelRadius;
+    wd.techImgRadius = techImgRadius;
+    wd.eraLabelRadius = eraLabelRadius;
+    wd.eraBackgroundRadius = eraBackgroundRadius;
+    wd.arcSpace = maxStep > 0
+        ? Math.min(
+            ARC_SPACE_MAX,
+            (iconInnerEdge - ARC_BASE - ARC_GAP_FROM_ICONS) / maxStep
+          )
+        : ARC_SPACE_MAX;
 }

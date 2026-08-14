@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/techs.css">
         <title>Civilization Technologies Wheel</title>
     </head>
@@ -105,7 +106,11 @@
             </div>
             </div>
 
+            <!-- Two renderings of the same data: the wheel on wide screens,
+                 the table on narrow ones. CSS decides which is visible and
+                 src/renderView.js only renders the visible one. -->
             <div id="chart"></div>
+            <div id="table"></div>
 
             <div id="tooltip" class="hidden">
                 <div id="tipHead">

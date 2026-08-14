@@ -396,6 +396,10 @@ p {
   width: 400px;
   height: auto;
   padding: 5px;
+  /* Border-box so a width set here (or computed in tooltip.js for the
+   * mobile docked panel) is the real on-screen width — with content-box
+   * the padding and border pushed the panel past a phone's viewport. */
+  box-sizing: border-box;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 10;
 }
@@ -602,4 +606,182 @@ p {
   stroke-width: 4px;
   stroke-linejoin: round;
   paint-order: stroke;
+}
+
+/* ------------------------------------------------------------------ */
+/* Mobile table view (src/makeTable.js) — the wheel unrolled.
+ *
+ * The wheel is a fixed 1200-unit viewBox scaled to the narrow axis, so on
+ * a phone its labels render around 4.8px and no font size can fix that:
+ * the label count is set by the data, not the viewport. This view drops
+ * the scaling entirely — every size below is real CSS pixels — and trades
+ * the circle's "all at once" for vertical scrolling.
+ *
+ * Rows are absolutely positioned on an exact ROW_H pitch so the SVG lane
+ * overlay lines up by construction; see the note in makeTable.js. */
+#table {
+  display: none;
+  position: relative;
+  margin: 0 auto 32px;
+}
+
+.tt-lanes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Above the rows. Rows come later in the DOM and the era-tinted ones
+   * carry an opaque background across the full width, which would other-
+   * wise paint over the lanes in alternating bands. The lanes only span
+   * the gutter (rows pad their content past it) so nothing covers text,
+   * and pointer-events:none keeps taps reaching the rows underneath. */
+  z-index: 1;
+  pointer-events: none;
+}
+
+.tt-arc,
+.tt-arc-sel {
+  stroke-width: 2px;
+}
+
+/* The wheel's spokes, laid flat: a hairline from an advance's innermost
+ * lane across to its icon. Deliberately faint — it's a connector, not
+ * content, and there is one on every row. */
+.tt-spoke {
+  stroke: #d5d7d9;
+  stroke-width: 1px;
+}
+
+/* The selected advance's own spokes, darkened so the highlighted chain
+ * reads over the dimmed rest. */
+.tt-spoke-sel {
+  stroke: #9aa0a6;
+}
+
+.tt-pin {
+  stroke-width: 2px;
+}
+
+.tt-opt {
+  fill: #fff;
+}
+
+.tt-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* Clears the lane overlay, and then some: makeTable sets
+   * --tt-content-left so the widest name lands flush against the right
+   * edge, which pulls the whole block right instead of leaving a ragged
+   * gap after every short name. Falls back to the bare lane gutter
+   * before that measurement has run. */
+  padding-left: var(--tt-content-left, var(--lane-gutter, 0));
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: opacity 0.5s ease;
+}
+
+/* Alternating tint marks era boundaries without adding a header block,
+ * which would break the fixed row pitch the lane overlay depends on. */
+.tt-row[data-era="1"] {
+  background: #f6f4ef;
+}
+
+.tt-row.pinned {
+  outline: 2px solid #1f1f1f;
+  outline-offset: -2px;
+}
+
+.tt-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.tt-name {
+  /* flex:1 + min-width:0 is what actually lets a long name ellipsize
+   * inside a flex row rather than overflowing it. */
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Era captions sit in their own layer, pinned to the top edge of the
+ * era's first row, so they read as section rules and never compete with
+ * an advance name for width. */
+.tt-era {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #bcbec0;
+  padding-right: 2px;
+  text-align: right;
+  pointer-events: none;
+  font-family: "Goudy Trajan Regular";
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+}
+
+/* The swap. Keep this breakpoint in sync with TABLE_BREAKPOINT in
+ * src/renderView.js, which decides which view actually renders. */
+@media (max-width: 699px) {
+  #chart { display: none; }
+  #table { display: block; }
+
+  /* The compact toolbar was designed for a wide screen: one row holding
+   * the emblem tabs plus every pill row. At 375px the tabs alone take
+   * ~276px, leaving ~73px for the pills — enough to wrap "Beyond the
+   * Sword" onto three lines and push the bar to 148px tall, ~18% of the
+   * viewport. Stack the rows instead, and let each pill row scroll
+   * sideways rather than wrap. */
+  #select-options.compact {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 6px 10px;
+  }
+
+  /* Spread the emblems across the full width so the row reads as a
+   * deliberate strip rather than a cluster hugging the left edge. */
+  #select-options.compact #game-tabs {
+    justify-content: space-between;
+    gap: 2px;
+  }
+
+  #select-options.compact .game-tab img {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* One line per pill row, scrolled horizontally. Wrapping is what made
+   * the bar tall; scrolling keeps its height fixed no matter how many
+   * expansions a game has. */
+  #select-options.compact .pill-row {
+    gap: 8px;
+    overflow-x: auto;
+    /* The row is only ~26px tall, so a persistent scrollbar would eat a
+     * meaningful share of it. */
+    scrollbar-width: none;
+  }
+
+  #select-options.compact .pill-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  #select-options.compact .pill-group {
+    flex-wrap: nowrap;
+  }
+
+  #select-options.compact .pill {
+    white-space: nowrap;
+  }
 }

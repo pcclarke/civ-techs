@@ -374,6 +374,18 @@ function positionTooltipAt(tech, count, labelRadius) {
     if (!tipBox || !svgEl) return;
 
     const svgRect = svgEl.getBoundingClientRect();
+
+    // In the mobile table view the wheel is display:none, so its rect is
+    // all zeroes and the antipodal maths below would collapse the tooltip
+    // to the top-left corner at a width wider than the screen. There's no
+    // wheel to avoid overlapping in that view, so dock it to the bottom
+    // of the viewport instead — the tapped row stays visible above it.
+    if (svgRect.width === 0) {
+        positionTooltipAsSheet(tipBox);
+        return;
+    }
+    resetSheetStyles(tipBox);
+
     const scale = svgRect.width / TOTAL_WIDTH;
 
     // Hovered node's offset from the wheel centre, in viewBox coords.
@@ -408,4 +420,35 @@ function positionTooltipAt(tech, count, labelRadius) {
 
 function clamp(v, lo, hi) {
     return Math.max(lo, Math.min(hi, v));
+}
+
+
+/** Margin between the docked panel and the viewport edges. */
+const SHEET_MARGIN = 8;
+
+/**
+ * Mobile placement: a panel docked to the bottom of the viewport, sized
+ * to the screen rather than the CSS default 400px (which overflows a
+ * 375px phone). Height is capped at half the viewport so the table stays
+ * partly visible, with the overflow scrollable — the pinned tooltip
+ * already accepts pointer events, so that scroll works.
+ */
+function positionTooltipAsSheet(tipBox) {
+    const width = Math.min(420, window.innerWidth - SHEET_MARGIN * 2);
+    tipBox.style.width = `${width}px`;
+    tipBox.style.maxHeight = `${Math.round(window.innerHeight * 0.5)}px`;
+    tipBox.style.overflowY = "auto";
+    tipBox.style.left = `${SHEET_MARGIN}px`;
+    // Read the height only after width/max-height are applied, or it
+    // reflects the old layout.
+    const h = tipBox.offsetHeight;
+    tipBox.style.top = `${window.innerHeight - h - SHEET_MARGIN}px`;
+}
+
+/** Undo the sheet sizing so the wheel view gets its fixed-width box back
+ *  (the same element serves both views). */
+function resetSheetStyles(tipBox) {
+    tipBox.style.width = "";
+    tipBox.style.maxHeight = "";
+    tipBox.style.overflowY = "";
 }

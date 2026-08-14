@@ -15,7 +15,9 @@ import {
 import { drawEraBackgrounds, drawEraLabels } from "./drawEras";
 import { setupHighlights } from "./setupHighlights";
 
-const color = scaleOrdinal(schemeCategory10);
+// Exported so the mobile table view (makeTable.js) colours a given arc
+// step identically — the two views are the same data drawn differently.
+export const color = scaleOrdinal(schemeCategory10);
 // Era colours are a hand-picked muted "antique" palette — desaturated,
 // mid-dark tones that read clearly as 22px serif text and tint softly as
 // wedge backgrounds, while staying visually distinct from the vivid
