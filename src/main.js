@@ -2,6 +2,7 @@ import { select, selectAll } from "d3-selection";
 
 import { DEFAULT_GAME, GAMES } from "./constants";
 import { initWheelData } from "./initWheelData";
+import { updateEraIndicator } from "./makeTable";
 import { renderActiveView } from "./renderView";
 import svgInit from "./svgInit";
 import { hideTooltip } from "./tooltip";
@@ -149,6 +150,11 @@ if (selectWrap && selectOptions) {
         if (!stuck) {
             selectWrap.style.height = "";
         }
+        // The table's era indicator parks against the bar's bottom edge,
+        // which just moved. It has its own scroll listener, but this one
+        // is what changed the geometry — update from here so the two never
+        // disagree for a frame.
+        updateEraIndicator();
     };
     window.addEventListener("scroll", updateCompact, { passive: true });
     window.addEventListener("resize", updateCompact);

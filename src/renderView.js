@@ -1,5 +1,5 @@
 import { refreshWheelLayout } from "./computeWheelLayout";
-import { renderTable } from "./makeTable";
+import { renderTable, updateEraIndicator } from "./makeTable";
 import { renderWheel } from "./makeWheel";
 
 /**
@@ -44,6 +44,9 @@ export function renderActiveView() {
     // the table was showing is garbage. Re-measure on the way in.
     if (switched) refreshWheelLayout();
     renderWheel();
+    // The era indicator belongs to the table; it's position:fixed, so
+    // nothing else takes it off screen when the wheel takes over.
+    updateEraIndicator();
 }
 
 // Crossing the breakpoint (rotating a phone, resizing a window) has to

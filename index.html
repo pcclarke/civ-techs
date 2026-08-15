@@ -111,6 +111,12 @@
                  src/renderView.js only renders the visible one. -->
             <div id="chart"></div>
             <div id="table"></div>
+            <!-- Names the era you are currently scrolled into. A label at
+                 the era boundary answers "where does it change?", but the
+                 question while scrolling a long table is "which era am I
+                 in?" — and a boundary label scrolls away just as you enter
+                 the era it names. Positioned by src/makeTable.js. -->
+            <div id="era-indicator" class="hidden"></div>
 
             <div id="tooltip" class="hidden">
                 <div id="tipHead">

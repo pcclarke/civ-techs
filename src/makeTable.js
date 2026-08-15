@@ -129,6 +129,86 @@ function contentLeft(root, allTechs, laneCount) {
 
 
 /**
+ * Keep #era-indicator naming the era currently under the top of the
+ * viewport, and parked directly beneath the pinned toolbar.
+ *
+ * Reads the toolbar's live rect rather than a constant because its height
+ * changes with the active game — Civ 6 carries both an expansion and a
+ * tree row, Civ 7 only a tree row — and again between its expanded and
+ * compact states.
+ *
+ * Hidden whenever it has nothing to say: on the wheel view, on a game
+ * with no era data (Civ 1), or while the table isn't the thing under the
+ * toolbar.
+ */
+export function updateEraIndicator() {
+    const el = document.querySelector("#era-indicator");
+    const table = document.querySelector("#table");
+    if (!el || !table) return;
+
+    const wd = window.app && window.app.wheelData;
+    const eraRanges = wd ? wd.eraRanges : [];
+    const hide = () => el.classList.add("hidden");
+
+    if (!eraRanges.length || getComputedStyle(table).display === "none") {
+        hide();
+        return;
+    }
+
+    const bar = document.querySelector("#select-options");
+    const barRect = bar ? bar.getBoundingClientRect() : null;
+    // Only the pinned bar overlays the table; expanded, it's in normal
+    // flow and the table starts below it.
+    const anchorY = bar && bar.classList.contains("compact") && barRect
+        ? barRect.bottom
+        : 0;
+
+    const rect = table.getBoundingClientRect();
+    // Above the table, or scrolled past its end: nothing to label.
+    if (rect.top > anchorY || rect.bottom < anchorY) {
+        hide();
+        return;
+    }
+
+    // The table's last screenful of rows can never reach the anchor line —
+    // the document runs out of scroll first — so read literally, the
+    // indicator would still say "Industrial" while you're looking at the
+    // Future era. Over the final stretch of scrolling, slide the read-off
+    // point down by exactly as much as the scroll can't cover, so the last
+    // row is named at the bottom of the page.
+    const scrollLeft = Math.max(
+        0,
+        document.documentElement.scrollHeight - window.innerHeight - window.scrollY
+    );
+    const unreachable = rect.bottom - ROW_H - anchorY - scrollLeft;
+    const readY = anchorY + Math.max(0, unreachable - scrollLeft);
+
+    const row = Math.min(
+        wd.allTechs.length - 1,
+        Math.max(0, Math.floor((readY - rect.top) / ROW_H))
+    );
+    const era = eraRanges.find((r) => row >= r.first && row <= r.last);
+    if (!era) {
+        hide();
+        return;
+    }
+
+    el.style.top = `${anchorY}px`;
+    el.textContent = eraDisplayName(era.era);
+    el.classList.remove("hidden");
+}
+
+/** Bound once; the handler re-reads live state on every call. */
+let eraIndicatorBound = false;
+function bindEraIndicator() {
+    if (eraIndicatorBound) return;
+    eraIndicatorBound = true;
+    window.addEventListener("scroll", updateEraIndicator, { passive: true });
+    window.addEventListener("resize", updateEraIndicator);
+}
+
+
+/**
  * Draw one row per advance: icon plus name.
  *
  * HTML rather than SVG text so names get native ellipsis, selection and
@@ -353,16 +433,18 @@ export function renderTable() {
         .attr("r", mark / 2)
         .attr("stroke", (d) => color(d.step));
 
-    // Era captions ride in their own absolutely-positioned layer rather
-    // than inside the row. In the row they competed with the advance name
-    // for width and truncated it ("Iron Worki…"), and they'd have been the
-    // one row per era where the name is hardest to read.
+    // Era boundaries are rules only — see #era-indicator, which names the
+    // era you're actually in. They ride in their own absolutely-positioned
+    // layer rather than inside the row, so they span the full width without
+    // taking any of it from the advance name.
     root.selectAll("div.tt-era")
         .data(eraRanges, (d) => d.era)
         .join("div")
         .attr("class", "tt-era")
-        .style("top", (d) => `${d.first * ROW_H}px`)
-        .text((d) => eraDisplayName(d.era));
+        .style("top", (d) => `${d.first * ROW_H}px`);
 
     root.style("height", `${bodyH}px`);
+
+    bindEraIndicator();
+    updateEraIndicator();
 }
