@@ -387,14 +387,27 @@ export function renderTable() {
     const laneX = (step) => step * laneW + laneW / 2;
     const rowY = (pos) => pos * ROW_H + ROW_H / 2;
 
+    // An advance with no prerequisites of its own still starts an arc
+    // (a tt-arc vertical) when something else depends on it; look those
+    // up so a root advance's spoke can start at that arc's lane instead
+    // of the SVG edge.
+    const ownArcStepById = new Map(prerequisites.map((d) => [d.id, d.step]));
+
     // Spokes — the wheel's radial lines, laid flat. Each runs from the
     // innermost lane that touches its advance out to the icon, which is
     // what lets the eye follow a row back to the lines belonging to it;
     // without them the names and the graph read as two separate columns.
     // setupSpokes marks an advance with no prerequisites using a negative
-    // sentinel step; the wheel starts those at the centre, so here they
-    // start at the left edge.
-    const spokeX1 = (d) => (d.step >= 0 ? laneX(d.step) : 0);
+    // sentinel step; the wheel starts those at the centre, which has no
+    // mobile equivalent, so here they start at their own arc's lane
+    // instead — same as every other spoke, meeting a vertical line rather
+    // than dangling from the edge. A handful of advances are truly
+    // isolated (no arc in either direction) and still fall back to 0.
+    const spokeX1 = (d) => {
+        if (d.step >= 0) return laneX(d.step);
+        const ownStep = ownArcStepById.get(d.id);
+        return ownStep !== undefined ? laneX(ownStep) : 0;
+    };
     const drawSpokeLines = (sel, data) => sel.selectAll("line")
         .data(data, (d) => d.id)
         .join("line")
