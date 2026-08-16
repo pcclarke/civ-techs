@@ -1,22 +1,26 @@
 import { select } from "d3-selection";
 
-import { TOTAL_WIDTH } from "./constants";
 import { eraDisplayName } from "./eraData";
 import { calculatePointOnWheel } from "./helpers";
+import getHighlightedTechs from "./createSelectedUnlocks";
 
 /**
  * Hover tooltip for tech / civic nodes. Reuses the markup originally
  * authored for the now-removed click-modal (#tooltip and friends in
  * index.html); CSS for position is overridden here per call.
  *
- * Positioning is *antipodal*: the tooltip's centre is placed across the
- * wheel from the hovered node, in the labels-area band. Rationale lives in
- * the design discussion that motivated this module — TL;DR is "anywhere
- * the selected arcs are likely to be is wrong, and arcs concentrate near
- * the hovered node, so far away is right." Result is then clamped inside
- * the SVG bounds so it never escapes off-screen. (An experiment docking
- * the tooltip in the wheel's hub was rejected: it sat on top of the inner
- * arcs, including the selection's own highlight chain.)
+ * Positioning docks the tooltip to one of the SVG's four corners. The
+ * wheel is a circle inscribed in a square viewBox (see MAX_EXTENT in
+ * computeWheelLayout.js), so every corner sits outside anything the wheel
+ * ever draws. That replaces an earlier antipodal placement, which mirrored
+ * only the hovered node's own position and could still land on top of an
+ * arc running far around the rim — e.g. Iron Working in Civilization IV,
+ * whose prerequisite sits many positions away. The corner is chosen from
+ * the whole lit selection (the hovered node plus everything its arcs
+ * touch), not just the node itself — see pickCorner. (An experiment
+ * docking the tooltip in the wheel's hub was rejected for the same reason:
+ * it sat on top of the inner arcs, including the selection's own highlight
+ * chain.)
  */
 
 const SELECTORS = {
@@ -77,7 +81,7 @@ const SOURCE_ORDER = [
 
 
 /**
- * Show the tooltip for `tech`. Pulls render context (allTechs, labelRadius,
+ * Show the tooltip for `tech`. Pulls render context (allTechs, game,
  * iconFolder) off `window.app` so callers don't have to thread it through.
  */
 export function showTooltip(tech) {
@@ -86,7 +90,6 @@ export function showTooltip(tech) {
 
     const {
         allTechs,
-        labelRadius,
         unlocksByTech,
         obsoletesByTech,
         eraRanges,
@@ -109,7 +112,7 @@ export function showTooltip(tech) {
     // otherwise), and the sheet path measures its own height to pad the
     // table. Both happen in one task, so nothing paints in between.
     tipBox.classed("hidden", false);
-    positionTooltipAt(tech, allTechs.length, labelRadius);
+    positionTooltipAt(tech, allTechs);
 }
 
 /**
@@ -375,16 +378,90 @@ function joinList(items, conj) {
 
 // --------------------------- Position ---------------------------
 
+/** Gap between the tooltip and the SVG's own edge, so the box doesn't
+ *  land flush against the corner it's docked to. */
+const CORNER_MARGIN = 10;
+
 /**
- * Place the tooltip's centre at the antipode of the hovered node in screen
- * space, then clamp inside the SVG bounding box.
- *
- * The wheel renders into an SVG with a 1200×1200 viewBox; the rendered
- * size is whatever the page CSS gives it (currently `width: min(100%,
- * 95vh)`). So we work in screen pixels by reading getBoundingClientRect
- * and converting through `scale = renderedSide / TOTAL_WIDTH`.
+ * The four corners a tooltip can dock to, each as the angle of that corner
+ * from the wheel's centre (same convention as calculatePointOnWheel — 0 is
+ * +x, increasing toward +y) plus how to turn a tooltip size into a
+ * {left, top} anchored there. All four are always outside the wheel's
+ * circle (see the module doc comment), so whichever one is picked is
+ * guaranteed clear of anything drawn.
  */
-function positionTooltipAt(tech, count, labelRadius) {
+const CORNERS = [
+    { // top-left
+        angle: -3 * Math.PI / 4,
+        anchor: (r) => ({ left: r.left + CORNER_MARGIN, top: r.top + CORNER_MARGIN }),
+    },
+    { // top-right
+        angle: -Math.PI / 4,
+        anchor: (r, w) => ({ left: r.right - CORNER_MARGIN - w, top: r.top + CORNER_MARGIN }),
+    },
+    { // bottom-right
+        angle: Math.PI / 4,
+        anchor: (r, w, h) => ({ left: r.right - CORNER_MARGIN - w, top: r.bottom - CORNER_MARGIN - h }),
+    },
+    { // bottom-left
+        angle: 3 * Math.PI / 4,
+        anchor: (r, _w, h) => ({ left: r.left + CORNER_MARGIN, top: r.bottom - CORNER_MARGIN - h }),
+    },
+];
+
+/** Smallest angle between two directions, in [0, π]. */
+function angleGap(a, b) {
+    const diff = Math.abs(a - b) % (2 * Math.PI);
+    return diff > Math.PI ? 2 * Math.PI - diff : diff;
+}
+
+/**
+ * Every wheel position that's lit up for the current selection: the
+ * hovered/pinned node itself, plus everything setupHighlights would mark
+ * undimmed (its direct prerequisites and dependents — the same set the
+ * wheel draws arcs and un-fades labels for). An arc never reaches past its
+ * two ends, and both ends are always in this set, so it's everything a
+ * placement needs to steer clear of.
+ */
+function litPositions(tech, allTechs) {
+    const { highlightedIds } = getHighlightedTechs(allTechs);
+    const posById = new Map(allTechs.map((t) => [t.id, t.position]));
+    const positions = new Set([tech.position]);
+    for (const id of highlightedIds) {
+        const p = posById.get(id);
+        if (p !== undefined) positions.add(p);
+    }
+    return positions;
+}
+
+/**
+ * Pick whichever corner is farthest, in angle, from the nearest lit
+ * position — the corner the tooltip can extend inward from with the least
+ * chance of its edge crossing a highlighted spoke or label.
+ */
+function pickCorner(tech, allTechs) {
+    const count = allTechs.length;
+    const litAngles = [...litPositions(tech, allTechs)]
+        .map((pos) => calculatePointOnWheel(count, pos, 1).angle);
+
+    let best = CORNERS[0];
+    let bestGap = -Infinity;
+    for (const corner of CORNERS) {
+        const gap = Math.min(...litAngles.map((a) => angleGap(corner.angle, a)));
+        if (gap > bestGap) {
+            bestGap = gap;
+            best = corner;
+        }
+    }
+    return best;
+}
+
+/**
+ * Dock the tooltip to whichever SVG corner clears the current selection
+ * (see pickCorner), then clamp inside the SVG bounding box as a safety net
+ * for a tooltip too big for the space it was docked into.
+ */
+function positionTooltipAt(tech, allTechs) {
     const tipBox = select(SELECTORS.box).node();
     const svgEl = document.querySelector("#chart svg");
     if (!tipBox || !svgEl) return;
@@ -392,10 +469,8 @@ function positionTooltipAt(tech, count, labelRadius) {
     const svgRect = svgEl.getBoundingClientRect();
 
     // In the mobile table view the wheel is display:none, so its rect is
-    // all zeroes and the antipodal maths below would collapse the tooltip
-    // to the top-left corner at a width wider than the screen. There's no
-    // wheel to avoid overlapping in that view, so dock it to the bottom
-    // of the viewport instead — the tapped row stays visible above it.
+    // all zeroes and there's no wheel to avoid overlapping — dock to the
+    // bottom of the viewport instead, the tapped row stays visible above it.
     if (svgRect.width === 0) {
         positionTooltipAsSheet(tipBox);
         fitSheetToTable(tipBox, tech);
@@ -404,30 +479,13 @@ function positionTooltipAt(tech, count, labelRadius) {
     releaseSheetSpace();
     resetSheetStyles(tipBox);
 
-    const scale = svgRect.width / TOTAL_WIDTH;
-
-    // Hovered node's offset from the wheel centre, in viewBox coords.
-    const onLabelRing = calculatePointOnWheel(count, tech.position, labelRadius);
-
-    // Reflect through the centre to get the antipodal point, then convert
-    // back to screen coords. The wheel <g> is centred in the SVG, so the
-    // SVG's screen centre IS the wheel's screen centre.
-    const cx = svgRect.left + svgRect.width / 2;
-    const cy = svgRect.top + svgRect.height / 2;
-    const antipodeX = cx - onLabelRing.x * scale;
-    const antipodeY = cy - onLabelRing.y * scale;
-
     // Tooltip dimensions: read offset* lazily so a previously-hidden box
     // doesn't return zero. CSS sets min/max widths so this is stable.
     const tipW = tipBox.offsetWidth || 400;
     const tipH = tipBox.offsetHeight || 200;
 
-    // Anchor the tooltip's centre to the antipode, then clamp so it never
-    // escapes the SVG. Clamping is per-axis so an antipode that's near the
-    // edge slides the tooltip along that edge rather than snapping to the
-    // corner.
-    let left = antipodeX - tipW / 2;
-    let top = antipodeY - tipH / 2;
+    const corner = pickCorner(tech, allTechs);
+    let { left, top } = corner.anchor(svgRect, tipW, tipH);
     left = clamp(left, svgRect.left, svgRect.right - tipW);
     top = clamp(top, svgRect.top, svgRect.bottom - tipH);
 
