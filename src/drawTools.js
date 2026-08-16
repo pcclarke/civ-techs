@@ -1,7 +1,7 @@
 import { ARC_BASE, ARC_SPACE, TECH_IMG_RADIUS, TECH_IMG_WIDTH } from "./constants";
 import { makeUnlockArc } from "./arcs";
 import { calculateSingleRadialLinePath, wheelTransform, fadeCheck } from "./helpers";
-import { hideTooltip, showTooltip } from "./tooltip";
+import { hideTooltip, isSheetView, showTooltip } from "./tooltip";
 
 export function drawArcs(element, data, color, arcSpace = ARC_SPACE) {
       const unlockArc = makeUnlockArc(arcSpace);
@@ -77,13 +77,31 @@ export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
  *  independently. While a node is pinned, hover is inert: previews would
  *  rip the pinned tooltip away as the pointer crosses the wheel (e.g. on
  *  its way to the tooltip's close button), which defeats the pin. */
+/**
+ * True when the device actually has a hovering pointer.
+ *
+ * A touch device synthesises the whole mouse sequence from a tap, and
+ * `mouseover` arrives on the element under the finger *before* the click.
+ * Acting on it opens the tooltip with nothing pinned behind it — a state
+ * with no way out, since the close button releases a pin. Worse, iOS
+ * treats a tap that changes the DOM from its synthetic hover as a hover
+ * rather than a click and swallows the click entirely, so the tap that
+ * opened the panel never pins it either.
+ *
+ * Read live rather than cached: the same page is a desktop wheel and a
+ * phone table, and a narrow desktop window keeps its hover previews.
+ */
+const hoverQuery = window.matchMedia("(hover: hover)");
+
 export function onNodeHover(_, d) {
+    if (!hoverQuery.matches) return;
     if (window.app.pinned) return;
     window.app.selected = d;
     showTooltip(d);
 }
 
 export function onNodeLeave() {
+    if (!hoverQuery.matches) return;
     if (window.app.pinned) return;
     window.app.selected = null;
     hideTooltip();
@@ -97,7 +115,19 @@ export function onNodeLeave() {
 export function onNodeClick(event, d) {
     event.stopPropagation();
     const { pinned } = window.app;
-    window.app.pinned = pinned && pinned.id === d.id ? null : d;
+    const releasing = Boolean(pinned) && pinned.id === d.id;
+    window.app.pinned = releasing ? null : d;
+
+    // Tapping the pinned row again is the gesture for "done reading" — but
+    // on the wheel the pointer is still sitting on the node, so what's
+    // left behind is an ordinary hover preview that mouseleave will clear.
+    // The sheet has no such exit: touch never fires mouseleave, so the
+    // panel would stay docked with no pin behind it.
+    if (releasing && isSheetView()) {
+        window.app.selected = null;
+        hideTooltip();
+        return;
+    }
     window.app.selected = d;
     showTooltip(d);
 }

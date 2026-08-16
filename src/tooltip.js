@@ -25,17 +25,9 @@ const SELECTORS = {
     img:        "#tipImg",
     cost:       "#tipCost",
     costLine:   "#tipCostLine",
-    noLine:     "#tipNoLine",
-    mandLine:   "#tipMandLine",
-    mand:       "#tipMand",
-    plusLine:   "#tipPlusLine",
-    optLine:    "#tipOptLine",
-    opt:        "#tipOpt",
+    reqLine:    "#tipReqLine",
     leads:      "#tipLeads",
-    mldLine:    "#tipMldLine",
-    mld:        "#tipMld",
-    oldLine:    "#tipOldLine",
-    old:        "#tipOld",
+    leadLine:   "#tipLeadLine",
     unlocks:        "#tipUnlocks",
     unlocksContent: "#tipUnlocksContent",
     obsoletes:        "#tipObsoletes",
@@ -116,10 +108,24 @@ export function showTooltip(tech) {
     tipBox.classed("hidden", false);
 }
 
+/**
+ * True when the tooltip is rendering as the mobile bottom sheet.
+ *
+ * Same test the positioning code uses: in the table view the wheel is
+ * display:none, so its SVG has no box. Callers need this because the
+ * sheet has no hover to fall back on — there is no mouseleave on touch,
+ * so anything that leaves an unpinned tooltip on screen strands it there.
+ */
+export function isSheetView() {
+    const svgEl = document.querySelector("#chart svg");
+    return !svgEl || svgEl.getBoundingClientRect().width === 0;
+}
+
 export function hideTooltip() {
     select(SELECTORS.box)
         .classed("pinned", false)
         .classed("hidden", true);
+    releaseSheetSpace();
 }
 
 
@@ -146,27 +152,9 @@ function populateTooltip(tech, allTechs, game, folder, eraRanges) {
     const required = (tech.reqTo || []).map((r) => nameOf(r.id));
     const optional = (tech.optTo || []).map((r) => nameOf(r.id));
 
-    const noPrereqs = required.length === 0 && optional.length === 0;
-    if (noPrereqs) {
-        select(SELECTORS.noLine).text(availabilityText(tech, eraRanges, game));
-    }
-    select(SELECTORS.noLine).classed("hidden", !noPrereqs);
-
-    if (required.length > 0) {
-        select(SELECTORS.mand).text(joinList(required, "and"));
-        select(SELECTORS.mandLine).classed("hidden", false);
-    } else {
-        select(SELECTORS.mandLine).classed("hidden", true);
-    }
-    if (optional.length > 0) {
-        select(SELECTORS.opt).text(joinList(optional, "or"));
-        select(SELECTORS.optLine).classed("hidden", false);
-        // "plus" only shows when both required and optional rows are visible.
-        select(SELECTORS.plusLine).classed("hidden", required.length === 0);
-    } else {
-        select(SELECTORS.optLine).classed("hidden", true);
-        select(SELECTORS.plusLine).classed("hidden", true);
-    }
+    select(SELECTORS.reqLine).text(
+        requirementText(required, optional, availabilityText(tech, eraRanges, game))
+    );
 
     // Required for (outgoing edges).
     //   reqFor: techs that hard-require this one
@@ -176,19 +164,43 @@ function populateTooltip(tech, allTechs, game, folder, eraRanges) {
 
     const hasOutgoing = requiredFor.length > 0 || optionalFor.length > 0;
     select(SELECTORS.leads).classed("hidden", !hasOutgoing);
+    if (hasOutgoing) {
+        select(SELECTORS.leadLine).text(leadsToText(requiredFor, optionalFor));
+    }
+}
 
-    if (requiredFor.length > 0) {
-        select(SELECTORS.mld).text(joinList(requiredFor, "and"));
-        select(SELECTORS.mldLine).classed("hidden", false);
-    } else {
-        select(SELECTORS.mldLine).classed("hidden", true);
-    }
-    if (optionalFor.length > 0) {
-        select(SELECTORS.old).text(joinList(optionalFor, "and"));
-        select(SELECTORS.oldLine).classed("hidden", false);
-    } else {
-        select(SELECTORS.oldLine).classed("hidden", true);
-    }
+
+/**
+ * One sentence for the "Requires" row.
+ *
+ * The mandatory prerequisites are stated plainly — the row's label already
+ * says they're required — and the any-of set is the one that needs
+ * marking. This used to be up to three stacked lines ("You must have: X" /
+ * "plus" / "You need one of: Y or Z"), which is the same information at
+ * three times the height.
+ */
+function requirementText(required, optional, availability) {
+    const mand = joinList(required, "and");
+    const opt = joinList(optional, "or");
+    if (required.length && optional.length) return `${mand}, plus one of ${opt}`;
+    if (required.length) return mand;
+    if (optional.length) return `One of ${opt}`;
+    // "Requires: Available at game start" doesn't parse — under a label
+    // that names the thing, the answer has to be the absence of one.
+    return `Nothing — ${availability[0].toLowerCase()}${availability.slice(1)}`;
+}
+
+/**
+ * One sentence for the "Leads to" row. Advances this one is a mandatory
+ * prerequisite for come first and unmarked; the ones where it's merely an
+ * option are called out, since that's the difference worth reading.
+ */
+function leadsToText(requiredFor, optionalFor) {
+    const mand = joinList(requiredFor, "and");
+    const opt = joinList(optionalFor, "and");
+    if (requiredFor.length && optionalFor.length) return `${mand}; optional for ${opt}`;
+    if (requiredFor.length) return mand;
+    return `Optional for ${opt}`;
 }
 
 
@@ -382,8 +394,10 @@ function positionTooltipAt(tech, count, labelRadius) {
     // of the viewport instead — the tapped row stays visible above it.
     if (svgRect.width === 0) {
         positionTooltipAsSheet(tipBox);
+        fitSheetToTable(tipBox, tech);
         return;
     }
+    releaseSheetSpace();
     resetSheetStyles(tipBox);
 
     const scale = svgRect.width / TOTAL_WIDTH;
@@ -423,32 +437,81 @@ function clamp(v, lo, hi) {
 }
 
 
-/** Margin between the docked panel and the viewport edges. */
-const SHEET_MARGIN = 8;
-
 /**
- * Mobile placement: a panel docked to the bottom of the viewport, sized
- * to the screen rather than the CSS default 400px (which overflows a
- * 375px phone). Height is capped at half the viewport so the table stays
- * partly visible, with the overflow scrollable — the pinned tooltip
- * already accepts pointer events, so that scroll works.
+ * Mobile placement: the tooltip is a bottom sheet, and the media query in
+ * techs.css owns every bit of its geometry. All this has to do is clear
+ * the inline styles the wheel path writes, since those would otherwise
+ * out-rank the stylesheet.
  */
 function positionTooltipAsSheet(tipBox) {
-    const width = Math.min(420, window.innerWidth - SHEET_MARGIN * 2);
-    tipBox.style.width = `${width}px`;
-    tipBox.style.maxHeight = `${Math.round(window.innerHeight * 0.5)}px`;
-    tipBox.style.overflowY = "auto";
-    tipBox.style.left = `${SHEET_MARGIN}px`;
-    // Read the height only after width/max-height are applied, or it
-    // reflects the old layout.
-    const h = tipBox.offsetHeight;
-    tipBox.style.top = `${window.innerHeight - h - SHEET_MARGIN}px`;
+    resetSheetStyles(tipBox);
 }
 
-/** Undo the sheet sizing so the wheel view gets its fixed-width box back
- *  (the same element serves both views). */
+/** Undo the wheel's inline placement so the sheet's CSS can apply — and,
+ *  going the other way, undo nothing, because the sheet sets none. */
 function resetSheetStyles(tipBox) {
+    tipBox.style.left = "";
+    tipBox.style.top = "";
     tipBox.style.width = "";
     tipBox.style.maxHeight = "";
     tipBox.style.overflowY = "";
+}
+
+
+/** Breathing room between a revealed row and whatever it's clearing. */
+const REVEAL_GAP = 6;
+
+/**
+ * A sheet docked to the bottom edge covers the rows behind it, and the
+ * ones at the very end of the tree could not be scrolled out from under
+ * it — the document simply ended. Two things fix that:
+ *
+ *   - The table carries a bottom margin the height of the open sheet, so
+ *     every row can be scrolled clear of it. Margin rather than padding:
+ *     getBoundingClientRect (which the era indicator reads to work out
+ *     which rows are where) counts padding but not margin.
+ *   - The row you just tapped is scrolled into the band between the
+ *     toolbar and the sheet, so opening the sheet never hides the thing
+ *     it's describing.
+ *
+ * Only on a pin. Hover previews on a narrow desktop window would
+ * otherwise yank the page around under the pointer.
+ */
+function fitSheetToTable(tipBox, tech) {
+    const table = document.querySelector("#table");
+    if (!table) return;
+
+    const sheetH = tipBox.offsetHeight;
+    table.style.marginBottom = `${sheetH}px`;
+
+    if (!window.app.pinned) return;
+    const row = document.querySelector(
+        `#table .tt-row[data-id="${CSS.escape(tech.id)}"]`
+    );
+    if (!row) return;
+
+    // The top of the band is whatever chrome is pinned up there: the era
+    // indicator when it's showing, else the compact toolbar, else nothing.
+    const indicator = document.querySelector("#era-indicator");
+    const bar = document.querySelector("#select-options");
+    let bandTop = 0;
+    if (indicator && !indicator.classList.contains("hidden")) {
+        bandTop = indicator.getBoundingClientRect().bottom;
+    } else if (bar && bar.classList.contains("compact")) {
+        bandTop = bar.getBoundingClientRect().bottom;
+    }
+    const bandBottom = window.innerHeight - sheetH;
+
+    const r = row.getBoundingClientRect();
+    if (r.bottom > bandBottom - REVEAL_GAP) {
+        window.scrollBy(0, r.bottom - bandBottom + REVEAL_GAP);
+    } else if (r.top < bandTop + REVEAL_GAP) {
+        window.scrollBy(0, r.top - bandTop - REVEAL_GAP);
+    }
+}
+
+/** Give the table its own height back once the sheet is gone. */
+function releaseSheetSpace() {
+    const table = document.querySelector("#table");
+    if (table) table.style.marginBottom = "";
 }

@@ -34,8 +34,13 @@ window.app.svg = svgInit();
 // Releasing a pin: clicking empty wheel space (node/arc clicks stop
 // propagation before reaching the SVG) or the tooltip's close button.
 // Both clear the highlight state entirely; hover takes over again.
+// Dismiss whatever is showing, pinned or not. This used to return early
+// unless something was pinned, which made the close button dead in the one
+// state where it's the only way out: a tooltip opened by a hover with no
+// pin behind it. Touch devices produce exactly that state (see hoverQuery
+// in drawTools), so on a phone the button did nothing at all.
 function releasePin() {
-    if (!window.app.pinned) return;
+    if (!window.app.pinned && !window.app.selected) return;
     window.app.pinned = null;
     window.app.selected = null;
     hideTooltip();
@@ -43,6 +48,9 @@ function releasePin() {
 
 select("#chart svg").on("click", releasePin);
 select("#tipCloseButton").on("click", releasePin);
+// The table's equivalent of empty wheel space: the lane gutter left of
+// the names. Rows stop propagation, so only a miss reaches this.
+select("#table").on("click", releasePin);
 
 const expansion = select("#expansion");
 const selectExpansion = select("#select-expansion");

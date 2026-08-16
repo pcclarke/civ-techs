@@ -410,6 +410,18 @@ p {
   z-index: 10;
 }
 
+/* The tooltip is a dense information panel, not body copy. The page's
+ * 1rem/1.8rem paragraph rhythm made a typical entry 459px tall at phone
+ * width — taller than any phone can show without scrolling — where the
+ * same content sets in 326px at this size. :where() keeps the selector's
+ * specificity at zero for the p, so the per-line rules further down
+ * (#tipName, #tipKind) still win without needing to be restated. */
+#tooltip :where(p) {
+  font-size: 14px;
+  line-height: 1.45;
+  margin: 3px 0;
+}
+
 /* Override the global .hidden { display: none } for the tooltip. We want
  * the box to remain in layout so its real width/height are available to
  * the JS that positions it antipodally — display:none zeroes out
@@ -445,35 +457,78 @@ p {
   border-width: 2px;
 }
 
+/* A section is its label and its content side by side, not a heading with
+ * an indented block underneath. Four sections meant four heading lines,
+ * ~90px of a panel that only has ~370px to work with on a phone.
+ *
+ * :not(.hidden) because .hidden's display:none carries the same
+ * specificity as a bare .tipSection would — whichever came last in the
+ * file would win, which is not a thing to leave to file order. */
+.tipSection:not(.hidden) {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* Wide enough for "Obsoletes", the longest of the four. */
+#tooltip .tipSubTitle {
+  flex: 0 0 76px;
+  font-weight: bold;
+  margin: 0;
+  padding-bottom: 0;
+}
+
 .desc {
-  padding-left: 10px;
+  flex: 1 1 auto;
+  /* Lets the body shrink to the column instead of forcing the section
+   * wider than the panel. */
+  min-width: 0;
+}
+
+/* Icon, name and close button share one line; the kind sits underneath.
+ * This was floats with a 305px name column, which only added up inside
+ * the 400px desktop box — at 375px the close button had nowhere to go and
+ * dropped onto its own line. Flex gives the name whatever is left over. */
+#tipHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 5px;
 }
 
 #tipKind {
-  float: left;
+  flex: 1 0 100%;
   font-size: 12px;
   font-style: italic;
-  margin: 6px 0px;
-  width: 100%;
+  margin: 4px 0 0;
 }
 
 #tipName {
-  float: left;
+  flex: 1 1 auto;
+  /* Without this a long name refuses to wrap and pushes the close button
+   * out of the box — flex items floor at their content width otherwise. */
+  min-width: 0;
   font-family: var(--ui-font-display);
   font-size: 20px;
   margin: 0;
   padding: 0;
-  width: 305px;
 }
 
 #tipImg {
-  float: left;
-  padding-right: 5px;
+  flex: none;
   width: 45px;
 }
 
 #tipCloseButton {
-  float: right;
+  flex: none;
+  align-self: flex-start;
+}
+
+/* The float clearer the old layout needed. Harmless in flow, but as a
+ * flex item it would claim a slot of its own. */
+#tipHead .clear {
+  display: none;
 }
 
 #tipPlusLine {
@@ -482,11 +537,7 @@ p {
   padding: 0;
 }
 
-.tipSubTitle {
-  font-weight: bold;
-  padding-bottom: 0;
-  margin: 6px 0 2px;
-}
+
 
 /* Unlocks / Makes obsolete sections.
  *
@@ -495,26 +546,38 @@ p {
  * grid of icon+name pairs so big trees (Masonry → 4 wonders) flow nicely
  * inside the fixed-width tooltip without spilling vertically.
  */
+/* Same run-in treatment one level down: the category name sits beside its
+ * items rather than above them. Most groups hold a single item, so a
+ * heading of its own doubled the cost of saying "Iron". */
 .tipGroup {
-  margin: 4px 0 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 3px;
 }
 
 .tipGroupName {
+  flex: 0 0 auto;
   font-size: 11px;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--ui-ink-muted);
-  margin: 0 0 2px;
+  margin: 0;
 }
 
+/* Items flow and wrap at their natural width. As a two-column grid, a
+ * group with one short item ("Iron") still claimed a full row and left
+ * half of it empty; this way short items share a line. */
 .tipItemList {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 12px;
   row-gap: 2px;
 }
 
@@ -522,6 +585,8 @@ p {
   display: flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
+  max-width: 100%;
   font-size: 12px;
   line-height: 1.2;
 }
@@ -545,7 +610,7 @@ p {
 /* Items with civ-unique variants span the full tooltip width so their
  * variant chips read as belonging to them; the chips wrap as needed. */
 .tipItem.tipItemWide {
-  grid-column: 1 / -1;
+  flex-basis: 100%;
   flex-wrap: wrap;
 }
 
@@ -565,10 +630,16 @@ p {
   color: var(--ui-ink-muted);
 }
 
+/* A variant chip keeps its icon, name and owning civ together on one
+ * line where it fits — and wraps between them rather than pushing past
+ * the panel's edge where it doesn't (Civ 5's "Mud Pyramid Mosque
+ * (Songhai)" is 195px on its own). */
 .tipUnique {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 4px;
+  max-width: 100%;
   white-space: nowrap;
 }
 
@@ -809,5 +880,96 @@ p {
 
   #select-options.compact .pill {
     white-space: nowrap;
+  }
+
+  /* The tooltip becomes a bottom sheet: full-bleed, docked to the bottom
+   * edge, sized by its content up to a cap. The wheel's antipodal box
+   * doesn't translate here — it floated over the middle of the tree at a
+   * width wider than the screen, and tooltip.js had to size and place it
+   * by hand. All of that geometry now lives in CSS, and the sheet path in
+   * tooltip.js just clears the inline styles the wheel path leaves.
+   *
+   * The sheet is sized by its content; the cap only binds for the tallest
+   * entries. With the run-in section layout those run 250–380px, so at
+   * 60vh the only advance in any game that still scrolls on a 667px-tall
+   * phone is Civ 4's Rifling, which carries five units and three unique
+   * variants. src/tooltip.js pads the table by the sheet's height so the
+   * rows underneath stay reachable. */
+  #tooltip {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    width: auto;
+    max-height: 60vh;
+    overflow-y: auto;
+    /* Don't hand the scroll to the page when the sheet hits its end. */
+    overscroll-behavior: contain;
+    border-width: 1px 0 0;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.18);
+    /* No top padding: #tipHead carries it, so the head's background
+     * covers the strip it sticks to. */
+    padding: 0 10px;
+    /* Clear the home indicator on phones that have one. */
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Touch needs the sheet to accept events so it can be scrolled — but a
+   * hidden tooltip keeps its box (see #tooltip.hidden above), so leaving
+   * this on unconditionally would put an invisible tap-eating panel over
+   * the bottom of the screen. */
+  #tooltip:not(.hidden) {
+    pointer-events: auto;
+  }
+
+  /* The head stays put while the body scrolls. It carries the only way
+   * out of the sheet, and on a tall entry it would otherwise scroll off
+   * the top — leaving a panel with no visible close control. The sheet's
+   * top padding moves here so the sticky background covers the full
+   * width of the strip rather than letting content slide through a gap
+   * above it. */
+  #tipHead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 8px 0 4px;
+    background: var(--ui-tip-bg);
+    /* Without a rule, body text sliding under the head reads as a
+     * rendering fault rather than as content passing behind a header. */
+    box-shadow: 0 1px 0 #dcdcdc;
+  }
+
+  /* A pin is the only way in on touch, so the tooltip is always pinned
+   * here — and there's no mouseleave to dismiss it either way, so the way
+   * out is always shown.
+   *
+   * Three ids to out-rank #tooltip.pinned #tipCloseButton, which is what
+   * this used to lose to: the button kept the desktop's 14px/2px sizing
+   * and came out 21×20, about a fifth of the area a fingertip needs. A
+   * near-miss lands on inert sheet, so it read as a dead button. The
+   * right margin lets the target reach the sheet's edge; it needs no
+   * vertical one, since the 45px advance icon beside it already sets the
+   * head's height. */
+  #tooltip #tipHead #tipCloseButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0 -10px 0 0;
+    padding: 0;
+    pointer-events: auto;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: inherit;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  /* The doubled pinned border would sit under the sheet's top rule. */
+  #tooltip.pinned {
+    border-width: 1px 0 0;
   }
 }

@@ -223,6 +223,9 @@ function drawRows(root, allTechs, opts) {
         .data(allTechs, (d) => d.id)
         .join("div")
         .attr("class", "tt-row")
+        // Lets tooltip.js find a row's box without importing ROW_H or
+        // reproducing the position → y mapping.
+        .attr("data-id", (d) => d.id)
         .classed("fade", (d) => fadeCheck(d, highlightedIds))
         .classed("pinned", (d) => Boolean(window.app.pinned)
             && window.app.pinned.id === d.id)

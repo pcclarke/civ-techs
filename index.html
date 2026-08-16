@@ -129,28 +129,28 @@
                 <div id="tipTraits">
                     <p id="tipCostLine" class="hidden">Cost: <span id="tipCost"></span> <span id="tipCostType"></span></p>
                 </div>
-                <div id="tipReqs">
-                    <p class="tipSubTitle">Requirements</p>
-                    <div class="desc">
-                        <p id="tipNoLine" class="hidden">Available at game start</p>
-                        <p id="tipMandLine" class="hidden">You must have: <span id="tipMand"></span></p>
-                        <p id="tipPlusLine" class="hidden">plus</p>
-                        <p id="tipOptLine" class="hidden">You need one of: <span id="tipOpt"></span></p>
-                    </div>
+                <!-- Every section is a run-in label plus its content, laid
+                     out as label column + body (see .tipSection). The
+                     headings used to sit on their own line above an
+                     indented body, which cost a line per section — a third
+                     of the panel's height went to four words. Each body is
+                     a single composed sentence for the same reason; the
+                     prose that used to lead each line ("You must have:")
+                     is now carried by the label. -->
+                <div id="tipReqs" class="tipSection">
+                    <p class="tipSubTitle">Requires</p>
+                    <div class="desc"><p id="tipReqLine"></p></div>
                 </div>
-                <div id="tipLeads" class="hidden">
+                <div id="tipLeads" class="tipSection hidden">
                     <p class="tipSubTitle">Leads to</p>
-                    <div class="desc">
-                        <p id="tipMldLine" class="hidden">Must have for: <span id="tipMld"></span></p>
-                        <p id="tipOldLine" class="hidden">Optional for: <span id="tipOld"></span></p>
-                    </div>
+                    <div class="desc"><p id="tipLeadLine"></p></div>
                 </div>
-                <div id="tipUnlocks" class="hidden">
+                <div id="tipUnlocks" class="tipSection hidden">
                     <p class="tipSubTitle">Unlocks</p>
                     <div class="desc" id="tipUnlocksContent"></div>
                 </div>
-                <div id="tipObsoletes" class="hidden">
-                    <p class="tipSubTitle">Makes obsolete</p>
+                <div id="tipObsoletes" class="tipSection hidden">
+                    <p class="tipSubTitle">Obsoletes</p>
                     <div class="desc" id="tipObsoletesContent"></div>
                 </div>
             </div>

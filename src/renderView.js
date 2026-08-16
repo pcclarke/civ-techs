@@ -1,6 +1,7 @@
 import { refreshWheelLayout } from "./computeWheelLayout";
 import { renderTable, updateEraIndicator } from "./makeTable";
 import { renderWheel } from "./makeWheel";
+import { showTooltip } from "./tooltip";
 
 /**
  * Picks between the two renderings of the wheel data: the circular wheel
@@ -37,16 +38,22 @@ export function renderActiveView() {
 
     if (table) {
         renderTable();
-        return;
+    } else {
+        // The wheel's radii come from measuring label widths, which reads
+        // as zero while the wheel is display:none — so any layout computed
+        // while the table was showing is garbage. Re-measure on the way in.
+        if (switched) refreshWheelLayout();
+        renderWheel();
+        // The era indicator belongs to the table; it's position:fixed, so
+        // nothing else takes it off screen when the wheel takes over.
+        updateEraIndicator();
     }
-    // The wheel's radii come from measuring label widths, which reads as
-    // zero while the wheel is display:none — so any layout computed while
-    // the table was showing is garbage. Re-measure on the way in.
-    if (switched) refreshWheelLayout();
-    renderWheel();
-    // The era indicator belongs to the table; it's position:fixed, so
-    // nothing else takes it off screen when the wheel takes over.
-    updateEraIndicator();
+
+    // The two views place the tooltip completely differently — bottom
+    // sheet vs. antipodal box — and the placement is written when it's
+    // shown. Rotating a phone with a pinned advance would otherwise leave
+    // the panel sized for the view it just left.
+    if (switched && window.app.pinned) showTooltip(window.app.pinned);
 }
 
 // Crossing the breakpoint (rotating a phone, resizing a window) has to
