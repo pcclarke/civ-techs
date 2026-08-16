@@ -99,13 +99,17 @@ export function showTooltip(tech) {
 
     populateTooltip(tech, allTechs, game, folder, eraRanges);
     populateUnlocks(tech, unlocksByTech, obsoletesByTech, game);
-    positionTooltipAt(tech, allTechs.length, labelRadius);
     // While pinned the tooltip advertises it (stronger border, visible
     // close button — see #tooltip.pinned in techs.css). Hover previews
     // are suppressed during a pin, so a shown tooltip is either a plain
     // hover preview or THE pinned tech, never a mixture.
     tipBox.classed("pinned", Boolean(app.pinned));
+    // Unhidden before positioning, not after: on mobile the hidden sheet
+    // is display:none (it costs a composited fixed layer during scroll
+    // otherwise), and the sheet path measures its own height to pad the
+    // table. Both happen in one task, so nothing paints in between.
     tipBox.classed("hidden", false);
+    positionTooltipAt(tech, allTechs.length, labelRadius);
 }
 
 /**
@@ -259,11 +263,11 @@ function renderItemSection(items, sectionSel, contentSel, game) {
             const hasUniques = it.uniques && it.uniques.length > 0;
             const li = list.append("li")
                 .attr("class", "tipItem")
-                // Items with unique variants span both grid columns so
-                // the variant chips sit unambiguously with their base
-                // item instead of interleaving the two-column packing.
-                // Owner-tagged exclusives span too: "Immortal (Achaemenid
-                // Persian)" ellipsizes in a half-width column.
+                // Items with unique variants take a line of their own so
+                // the variant chips sit unambiguously with their base item
+                // instead of interleaving with whatever else the flow
+                // packs onto that line. Owner-tagged exclusives too:
+                // "Immortal (Achaemenid Persian)" needs the width.
                 .classed("tipItemWide", hasUniques || Boolean(it.civ));
             li.append("img")
                 .attr("class", "tipItemIcon")

@@ -162,28 +162,47 @@ p {
   padding: 10px 12px;
 }
 
-/* Compact (pinned) mode: main.js adds .compact once the page scrolls past
- * #select-wrap. The bar leaves normal flow and pins to the viewport top
- * (position: fixed rather than sticky — sticky can't work here because
- * the wrapper containing block is exactly the panel's own height, so
- * there'd be no room to slide). The wrapper's frozen height keeps the
- * page from jumping. Horizontal geometry mirrors #container (centered,
- * max-width 1200px, 10px side padding) so the bar aligns with the page
- * column. Everything goes on one line: emblem-only tabs, slim pills,
- * captions and row labels hidden. */
+/* Two separate things, deliberately two classes.
+ *
+ * .compact is how the bar LOOKS: emblem-only tabs, slim pills, captions
+ * and row labels hidden, everything on one line. On a wide screen this is
+ * what the bar collapses to when it pins; on a narrow one it's the bar's
+ * permanent form, because 44px emblems and a caption per row are a poor
+ * trade for a third of a phone's viewport.
+ *
+ * .stuck is WHERE it sits: pinned to the top of the viewport, out of
+ * normal flow. Keeping this apart from .compact is what lets a phone have
+ * the small bar from the start and still only pin it once you scroll past
+ * — conflated, the switch to small happened at the pin, and the flow gap
+ * left behind by the tall version was something you had to scroll past.
+ *
+ * position: fixed rather than sticky, because sticky can't work here: the
+ * wrapper's containing block is exactly the panel's own height, so
+ * there'd be no room to slide. main.js freezes the wrapper's height to
+ * keep the page from jumping. Horizontal geometry mirrors #container
+ * (centered, max-width 1200px, 10px side padding) so the bar stays
+ * aligned with the page column. */
 #select-options.compact {
+  padding: 10px;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+#select-options.stuck {
   position: fixed;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+  /* A 2D translate alone doesn't guarantee its own compositing layer, and
+   * an overlay that shares a layer with the page has to be redrawn every
+   * time the page under it scrolls — which iOS does in bursts during
+   * momentum. 28k pixels is a cheap layer to buy that back. */
+  will-change: transform;
   width: 100%;
   max-width: 1200px;
-  padding: 10px;
   box-sizing: border-box;
   z-index: 5;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
   border-bottom: 1px solid var(--ui-accent);
   border-radius: 0;
 }
@@ -749,6 +768,12 @@ p {
   display: flex;
   align-items: center;
   gap: 8px;
+  /* A promise that nothing in this row paints outside its box, which lets
+   * the browser skip the ~70 rows that are off-screen at any moment
+   * instead of considering all 89 when it rasterises a tile. Safe for the
+   * pinned outline below, which is drawn inside the box by its negative
+   * offset. */
+  contain: paint;
   /* Clears the lane overlay, and then some: makeTable sets
    * --tt-content-left so the widest name lands flush against the right
    * edge, which pulls the whole block right instead of leaving a ragged
@@ -811,6 +836,9 @@ p {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
+  /* Own compositing layer, for the reason given on #select-options.stuck.
+   * This one sits over the scrolling table for its whole life. */
+  will-change: transform;
   width: 100%;
   max-width: 1200px;
   box-sizing: border-box;
@@ -834,9 +862,13 @@ p {
   #chart { display: none; }
   #table { display: block; }
 
-  /* The compact toolbar was designed for a wide screen: one row holding
-   * the emblem tabs plus every pill row. At 375px the tabs alone take
-   * ~276px, leaving ~73px for the pills — enough to wrap "Beyond the
+  /* The bar is compact from the moment the page loads here — main.js
+   * keeps the class on below this breakpoint — so these rules describe
+   * the phone's only version of it, pinned or not.
+   *
+   * The compact layout itself was designed for a wide screen: one row
+   * holding the emblem tabs plus every pill row. At 375px the tabs alone
+   * take ~276px, leaving ~73px for the pills — enough to wrap "Beyond the
    * Sword" onto three lines and push the bar to 148px tall, ~18% of the
    * viewport. Stack the rows instead, and let each pill row scroll
    * sideways rather than wrap. */
@@ -845,6 +877,10 @@ p {
     align-items: stretch;
     gap: 6px;
     padding: 6px 10px;
+    /* .stuck adds a real bottom border. Reserving its 1px here too keeps
+     * the in-flow and pinned heights identical, so the frozen wrapper
+     * height matches exactly and pinning shifts nothing. */
+    border-bottom: 1px solid transparent;
   }
 
   /* Spread the emblems across the full width so the row reads as a
@@ -915,11 +951,17 @@ p {
     padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
   }
 
-  /* Touch needs the sheet to accept events so it can be scrolled — but a
-   * hidden tooltip keeps its box (see #tooltip.hidden above), so leaving
-   * this on unconditionally would put an invisible tap-eating panel over
-   * the bottom of the screen. */
-  #tooltip:not(.hidden) {
+  /* Nothing here needs the hidden box the wheel keeps for its centring
+   * maths, and a full-width fixed element with a shadow is a composited
+   * layer the browser carries through every scroll frame. Take it out of
+   * the page entirely when it isn't showing — which also settles the
+   * question of an invisible panel over the bottom of the screen. */
+  #tooltip.hidden {
+    display: none;
+  }
+
+  /* Touch needs the sheet to accept events so it can be scrolled. */
+  #tooltip {
     pointer-events: auto;
   }
 

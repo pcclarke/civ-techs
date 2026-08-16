@@ -3,7 +3,7 @@ import { select, selectAll } from "d3-selection";
 import { DEFAULT_GAME, GAMES } from "./constants";
 import { initWheelData } from "./initWheelData";
 import { updateEraIndicator } from "./makeTable";
-import { renderActiveView } from "./renderView";
+import { isTableView, renderActiveView } from "./renderView";
 import svgInit from "./svgInit";
 import { hideTooltip } from "./tooltip";
 
@@ -32,9 +32,11 @@ Object.defineProperty(window.app, 'selected', {
 window.app.svg = svgInit();
 
 // Releasing a pin: clicking empty wheel space (node/arc clicks stop
-// propagation before reaching the SVG) or the tooltip's close button.
-// Both clear the highlight state entirely; hover takes over again.
-// Dismiss whatever is showing, pinned or not. This used to return early
+// propagation before reaching the SVG), the table's lane gutter, or the
+// tooltip's close button. All clear the highlight state entirely; on a
+// device with a pointer, hover takes over again.
+//
+// Dismisses whatever is showing, pinned or not. This used to return early
 // unless something was pinned, which made the close button dead in the one
 // state where it's the only way out: a tooltip opened by a hover with no
 // pin behind it. Touch devices produce exactly that state (see hoverQuery
@@ -132,29 +134,39 @@ if (gameInfo.trees && gameInfo.trees.length > 1) {
     addTrees();
 }
 
-// Sticky toolbar: #select-options is position:sticky inside #select-wrap,
-// so once the page scrolls past the wrapper's top the panel pins to the
-// viewport and .compact collapses it into a slim toolbar; scrolling back
-// restores the full panel. Two details keep this stable:
+// Sticky toolbar. Once the page scrolls past #select-wrap the panel pins
+// to the top of the viewport (.stuck); scrolling back returns it to the
+// flow. On a wide screen it also collapses to the slim bar at that moment
+// (.compact) and expands again on the way back; on a narrow one it is
+// compact throughout, so pinning is the only thing that changes. Two
+// details keep this stable:
 //   - The check reads the WRAPPER's position (a pinned panel never leaves
 //     the viewport, so its own rect can't signal anything) from scroll and
 //     resize listeners rather than an IntersectionObserver — jump scrolls
 //     (End key, anchors, restored positions) can move the wrapper from
 //     below the viewport to above it without ever intersecting, which an
 //     observer reports as no change at all.
-//   - The wrapper's height is frozen at the panel's expanded size while
-//     pinned. Otherwise compacting would shrink the document, the browser
-//     would clamp the scroll position back, and near the bottom of the
-//     page the panel would flip-flop between states.
+//   - The wrapper's height is frozen at whatever the panel measured just
+//     before it left the flow. Otherwise the document would shrink, the
+//     browser would clamp the scroll position back, and near the bottom of
+//     the page the panel would flip-flop between states.
 const selectWrap = document.querySelector("#select-wrap");
 const selectOptions = document.querySelector("#select-options");
 if (selectWrap && selectOptions) {
     const updateCompact = () => {
         const stuck = selectWrap.getBoundingClientRect().top < 0;
-        if (stuck && !selectOptions.classList.contains("compact")) {
+        // Freeze the space the bar occupies *before* taking it out of
+        // flow — whatever height it happens to have, which is the compact
+        // one on a phone and the expanded one on a wide screen. Keying
+        // this off .compact instead was what left the gap on mobile:
+        // reserving the tall version's height for a short pinned bar.
+        if (stuck && !selectOptions.classList.contains("stuck")) {
             selectWrap.style.height = `${selectWrap.offsetHeight}px`;
         }
-        selectOptions.classList.toggle("compact", stuck);
+        selectOptions.classList.toggle("stuck", stuck);
+        // Narrow screens keep the compact look at every scroll position;
+        // wide ones adopt it only while pinned.
+        selectOptions.classList.toggle("compact", stuck || isTableView());
         if (!stuck) {
             selectWrap.style.height = "";
         }
@@ -164,8 +176,20 @@ if (selectWrap && selectOptions) {
         // disagree for a frame.
         updateEraIndicator();
     };
-    window.addEventListener("scroll", updateCompact, { passive: true });
-    window.addEventListener("resize", updateCompact);
+    // Coalesced to one pass per frame. iOS delivers scroll events during
+    // momentum faster than it paints, and this handler reads a rect and
+    // may write a height and two classes — run per event, those reads and
+    // writes interleave into repeated forced layouts of the whole table.
+    let frame = 0;
+    const scheduleCompact = () => {
+        if (frame) return;
+        frame = requestAnimationFrame(() => {
+            frame = 0;
+            updateCompact();
+        });
+    };
+    window.addEventListener("scroll", scheduleCompact, { passive: true });
+    window.addEventListener("resize", scheduleCompact);
     updateCompact();
 }
 

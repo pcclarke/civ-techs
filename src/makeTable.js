@@ -141,14 +141,14 @@ function contentLeft(root, allTechs, laneCount) {
  * with no era data (Civ 1), or while the table isn't the thing under the
  * toolbar.
  */
-export function updateEraIndicator() {
+function applyEraIndicator() {
     const el = document.querySelector("#era-indicator");
     const table = document.querySelector("#table");
     if (!el || !table) return;
 
     const wd = window.app && window.app.wheelData;
     const eraRanges = wd ? wd.eraRanges : [];
-    const hide = () => el.classList.add("hidden");
+    const hide = () => setIndicator(el, null, 0);
 
     if (!eraRanges.length || getComputedStyle(table).display === "none") {
         hide();
@@ -193,9 +193,58 @@ export function updateEraIndicator() {
         return;
     }
 
-    el.style.top = `${anchorY}px`;
-    el.textContent = eraDisplayName(era.era);
-    el.classList.remove("hidden");
+    setIndicator(el, eraDisplayName(era.era), anchorY);
+}
+
+
+/**
+ * Write the indicator only when something it shows has actually changed.
+ *
+ * Scroll handlers that assign unconditionally are what make a page stutter:
+ * every assignment dirties layout, so the next rect read in the same handler
+ * has to re-run layout over the whole document — 89 absolutely positioned
+ * rows and a 400-node SVG here — and that happened twice per scroll event.
+ * Nearly every one of those writes set the value it already had: the era
+ * name changes a handful of times in a full scroll, and `top` only when the
+ * toolbar resizes.
+ */
+let lastText = null;
+let lastTop = null;
+function setIndicator(el, text, top) {
+    if (text === null) {
+        if (lastText !== null) {
+            el.classList.add("hidden");
+            lastText = null;
+        }
+        return;
+    }
+    if (top !== lastTop) {
+        el.style.top = `${top}px`;
+        lastTop = top;
+    }
+    if (text !== lastText) {
+        el.textContent = text;
+        el.classList.remove("hidden");
+        lastText = text;
+    }
+}
+
+
+/**
+ * Public entry point: schedule a single update on the next frame.
+ *
+ * Both the scroll listener below and main.js's pinned-toolbar handler call
+ * this, and iOS fires scroll events faster than it paints — so without
+ * coalescing the same measurement ran two or more times per frame, each
+ * pass forcing its own layout.
+ */
+let indicatorFrame = 0;
+export function updateEraIndicator() {
+    if (indicatorFrame) return;
+    indicatorFrame = requestAnimationFrame(() => {
+        indicatorFrame = 0;
+        applyEraIndicator();
+    });
 }
 
 /** Bound once; the handler re-reads live state on every call. */
@@ -236,8 +285,13 @@ function drawRows(root, allTechs, opts) {
         .on("mouseover", onNodeHover)
         .on("mouseleave", onNodeLeave)
         .on("click", onNodeClick)
+        // decoding="sync" because the default lets the browser decode off
+        // the main thread and paint the row before the bitmap is ready —
+        // which is what makes the icons blink on iOS as rows scroll in and
+        // their decoded data is re-fetched. These are 24px; decoding one
+        // synchronously costs less than the blank frame does.
         .html((d) =>
-            `<img class="tt-icon" src="${game}/img/${iconFolder}/${d.id}.png" alt="">`
+            `<img class="tt-icon" decoding="sync" src="${game}/img/${iconFolder}/${d.id}.png" alt="">`
             + `<span class="tt-name">${d.name}</span>`);
 }
 
