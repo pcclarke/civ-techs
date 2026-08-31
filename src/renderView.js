@@ -31,7 +31,7 @@ export function isTableView() {
  *  apart from an ordinary re-render (hover, pin, game switch). */
 let lastWasTable = null;
 
-export function renderActiveView() {
+export function renderActiveView({ animate = false } = {}) {
     const table = isTableView();
     const switched = lastWasTable !== null && lastWasTable !== table;
     lastWasTable = table;
@@ -43,7 +43,11 @@ export function renderActiveView() {
         // as zero while the wheel is display:none — so any layout computed
         // while the table was showing is garbage. Re-measure on the way in.
         if (switched) refreshWheelLayout();
-        renderWheel();
+        // A breakpoint crossing has nothing to animate from — the wheel
+        // wasn't visible a moment ago — so it always renders instantly
+        // even if the caller asked for animate (only initWheelData.js ever
+        // does, and only when the mobile table isn't what's showing).
+        renderWheel({ animate: animate && !switched });
         // The era indicator belongs to the table; it's position:fixed, so
         // nothing else takes it off screen when the wheel takes over.
         updateEraIndicator();

@@ -34,6 +34,47 @@ export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_
         });
 }
 
+/** Perpendicular "pin" tick marking the spoke an arc originates from. */
+export function drawUnlockPins(element, prerequisites, spokeCount, color, arcSpace, base = ARC_BASE) {
+    return element
+        .selectAll("path")
+        .data(prerequisites)
+        .join("path")
+        .attr("d", (d) => calculateSingleRadialLinePath(
+            spokeCount,
+            base - 5 + arcSpace * d.step,
+            base + 5 + arcSpace * d.step,
+            d.position
+        ))
+        .attr("stroke", (d) => color(d.step));
+}
+
+/** Square mark on a spoke: the arc's origin is a hard requirement for it. */
+export function drawUnlockSquares(element, squareData, count, color, arcSpace, base = ARC_BASE) {
+    return element
+        .selectAll("rect")
+        .data(squareData)
+        .join("rect")
+        .attr("x", -2.5)
+        .attr("y", -2.5)
+        .attr("transform", (d) => wheelTransform(count, d.pos, base + arcSpace * d.step))
+        .attr("width", 5)
+        .attr("height", 5)
+        .attr("fill", (d) => color(d.step));
+}
+
+/** Circle mark on a spoke: the arc's origin is an optional requirement for it. */
+export function drawUnlockCircles(element, circleData, count, color, arcSpace, base = ARC_BASE) {
+    return element
+        .selectAll("circle")
+        .data(circleData)
+        .join("circle")
+        .attr("r", 2.5)
+        .attr("transform", (d) => wheelTransform(count, d.pos, base + arcSpace * d.step))
+        .attr("fill", "#FFF")
+        .attr("stroke", (d) => color(d.step));
+}
+
 export function drawTechImages(element, allTechs, game, highlightedIds, folder = "technologies", techImgRadius = TECH_IMG_RADIUS) {
     return element
         .selectAll(".tech-image")

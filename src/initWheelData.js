@@ -15,6 +15,15 @@ import { renderActiveView } from "./renderView";
 import { setupSpokes } from "./setupSpokes";
 import { hideTooltip } from "./tooltip";
 
+// Bumped on every call so a fetch that resolves after a newer one has
+// already started can tell it's stale. Nothing previously guarded against
+// this: clicking a second game/expansion/tree before the first `json()`
+// resolves meant whichever fetch finished last won, not whichever was
+// clicked last. That was always a latent bug; the switch animation would
+// make it an obviously visible one (a wheel animating into data that's
+// about to be immediately clobbered), so it's fixed here.
+let loadRequestId = 0;
+
 /**
  * Load and process data for the wheel visualization.
  * Call this once on startup and when the game changes.
@@ -22,6 +31,7 @@ import { hideTooltip } from "./tooltip";
 export async function initWheelData() {
   var { game, tree } = window.app;
   var path = game + "/civdata.json";
+  const requestId = ++loadRequestId;
 
   // A hover selection or pin can survive a game/tree switch (switching via
   // keyboard, or racing the mouseleave), but the selected object belongs
@@ -33,7 +43,12 @@ export async function initWheelData() {
   window.app.pinned = null;
   hideTooltip();
 
+  // Nothing to animate from on the very first load — wheelData doesn't
+  // exist yet — so only switches after that one get the transition.
+  const hadPreviousData = Boolean(window.app.wheelData);
+
   var data = await json(path);
+  if (requestId !== loadRequestId) return; // superseded by a newer switch
   // Pick the right node array for the active tree (default: technologies).
   // For pre-tree games this is just `data.technologies`; for Civ 6 it can
   // also be `data.civics`.
@@ -139,5 +154,5 @@ export async function initWheelData() {
       obsoletesByTech,
   };
 
-  renderActiveView();
+  renderActiveView({ animate: hadPreviousData });
 }
