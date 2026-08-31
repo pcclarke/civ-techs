@@ -15,8 +15,10 @@ import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
  *     clockwise to their slot;
  *   - continuing techs rotate to their new slot by the shortest path,
  *     their old icon crossfading to the new game's icon as they move;
- *   - departing techs continue clockwise past their old slot, through the
- *     wheel's reserved gap, back to 0°, fading out as they go.
+ *   - departing techs continue clockwise past their old slot to the *new*
+ *     wheel's last slot, fading out as they go — the far side of the
+ *     wheel's reserved gap from where entrants appear, not the same point
+ *     reached by going all the way around.
  *
  * Arcs and everything else shaped by an angular *range* rather than a
  * single point (pins, unlock marks, era wedges/labels) don't rotate —
@@ -43,9 +45,9 @@ const FADE_OUT_MS = 250;
 const FADE_IN_MS = 450;
 
 /** Angle of wheel position 0 — the same value calculatePointOnWheel gives
- *  it, independent of tech count. Entrants appear here; departures exit
- *  here; both travel through it in the same clockwise direction the wheel
- *  already reads in. */
+ *  it, independent of tech count. Entrants appear here and sweep forward;
+ *  see lastAngle for where departures head instead, in the same clockwise
+ *  direction the wheel already reads in. */
 const TOP_ANGLE = -Math.PI / 2 + PI_DIFF;
 
 function easeInOutCubic(t) {
@@ -65,8 +67,8 @@ function shortestDelta(from, to) {
 /** Non-negative delta that only ever goes forward (clockwise) from `from`
  *  to the next angle equivalent to `to`. Used for entrances (from
  *  TOP_ANGLE, always forward since every valid position's angle is ≥
- *  TOP_ANGLE) and exits (to TOP_ANGLE, continuing forward through the
- *  wheel's reserved gap rather than snapping back). */
+ *  TOP_ANGLE) and exits (to lastAngle, continuing forward rather than
+ *  snapping back — see lastAngle). */
 function forwardDelta(from, to) {
     return mod(to - from, TWO_PI);
 }
@@ -115,6 +117,15 @@ function targetAngle(count, position) {
     return calculatePointOnWheel(count, position, 1).angle;
 }
 
+/** Angle of the wheel's last position — where a departing tech now heads,
+ *  rather than continuing all the way around to TOP_ANGLE. Every valid
+ *  on-wheel angle already falls at or before this one, so exits reach it
+ *  by forward (clockwise) travel same as always, just a hair short of a
+ *  full lap instead of a full one. */
+function lastAngle(count) {
+    return targetAngle(count, count - 1);
+}
+
 function spokeInnerRadius(step, arcSpace) {
     return step >= 0 ? ARC_BASE + arcSpace * step : 0;
 }
@@ -161,7 +172,7 @@ export function animateSpokes(group, spokeData, count, techImgRadius, arcSpace) 
                 .attrTween("d", function (d) {
                     const inner = spokeInnerRadius(d.step, arcSpace);
                     const start = readSpokeAngle(this);
-                    const delta = forwardDelta(start, TOP_ANGLE);
+                    const delta = forwardDelta(start, lastAngle(count));
                     return (t) => spokeD(start + delta * t, inner, techImgRadius);
                 })
                 .remove())
@@ -256,7 +267,7 @@ export function animateTechLabels(group, allTechs, count, labelRadius) {
                 .attr("opacity", 0)
                 .tween("angle", function () {
                     const start = readTransformAngle(this);
-                    return angleTween(start, forwardDelta(start, TOP_ANGLE));
+                    return angleTween(start, forwardDelta(start, lastAngle(count)));
                 })
                 .remove())
         );
@@ -288,7 +299,7 @@ export function animateTechImages(group, allTechs, count, techImgRadius, game, i
     for (const [id, node] of existingById) {
         if (newIds.has(id)) continue;
         const start = readTransformAngle(node);
-        const delta = forwardDelta(start, TOP_ANGLE);
+        const delta = forwardDelta(start, lastAngle(count));
         // .tech-image carries a CSS `transition: opacity 0.5s ease` (for
         // hover-fade) that would otherwise fight this d3-driven opacity
         // tween — every attribute tick is itself a "change" the CSS
