@@ -3,6 +3,7 @@ import "d3-transition";
 
 import { ROW_H } from "./constants";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
+import { fadeCheck } from "./helpers";
 
 /**
  * Table-view counterpart to animateWheelSwitch.js — see that file's doc
@@ -109,11 +110,20 @@ function crossfadeIcon(rowNode, d, game, iconFolder) {
  * labels/images.
  */
 export function animateRows(root, allTechs, count, opts) {
-    const { game, iconFolder, eraOf } = opts;
+    const { game, iconFolder, eraOf, highlightedIds = [] } = opts;
     const rowHTML = (d) =>
         `<span class="tt-icon-slot"><img class="tt-icon" decoding="sync" src="${game}/img/${iconFolder}/${d.id}.png" alt=""></span>`
         + `<span class="tt-name">${d.name}</span>`;
     const eraAttr = (d) => (eraOf.has(d.position) ? eraOf.get(d.position) % 2 : null);
+    const fade = (d) => fadeCheck(d, highlightedIds);
+    const pinned = (d) => Boolean(window.app.pinned) && window.app.pinned.id === d.id;
+    // A dimmed row's opacity target is 0.05, not 1 — .tt-row.fade only
+    // wins the cascade once the inline opacity this animation drives is
+    // gone (see settleRowStyle), so while the transition is still in
+    // control the *inline* target itself has to already be the dimmed
+    // value, or a persisting pin's highlight chain would flash at full
+    // brightness for the whole move before snapping dim at the very end.
+    const opacityFor = (d) => (fade(d) ? 0.05 : 1);
 
     root.selectAll("div.tt-row")
         .data(allTechs, (d) => d.id)
@@ -122,6 +132,8 @@ export function animateRows(root, allTechs, count, opts) {
                 .attr("class", "tt-row")
                 .attr("data-id", (d) => d.id)
                 .attr("data-era", eraAttr)
+                .classed("fade", fade)
+                .classed("pinned", pinned)
                 .style("height", `${ROW_H}px`)
                 .style("top", "0px")
                 // .tt-row carries a CSS `transition: opacity 0.5s ease`
@@ -136,7 +148,7 @@ export function animateRows(root, allTechs, count, opts) {
                 .on("mouseleave", onNodeLeave)
                 .on("click", onNodeClick)
                 .call((sel) => sel.transition().duration(MOVE_MS).ease(easeInOutCubic)
-                    .style("opacity", 1)
+                    .style("opacity", opacityFor)
                     .styleTween("top", (d) => {
                         const t = lerp(0, d.position * ROW_H);
                         return (u) => `${t(u)}px`;
@@ -150,7 +162,9 @@ export function animateRows(root, allTechs, count, opts) {
                 // reasserted, not after.
                 .interrupt()
                 .style("transition", "none")
-                .style("opacity", 1)
+                .classed("fade", fade)
+                .classed("pinned", pinned)
+                .style("opacity", opacityFor)
                 .attr("data-era", eraAttr)
                 .each(function (d) {
                     crossfadeIcon(this, d, game, iconFolder);
@@ -181,15 +195,21 @@ export function animateRows(root, allTechs, count, opts) {
  * edge, both already snapped to this render's own values by the caller,
  * same as the wheel leaves radius untweened.
  */
-export function animateSpokeLines(layer, spokeData, count, spokeX1, textLeft) {
+export function animateSpokeLines(layer, spokeData, count, spokeX1, textLeft, highlightedIds = []) {
     const rowY = (pos) => pos * ROW_H + ROW_H / 2;
     const readY = (node) => parseFloat(node.getAttribute("y1")) || 0;
+    // .attr(), not .style(), for this layer's opacity (see animateSpokes in
+    // animateWheelSwitch.js) — a plain SVG presentation attribute is always
+    // outranked by a CSS class, so .fade wins over whatever this tween
+    // drives without any of the row-level opacity juggling above.
+    const fade = (d) => fadeCheck(d, highlightedIds);
 
     layer.selectAll("line")
         .data(spokeData, (d) => d.id)
         .join(
             (enter) => enter.append("line")
                 .attr("class", "tt-spoke")
+                .classed("fade", fade)
                 .attr("x1", spokeX1)
                 .attr("x2", textLeft)
                 .attr("y1", rowY(0))
@@ -207,6 +227,7 @@ export function animateSpokeLines(layer, spokeData, count, spokeX1, textLeft) {
                     })),
             (update) => update.interrupt()
                 .attr("opacity", 1)
+                .classed("fade", fade)
                 .attr("x1", spokeX1)
                 .attr("x2", textLeft)
                 .call((sel) => sel.transition().duration(MOVE_MS).ease(easeInOutCubic)

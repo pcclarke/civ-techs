@@ -52,11 +52,14 @@ const eraColor = scaleOrdinal([
  * `animate: true` is set only by initWheelData.js, only when a game/
  * expansion/tree switch just replaced `wheelData` with a new dataset (not
  * on the initial page load, and not on the ordinary hover/pin re-renders
- * that make up the vast majority of calls here — `selected` is always
- * null on an animated call, since initWheelData clears it before the
- * switch, so there's no interplay with hover-dimming to consider). See
- * animateWheelSwitch.js for what that path actually does; every other
- * call takes the instant path below exactly as before.
+ * that make up the vast majority of calls here). `selected`/`pinned`
+ * usually are null on an animated call — initWheelData releases them
+ * unless the pinned advance's id also exists in the new dataset — but
+ * when a pin does survive, the animated branch below applies the same
+ * `.fade`/highlight logic the non-animated path does, so the highlight
+ * chain stays legible through the transition instead of popping back only
+ * once it settles. See animateWheelSwitch.js for what that path actually
+ * does; every other call takes the instant path below exactly as before.
  */
 export async function renderWheel({ animate = false } = {}) {
     var { game, tree, selected, svg, wheelData } = window.app;
@@ -84,23 +87,42 @@ export async function renderWheel({ animate = false } = {}) {
   if (animate) {
       const count = allTechs.length;
 
-      animateSpokes(svg.spokes, spokeData, count, techImgRadius, arcSpace);
+      // `selected` (and `pinned`) can survive a switch now — initWheelData
+      // carries a pinned advance over to its own copy in the new dataset
+      // when the id still exists there — so this isn't always the "nothing
+      // selected" case the rest of this branch used to assume. Every layer
+      // below applies the exact same `.fade`/highlight logic the
+      // non-animated path below uses, just layered onto the animated draw
+      // calls, so a surviving pin's spoke, arc chain, and dimmed
+      // surroundings stay correct and legible all through the transition
+      // instead of popping back only once it ends.
+      animateSpokes(svg.spokes, spokeData, count, techImgRadius, arcSpace, highlightedIds);
       drawSpokes(svg.selectedSpokes, selectedSpokes, count, techImgRadius, arcSpace);
 
-      animateTechImages(svg.techImages, allTechs, count, techImgRadius, game, iconFolder);
-      animateTechLabels(svg.techLabels, allTechs, count, labelRadius);
+      animateTechImages(svg.techImages, allTechs, count, techImgRadius, game, iconFolder, highlightedIds);
+      animateTechLabels(svg.techLabels, allTechs, count, labelRadius, highlightedIds);
 
       fadeSwapLayer(svg.arcs, "path", (g) => drawArcs(g, prerequisites, color, arcSpace)
+          .classed("fade", Boolean(selected))
           .on("mouseover", onNodeHover)
           .on("mouseleave", onNodeLeave)
           .on("click", onNodeClick));
-      fadeSwapLayer(svg.unlockPins, "path", (g) => drawUnlockPins(g, prerequisites, count, color, arcSpace));
-      fadeSwapLayer(svg.unlockSquares, "rect", (g) => drawUnlockSquares(g, squareData, count, color, arcSpace));
-      fadeSwapLayer(svg.unlockCircles, "circle", (g) => drawUnlockCircles(g, circleData, count, color, arcSpace));
+      fadeSwapLayer(svg.unlockPins, "path", (g) => drawUnlockPins(g, prerequisites, count, color, arcSpace)
+          .classed("fade", (d) => Boolean(selected) && d.id !== selected.id && !prerequisiteIds.includes(d.id)));
+      fadeSwapLayer(svg.unlockSquares, "rect", (g) => drawUnlockSquares(g, squareData, count, color, arcSpace)
+          .classed("fade", (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId));
+      fadeSwapLayer(svg.unlockCircles, "circle", (g) => drawUnlockCircles(g, circleData, count, color, arcSpace)
+          .classed("fade", (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId));
       fadeSwapLayer(svg.eraBackgrounds, "path", (g) => drawEraBackgrounds(g, eraRanges, eraColor, eraBackgroundRadius));
-      fadeSwapLayer(svg.eraLabels, "text", (g) => drawEraLabels(g, eraRanges, eraColor, eraLabelRadius));
+      fadeSwapLayer(svg.eraLabels, "text", (g) => drawEraLabels(g, eraRanges, eraColor, eraLabelRadius)
+          .classed("fade", Boolean(selected)));
 
-      svg.selectedArcs.selectAll("path").remove();
+      drawArcs(
+          svg.selectedArcs,
+          selected ? selectionPrerequisites.filter((d) => d.step !== undefined) : [],
+          color,
+          arcSpace
+      );
       fadeSwapCenterImage(svg.centerImage, `${game}/img/${game}-center.png`);
       return;
   }

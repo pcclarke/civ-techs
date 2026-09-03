@@ -345,7 +345,7 @@ export function renderTable({ animate = false } = {}) {
     // rendered name (for its font). Rows themselves need no lane geometry
     // — their left offset arrives afterwards as a CSS variable.
     if (animate) {
-        animateRows(root, allTechs, allTechs.length, { game, iconFolder, eraOf });
+        animateRows(root, allTechs, allTechs.length, { game, iconFolder, eraOf, highlightedIds });
     } else {
         drawRows(root, allTechs, {
             game, iconFolder, selected, highlightedIds, eraOf,
@@ -411,36 +411,69 @@ export function renderTable({ animate = false } = {}) {
         const ownStep = ownArcStepById.get(d.id);
         return ownStep !== undefined ? laneX(ownStep) : 0;
     };
+    // Shared by both branches: the selection's own spoke overlay is always
+    // drawn as a plain instant join, animated or not — it's a small
+    // supplementary highlight layer, not core content.
+    const drawSpokeLines = (sel, data) => sel.selectAll("line")
+        .data(data, (d) => d.id)
+        .join("line")
+        .attr("class", "tt-spoke")
+        .attr("x1", spokeX1)
+        .attr("x2", textLeft)
+        .attr("y1", (d) => rowY(d.position))
+        .attr("y2", (d) => rowY(d.position));
+
     if (animate) {
         // Spokes track their own advance's row, same as the wheel's spokes
-        // track their tech's angle. Everything else here is shaped by a
+        // track their tech's angle — and, same as the wheel, carry the
+        // `.fade` dimming through the move so a pin that survives the
+        // switch (see initWheelData.js) stays legible throughout rather
+        // than only once it settles. Everything else here is shaped by a
         // row *range* rather than a single row — arcs span origin to
         // furthest dependent, pins and marks are arc decorations, era
         // boundaries span a whole era — so, same call as the wheel, they
         // fade out and the redrawn set fades in rather than tweening a
         // shape whose ends would be moving independently. fadeSwapLayer is
         // the exact function animateWheelSwitch.js uses for this.
-        animateSpokeLines(layer.spokes, spokeData, allTechs.length, spokeX1, textLeft);
-        // Selection highlight layers are always empty here — `selected` is
-        // null throughout a switch — so there's nothing to animate, only
-        // whatever the previous render left behind to clear.
-        layer.spokesSel.selectAll("line").remove();
+        animateSpokeLines(layer.spokes, spokeData, allTechs.length, spokeX1, textLeft, highlightedIds);
+        // The selection's own spokes/arc chain, undimmed on top — drawn
+        // instantly (not animated) since it's a small supplementary
+        // overlay, same as the wheel's svg.selectedSpokes/selectedArcs.
+        // Empty (and so exit-clearing) whenever nothing survived the switch.
+        drawSpokeLines(layer.spokesSel, selected ? selectedSpokes : [])
+            .classed("tt-spoke-sel", true);
 
         fadeSwapLayer(layer.arcs, "line", (g) => g.selectAll("line")
             .data(arcs, (d) => d.id)
             .join("line")
             .attr("class", "tt-arc")
+            .classed("fade", Boolean(selected))
             .attr("x1", (d) => laneX(d.step))
             .attr("x2", (d) => laneX(d.step))
             .attr("y1", (d) => rowY(d.range[0]))
             .attr("y2", (d) => rowY(d.range[1]))
             .attr("stroke", (d) => color(d.step)));
-        layer.sel.selectAll("line").remove();
+
+        const selectedArcs = selected
+            ? selectionPrerequisites.filter((d) => Number.isFinite(d.step) && d.range)
+            : [];
+        layer.sel.selectAll("line")
+            .data(selectedArcs, (d) => d.id)
+            .join("line")
+            .attr("class", "tt-arc-sel")
+            .attr("x1", (d) => laneX(d.step))
+            .attr("x2", (d) => laneX(d.step))
+            .attr("y1", (d) => rowY(d.range[0]))
+            .attr("y2", (d) => rowY(d.range[1]))
+            .attr("stroke", (d) => color(d.step));
 
         fadeSwapLayer(layer.pins, "line", (g) => g.selectAll("line")
             .data(arcs, (d) => d.id)
             .join("line")
             .attr("class", "tt-pin")
+            .classed("fade", (d) => Boolean(selected)
+                && d.id !== (selected && selected.id)
+                && !prerequisiteIds.includes(d.id))
             .attr("x1", (d) => laneX(d.step) - pinHalf)
             .attr("x2", (d) => laneX(d.step) + pinHalf)
             .attr("y1", (d) => rowY(d.position))
@@ -451,6 +484,8 @@ export function renderTable({ animate = false } = {}) {
             .data(squareData)
             .join("rect")
             .attr("class", "tt-req")
+            .classed("fade", (d) => Boolean(selected)
+                && selected.id !== d.id && selected.id !== d.arcId)
             .attr("x", (d) => laneX(d.step) - mark / 2)
             .attr("y", (d) => rowY(d.pos) - mark / 2)
             .attr("width", mark)
@@ -461,6 +496,8 @@ export function renderTable({ animate = false } = {}) {
             .data(circleData)
             .join("circle")
             .attr("class", "tt-opt")
+            .classed("fade", (d) => Boolean(selected)
+                && selected.id !== d.id && selected.id !== d.arcId)
             .attr("cx", (d) => laneX(d.step))
             .attr("cy", (d) => rowY(d.pos))
             .attr("r", mark / 2)
@@ -473,15 +510,6 @@ export function renderTable({ animate = false } = {}) {
             .attr("class", "tt-era")
             .style("top", (d) => `${d.first * ROW_H}px`));
     } else {
-        const drawSpokeLines = (sel, data) => sel.selectAll("line")
-            .data(data, (d) => d.id)
-            .join("line")
-            .attr("class", "tt-spoke")
-            .attr("x1", spokeX1)
-            .attr("x2", textLeft)
-            .attr("y1", (d) => rowY(d.position))
-            .attr("y2", (d) => rowY(d.position));
-
         drawSpokeLines(layer.spokes, spokeData)
             .classed("fade", Boolean(selected));
 

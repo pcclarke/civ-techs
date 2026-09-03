@@ -2,7 +2,7 @@ import { select } from "d3-selection";
 import "d3-transition";
 
 import { ARC_BASE, PI_DIFF, TECH_IMG_WIDTH, TWO_PI } from "./constants";
-import { calculatePointOnWheel, wheelTransform } from "./helpers";
+import { calculatePointOnWheel, fadeCheck, wheelTransform } from "./helpers";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
 
 /**
@@ -132,12 +132,21 @@ function spokeInnerRadius(step, arcSpace) {
 
 // --------------------------- Spokes ---------------------------
 
-export function animateSpokes(group, spokeData, count, techImgRadius, arcSpace) {
+export function animateSpokes(group, spokeData, count, techImgRadius, arcSpace, highlightedIds = []) {
+    // A .fade class wins over the opacity attribute this tween drives
+    // regardless — a CSS class always outranks a plain SVG presentation
+    // attribute — so classing a dimmed advance here is enough to keep it
+    // dim through its whole flight without touching the tween itself; see
+    // makeWheel.js for why this can be non-empty at all mid-switch (a
+    // pinned advance that survives into the new game keeps its highlight).
+    const fade = (d) => fadeCheck(d, highlightedIds);
+
     group.selectAll(".spoke-line")
         .data(spokeData, (d) => d.id)
         .join(
             (enter) => enter.append("path")
                 .attr("class", "spoke-line")
+                .classed("fade", fade)
                 .attr("opacity", 0)
                 .attr("d", (d) => spokeD(TOP_ANGLE, spokeInnerRadius(d.step, arcSpace), techImgRadius))
                 .call((sel) => sel.transition().duration(ROTATE_MS).ease(easeInOutCubic)
@@ -160,6 +169,7 @@ export function animateSpokes(group, spokeData, count, techImgRadius, arcSpace) 
                 // before opacity is reasserted or the new transition starts.
                 .interrupt()
                 .attr("opacity", 1)
+                .classed("fade", fade)
                 .call((sel) => sel.transition().duration(ROTATE_MS).ease(easeInOutCubic)
                     .attrTween("d", function (d) {
                         const inner = spokeInnerRadius(d.step, arcSpace);
@@ -181,7 +191,8 @@ export function animateSpokes(group, spokeData, count, techImgRadius, arcSpace) 
 
 // --------------------------- Labels ---------------------------
 
-export function animateTechLabels(group, allTechs, count, labelRadius) {
+export function animateTechLabels(group, allTechs, count, labelRadius, highlightedIds = []) {
+    const fade = (d) => fadeCheck(d, highlightedIds);
     const anchorAt = (angle) => (Math.cos(angle) < 0 ? "end" : "start");
     // A tech sitting at position count/2 exactly (Nationalism does, in
     // Civ 4: 43 of 86) has a *mathematically* exact target angle of π/2 —
@@ -233,6 +244,7 @@ export function animateTechLabels(group, allTechs, count, labelRadius) {
         .data(allTechs, (d) => d.id)
         .join(
             (enter) => enter.append("text")
+                .classed("fade", fade)
                 .attr("y", 5)
                 .attr("opacity", 0)
                 .attr("text-anchor", anchorAt(TOP_ANGLE))
@@ -256,6 +268,7 @@ export function animateTechLabels(group, allTechs, count, labelRadius) {
                 // wherever it left off.
                 .interrupt()
                 .attr("opacity", 1)
+                .classed("fade", fade)
                 .text((d) => d.name)
                 .call((sel) => sel.transition().duration(ROTATE_MS).ease(easeInOutCubic)
                     .tween("angle", function (d) {
@@ -289,7 +302,8 @@ export function animateTechLabels(group, allTechs, count, labelRadius) {
  * swapping at any single instant. The incoming node becomes the resident
  * node for that id once the transition ends.
  */
-export function animateTechImages(group, allTechs, count, techImgRadius, game, iconFolder) {
+export function animateTechImages(group, allTechs, count, techImgRadius, game, iconFolder, highlightedIds = []) {
+    const fade = (d) => fadeCheck(d, highlightedIds);
     const existingById = new Map();
     group.selectAll(".tech-image").each(function (d) {
         existingById.set(d.id, this);
@@ -335,6 +349,7 @@ export function animateTechImages(group, allTechs, count, techImgRadius, game, i
 
         group.append("image")
             .attr("class", "tech-image")
+            .classed("fade", fade(d))
             .datum(d)
             .attr("width", TECH_IMG_WIDTH)
             .attr("height", TECH_IMG_WIDTH)
