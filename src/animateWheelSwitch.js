@@ -383,16 +383,30 @@ export async function fadeSwapLayer(group, childTag, redraw) {
     const existing = group.selectAll(childTag);
     if (!existing.empty()) {
         try {
-            await existing.transition().duration(FADE_OUT_MS).attr("opacity", 0).end();
+            // .style(), not .attr(): this is reused for the mobile table's
+            // era-boundary <div>s too (see animateTableSwitch.js), and a
+            // bare `opacity` attribute is an SVG presentation attribute —
+            // HTML ignores it outright. Inline style opacity works
+            // identically on both, so one code path covers both views.
+            await existing.transition().duration(FADE_OUT_MS).style("opacity", 0).end();
         } catch {
             // interrupted — fall through and redraw anyway
         }
     }
     group.selectAll(childTag).remove();
     redraw(group)
-        .attr("opacity", 0)
+        .style("opacity", 0)
         .transition().duration(FADE_IN_MS).ease(easeInOutCubic)
-        .attr("opacity", 1);
+        .style("opacity", 1)
+        // Cleared once settled, not left at "1": several of these layers
+        // (arcs, pins, req/opt marks) carry their own selection-driven
+        // `.fade` class independently of any row/label's own — an inline
+        // style always outranks a class rule, so a lingering "opacity: 1"
+        // here would silently defeat that class's `opacity: 0.05` on every
+        // hover from then on. Dropping it hands opacity back to whatever
+        // class (or its absence) says it should be, exactly where the
+        // non-animated draw path leaves it.
+        .on("end", function () { this.style.opacity = ""; });
 }
 
 /** Same fade-out/fade-in treatment for the hub's game logo. */

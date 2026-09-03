@@ -796,10 +796,22 @@ p {
   outline-offset: -2px;
 }
 
-.tt-icon {
+/* Wraps .tt-icon so a game switch can briefly overlay a second one on top
+ * of it (crossfading old art to new, same as the wheel) without disturbing
+ * the row's flex layout — the slot is the flex item; the image(s) inside
+ * it are simply stacked. */
+.tt-icon-slot {
+  position: relative;
   width: 24px;
   height: 24px;
   flex-shrink: 0;
+}
+
+.tt-icon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 

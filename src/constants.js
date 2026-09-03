@@ -146,3 +146,14 @@ export const ANG_ADJ = (1 - ANGLE_GAP) * 360;
 export const ANG_DIFF = (ANGLE_GAP / 2) * 360;
 
 export const GAME_IMG_WIDTH = 150;
+
+/** Mobile table row pitch. Every row is exactly this tall — no exceptions
+ *  — because the lane overlay in makeTable.js computes y positions as
+ *  `position * ROW_H` rather than measuring the DOM, and animateTableSwitch.js
+ *  relies on the same fixed pitch to compute a row's target `top` from its
+ *  position alone.
+ *
+ *  34 rather than a touch-target 44: the longest tree is 92 rows, and every
+ *  pixel here is multiplied by that. The row spans the full width, so the
+ *  tap target stays large in the axis that's easy to miss in. */
+export const ROW_H = 34;

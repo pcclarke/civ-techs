@@ -36,18 +36,19 @@ export function renderActiveView({ animate = false } = {}) {
     const switched = lastWasTable !== null && lastWasTable !== table;
     lastWasTable = table;
 
+    // A breakpoint crossing has nothing to animate from — neither view was
+    // visible a moment ago — so it always renders instantly even if the
+    // caller asked for animate (only initWheelData.js ever does).
+    const shouldAnimate = animate && !switched;
+
     if (table) {
-        renderTable();
+        renderTable({ animate: shouldAnimate });
     } else {
         // The wheel's radii come from measuring label widths, which reads
         // as zero while the wheel is display:none — so any layout computed
         // while the table was showing is garbage. Re-measure on the way in.
         if (switched) refreshWheelLayout();
-        // A breakpoint crossing has nothing to animate from — the wheel
-        // wasn't visible a moment ago — so it always renders instantly
-        // even if the caller asked for animate (only initWheelData.js ever
-        // does, and only when the mobile table isn't what's showing).
-        renderWheel({ animate: animate && !switched });
+        renderWheel({ animate: shouldAnimate });
         // The era indicator belongs to the table; it's position:fixed, so
         // nothing else takes it off screen when the wheel takes over.
         updateEraIndicator();
