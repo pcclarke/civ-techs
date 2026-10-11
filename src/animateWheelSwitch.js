@@ -3,6 +3,8 @@ import "d3-transition";
 
 import { ARC_BASE, PI_DIFF, TECH_IMG_WIDTH, TWO_PI } from "./constants";
 import { calculatePointOnWheel, fadeCheck, wheelTransform } from "./helpers";
+import { eraAngles, eraWedge, rememberEraAngles } from "./drawEras";
+import { eraKey } from "./eraData";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
 
 /**
@@ -56,6 +58,10 @@ function easeInOutCubic(t) {
 
 function mod(n, m) {
     return ((n % m) + m) % m;
+}
+
+function lerp(from, to, t) {
+    return from + (to - from) * t;
 }
 
 /** Signed delta in (-π, π]: the shorter way from `from` to `to`. Used for
@@ -421,19 +427,124 @@ export async function fadeSwapLayer(group, childTag, redraw) {
         }
     }
     group.selectAll(childTag).remove();
-    redraw(group)
+    fadeInToResting(redraw(group), FADE_IN_MS);
+}
+
+/**
+ * Fade a freshly-drawn selection in to each element's *resting* opacity —
+ * whatever value the CSS rules applying to it say it should have, read
+ * before any inline opacity exists.
+ *
+ * Fading to a hard-coded 1 instead (as this did) is wrong for every layer
+ * that rests below it: `.era-background` sits at 0.2 and anything
+ * carrying `.fade` at 0.05, and the inline opacity a tween drives
+ * outranks a class rule the whole way up. The era wedges ramped to five
+ * times their intended tint, hit full saturation at the end of the
+ * fade-in, then snapped back the instant the inline value was cleared on
+ * settle — a dark flash just as the switch landed. Reading the target
+ * first puts the end of the ramp exactly where the non-animated draw path
+ * leaves the layer, which makes that clearing invisible.
+ *
+ * Every read happens before the first write, so this costs one style
+ * recalc for the selection rather than one per element.
+ */
+function fadeInToResting(selection, duration) {
+    const resting = new Map();
+    selection.each(function () {
+        resting.set(this, getComputedStyle(this).opacity || "1");
+    });
+
+    return selection
         .style("opacity", 0)
-        .transition().duration(FADE_IN_MS).ease(easeInOutCubic)
-        .style("opacity", 1)
-        // Cleared once settled, not left at "1": several of these layers
-        // (arcs, pins, req/opt marks) carry their own selection-driven
-        // `.fade` class independently of any row/label's own — an inline
-        // style always outranks a class rule, so a lingering "opacity: 1"
-        // here would silently defeat that class's `opacity: 0.05` on every
-        // hover from then on. Dropping it hands opacity back to whatever
-        // class (or its absence) says it should be, exactly where the
-        // non-animated draw path leaves it.
+        .transition().duration(duration).ease(easeInOutCubic)
+        .style("opacity", function () { return resting.get(this); })
+        // Cleared once settled rather than left at a literal number: a
+        // lingering inline value would defeat `.fade`'s 0.05 on every
+        // later hover. Dropping it hands opacity back to whatever class
+        // (or its absence) says it should be.
+        //
+        // `end` only, deliberately not `interrupt`: a second switch
+        // arriving mid-fade schedules its own fade-out on these same
+        // elements, and that tween reads its start value from wherever
+        // this one had actually reached. Clearing on interrupt would
+        // instead snap the element up to resting opacity for a frame
+        // before fading it out — a visible blip on rapid switching.
+        // Nothing strands as a result: an interrupted element is either
+        // removed by the call that interrupted it, or left running to
+        // completion (a hover re-render writes attributes but does not
+        // cancel transitions), so this handler still fires.
         .on("end", function () { this.style.opacity = ""; });
+}
+
+// --------------------------- Era wedges ---------------------------
+
+/**
+ * Era backgrounds are the one range-shaped layer that *can* be tweened,
+ * because an era has an identity that outlives the dataset it came from.
+ *
+ * Every other range-shaped layer is keyed to data that simply doesn't
+ * exist in the next game — an arc belongs to a specific prerequisite edge
+ * — so fadeSwapLayer is all they can do. Eras are different: Civ 3's
+ * "Modern Times" and Civ 6's ERA_MODERN are the same era under different
+ * spellings, and eraKey makes that identity explicit. Keyed on it, a
+ * switch splits three ways:
+ *
+ *   - eras both games have    -> the wedge slides to its new span, its
+ *                                fill interpolating to the new colour
+ *   - eras only the old game had -> fade out and go
+ *   - eras only the new game has -> fade in at their final span
+ *
+ * which is what removes the blank gap the old treatment had. fadeSwapLayer
+ * emptied the whole layer before redrawing it, so even an era present in
+ * both games fell to opacity 0 and came back — the page showing through
+ * underneath for the length of the crossfade.
+ *
+ * Only the angles tween; the radius snaps to this render's value, the
+ * same choice the rest of this file makes (each game recomputes its radii
+ * from its own label widths, so the old radius isn't a meaningful place
+ * to ease from). Colour interpolation is d3's own: `.attr("fill", …)` on
+ * a transition detects a colour string and interpolates it in RGB.
+ *
+ * The morph runs at ROTATE_MS so a wedge travels in step with the spokes
+ * and icons rotating above it, rather than finishing early underneath a
+ * wheel still in motion.
+ */
+export function animateEraBackgrounds(group, eraRanges, color, outerRadius) {
+    const wedge = eraWedge(outerRadius);
+    const joined = group.selectAll("path").data(eraRanges, (d) => eraKey(d.era));
+
+    joined.exit()
+        .transition().duration(FADE_OUT_MS)
+        .style("opacity", 0)
+        .remove();
+
+    const entered = joined.enter().append("path")
+        .attr("class", "era-background")
+        .attr("d", (d) => wedge(eraAngles(d)))
+        .attr("fill", (_, i) => color(i));
+    rememberEraAngles(entered);
+    fadeInToResting(entered, FADE_IN_MS);
+
+    joined
+        .transition().duration(ROTATE_MS).ease(easeInOutCubic)
+        .attr("fill", (_, i) => color(i))
+        .attrTween("d", function (d) {
+            // Read the outgoing span before overwriting the stash, so a
+            // morph interrupted partway still leaves a sane value behind
+            // for the next switch to ease from. Falling back to the
+            // target means "no movement" rather than a jump from a
+            // garbage angle, which is the right failure for a wedge whose
+            // node somehow never recorded where it was drawn.
+            const from = this.__eraAngles || eraAngles(d);
+            const to = eraAngles(d);
+            this.__eraAngles = to;
+            return (t) => wedge({
+                startAngle: lerp(from.startAngle, to.startAngle, t),
+                endAngle: lerp(from.endAngle, to.endAngle, t),
+            });
+        });
+
+    return joined;
 }
 
 /** Same fade-out/fade-in treatment for the hub's game logo. */

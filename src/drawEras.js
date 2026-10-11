@@ -1,7 +1,7 @@
 import { arc } from "d3-shape";
 
 import { GAME_IMG_WIDTH, LABEL_PADDING, PI_DIFF, TWO_PI_ADJ } from "./constants";
-import { eraDisplayName } from "./eraData";
+import { eraDisplayName, eraKey } from "./eraData";
 import { wheelTransform } from "./helpers";
 
 /**
@@ -22,21 +22,52 @@ import { wheelTransform } from "./helpers";
  */
 
 /**
- * Build the d3 arc generator for era wedges. The wedge starts half a slot
- * before the era's first tech and ends half a slot after its last so the
- * tech icons (which extend half their width past the spoke) sit fully
- * inside the coloured region. The first and last eras intentionally bleed
- * a small amount into the angular gap above 12 o'clock — the gap is wider
- * than a half-slot for any realistic tech count, so the wedges stop well
- * short of meeting at the top. innerRadius=0 gives a solid pie slice all
+ * The angular span of one era's wedge, as a bare pair of numbers.
+ *
+ * The span starts half a slot before the era's first tech and ends half a
+ * slot after its last so the tech icons (which extend half their width
+ * past the spoke) sit fully inside the coloured region. The first and
+ * last eras intentionally bleed a small amount into the angular gap above
+ * 12 o'clock — the gap is wider than a half-slot for any realistic tech
+ * count, so the wedges stop well short of meeting at the top.
+ *
+ * Split out from the generator below so the switch animation can
+ * interpolate the two numbers and rebuild the path once per frame: a
+ * wedge's `d` string has no meaningful interpolation of its own. See
+ * animateEraBackgrounds in animateWheelSwitch.js.
+ */
+export function eraAngles(d) {
+    return {
+        startAngle: ((d.first - 0.5) / d.count) * TWO_PI_ADJ + PI_DIFF,
+        endAngle: ((d.last + 0.5) / d.count) * TWO_PI_ADJ + PI_DIFF,
+    };
+}
+
+/**
+ * Arc generator for era wedges, taking an eraAngles pair rather than an
+ * era range so the same generator serves both the static draw and the
+ * per-frame animated rebuild. innerRadius=0 gives a solid pie slice all
  * the way to the centre; the centre image and arc rings sit on top.
  */
-function eraBackgroundArc(outerRadius) {
+export function eraWedge(outerRadius) {
     return arc()
         .innerRadius(0)
         .outerRadius(outerRadius)
-        .startAngle((d) => ((d.first - 0.5) / d.count) * TWO_PI_ADJ + PI_DIFF)
-        .endAngle((d) => ((d.last + 0.5) / d.count) * TWO_PI_ADJ + PI_DIFF);
+        .startAngle((a) => a.startAngle)
+        .endAngle((a) => a.endAngle);
+}
+
+/**
+ * Stash the span a wedge is currently drawn at on the node itself, so a
+ * later switch can interpolate *from* it. The angles can't be recovered
+ * from the rendered `d` attribute, and the datum they came from belongs
+ * to the outgoing dataset — it's replaced wholesale on every load — so
+ * the node is the only thing that persists across a switch.
+ */
+export function rememberEraAngles(selection) {
+    return selection.each(function (d) {
+        this.__eraAngles = eraAngles(d);
+    });
 }
 
 /**
@@ -49,14 +80,19 @@ function eraBackgroundArc(outerRadius) {
  *                      which stops short of the tech labels)
  */
 export function drawEraBackgrounds(element, eraRanges, color, outerRadius) {
-    const wedge = eraBackgroundArc(outerRadius);
-    return element
+    const wedge = eraWedge(outerRadius);
+    return rememberEraAngles(element
         .selectAll("path")
-        .data(eraRanges)
+        // Keyed by canonical era identity, not array index, so the eras
+        // two games share stay the same DOM node across a switch — which
+        // is what lets animateEraBackgrounds morph them instead of
+        // crossfading. Index keying matched Civ 3's "Middle Ages" against
+        // Civ 5's ERA_CLASSICAL purely because both sit at position 1.
+        .data(eraRanges, (d) => eraKey(d.era))
         .join("path")
         .attr("class", "era-background")
-        .attr("d", (d) => wedge(d))
-        .attr("fill", (_, i) => color(i));
+        .attr("d", (d) => wedge(eraAngles(d)))
+        .attr("fill", (_, i) => color(i)));
 }
 
 /**
@@ -78,7 +114,7 @@ export function drawEraLabels(element, eraRanges, color, radius) {
     const widthCap = 2 * (radius - GAME_IMG_WIDTH / 2 - LABEL_PADDING);
     return element
         .selectAll("text")
-        .data(eraRanges)
+        .data(eraRanges, (d) => eraKey(d.era))
         .join("text")
         .attr("class", "era-label")
         .attr("text-anchor", "middle")
