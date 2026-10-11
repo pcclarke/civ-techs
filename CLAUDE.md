@@ -6,12 +6,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm install
-npm run dev      # vite --host (port 5173)
-npm run build    # -> dist/ (gitignored; CI rebuilds it)
-npm run preview  # serve the built output
+npm run dev            # vite --host (port 5173)
+npm run build          # -> dist/ (gitignored; CI rebuilds it)
+npm run preview        # serve the built output
+npm run check:browser  # headless-browser checks (see below)
 ```
 
-There is no test suite and no linter configured — verification is visual, in the browser.
+There is no unit-test suite and no linter; most verification is visual, in the browser.
+
+### `npm run check:browser`
+
+Checks the parts of the app that genuinely need a rendering engine, which is why they can't be unit-tested in Node or jsdom:
+
+- **Wheel layout** — `computeWheelLayout` derives every radius from *measured* text (`getComputedTextLength`, `getBBox`), across all 11 game/tree combinations. Also covers the documented `display: none` hazard (hidden text measures as zero width, collapsing the radii) and that `refreshWheelLayout` repairs it.
+- **Reduced motion** — that a switch animates normally, and lands on its final frame instantly under `--force-prefers-reduced-motion`.
+- **Table layout** — `contentLeft`'s contract that the widest advance name finishes flush against the right edge, measured the same way `makeTable` does it (canvas `measureText`), plus the fixed `ROW_H` row pitch the lane overlay depends on.
+
+No new dependencies: it bundles with the esbuild inside Vite and drives whichever Chrome is installed (`CHROME=/path` to override). The page under test is the project's own `index.html` with its module script swapped out, so the DOM and CSS are the real ones.
+
+Assertions are **invariants, not pixel values** ("every label fits inside the SVG", not "labelRadius is 418.5") — absolute numbers move with font availability and platform text rasterisation. Measured values are printed as diagnostics.
+
+Two things to know before extending it. Animation time comes from a stubbed `performance.now` + rAF queue, because Chrome's `--virtual-time-budget` advances `setTimeout` but *not* the rAF clock d3-timer uses, which makes every transition look like it barely started. And `--dump-dom` serialises the inlined `<script>` too, so results are collected via DOM APIs rather than an HTML string — a literal result marker in the source would be matched before the real element.
 
 Deployment is `.github/workflows/deploy.yml`: a push to **`master`** builds and publishes `dist/` to GitHub Pages. (`origin/HEAD` points at `gh-pages`, which is a legacy branch; `master` is what ships.)
 

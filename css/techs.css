@@ -1027,3 +1027,43 @@ p {
     border-width: 1px 0 0;
   }
 }
+
+
+/* Honour the OS "reduce motion" setting.
+ *
+ * The switch animations are suppressed on the JS side — see
+ * prefersReducedMotion in src/renderView.js, which renderActiveView
+ * consults before taking any animated path — so what is left for CSS is
+ * the hover dimming on icons, labels and table rows (the two
+ * `transition: opacity` rules above).
+ *
+ * Deliberately a blanket rule rather than a list of those selectors.
+ * Someone adding a transition later should not have to remember to come
+ * back here and exempt it, and an accessibility guard that silently stops
+ * covering new code is worse than a blunt one. `!important` is needed
+ * because a media query adds no specificity: a bare `*` loses to
+ * `.tech-image` on its own. The matching rules in src/animate*.js already
+ * set `transition: none` inline while their tweens run, for the unrelated
+ * reason that a 0.5s CSS transition would otherwise fight a per-frame
+ * attribute tween.
+ *
+ * Opacity, colour and position all still *change* — nothing is removed,
+ * no state or cue is lost. They just arrive at their final value directly
+ * instead of travelling there.
+ *
+ * 0.01ms rather than `none` so a transition still technically runs and
+ * fires its `transitionend`. Nothing here listens for one today (the
+ * animators are d3/rAF-driven and settle on d3's own "end" event), but
+ * `none` silently swallows that event, which is an unpleasant thing for
+ * an accessibility rule to do to code written later. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

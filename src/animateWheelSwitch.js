@@ -600,12 +600,87 @@ export function animateEraBackgrounds(group, eraRanges, color, outerRadius) {
     return all;
 }
 
-/** Same fade-out/fade-in treatment for the hub's game logo. */
+/**
+ * Crossfade the hub's game logo.
+ *
+ * This used to fade the resident image out to opacity 0, swap its href on
+ * `end`, and fade it back in — so for a quarter of a second the middle of
+ * the wheel was simply empty. That was unremarkable while every other
+ * layer crossfaded through nothing too; now that the spokes rotate and
+ * the era wedges morph continuously, a hole in the hub is the one thing
+ * left that blinks.
+ *
+ * Same two-node technique animateTechImages uses for the tech icons: the
+ * outgoing logo fades down while a second image showing the incoming one
+ * fades up over it, both on the same ROTATE_MS/easeInOutCubic curve as
+ * the rest of the switch, so the hub dissolves from one logo to the next
+ * instead of vanishing between them. Two stacked alpha images do dip to
+ * about 75% combined coverage at the midpoint — that's inherent to any
+ * crossfade, and it's exactly the dip the tech icons already have, so the
+ * hub now matches them rather than being the one element that blanks.
+ *
+ * The difference from a tech icon is that this node can't be thrown away.
+ * svgInit hands out a persistent `svg.centerImage` and the non-animated
+ * render path writes straight to it (see makeWheel.js), so the resident
+ * node has to survive the switch. Hence the overlay: the resident takes
+ * over the new href once the crossfade lands, leaving the DOM exactly as
+ * svgInit built it.
+ */
 export function fadeSwapCenterImage(centerImage, href) {
-    centerImage.transition().duration(FADE_OUT_MS).attr("opacity", 0)
+    const parent = select(centerImage.node().parentNode);
+
+    // A switch arriving mid-crossfade. Settle the previous one outright
+    // instead of just dropping its overlay — the resident still holds the
+    // logo from *before* that crossfade, so discarding the overlay would
+    // snap the hub back to a game two switches old for the length of the
+    // next fade. The href rides on the node rather than being read back
+    // out of the attribute, so no namespace getter is involved.
+    const pending = parent.selectAll("image.center-incoming");
+    if (!pending.empty()) {
+        const settled = pending.node().__centerHref;
+        pending.interrupt().remove();
+        centerImage.interrupt().attr("opacity", 1);
+        // Guarded: d3 reads a null *or undefined* attribute value as a
+        // removal, so handing it a missing href would strip the hub image
+        // outright. The stash is written the moment an overlay is created,
+        // so this should be unreachable — but blanking the hub is too
+        // visible a failure to leave to "should".
+        if (settled) centerImage.attr("xlink:href", settled);
+    }
+
+    // Nothing to cross to. Worth checking because a *tree* switch (Civ 6
+    // and 7 toggling technologies against civics) reloads the whole
+    // dataset without changing the game, and the old code dutifully
+    // blinked the hub out and back for it.
+    if (centerImage.attr("xlink:href") === href) return;
+
+    centerImage.interrupt()
+        .transition().duration(ROTATE_MS).ease(easeInOutCubic)
+        .attr("opacity", 0);
+
+    // Geometry copied off the resident rather than recomputed from
+    // GAME_IMG_WIDTH, so the overlay can't drift out of alignment with
+    // whatever svgInit decided. Appended to the same parent, which puts
+    // it immediately above the resident in paint order.
+    const incoming = parent.append("image")
+        .attr("class", "center-incoming")
+        .attr("x", centerImage.attr("x"))
+        .attr("y", centerImage.attr("y"))
+        .attr("width", centerImage.attr("width"))
+        .attr("height", centerImage.attr("height"))
+        .attr("xlink:href", href)
+        .attr("opacity", 0);
+    incoming.node().__centerHref = href;
+
+    incoming.transition().duration(ROTATE_MS).ease(easeInOutCubic)
+        .attr("opacity", 1)
         .on("end", function () {
-            select(this).attr("xlink:href", href)
-                .transition().duration(FADE_IN_MS).ease(easeInOutCubic)
-                .attr("opacity", 1);
+            // Hand the logo back to the resident and drop the overlay.
+            // Both are fully opaque and showing the same image by now, so
+            // the handover is invisible. The resident's own fade-out ended
+            // on this same frame; interrupt guards against any skew
+            // letting its last tick land after this.
+            centerImage.interrupt().attr("xlink:href", href).attr("opacity", 1);
+            this.remove();
         });
 }
