@@ -36,6 +36,21 @@ import { wheelTransform } from "./helpers";
  * wedge's `d` string has no meaningful interpolation of its own. See
  * animateEraBackgrounds in animateWheelSwitch.js.
  */
+/**
+ * Join key for both era layers.
+ *
+ * The layer gets bound to two different datum shapes: an eraRanges entry
+ * by the static draw path, and an eraMorphPlan slot by the animated one
+ * (slots also cover *departing* eras, which are absent from eraRanges
+ * altogether). A key function sees both — the incoming data and whatever
+ * the existing nodes still carry — so it has to read either. Without
+ * this, a hover re-render landing after a switch keyed every node on
+ * screen to "" and treated the whole layer as departing.
+ */
+export function eraJoinKey(d) {
+    return d.key || eraKey(d.era);
+}
+
 export function eraAngles(d) {
     return {
         startAngle: ((d.first - 0.5) / d.count) * TWO_PI_ADJ + PI_DIFF,
@@ -71,6 +86,116 @@ export function rememberEraAngles(selection) {
 }
 
 /**
+ * Work out where every era wedge travels across one game switch.
+ *
+ * Pure geometry, no DOM: the caller supplies the spans currently on
+ * screen (keyed by canonical era identity — it reads them off the nodes,
+ * since the dataset they came from is already gone) plus the incoming
+ * eraRanges, and gets back one *slot* per wedge to render, each with the
+ * span it starts from and the span it ends at.
+ *
+ * Why slots rather than three independent populations. The era layer is a
+ * partition: adjacent wedges share an edge exactly, which is the only
+ * reason it reads as continuous bands instead of stripes. Animating each
+ * wedge from its own old span to its own new span breaks that, because an
+ * era appearing or disappearing has no counterpart to share an edge with
+ * — the partition develops gaps the page shows through and overlaps that
+ * tint twice, for the length of the morph.
+ *
+ * Anchoring each entrance and departure to its nearest surviving
+ * neighbour is not enough either. Civ 4 -> Civ 7 replaces five
+ * consecutive eras (Classical through Industrial) with one (Exploration);
+ * collapse them all toward the one survivor behind them and they vacate
+ * the middle of the wheel together, opening a 65-degree hole.
+ *
+ * So the lists are aligned into a single ordered slot sequence instead —
+ * survivors as anchors, with each block's departures and arrivals between
+ * them — and the degenerate ends are then filled in *from their
+ * neighbours*: an arrival's start span collapses onto the previous slot's
+ * old end, a departure's end span onto the previous slot's new end.
+ * Consecutive slots therefore share both an old edge and a new edge, so
+ * the edge between them is interpolated from one pair of numbers and the
+ * partition stays airtight at every frame, whatever the two games' era
+ * sets look like.
+ *
+ * `fade` comes back true on every slot when the two games share no era at
+ * all (Civ 4 -> Civ 1, which has no era data): there is no common
+ * geometry to travel through, so those wedges simply fade.
+ *
+ * @param {Map<string, {startAngle: number, endAngle: number}>} oldByKey
+ * @param {Object[]} newRanges  eraRanges for the incoming dataset
+ * @returns {{slots: Array<{key: string, kind: "morph"|"enter"|"exit",
+ *            index: number|null, from: Object, to: Object, fade: boolean}>}}
+ */
+export function eraMorphPlan(oldByKey, newRanges) {
+    const newKeys = newRanges.map((d) => eraKey(d.era));
+    const newAngles = newRanges.map(eraAngles);
+    const newIndexOf = new Map(newKeys.map((k, i) => [k, i]));
+    // Old-wheel order is just ascending start angle; the outgoing
+    // eraRanges array is no longer around to consult.
+    const oldKeys = [...oldByKey.keys()].sort(
+        (a, b) => oldByKey.get(a).startAngle - oldByKey.get(b).startAngle);
+
+    const survives = (k) => oldByKey.has(k) && newIndexOf.has(k);
+    const anySurvivor = oldKeys.some(survives);
+
+    // Align the two orderings. Era order is chronological in every game,
+    // so survivors appear in the same relative order on both sides and a
+    // two-pointer walk is enough. Departures in a block are emitted
+    // before its arrivals; either order chains correctly once the
+    // degenerate ends are filled in below, so this just picks one.
+    const slots = [];
+    let i = 0;
+    let j = 0;
+    while (i < oldKeys.length || j < newKeys.length) {
+        if (i < oldKeys.length && !survives(oldKeys[i])) {
+            slots.push({ key: oldKeys[i], kind: "exit", index: null,
+                from: oldByKey.get(oldKeys[i]), to: null, fade: !anySurvivor });
+            i++;
+        } else if (j < newKeys.length && !survives(newKeys[j])) {
+            slots.push({ key: newKeys[j], kind: "enter", index: j,
+                from: null, to: newAngles[j], fade: !anySurvivor });
+            j++;
+        } else if (i < oldKeys.length && j < newKeys.length && oldKeys[i] === newKeys[j]) {
+            slots.push({ key: newKeys[j], kind: "morph", index: j,
+                from: oldByKey.get(oldKeys[i]), to: newAngles[j], fade: false });
+            i++;
+            j++;
+        } else {
+            // Two survivors that disagree about their order — impossible
+            // with the series' chronological era lists, but treating the
+            // old one as a departure keeps the walk monotone rather than
+            // looping, and degrades to a crossfade for that one wedge.
+            slots.push({ key: oldKeys[i], kind: "exit", index: null,
+                from: oldByKey.get(oldKeys[i]), to: null, fade: !anySurvivor });
+            i++;
+        }
+    }
+
+    if (!anySurvivor) return { slots };
+
+    // Fill the degenerate ends from the neighbouring slot, so every pair
+    // of adjacent slots shares an edge in both the old and the new
+    // geometry. Forward first: each missing end collapses onto the
+    // previous slot's corresponding edge, which may itself have just been
+    // filled — that chaining is what makes a run of several arrivals or
+    // departures hold together.
+    const collapse = (angle) => ({ startAngle: angle, endAngle: angle });
+    for (let k = 1; k < slots.length; k++) {
+        if (slots[k].from === null) slots[k].from = collapse(slots[k - 1].from.endAngle);
+        if (slots[k].to === null) slots[k].to = collapse(slots[k - 1].to.endAngle);
+    }
+    // Then backward, for a leading run that had no previous slot to take
+    // an edge from: collapse onto the *next* slot's leading edge instead.
+    for (let k = slots.length - 2; k >= 0; k--) {
+        if (slots[k].from === null) slots[k].from = collapse(slots[k + 1].from.startAngle);
+        if (slots[k].to === null) slots[k].to = collapse(slots[k + 1].to.startAngle);
+    }
+
+    return { slots };
+}
+
+/**
  * Render one wedge per era behind every other layer.
  *
  * @param element       d3 selection for the era-backgrounds <g>
@@ -88,7 +213,7 @@ export function drawEraBackgrounds(element, eraRanges, color, outerRadius) {
         // is what lets animateEraBackgrounds morph them instead of
         // crossfading. Index keying matched Civ 3's "Middle Ages" against
         // Civ 5's ERA_CLASSICAL purely because both sit at position 1.
-        .data(eraRanges, (d) => eraKey(d.era))
+        .data(eraRanges, eraJoinKey)
         .join("path")
         .attr("class", "era-background")
         .attr("d", (d) => wedge(eraAngles(d)))
@@ -114,7 +239,7 @@ export function drawEraLabels(element, eraRanges, color, radius) {
     const widthCap = 2 * (radius - GAME_IMG_WIDTH / 2 - LABEL_PADDING);
     return element
         .selectAll("text")
-        .data(eraRanges, (d) => eraKey(d.era))
+        .data(eraRanges, eraJoinKey)
         .join("text")
         .attr("class", "era-label")
         .attr("text-anchor", "middle")

@@ -3,7 +3,7 @@ import "d3-transition";
 
 import { ARC_BASE, PI_DIFF, TECH_IMG_WIDTH, TWO_PI } from "./constants";
 import { calculatePointOnWheel, fadeCheck, wheelTransform } from "./helpers";
-import { eraAngles, eraWedge, rememberEraAngles } from "./drawEras";
+import { eraJoinKey, eraMorphPlan, eraWedge } from "./drawEras";
 import { eraKey } from "./eraData";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
 
@@ -483,21 +483,42 @@ function fadeInToResting(selection, duration) {
  * because an era has an identity that outlives the dataset it came from.
  *
  * Every other range-shaped layer is keyed to data that simply doesn't
- * exist in the next game — an arc belongs to a specific prerequisite edge
- * — so fadeSwapLayer is all they can do. Eras are different: Civ 3's
+ * exist in the next game — an arc belongs to one specific prerequisite
+ * edge — so fadeSwapLayer is all they can do. Eras are different: Civ 3's
  * "Modern Times" and Civ 6's ERA_MODERN are the same era under different
- * spellings, and eraKey makes that identity explicit. Keyed on it, a
- * switch splits three ways:
+ * spellings, and eraKey makes that identity explicit. eraMorphPlan turns
+ * a switch into one ordered slot per wedge, each carrying the span it
+ * starts from and the span it ends at:
  *
- *   - eras both games have    -> the wedge slides to its new span, its
- *                                fill interpolating to the new colour
- *   - eras only the old game had -> fade out and go
- *   - eras only the new game has -> fade in at their final span
+ *   - eras both games have       -> a real span at both ends, so the
+ *                                   wedge slides, its fill interpolating
+ *                                   to the new colour
+ *   - eras only the new game has -> collapsed at the start, so it grows
+ *   - eras only the old game had -> collapsed at the end, so it shrinks
+ *                                   away and is removed
  *
- * which is what removes the blank gap the old treatment had. fadeSwapLayer
+ * All three are then the *same* tween over a pair of spans, which is what
+ * lets one transition drive the whole layer. Adjacent slots are built to
+ * share both their old and their new edge, so the edge between two wedges
+ * is interpolated from one pair of numbers and the partition never opens
+ * a gap — see eraMorphPlan for how the collapsed ends are placed, and why
+ * anchoring each wedge to its nearest surviving neighbour instead is not
+ * enough.
+ *
+ * This is what removes the blank gap the old treatment had. fadeSwapLayer
  * emptied the whole layer before redrawing it, so even an era present in
- * both games fell to opacity 0 and came back — the page showing through
+ * both games fell to opacity 0 and came back, the page showing through
  * underneath for the length of the crossfade.
+ *
+ * Note what *isn't* animated here: opacity. Growing from nothing is the
+ * reveal, and shrinking to nothing is the exit, so a wedge sits at the
+ * resting 0.2 `.era-background` gives it from the first frame to the
+ * last. That's deliberate — fading an entrance in while it grows would
+ * put a lighter band along the very seam the growth exists to keep tight,
+ * and it keeps this layer clear of the inline-opacity-versus-class
+ * precedence trap fadeInToResting has to work around. Only the degenerate
+ * case where nothing survives the switch (Civ 4 -> Civ 1, no era data at
+ * all) has no boundary to travel to, and falls back to a plain fade.
  *
  * Only the angles tween; the radius snaps to this render's value, the
  * same choice the rest of this file makes (each game recomputes its radii
@@ -505,46 +526,78 @@ function fadeInToResting(selection, duration) {
  * to ease from). Colour interpolation is d3's own: `.attr("fill", …)` on
  * a transition detects a colour string and interpolates it in RGB.
  *
- * The morph runs at ROTATE_MS so a wedge travels in step with the spokes
- * and icons rotating above it, rather than finishing early underneath a
- * wheel still in motion.
+ * Everything moves at ROTATE_MS on easeInOutCubic — the same duration and
+ * easing as the spokes and icons rotating above it, and necessarily the
+ * same as each other: two wedges sharing a boundary only stay flush if
+ * both sides of it are interpolated on the identical curve.
  */
 export function animateEraBackgrounds(group, eraRanges, color, outerRadius) {
     const wedge = eraWedge(outerRadius);
-    const joined = group.selectAll("path").data(eraRanges, (d) => eraKey(d.era));
 
-    joined.exit()
-        .transition().duration(FADE_OUT_MS)
-        .style("opacity", 0)
-        .remove();
+    // Read the spans currently on screen *before* the join rebinds data —
+    // afterwards every node carries its incoming slot, and the dataset
+    // the old spans came from is gone.
+    const oldByKey = new Map();
+    group.selectAll("path").each(function (d) {
+        if (d && this.__eraAngles) oldByKey.set(eraJoinKey(d), this.__eraAngles);
+    });
 
-    const entered = joined.enter().append("path")
-        .attr("class", "era-background")
-        .attr("d", (d) => wedge(eraAngles(d)))
-        .attr("fill", (_, i) => color(i));
-    rememberEraAngles(entered);
-    fadeInToResting(entered, FADE_IN_MS);
+    const { slots } = eraMorphPlan(oldByKey, eraRanges);
 
-    joined
+    const all = group.selectAll("path").data(slots, eraJoinKey).join(
+        (enter) => enter.append("path")
+            .attr("class", "era-background")
+            // Departures have no new colour to take; they keep the one
+            // they were drawn with.
+            .attr("fill", (d) => (d.index === null ? null : color(d.index)))
+            // `from` is null in the fade case — nothing survived, so
+            // there is no old span to start at and the wedge is simply
+            // drawn where it belongs and faded up.
+            .attr("d", (d) => wedge(d.from || d.to)),
+        (update) => update,
+        // With a slot per old key, d3's own exit should never fire.
+        // Anything landing here has no plan entry to travel along.
+        (exit) => exit.remove(),
+    );
+
+    // No era in common, so no shared geometry to travel through: fade.
+    const arriving = all.filter((d) => d.fade && d.kind !== "exit");
+    if (!arriving.empty()) fadeInToResting(arriving, FADE_IN_MS);
+    const leaving = all.filter((d) => d.fade && d.kind === "exit");
+    if (!leaving.empty()) {
+        leaving.transition().duration(FADE_OUT_MS).style("opacity", 0).remove();
+    }
+
+    // Everything else travels from its old span to its new one. A
+    // departure's new span is collapsed to zero width and an arrival's
+    // old span is, so the same tween covers all three kinds — which is
+    // the point: one tween, one easing, one duration, applied to slots
+    // that share their edges, is what keeps the partition airtight.
+    // Record where every wedge is headed, arrivals included. Doing this
+    // only for the travelling slots left a fade-case arrival with no
+    // stashed span at all, so the *next* switch read an empty oldByKey,
+    // found no survivors, and fell back to crossfading — and stayed that
+    // way until some non-animated render happened to repopulate it.
+    // Departures are removed before anyone reads theirs.
+    all.each(function (d) { if (d.to) this.__eraAngles = d.to; });
+
+    const travelling = all.filter((d) => !d.fade);
+
+    const moving = travelling
         .transition().duration(ROTATE_MS).ease(easeInOutCubic)
-        .attr("fill", (_, i) => color(i))
-        .attrTween("d", function (d) {
-            // Read the outgoing span before overwriting the stash, so a
-            // morph interrupted partway still leaves a sane value behind
-            // for the next switch to ease from. Falling back to the
-            // target means "no movement" rather than a jump from a
-            // garbage angle, which is the right failure for a wedge whose
-            // node somehow never recorded where it was drawn.
-            const from = this.__eraAngles || eraAngles(d);
-            const to = eraAngles(d);
-            this.__eraAngles = to;
-            return (t) => wedge({
-                startAngle: lerp(from.startAngle, to.startAngle, t),
-                endAngle: lerp(from.endAngle, to.endAngle, t),
-            });
-        });
+        .attrTween("d", (d) => (t) => wedge({
+            startAngle: lerp(d.from.startAngle, d.to.startAngle, t),
+            endAngle: lerp(d.from.endAngle, d.to.endAngle, t),
+        }))
+        // A departure is zero-width by now, so it needs no fade of its
+        // own — it has nothing left to show.
+        .on("end", function (d) { if (d.kind === "exit") this.remove(); });
 
-    return joined;
+    // Colour interpolation is d3's own: `.attr("fill", …)` on a
+    // transition detects a colour string and interpolates it in RGB.
+    moving.filter((d) => d.index !== null).attr("fill", (d) => color(d.index));
+
+    return all;
 }
 
 /** Same fade-out/fade-in treatment for the hub's game logo. */
