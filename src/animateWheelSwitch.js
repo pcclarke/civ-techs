@@ -132,14 +132,26 @@ function spokeInnerRadius(step, arcSpace) {
 
 // --------------------------- Spokes ---------------------------
 
-export function animateSpokes(group, spokeData, count, techImgRadius, arcSpace, highlightedIds = []) {
+export function animateSpokes(group, spokeData, count, techImgRadius, arcSpace, dimAll = false) {
+    // Unlike icons/labels (dimmed per-tech, via fadeCheck against the
+    // highlight chain), the base spoke layer dims *uniformly* whenever
+    // anything is selected — drawSpokes' non-animated call does the exact
+    // same `Boolean(selected)`, not a per-tech check. The actual
+    // highlighted chain is a completely separate overlay (svg.selectedSpokes),
+    // often anchored to a *different* lane than a dependent tech's own arc
+    // (setupSpokes roots a dependent's highlighted spoke at the selected
+    // tech's lane, not its own). Dimming this layer per-tech instead of
+    // uniformly — an earlier version did — left a highlighted-but-not-
+    // current tech's base spoke undimmed at its own lane, competing
+    // visibly with the correct overlay spoke at the selected tech's lane:
+    // exactly the "spoke doesn't end at its own line" symptom reported
+    // after a switch carried a pin over (see initWheelData.js).
+    //
     // A .fade class wins over the opacity attribute this tween drives
     // regardless — a CSS class always outranks a plain SVG presentation
     // attribute — so classing a dimmed advance here is enough to keep it
-    // dim through its whole flight without touching the tween itself; see
-    // makeWheel.js for why this can be non-empty at all mid-switch (a
-    // pinned advance that survives into the new game keeps its highlight).
-    const fade = (d) => fadeCheck(d, highlightedIds);
+    // dim through its whole flight without touching the tween itself.
+    const fade = () => dimAll;
 
     group.selectAll(".spoke-line")
         .data(spokeData, (d) => d.id)

@@ -435,7 +435,7 @@ export function renderTable({ animate = false } = {}) {
         // fade out and the redrawn set fades in rather than tweening a
         // shape whose ends would be moving independently. fadeSwapLayer is
         // the exact function animateWheelSwitch.js uses for this.
-        animateSpokeLines(layer.spokes, spokeData, allTechs.length, spokeX1, textLeft, highlightedIds);
+        animateSpokeLines(layer.spokes, spokeData, allTechs.length, spokeX1, textLeft, Boolean(selected));
         // The selection's own spokes/arc chain, undimmed on top — drawn
         // instantly (not animated) since it's a small supplementary
         // overlay, same as the wheel's svg.selectedSpokes/selectedArcs.

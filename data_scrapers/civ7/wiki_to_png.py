@@ -19,10 +19,10 @@ either.
 
 Run from this directory:
     python3 wiki_to_png.py \\
-      --tech-html      "../../List of technologies in Civ7 _ Civilization Wiki _ Fandom.html" \\
-      --civic-html     "../../List of civics in Civ7 _ Civilization Wiki _ Fandom.html" \\
-      --buildings-html "../../List of buildings in Civ7 _ Civilization Wiki _ Fandom.html" \\
-      --units-html     "../../List of units in Civ7 _ Civilization Wiki _ Fandom.html"
+      --tech-html      "data/List of technologies in Civ7 _ Civilization Wiki _ Fandom.html" \\
+      --civic-html     "data/List of civics in Civ7 _ Civilization Wiki _ Fandom.html" \\
+      --buildings-html "data/List of buildings in Civ7 _ Civilization Wiki _ Fandom.html" \\
+      --units-html     "data/List of units in Civ7 _ Civilization Wiki _ Fandom.html"
 
 Skips files that already exist on disk by default; pass --force to
 re-download. --dry-run prints the plan without fetching anything.

@@ -195,14 +195,28 @@ export function animateRows(root, allTechs, count, opts) {
  * edge, both already snapped to this render's own values by the caller,
  * same as the wheel leaves radius untweened.
  */
-export function animateSpokeLines(layer, spokeData, count, spokeX1, textLeft, highlightedIds = []) {
+export function animateSpokeLines(layer, spokeData, count, spokeX1, textLeft, dimAll = false) {
     const rowY = (pos) => pos * ROW_H + ROW_H / 2;
     const readY = (node) => parseFloat(node.getAttribute("y1")) || 0;
+    // Unlike rows (dimmed per-tech, via fadeCheck against the highlight
+    // chain — see animateRows), this base spoke layer dims *uniformly*
+    // whenever anything is selected, exactly like drawSpokeLines' own
+    // non-animated `Boolean(selected)` call — the actual highlighted chain
+    // is a separate overlay (layer.spokesSel), often anchored to a
+    // *different* lane than a dependent advance's own arc (setupSpokes
+    // roots a dependent's highlighted spoke at the selected advance's
+    // lane, not its own). Dimming this layer per-tech instead of uniformly
+    // — an earlier version did — left a highlighted-but-not-current
+    // advance's base spoke undimmed at its own lane, competing visibly
+    // with the correct overlay spoke at the selected advance's lane:
+    // exactly the "spoke doesn't end at its own line" bug reported after a
+    // switch carried a pin over (see initWheelData.js).
+    //
     // .attr(), not .style(), for this layer's opacity (see animateSpokes in
     // animateWheelSwitch.js) — a plain SVG presentation attribute is always
     // outranked by a CSS class, so .fade wins over whatever this tween
     // drives without any of the row-level opacity juggling above.
-    const fade = (d) => fadeCheck(d, highlightedIds);
+    const fade = () => dimAll;
 
     layer.selectAll("line")
         .data(spokeData, (d) => d.id)

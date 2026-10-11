@@ -96,7 +96,7 @@ export async function renderWheel({ animate = false } = {}) {
       // calls, so a surviving pin's spoke, arc chain, and dimmed
       // surroundings stay correct and legible all through the transition
       // instead of popping back only once it ends.
-      animateSpokes(svg.spokes, spokeData, count, techImgRadius, arcSpace, highlightedIds);
+      animateSpokes(svg.spokes, spokeData, count, techImgRadius, arcSpace, Boolean(selected));
       drawSpokes(svg.selectedSpokes, selectedSpokes, count, techImgRadius, arcSpace);
 
       animateTechImages(svg.techImages, allTechs, count, techImgRadius, game, iconFolder, highlightedIds);
