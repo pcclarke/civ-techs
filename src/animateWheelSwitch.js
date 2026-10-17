@@ -2,6 +2,9 @@ import { select } from "d3-selection";
 import "d3-transition";
 
 import { ARC_BASE, PI_DIFF, TECH_IMG_WIDTH, TWO_PI } from "./constants";
+import {
+    arcKey, markKey, PIN_REACH, ringRadius, unlockArcAt, unlockArcGeom,
+} from "./arcs";
 import { calculatePointOnWheel, fadeCheck, wheelTransform } from "./helpers";
 import {
     eraJoinKey, eraLabelIndex, eraLabelWidthCap, eraMorphPlan, eraWedge,
@@ -25,10 +28,14 @@ import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
  *     wheel's reserved gap from where entrants appear, not the same point
  *     reached by going all the way around.
  *
- * Arcs and everything else shaped by an angular *range* rather than a
- * single point (pins, unlock marks, era wedges/labels) don't rotate —
- * their two ends would be moving independently, which has no sane tween —
- * they just fade out and the new set fades in; see fadeSwapLayer.
+ * Arcs and the other things shaped by an angular *range* rather than a
+ * single point (pins, unlock marks, era wedges and labels) once simply
+ * faded out while the new set faded in, on the reasoning that a shape
+ * whose two ends move independently has no sane tween. They all travel
+ * now — the ends are just two numbers, and interpolating both turned out
+ * to be exactly what the era wedges needed to stay airtight. See the Arc
+ * layer and Era sections below; nothing in either view crossfades a whole
+ * layer any more.
  *
  * Radii are not animated: every element jumps straight to its *target*
  * radius (each game recomputes labelRadius/techImgRadius/arcSpace from its
@@ -400,83 +407,182 @@ export function animateTechImages(group, allTechs, count, techImgRadius, game, i
     }
 }
 
-// --------------------- Range-shaped layers (fade only) ---------------------
+// --------------------------- Arc layer ---------------------------
 
 /**
- * Arcs, pins, unlock marks, and era wedges/labels are all shaped by an
- * angular *range* (two ends, not one point) or are otherwise incidental
- * decoration — there's no sane way to tween a shape whose ends are moving
- * independently, so they simply fade out, then the new set (already laid
- * out at its final position by `redraw`, the layer's normal non-animated
- * draw function from drawTools.js/drawEras.js) fades in.
+ * The arc layer — the arcs themselves, the origin pins, and the req/opt
+ * marks — travels rather than crossfading.
  *
- * `.end()` rejects if a transition is interrupted (e.g. a second switch
- * arriving before this one finishes) — caught rather than left to surface
- * as an unhandled rejection; the redraw still happens using whatever data
- * this call closed over; a still-newer render will draw over it shortly.
+ * Why it is one section and not four: the three decorations sit *on* an
+ * arc. A pin is the tick where its arc starts, and a square or circle is
+ * where a dependent meets it, all on the same ring. Animating the arcs
+ * alone would peel them apart, so they move together or not at all.
+ *
+ * Be aware of what the data does here, because it is not kind. Measured
+ * across every switch in the project: only 53% of arcs survive by tech
+ * id at all, and of those, just 15% stay on the same ring — 37% move four
+ * rings or more (median 3, max 15), because `step` comes out of
+ * createUnlocks' bin-packing and is repacked from scratch for each game.
+ * An arc end travels a median 29 degrees, and arcs change *length* by a
+ * median 11 degrees. So unlike the spokes, which all sweep the same
+ * direction by similar amounts and read as one coherent rotation, this
+ * layer's motion is genuinely incoherent: a few dozen arcs sliding
+ * radially past each other while a similar number fade in and out.
+ *
+ * It is still an improvement on what it replaced, and not mainly because
+ * of the motion. The old layer-wide crossfade faded everything to nothing
+ * over 250ms and only *then* brought the new set up over 450ms, so the
+ * arcs physically vanished from the middle of a 700ms switch while the
+ * spokes swept on around them — which is what read as "the arcs don't
+ * animate". Every
+ * population here runs on the same ROTATE_MS/easeInOutCubic as the
+ * spokes, concurrently, so the layer stays continuously populated.
+ *
+ * The radius is interpolated, which the rest of this file does not do.
+ * Spokes and icons snap theirs because each game recomputes it from its
+ * own label widths, making the old value meaningless to ease from. A ring
+ * radius is not like that: it is where the arc *is*, and jumping three
+ * rings instantly would be a pop in the middle of an otherwise continuous
+ * layer. The integer `step` is deliberately not what travels — arcSpace
+ * differs per game, so only the radius is comparable across a switch.
  */
+
+/** Interpolate every number in a geometry record. A missing `from` key
+ *  (a node that never recorded one) holds at the target, so the element
+ *  simply doesn't move rather than flying in from a garbage value. */
+export function lerpGeom(from, to, t) {
+    const out = {};
+    for (const k of Object.keys(to)) {
+        const a = Number.isFinite(from[k]) ? from[k] : to[k];
+        out[k] = lerp(a, to[k], t);
+    }
+    return out;
+}
+
 /**
- * Which swap currently owns a layer, so a superseded one can tell.
+ * One keyed switch over a part of the arc layer.
  *
- * Keyed by group *and* childTag, not group alone: makeTable runs two
- * independent swaps against its marks layer, one for the req squares and
- * one for the opt circles, and they must not cancel each other.
+ * `geomOf` gives a datum's target geometry, `apply` writes a geometry
+ * onto a node, and the stash drawTools.js leaves in `__ringGeom` (see
+ * rememberRing there) supplies where a survivor starts. Departures fade
+ * out, arrivals fade in — an arc has no span to collapse onto a
+ * neighbouring boundary the way an era wedge does, and nothing tiles here,
+ * so there is no partition to keep airtight.
  *
- * A WeakMap so a layer whose node is discarded takes its counter with it.
+ * Arrivals go through fadeInToResting rather than a fade to 1: every part
+ * of this layer carries a selection-driven `.fade` class whose 0.05 an
+ * inline opacity would outrank. Survivors never touch inline opacity at
+ * all, so they stay clear of that entirely.
  */
-const swapGeneration = new WeakMap();
+function animateRingPart({ group, tag, data, keyOf, geomOf, apply, paintAttr, paintOf, shape, fadeOf }) {
+    const resident = new Map();
+    group.selectAll(tag).each(function (d) {
+        if (d) resident.set(keyOf(d), this);
+    });
 
-function claimLayer(node, childTag) {
-    let byTag = swapGeneration.get(node);
-    if (!byTag) swapGeneration.set(node, (byTag = new Map()));
-    const mine = (byTag.get(childTag) || 0) + 1;
-    byTag.set(childTag, mine);
-    return mine;
-}
+    const arriving = new Set(data.map(keyOf));
+    for (const [key, node] of resident) {
+        if (arriving.has(key)) continue;
+        select(node).interrupt()
+            .transition().duration(ROTATE_MS).ease(easeInOutCubic)
+            .style("opacity", 0)
+            .remove();
+    }
 
-function stillOwns(node, childTag, generation) {
-    const byTag = swapGeneration.get(node);
-    return Boolean(byTag) && byTag.get(childTag) === generation;
-}
+    data.forEach((d, i) => {
+        const to = geomOf(d);
+        const old = resident.get(keyOf(d));
 
-export async function fadeSwapLayer(group, childTag, redraw) {
-    const node = group.node();
-    const generation = claimLayer(node, childTag);
-
-    const existing = group.selectAll(childTag);
-    if (!existing.empty()) {
-        try {
-            // .style(), not .attr(): this is reused for the mobile table's
-            // era-boundary <div>s too (see animateTableSwitch.js), and a
-            // bare `opacity` attribute is an SVG presentation attribute —
-            // HTML ignores it outright. Inline style opacity works
-            // identically on both, so one code path covers both views.
-            await existing.transition().duration(FADE_OUT_MS).style("opacity", 0).end();
-        } catch {
-            // Interrupted, which on its own says nothing about who should
-            // redraw — the generation check below is what decides.
+        if (old) {
+            const from = old.__ringGeom || to;
+            old.__ringGeom = to;
+            // Rebind: the next switch keys off this datum, and so do the
+            // hover handlers already attached to the node.
+            select(old).interrupt().datum(d).classed("fade", fadeOf(d, i))
+                .transition().duration(ROTATE_MS).ease(easeInOutCubic)
+                // Colour interpolates: the ordinal scale is keyed by step,
+                // so a survivor that changes ring changes hue too.
+                .attr(paintAttr, paintOf(d))
+                .tween("ring", function () {
+                    return (t) => apply(this, lerpGeom(from, to, t));
+                })
+                // Land on the exact target rather than the tween's last
+                // step, so the next switch eases from a clean value.
+                .on("end", function () { apply(this, to); });
+            return;
         }
 
-        // A newer swap of this same layer began while this one was fading
-        // out; it owns the layer now, so stop here and touch nothing.
-        //
-        // This is the only await in the file, and it opened a real race.
-        // Switching twice in quick succession meant the second call's
-        // `existing.transition()` interrupted the first's fade-out, which
-        // rejected the first's `.end()` — and the first then fell straight
-        // through to remove and redraw the layer from the dataset it had
-        // closed over, which is now a game out of date. So the layer drew
-        // the *intermediate* game's arcs and faded them in, while the
-        // second call sat waiting on a fade-out whose nodes had just been
-        // deleted from under it. The end state was right, because the
-        // second call redrew last, but a stale layer was visible for the
-        // whole fade. Same counter trick initWheelData.js uses with
-        // loadRequestId, for the same reason.
-        if (!stillOwns(node, childTag, generation)) return;
-    }
-    group.selectAll(childTag).remove();
-    fadeInToResting(redraw(group), FADE_IN_MS);
+        const sel = group.append(tag).datum(d)
+            .classed("fade", fadeOf(d, i))
+            .attr(paintAttr, paintOf(d));
+        if (shape) shape(sel);
+        apply(sel.node(), to);
+        sel.node().__ringGeom = to;
+        fadeInToResting(sel, ROTATE_MS);
+    });
 }
+
+export function animateArcs(group, prerequisites, color, arcSpace, dimAll = false) {
+    const at = unlockArcAt();
+    animateRingPart({
+        group, tag: "path", data: prerequisites, keyOf: arcKey,
+        geomOf: (d) => unlockArcGeom(d, arcSpace),
+        apply: (node, g) => node.setAttribute("d", at(g)),
+        paintAttr: "fill", paintOf: (d) => color(d.step),
+        // Arcs share the node handlers, so hovering an arc behaves like
+        // hovering its origin advance — same as the static path.
+        shape: (sel) => sel
+            .on("mouseover", onNodeHover)
+            .on("mouseleave", onNodeLeave)
+            .on("click", onNodeClick),
+        fadeOf: () => dimAll,
+    });
+}
+
+export function animateUnlockPins(group, prerequisites, count, color, arcSpace, fadeOf) {
+    animateRingPart({
+        group, tag: "path", data: prerequisites, keyOf: arcKey,
+        geomOf: (d) => ({
+            angle: targetAngle(count, d.position),
+            radius: ringRadius(d.step, arcSpace),
+        }),
+        apply: (node, g) => node.setAttribute(
+            "d", spokeD(g.angle, g.radius - PIN_REACH, g.radius + PIN_REACH)),
+        paintAttr: "stroke", paintOf: (d) => color(d.step),
+        fadeOf,
+    });
+}
+
+/** Squares and circles differ only in tag and resting shape; both sit at a
+ *  single (angle, ring) point, positioned by transform exactly as
+ *  wheelTransform would. */
+function animateMarks(group, tag, data, count, arcSpace, paintAttr, paintOf, shape, fadeOf) {
+    animateRingPart({
+        group, tag, data, keyOf: markKey,
+        geomOf: (d) => ({
+            angle: targetAngle(count, d.pos),
+            radius: ringRadius(d.step, arcSpace),
+        }),
+        apply: (node, g) => node.setAttribute("transform", transformAtAngle(g.angle, g.radius)),
+        paintAttr, paintOf, shape, fadeOf,
+    });
+}
+
+export function animateUnlockSquares(group, squareData, count, color, arcSpace, fadeOf) {
+    animateMarks(group, "rect", squareData, count, arcSpace,
+        "fill", (d) => color(d.step),
+        (sel) => sel.attr("x", -2.5).attr("y", -2.5).attr("width", 5).attr("height", 5),
+        fadeOf);
+}
+
+export function animateUnlockCircles(group, circleData, count, color, arcSpace, fadeOf) {
+    animateMarks(group, "circle", circleData, count, arcSpace,
+        "stroke", (d) => color(d.step),
+        (sel) => sel.attr("r", 2.5).attr("fill", "#FFF"),
+        fadeOf);
+}
+
+// --------------------------- Shared fades ---------------------------
 
 /**
  * Fade a freshly-drawn selection in to each element's *resting* opacity —
@@ -530,9 +636,7 @@ export function fadeInToResting(selection, duration) {
  * Era backgrounds are the one range-shaped layer that *can* be tweened,
  * because an era has an identity that outlives the dataset it came from.
  *
- * Every other range-shaped layer is keyed to data that simply doesn't
- * exist in the next game — an arc belongs to one specific prerequisite
- * edge — so fadeSwapLayer is all they can do. Eras are different: Civ 3's
+ * An era's identity is what makes this possible at all. Civ 3's
  * "Modern Times" and Civ 6's ERA_MODERN are the same era under different
  * spellings, and eraKey makes that identity explicit. eraMorphPlan turns
  * a switch into one ordered slot per wedge, each carrying the span it
@@ -553,10 +657,10 @@ export function fadeInToResting(selection, duration) {
  * anchoring each wedge to its nearest surviving neighbour instead is not
  * enough.
  *
- * This is what removes the blank gap the old treatment had. fadeSwapLayer
- * emptied the whole layer before redrawing it, so even an era present in
- * both games fell to opacity 0 and came back, the page showing through
- * underneath for the length of the crossfade.
+ * This is what removes the blank gap the old treatment had. The
+ * layer-wide crossfade emptied the whole layer before redrawing it, so
+ * even an era present in both games fell to opacity 0 and came back, the
+ * page showing through underneath for the length of the fade.
  *
  * Note what *isn't* animated here: opacity. Growing from nothing is the
  * reveal, and shrinking to nothing is the exit, so a wedge sits at the
@@ -653,8 +757,9 @@ export function animateEraBackgrounds(group, eraRanges, color, outerRadius) {
 /**
  * Era names travel with their wedge.
  *
- * These used to go through fadeSwapLayer like every other range-shaped
- * layer, which blanks the whole layer and redraws it. That was fine while
+ * These used to go through the layer-wide crossfade like every other
+ * range-shaped layer, which blanks the layer and redraws it. That was
+ * fine while
  * the wedges crossfaded too — but now that a wedge morphs, it left the
  * name of an era blinking out and back while the band it names slid
  * underneath, visibly breaking the association between the two for the

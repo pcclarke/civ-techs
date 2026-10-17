@@ -41,8 +41,8 @@ const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
  *
  * Gated here rather than inside the individual animators so there is one
  * place to get right. Everything the switch animations do — the wheel's
- * rotation, the table's row slides, the era wedge morph, every
- * fadeSwapLayer crossfade — hangs off the `animate` flag that
+ * rotation, the table's row slides, the era wedge morph, the arc layer's
+ * travel in both views — hangs off the `animate` flag that
  * renderActiveView computes below, so suppressing it there suppresses all
  * of them. The CSS-driven hover dimming is the one piece of motion that
  * doesn't route through here; techs.css turns that off under the same

@@ -1,7 +1,8 @@
 import { select } from "d3-selection";
 import "d3-transition";
 
-import { fadeInToResting } from "./animateWheelSwitch";
+import { fadeInToResting, lerpGeom } from "./animateWheelSwitch";
+import { arcKey, markKey } from "./arcs";
 import { ROW_H } from "./constants";
 import { eraJoinKey } from "./drawEras";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
@@ -32,11 +33,11 @@ import { fadeCheck } from "./helpers";
  *     row, fading out — arriving there, not overshooting past it, since a
  *     list (unlike the wheel's circle) has no wraparound to reach for.
  *
- * Arcs, pins, req/opt marks, and era boundaries are shaped by a row
- * *range*, not a single row, so — same call as the wheel — they just fade
- * out and the new set fades in; see fadeSwapLayer in animateWheelSwitch.js,
- * reused here as-is (its opacity is set via .style(), specifically so it
- * also works on the era boundaries, which are <div>s rather than SVG).
+ * Arcs, pins, req/opt marks and era boundaries are shaped by a row
+ * *range* rather than a single row, and once simply faded out while the
+ * new set faded in. They all travel now, on the same curve as the rows —
+ * see the Arc layer section at the foot of this file and animateEraRows.
+ * Nothing in either view crossfades a whole layer any more.
  */
 
 const MOVE_MS = 700;
@@ -273,12 +274,13 @@ export function animateSpokeLines(layer, spokeData, count, spokeX1, textLeft, di
 /**
  * Era boundaries: the table's counterpart to the wheel's era wedges.
  *
- * These went through fadeSwapLayer, which empties the layer and redraws
- * it, so every boundary blinked out and back on a switch — including the
- * ones belonging to an era both games have. Two things made that worse
- * than it looked: fadeSwapLayer removes every child *before* the redraw
- * runs, so the keyed join behind it never matched anything; and the key
- * was the raw `d.era` string, which would have failed anyway, since Civ 3
+ * These went through a layer-wide crossfade, which empties the layer and
+ * redraws it, so every boundary blinked out and back on a switch —
+ * including the ones belonging to an era both games have. Two things made
+ * that worse than it looked: the crossfade removed every child *before*
+ * the redraw ran, so the keyed join behind it never matched anything; and
+ * the key was the raw `d.era` string, which would have failed anyway,
+ * since Civ 3
  * calls it "Modern Times" where Civ 6 calls it ERA_MODERN. Keyed on
  * eraJoinKey, the same canonical identity the wheel uses, a boundary that
  * exists in both games now slides from its old row to its new one.
@@ -335,4 +337,159 @@ export function animateEraRows(root, eraRanges) {
             MOVE_MS,
         );
     }
+}
+
+
+// --------------------------- Arc layer ---------------------------
+
+/**
+ * The table's arc layer travels, exactly as the wheel's now does — see
+ * animateArcs in animateWheelSwitch.js for the reasoning, the measured
+ * churn in the underlying data, and why the real problem with the old
+ * treatment was not the absence of motion but the blank middle: the
+ * layer-wide crossfade took everything to opacity 0 over 250ms and only
+ * then brought the new set up, so the arcs vanished out of the centre of
+ * a 700ms switch while the rows slid on around them.
+ *
+ * This side is the easier one. The wheel has to interpolate an angle and
+ * a ring radius and rebuild an annular sector per frame; here an arc is a
+ * vertical line in a lane, so the geometry is a Cartesian (x, y) pair
+ * read straight off the element's own attributes. No stash is needed —
+ * unlike the wheel's arcs, whose radii cannot be recovered from a path's
+ * `d` string, every number here is sitting in an attribute already, so
+ * this follows the file's usual habit of reading live from the DOM.
+ *
+ * Sizes snap rather than tween: `mark` and `pinHalf` come out of
+ * laneMetrics and change with the lane *count*, so like the wheel's icon
+ * width they are a property of the layout rather than of where a thing
+ * is. Position travels; size arrives.
+ */
+
+function attrNum(node, name) {
+    return parseFloat(node.getAttribute(name)) || 0;
+}
+
+/**
+ * One keyed switch over a part of the table's arc layer. Mirrors
+ * animateRingPart on the wheel side: departures fade out, arrivals fade
+ * in through fadeInToResting (every part of this layer carries a
+ * selection-driven `.fade` class whose 0.05 an inline opacity would
+ * outrank), and survivors tween their geometry without touching opacity
+ * at all.
+ */
+function animateLanePart({ layer, tag, cls, data, keyOf, geomOf, readGeom, apply, paintAttr, paintOf, fadeOf }) {
+    const resident = new Map();
+    layer.selectAll(tag).each(function (d) {
+        if (d) resident.set(keyOf(d), this);
+    });
+
+    const arriving = new Set(data.map(keyOf));
+    for (const [key, node] of resident) {
+        if (arriving.has(key)) continue;
+        select(node).interrupt()
+            .transition().duration(MOVE_MS).ease(easeInOutCubic)
+            .style("opacity", 0)
+            .remove();
+    }
+
+    data.forEach((d, i) => {
+        const to = geomOf(d);
+        const old = resident.get(keyOf(d));
+
+        if (old) {
+            const from = readGeom(old);
+            // Rebind: the next switch keys off this datum.
+            select(old).interrupt().datum(d).classed("fade", fadeOf(d, i))
+                .transition().duration(MOVE_MS).ease(easeInOutCubic)
+                // Colour interpolates: the ordinal scale is keyed by step,
+                // so a survivor that changes lane changes hue too.
+                .attr(paintAttr, paintOf(d))
+                .tween("lane", function () {
+                    return (t) => apply(this, lerpGeom(from, to, t));
+                })
+                // Land on the exact target, so the next switch reads a
+                // clean start value back out of the attributes.
+                .on("end", function () { apply(this, to); });
+            return;
+        }
+
+        const sel = layer.append(tag).datum(d)
+            .attr("class", cls)
+            .classed("fade", fadeOf(d, i))
+            .attr(paintAttr, paintOf(d));
+        apply(sel.node(), to);
+        fadeInToResting(sel, MOVE_MS);
+    });
+}
+
+export function animateTableArcs(layer, arcs, laneX, rowY, color, dimAll = false) {
+    animateLanePart({
+        layer, tag: "line", cls: "tt-arc", data: arcs, keyOf: arcKey,
+        geomOf: (d) => ({ x: laneX(d.step), y0: rowY(d.range[0]), y1: rowY(d.range[1]) }),
+        readGeom: (n) => ({ x: attrNum(n, "x1"), y0: attrNum(n, "y1"), y1: attrNum(n, "y2") }),
+        apply: (n, g) => {
+            n.setAttribute("x1", g.x);
+            n.setAttribute("x2", g.x);
+            n.setAttribute("y1", g.y0);
+            n.setAttribute("y2", g.y1);
+        },
+        paintAttr: "stroke", paintOf: (d) => color(d.step),
+        fadeOf: () => dimAll,
+    });
+}
+
+export function animateTablePins(layer, arcs, laneX, rowY, pinHalf, color, fadeOf) {
+    animateLanePart({
+        layer, tag: "line", cls: "tt-pin", data: arcs, keyOf: arcKey,
+        geomOf: (d) => ({ x: laneX(d.step), y: rowY(d.position) }),
+        readGeom: (n) => ({
+            x: (attrNum(n, "x1") + attrNum(n, "x2")) / 2,
+            y: attrNum(n, "y1"),
+        }),
+        apply: (n, g) => {
+            n.setAttribute("x1", g.x - pinHalf);
+            n.setAttribute("x2", g.x + pinHalf);
+            n.setAttribute("y1", g.y);
+            n.setAttribute("y2", g.y);
+        },
+        paintAttr: "stroke", paintOf: (d) => color(d.step),
+        fadeOf,
+    });
+}
+
+export function animateTableSquares(layer, squareData, laneX, rowY, mark, color, fadeOf) {
+    animateLanePart({
+        layer, tag: "rect", cls: "tt-req", data: squareData, keyOf: markKey,
+        geomOf: (d) => ({ x: laneX(d.step), y: rowY(d.pos) }),
+        readGeom: (n) => ({
+            x: attrNum(n, "x") + attrNum(n, "width") / 2,
+            y: attrNum(n, "y") + attrNum(n, "height") / 2,
+        }),
+        apply: (n, g) => {
+            n.setAttribute("x", g.x - mark / 2);
+            n.setAttribute("y", g.y - mark / 2);
+            n.setAttribute("width", mark);
+            n.setAttribute("height", mark);
+        },
+        // A square is filled, not stroked.
+        paintAttr: "fill", paintOf: (d) => color(d.step),
+        fadeOf,
+    });
+}
+
+export function animateTableCircles(layer, circleData, laneX, rowY, mark, color, fadeOf) {
+    animateLanePart({
+        layer, tag: "circle", cls: "tt-opt", data: circleData, keyOf: markKey,
+        geomOf: (d) => ({ x: laneX(d.step), y: rowY(d.pos) }),
+        readGeom: (n) => ({ x: attrNum(n, "cx"), y: attrNum(n, "cy") }),
+        apply: (n, g) => {
+            n.setAttribute("cx", g.x);
+            n.setAttribute("cy", g.y);
+            n.setAttribute("r", mark / 2);
+        },
+        // Stroked, not filled: .tt-opt gets its white fill from
+        // techs.css, exactly as the static path relies on.
+        paintAttr: "stroke", paintOf: (d) => color(d.step),
+        fadeOf,
+    });
 }

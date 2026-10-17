@@ -1,16 +1,43 @@
 import { ARC_BASE, ARC_SPACE, TECH_IMG_RADIUS, TECH_IMG_WIDTH } from "./constants";
-import { makeUnlockArc } from "./arcs";
-import { calculateSingleRadialLinePath, wheelTransform, fadeCheck } from "./helpers";
+import {
+    arcKey, makeUnlockArc, markKey, PIN_REACH, ringRadius, unlockArcGeom,
+} from "./arcs";
+import {
+    calculatePointOnWheel, calculateSingleRadialLinePath, fadeCheck, wheelTransform,
+} from "./helpers";
 import { hideTooltip, isSheetView, showTooltip } from "./tooltip";
+
+/**
+ * Remember the geometry each element of the arc layer is drawn at, on the
+ * node itself, so a later switch can interpolate *from* it.
+ *
+ * Needed because none of it survives otherwise: an annular sector's radii
+ * aren't recoverable from its `d` string, and the integer `step` the
+ * radius comes from belongs to the outgoing dataset — which is replaced
+ * wholesale on every load, with arcSpace differing per game on top. The
+ * node is the only thing that persists across a switch.
+ * animateWheelSwitch.js reads `__ringGeom`.
+ */
+function rememberRing(selection, geomOf) {
+    return selection.each(function (d) { this.__ringGeom = geomOf(d); });
+}
+
+/** Angle of wheel position `i`, for the point-shaped parts of the layer. */
+function angleAt(count, i) {
+    return calculatePointOnWheel(count, i, 1).angle;
+}
 
 export function drawArcs(element, data, color, arcSpace = ARC_SPACE) {
       const unlockArc = makeUnlockArc(arcSpace);
-      return element
+      // Keyed, so a static re-render after an animated one matches
+      // elements up the same way animateArcs does.
+      return rememberRing(element
           .selectAll("path")
-          .data(data)
+          .data(data, arcKey)
           .join("path")
           .attr("d", (d) => unlockArc(d))
-          .attr("fill", (d) => color(d.step));
+          .attr("fill", (d) => color(d.step)),
+          (d) => unlockArcGeom(d, arcSpace));
 }
 
 export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_RADIUS, arcSpace = ARC_SPACE) {
@@ -36,43 +63,46 @@ export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_
 
 /** Perpendicular "pin" tick marking the spoke an arc originates from. */
 export function drawUnlockPins(element, prerequisites, spokeCount, color, arcSpace, base = ARC_BASE) {
-    return element
+    return rememberRing(element
         .selectAll("path")
-        .data(prerequisites)
+        .data(prerequisites, arcKey)
         .join("path")
         .attr("d", (d) => calculateSingleRadialLinePath(
             spokeCount,
-            base - 5 + arcSpace * d.step,
-            base + 5 + arcSpace * d.step,
+            base - PIN_REACH + arcSpace * d.step,
+            base + PIN_REACH + arcSpace * d.step,
             d.position
         ))
-        .attr("stroke", (d) => color(d.step));
+        .attr("stroke", (d) => color(d.step)),
+        (d) => ({ angle: angleAt(spokeCount, d.position), radius: ringRadius(d.step, arcSpace) }));
 }
 
 /** Square mark on a spoke: the arc's origin is a hard requirement for it. */
 export function drawUnlockSquares(element, squareData, count, color, arcSpace, base = ARC_BASE) {
-    return element
+    return rememberRing(element
         .selectAll("rect")
-        .data(squareData)
+        .data(squareData, markKey)
         .join("rect")
         .attr("x", -2.5)
         .attr("y", -2.5)
         .attr("transform", (d) => wheelTransform(count, d.pos, base + arcSpace * d.step))
         .attr("width", 5)
         .attr("height", 5)
-        .attr("fill", (d) => color(d.step));
+        .attr("fill", (d) => color(d.step)),
+        (d) => ({ angle: angleAt(count, d.pos), radius: ringRadius(d.step, arcSpace) }));
 }
 
 /** Circle mark on a spoke: the arc's origin is an optional requirement for it. */
 export function drawUnlockCircles(element, circleData, count, color, arcSpace, base = ARC_BASE) {
-    return element
+    return rememberRing(element
         .selectAll("circle")
-        .data(circleData)
+        .data(circleData, markKey)
         .join("circle")
         .attr("r", 2.5)
         .attr("transform", (d) => wheelTransform(count, d.pos, base + arcSpace * d.step))
         .attr("fill", "#FFF")
-        .attr("stroke", (d) => color(d.step));
+        .attr("stroke", (d) => color(d.step)),
+        (d) => ({ angle: angleAt(count, d.pos), radius: ringRadius(d.step, arcSpace) }));
 }
 
 export function drawTechImages(element, allTechs, game, highlightedIds, folder = "technologies", techImgRadius = TECH_IMG_RADIUS) {

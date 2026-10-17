@@ -16,13 +16,16 @@ import {
 import { drawEraBackgrounds, drawEraLabels } from "./drawEras";
 import { setupHighlights } from "./setupHighlights";
 import {
+    animateArcs,
     animateEraBackgrounds,
     animateEraLabels,
+    animateUnlockCircles,
+    animateUnlockPins,
+    animateUnlockSquares,
     animateSpokes,
     animateTechImages,
     animateTechLabels,
     fadeSwapCenterImage,
-    fadeSwapLayer,
 } from "./animateWheelSwitch";
 
 // Exported so the mobile table view (makeTable.js) colours a given arc
@@ -104,17 +107,17 @@ export async function renderWheel({ animate = false } = {}) {
       animateTechImages(svg.techImages, allTechs, count, techImgRadius, game, iconFolder, highlightedIds);
       animateTechLabels(svg.techLabels, allTechs, count, labelRadius, highlightedIds);
 
-      fadeSwapLayer(svg.arcs, "path", (g) => drawArcs(g, prerequisites, color, arcSpace)
-          .classed("fade", Boolean(selected))
-          .on("mouseover", onNodeHover)
-          .on("mouseleave", onNodeLeave)
-          .on("click", onNodeClick));
-      fadeSwapLayer(svg.unlockPins, "path", (g) => drawUnlockPins(g, prerequisites, count, color, arcSpace)
-          .classed("fade", (d) => Boolean(selected) && d.id !== selected.id && !prerequisiteIds.includes(d.id)));
-      fadeSwapLayer(svg.unlockSquares, "rect", (g) => drawUnlockSquares(g, squareData, count, color, arcSpace)
-          .classed("fade", (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId));
-      fadeSwapLayer(svg.unlockCircles, "circle", (g) => drawUnlockCircles(g, circleData, count, color, arcSpace)
-          .classed("fade", (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId));
+      // The arc layer travels instead of crossfading — see animateArcs for
+      // what the data does to the motion, and why it is still better than
+      // the layer vanishing out of the middle of the switch. The marks and
+      // pins ride on the arcs, so they move on the same curve.
+      animateArcs(svg.arcs, prerequisites, color, arcSpace, Boolean(selected));
+      animateUnlockPins(svg.unlockPins, prerequisites, count, color, arcSpace,
+          (d) => Boolean(selected) && d.id !== selected.id && !prerequisiteIds.includes(d.id));
+      animateUnlockSquares(svg.unlockSquares, squareData, count, color, arcSpace,
+          (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId);
+      animateUnlockCircles(svg.unlockCircles, circleData, count, color, arcSpace,
+          (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId);
       // Both era layers are keyed on canonical era identity, so an era
       // both games have slides to its new place rather than fading out and
       // back in — the wedge morphing its span, the label travelling with

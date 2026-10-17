@@ -20,7 +20,8 @@ Checks the parts of the app that genuinely need a rendering engine, which is why
 
 - **Wheel layout** — `computeWheelLayout` derives every radius from *measured* text (`getComputedTextLength`, `getBBox`), across all 11 game/tree combinations. Also covers the documented `display: none` hazard (hidden text measures as zero width, collapsing the radii) and that `refreshWheelLayout` repairs it.
 - **Reduced motion** — that a switch animates normally, and lands on its final frame instantly under `--force-prefers-reduced-motion`.
-- **Table layout** — `contentLeft`'s contract that the widest advance name finishes flush against the right edge, measured the same way `makeTable` does it (canvas `measureText`), plus the fixed `ROW_H` row pitch the lane overlay depends on.
+- **Table layout** — `contentLeft`'s contract that the widest advance name finishes flush against the right edge, measured the same way `makeTable` does it (canvas `measureText`), plus the fixed `ROW_H` row pitch the lane overlay depends on. Also that the table's arc layer travels, and that an animated settle lands byte-identical to a static re-render.
+- **Arc layer** — that the wheel's arc layer never empties or goes faint mid-switch (the regression the old crossfade had), that survivors are moved rather than re-created, and that settled arcs match the static generator exactly.
 
 No new dependencies: it bundles with the esbuild inside Vite and drives whichever Chrome is installed (`CHROME=/path` to override). The page under test is the project's own `index.html` with its module script swapped out, so the DOM and CSS are the real ones.
 
@@ -91,7 +92,22 @@ SVG paints in document order and d3's `join` appends entrants at the end, so sta
 
 ### Switch animations
 
-`animateWheelSwitch.js` / `animateTableSwitch.js` run only when `initWheelData` replaced the dataset (never on first load, never on hover re-renders). Node ids are stable across games, so a switch is entrances + rotations/slides + exits on the same visual objects. The rule: things positioned at a *single* point (spokes, icons, labels, rows) tween; things shaped by a *range* (arcs, pins, req/opt marks, era wedges) can't be tweened sanely and instead use `fadeSwapLayer`. Start values are read live off the DOM, not from a snapshot, so rapid switching redirects gracefully.
+`animateWheelSwitch.js` / `animateTableSwitch.js` run only when `initWheelData` replaced the dataset (never on first load, never on hover re-renders). Node ids are stable across games, so a switch is entrances + travel + exits on the same visual objects, and **every layer travels** — nothing crossfades a whole layer in either view.
+
+Each layer is keyed on an identity that outlives the dataset, which is the part worth understanding before changing any of it:
+
+| Layer | Identity | What interpolates |
+|---|---|---|
+| Spokes, icons, labels, rows | node id | angle (wheel) / row (table) |
+| Arcs, origin pins, req/opt marks | tech id; `arcId>id` for marks | angle + ring radius (wheel), lane x + row y (table) |
+| Era wedges | `eraKey` — canonical across games | the shared *boundaries* of a partition, via `eraMorphPlan` |
+| Era labels | `eraKey` | position; text crossfades only when the wording differs |
+
+Three things that look like free choices but aren't:
+
+- **Start values are read live off the DOM**, not from a snapshot, so rapid switching redirects from wherever an element actually is. Where a value can't be recovered from the DOM — an annular sector's radii, an era wedge's angles — it's stashed on the node instead (`__ringGeom`, `__eraAngles`), which is why the *static* draw paths write those stashes too.
+- **Opacity is never animated for a surviving element.** Every layer carries a selection-driven `.fade` class at `opacity: 0.05`, and an inline opacity outranks a class rule — so anything that does fade goes through `fadeInToResting`, which reads the resting value instead of assuming `1`.
+- **Sizes snap, positions travel.** Label radii, icon widths, `mark`/`pinHalf` are properties of the layout (recomputed per game), not of where a thing is.
 
 ## Data conventions
 

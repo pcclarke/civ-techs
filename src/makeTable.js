@@ -1,9 +1,17 @@
 import { select } from "d3-selection";
 
-import { animateEraRows, animateRows, animateSpokeLines } from "./animateTableSwitch";
-import { fadeSwapLayer } from "./animateWheelSwitch";
+import {
+    animateEraRows,
+    animateRows,
+    animateSpokeLines,
+    animateTableArcs,
+    animateTableCircles,
+    animateTablePins,
+    animateTableSquares,
+} from "./animateTableSwitch";
 import { ROW_H } from "./constants";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
+import { markKey } from "./arcs";
 import { eraJoinKey } from "./drawEras";
 import { eraDisplayName } from "./eraData";
 import { fadeCheck } from "./helpers";
@@ -429,13 +437,11 @@ export function renderTable({ animate = false } = {}) {
         // track their tech's angle — and, same as the wheel, carry the
         // `.fade` dimming through the move so a pin that survives the
         // switch (see initWheelData.js) stays legible throughout rather
-        // than only once it settles. Everything else here is shaped by a
-        // row *range* rather than a single row — arcs span origin to
-        // furthest dependent, pins and marks are arc decorations, era
-        // boundaries span a whole era — so, same call as the wheel, they
-        // fade out and the redrawn set fades in rather than tweening a
-        // shape whose ends would be moving independently. fadeSwapLayer is
-        // the exact function animateWheelSwitch.js uses for this.
+        // than only once it settles. Everything else in this branch now
+        // travels too, on the same curve — the arc layer by interpolating
+        // its lane and row positions (animateTableArcs), the era
+        // boundaries by sliding to their new row (animateEraRows). Nothing
+        // in either view crossfades a whole layer any more.
         animateSpokeLines(layer.spokes, spokeData, allTechs.length, spokeX1, textLeft, Boolean(selected));
         // The selection's own spokes/arc chain, undimmed on top — drawn
         // instantly (not animated) since it's a small supplementary
@@ -444,16 +450,11 @@ export function renderTable({ animate = false } = {}) {
         drawSpokeLines(layer.spokesSel, selected ? selectedSpokes : [])
             .classed("tt-spoke-sel", true);
 
-        fadeSwapLayer(layer.arcs, "line", (g) => g.selectAll("line")
-            .data(arcs, (d) => d.id)
-            .join("line")
-            .attr("class", "tt-arc")
-            .classed("fade", Boolean(selected))
-            .attr("x1", (d) => laneX(d.step))
-            .attr("x2", (d) => laneX(d.step))
-            .attr("y1", (d) => rowY(d.range[0]))
-            .attr("y2", (d) => rowY(d.range[1]))
-            .attr("stroke", (d) => color(d.step)));
+        // The arc layer travels instead of crossfading, mirroring the
+        // wheel — see animateTableArcs. The selection's own arc chain
+        // stays an instant join below: it's a small supplementary overlay,
+        // same as the wheel's svg.selectedArcs.
+        animateTableArcs(layer.arcs, arcs, laneX, rowY, color, Boolean(selected));
 
         const selectedArcs = selected
             ? selectionPrerequisites.filter((d) => Number.isFinite(d.step) && d.range)
@@ -468,42 +469,18 @@ export function renderTable({ animate = false } = {}) {
             .attr("y2", (d) => rowY(d.range[1]))
             .attr("stroke", (d) => color(d.step));
 
-        fadeSwapLayer(layer.pins, "line", (g) => g.selectAll("line")
-            .data(arcs, (d) => d.id)
-            .join("line")
-            .attr("class", "tt-pin")
-            .classed("fade", (d) => Boolean(selected)
+        animateTablePins(layer.pins, arcs, laneX, rowY, pinHalf, color,
+            (d) => Boolean(selected)
                 && d.id !== (selected && selected.id)
-                && !prerequisiteIds.includes(d.id))
-            .attr("x1", (d) => laneX(d.step) - pinHalf)
-            .attr("x2", (d) => laneX(d.step) + pinHalf)
-            .attr("y1", (d) => rowY(d.position))
-            .attr("y2", (d) => rowY(d.position))
-            .attr("stroke", (d) => color(d.step)));
+                && !prerequisiteIds.includes(d.id));
 
-        fadeSwapLayer(layer.marks, "rect", (g) => g.selectAll("rect")
-            .data(squareData)
-            .join("rect")
-            .attr("class", "tt-req")
-            .classed("fade", (d) => Boolean(selected)
-                && selected.id !== d.id && selected.id !== d.arcId)
-            .attr("x", (d) => laneX(d.step) - mark / 2)
-            .attr("y", (d) => rowY(d.pos) - mark / 2)
-            .attr("width", mark)
-            .attr("height", mark)
-            .attr("fill", (d) => color(d.step)));
+        animateTableSquares(layer.marks, squareData, laneX, rowY, mark, color,
+            (d) => Boolean(selected)
+                && selected.id !== d.id && selected.id !== d.arcId);
 
-        fadeSwapLayer(layer.marks, "circle", (g) => g.selectAll("circle")
-            .data(circleData)
-            .join("circle")
-            .attr("class", "tt-opt")
-            .classed("fade", (d) => Boolean(selected)
-                && selected.id !== d.id && selected.id !== d.arcId)
-            .attr("cx", (d) => laneX(d.step))
-            .attr("cy", (d) => rowY(d.pos))
-            .attr("r", mark / 2)
-            .attr("fill", "#FFF")
-            .attr("stroke", (d) => color(d.step)));
+        animateTableCircles(layer.marks, circleData, laneX, rowY, mark, color,
+            (d) => Boolean(selected)
+                && selected.id !== d.id && selected.id !== d.arcId);
 
         // Keyed on canonical era identity, so a boundary both games have
         // slides to its new row instead of blinking out and back — the
@@ -576,7 +553,7 @@ export function renderTable({ animate = false } = {}) {
             .attr("stroke", (d) => color(d.step));
 
         layer.marks.selectAll("rect")
-            .data(squareData)
+            .data(squareData, markKey)
             .join("rect")
             .attr("class", "tt-req")
             .classed("fade", (d) => Boolean(selected)
@@ -588,7 +565,7 @@ export function renderTable({ animate = false } = {}) {
             .attr("fill", (d) => color(d.step));
 
         layer.marks.selectAll("circle")
-            .data(circleData)
+            .data(circleData, markKey)
             .join("circle")
             .attr("class", "tt-opt")
             .classed("fade", (d) => Boolean(selected)

@@ -25,7 +25,7 @@ import {
 import { computeWheelLayout, refreshWheelLayout } from "../../src/computeWheelLayout";
 import { calculatePointOnWheel, wheelTransform } from "../../src/helpers";
 import { eraAngles, eraLabelIndex, eraWedge } from "../../src/drawEras";
-import { fadeSwapLayer } from "../../src/animateWheelSwitch";
+import { makeUnlockArc } from "../../src/arcs";
 import { eraDisplayName } from "../../src/eraData";
 import { prefersReducedMotion, renderActiveView, isTableView } from "../../src/renderView";
 import svgInit from "../../src/svgInit";
@@ -205,85 +205,74 @@ function motionChecks() {
     labelChecks(reduced);
 }
 
-/* ---------------------- fadeSwapLayer race --------------------------- */
+/* ---------------------------- arc layer ------------------------------ */
 
-/**
- * Drain the microtask queue.
- *
- * fadeSwapLayer is the only function in the animators that awaits, and
- * its post-await half is a promise continuation — which window.__tick,
- * being plain synchronous JS, never lets run. So this is the one suite
- * that has to be async, and it is also why the rest of the harness has
- * never exercised that code path at all.
- *
- * Only resolved promises are awaited, never a timer, so the whole suite
- * still completes before the load event --dump-dom snapshots on.
- */
-const drain = async (rounds = 20) => {
-    for (let i = 0; i < rounds; i++) await Promise.resolve();
-};
+const arcEls = () => [...document.querySelectorAll("#chart g.arcs path")];
+const pinEls = () => [...document.querySelectorAll("#chart g.unlock-pins path")];
+const sqEls = () => [...document.querySelectorAll("#chart g.unlock-squares rect")];
+const ciEls = () => [...document.querySelectorAll("#chart g.unlock-circles circle")];
 
-const arcCount = () => document.querySelectorAll("#chart g.arcs path").length;
-
-async function raceChecks() {
-    const arcs = (g) => WHEEL[g].prerequisites.length;
-
-    // The check below distinguishes games by arc count, so it is only
-    // meaningful while those counts differ.
-    ok("race fixture: the three games have distinct arc counts",
-        new Set([arcs("civ4"), arcs("civ7"), arcs("civ5")]).size === 3,
-        `civ4=${arcs("civ4")} civ7=${arcs("civ7")} civ5=${arcs("civ5")}`);
-
+function arcChecks() {
     setupApp("civ4");
     renderActiveView();
-    ok("starting layer is the first game's", arcCount() === arcs("civ4"), `${arcCount()} arcs`);
+    const startIds = new Set(WHEEL.civ4.prerequisites.map((p) => p.id));
+    arcEls().forEach((n) => { n.__probe = true; });
+    const survivors = WHEEL.civ5.prerequisites.filter((p) => startIds.has(p.id)).length;
+    ok("fixture has arcs that survive the switch", survivors > 10, `${survivors} survivors`);
 
-    // Switch, let the fade-out get underway, then switch again before it
-    // finishes. The second call's transition interrupts the first's,
-    // rejecting its .end() — and the drain is where the superseded call
-    // would resume and redraw the layer from data a game out of date.
-    switchTo("civ7", { animate: true });
-    window.__tick(120);                       // inside FADE_OUT_MS (250)
     switchTo("civ5", { animate: true });
-    // One frame, which matters: d3 resolves transition conflicts when a
-    // transition *starts*, not when it is created, so this is the tick on
-    // which the second call's fade-out pre-empts the first's and rejects
-    // its .end(). Sampling before it (as a first version of this check
-    // did) found nothing wrong even with the guard removed — the two
-    // continuations then drained back to back and the stale layer existed
-    // for no observable time.
-    window.__tick(16);
-    await drain();
 
-    const observed = arcCount();
-    ok("superseded swap does not draw its stale layer",
-        observed !== arcs("civ7"),
-        `${observed} arcs — civ4=${arcs("civ4")} (held, correct), civ7=${arcs("civ7")} (stale)`);
-    ok("the layer is still the outgoing game's while the new fade-out runs",
-        observed === arcs("civ4"), `${observed} arcs`);
+    // The actual regression this replaced: the old layer-wide crossfade
+    // took the arcs to opacity 0 and only then brought the new set up, so
+    // they were absent from the middle of the switch while the spokes
+    // swept on. Survivors now hold full opacity the whole way through.
+    let faintest = 1;
+    let emptiest = Infinity;
+    for (let i = 0; i < 45; i++) {
+        window.__tick(16);
+        const live = arcEls();
+        emptiest = Math.min(emptiest, live.length);
+        if (live.length) {
+            faintest = Math.min(faintest, Math.max(...live.map(
+                (n) => parseFloat(getComputedStyle(n).opacity) || 0)));
+        }
+    }
+    ok("arc layer never empties mid-switch", emptiest > 0, `low-water mark ${emptiest} arcs`);
+    ok("arc layer never goes faint mid-switch", faintest > 0.5,
+        `faintest peak opacity seen: ${faintest.toFixed(2)}`);
 
-    window.__tick(500);
-    await drain();
-    window.__tick(500);
-    await drain();
-    ok("the newest switch owns the layer once settled",
-        arcCount() === arcs("civ5"), `${arcCount()} arcs, expected ${arcs("civ5")}`);
+    window.__tick(1200);
 
-    // Two independent swaps share one group in makeTable: the req squares
-    // and the opt circles both live in its marks layer. A generation
-    // counter keyed by group alone would make the second evict the first.
-    const probe = select("#chart svg").append("g").attr("class", "probe-layer");
-    probe.append("rect");
-    probe.append("circle");
-    fadeSwapLayer(probe, "rect", (g) =>
-        g.selectAll("rect").data([1, 2, 3]).join("rect"));
-    fadeSwapLayer(probe, "circle", (g) =>
-        g.selectAll("circle").data([1, 2]).join("circle"));
-    for (let i = 0; i < 4; i++) { window.__tick(400); await drain(); }
-    ok("two swaps sharing a group don't cancel each other",
-        probe.selectAll("rect").size() === 3 && probe.selectAll("circle").size() === 2,
-        `${probe.selectAll("rect").size()} rects, ${probe.selectAll("circle").size()} circles`);
-    probe.remove();
+    const want = WHEEL.civ5.prerequisites.filter((p) => Number.isFinite(p.step));
+    ok("arc count matches the new game", arcEls().length === want.length,
+        `${arcEls().length} vs ${want.length}`);
+    ok("surviving arcs are moved, not re-created",
+        arcEls().filter((n) => n.__probe).length > 10,
+        `${arcEls().filter((n) => n.__probe).length} carried`);
+
+    // Settled geometry must equal what the static path would draw — the
+    // radius is interpolated here, so a settle error shows up as an arc
+    // parked on the wrong ring.
+    const unlockArc = makeUnlockArc(window.app.wheelData.arcSpace);
+    const expect = new Set(want.map((d) => unlockArc(d)));
+    const got = arcEls().map((n) => n.getAttribute("d"));
+    ok("settled arcs match the static generator exactly",
+        got.length === expect.size && got.every((d) => expect.has(d)),
+        `${got.filter((d) => !expect.has(d)).length} mismatched`);
+
+    ok("pins, squares and circles match the new game too",
+        pinEls().length === want.length
+        && sqEls().length === WHEEL.civ5.squareData.length
+        && ciEls().length === WHEEL.civ5.circleData.length,
+        `${pinEls().length} pins / ${sqEls().length} squares / ${ciEls().length} circles ` +
+        `vs ${want.length} / ${WHEEL.civ5.squareData.length} / ${WHEEL.civ5.circleData.length}`);
+
+    ok("no stranded inline opacity across the arc layer",
+        [...arcEls(), ...pinEls(), ...sqEls(), ...ciEls()].every((n) => n.style.opacity === ""),
+        `${[...arcEls(), ...pinEls(), ...sqEls(), ...ciEls()].filter((n) => n.style.opacity !== "").length} stranded`);
+
+    note.push(`arcs: civ4 ${WHEEL.civ4.prerequisites.length} -> civ5 ${want.length}, ` +
+        `${survivors} shared ids`);
 }
 
 /* ------------------------- era label checks -------------------------- */
@@ -444,21 +433,100 @@ function tableChecks() {
     ok("no stranded inline opacity on boundaries",
         nowEras.every((n) => n.style.opacity === ""),
         `${nowEras.filter((n) => n.style.opacity !== "").length} stranded`);
+
+    // --- the arc layer travels here too ---
+    const lanePart = (sel) => [...document.querySelectorAll(`#table ${sel}`)];
+    const laneArcs = () => lanePart("g.tt-l-arcs line");
+    const laneAll = () => [
+        ...laneArcs(), ...lanePart("g.tt-l-pins line"),
+        ...lanePart("g.tt-l-marks rect"), ...lanePart("g.tt-l-marks circle"),
+    ];
+    /**
+     * Every positional and paint attribute of the layer, so an animated
+     * settle can be compared against what the static path draws.
+     *
+     * Colours are canonicalised through the browser because the two paths
+     * legitimately write different *notations* for the same colour: d3's
+     * transition interpolator lands on `rgb(148, 103, 189)` where the
+     * static `.attr()` writes `#9467bd`. Identical rendering, so comparing
+     * the raw strings would fail on a difference that does not exist.
+     */
+    const swatch = document.body.appendChild(document.createElement("span"));
+    swatch.style.display = "none";
+    const canonColor = (v) => {
+        if (!v) return "";
+        swatch.style.color = "";
+        swatch.style.color = v;
+        return getComputedStyle(swatch).color || v;
+    };
+    const POS = ["x", "y", "x1", "x2", "y1", "y2", "cx", "cy", "r", "width", "height"];
+    const snapshot = () => laneAll().map((n) =>
+        n.tagName + ":" + POS.map((a) => n.getAttribute(a) || "").join(",")
+        + ":" + canonColor(n.getAttribute("stroke")) + "/" + canonColor(n.getAttribute("fill"))
+    ).sort().join("|");
+
+    setupApp("civ4");
+    renderActiveView();
+    const arcsBefore = laneArcs().length;
+    laneArcs().forEach((n) => { n.__probe = true; });
+    ok("table arc layer drawn", arcsBefore > 0, `${arcsBefore} arcs`);
+
+    switchTo("civ5", { animate: true });
+    let faintest = 1;
+    for (let i = 0; i < 45; i++) {
+        window.__tick(16);
+        const live = laneArcs();
+        if (live.length) {
+            faintest = Math.min(faintest, Math.max(...live.map(
+                (n) => parseFloat(getComputedStyle(n).opacity) || 0)));
+        }
+    }
+    ok("table arc layer never goes faint mid-switch", faintest > 0.5,
+        `faintest peak opacity seen: ${faintest.toFixed(2)}`);
+    window.__tick(1200);
+
+    const wantArcs = WHEEL.civ5.prerequisites.filter((d) => Number.isFinite(d.step)).length;
+    ok("table arc count matches the new game", laneArcs().length === wantArcs,
+        `${laneArcs().length} vs ${wantArcs}`);
+    ok("surviving table arcs are moved, not re-created",
+        laneArcs().filter((n) => n.__probe).length > 10,
+        `${laneArcs().filter((n) => n.__probe).length} carried`);
+
+    // The settle has to land exactly where the static path would draw, or
+    // an arc ends up parked in the wrong lane. Comparing against a real
+    // static re-render of the same data is the strongest form of that.
+    const settled = snapshot();
+    renderActiveView();
+    ok("animated settle matches a static re-render exactly",
+        snapshot() === settled,
+        snapshot() === settled ? "identical" : (() => {
+            const a = settled.split("|"), b = snapshot().split("|");
+            const d = a.map((x, i) => x === b[i] ? null : `${x}  =>  ${b[i]}`)
+                .filter(Boolean).slice(0, 2);
+            return `${a.filter((x, i) => x !== b[i]).length} differ; e.g. ${d.join(" ;; ")}`;
+        })());
+    ok("no stranded inline opacity across the table arc layer",
+        laneAll().every((n) => n.style.opacity === ""),
+        `${laneAll().filter((n) => n.style.opacity !== "").length} stranded`);
+
+    note.push(`table arcs: ${arcsBefore} -> ${laneArcs().length}, ` +
+        `${laneAll().length} elements in the layer`);
 }
 
 /* ------------------------------- driver ------------------------------ */
 
-// Async because the race suite has to drain microtasks; every other
-// suite stays synchronous. Only resolved promises are ever awaited —
-// never a timer — so this finishes before the load event --dump-dom
-// snapshots on, which is also why the results are written from *inside*
-// the async function rather than after it. (No top-level await: the
-// bundle is iife, which doesn't support it.)
+// Wrapped in an async IIFE so a suite can await if it needs to. None do
+// at the moment — every check runs synchronously against the stubbed
+// clock — but if one ever drains microtasks, the rule is that it may only
+// await already-resolved promises, never a timer: --dump-dom snapshots
+// the page on the load event, and a task would land after it. That is
+// also why the results are written from *inside* this function rather
+// than after it. (No top-level await: the bundle is iife.)
 (async () => {
     try {
         if (location.hash.includes("layout")) layoutChecks();
         else if (location.hash.includes("table")) tableChecks();
-        else if (location.hash.includes("race")) await raceChecks();
+        else if (location.hash.includes("arcs")) arcChecks();
         else motionChecks();
     } catch (e) {
         ok("suite ran without throwing", false, `${e && e.message}\n${e && e.stack}`);

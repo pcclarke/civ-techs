@@ -17,6 +17,7 @@
  *   #motion   wide viewport                  — animates
  *   #motion-reduced  ditto, but with --force-prefers-reduced-motion
  *   #table    narrow viewport, table visible — the table's own layout
+ *   #arcs     wide viewport                  — the arc layer's travel
  *
  * One environment constraint worth knowing: headless Chrome on macOS
  * clamps the window to about 500px wide, so --window-size=390 still
@@ -73,7 +74,7 @@ const RUNS = [
     { hash: "motion-reduced", label: "motion — prefers-reduced-motion", size: "1400,1000",
       flags: ["--force-prefers-reduced-motion"] },
     { hash: "table", label: "table layout (narrow viewport)", size: "390,900" },
-    { hash: "race", label: "fadeSwapLayer race (rapid switching)", size: "1400,1000" },
+    { hash: "arcs", label: "arc layer travel", size: "1400,1000" },
 ];
 
 /** execFileSync, but reporting a tool's own stderr instead of burying it
