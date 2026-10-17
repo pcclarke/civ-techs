@@ -3,8 +3,11 @@ import "d3-transition";
 
 import { ARC_BASE, PI_DIFF, TECH_IMG_WIDTH, TWO_PI } from "./constants";
 import { calculatePointOnWheel, fadeCheck, wheelTransform } from "./helpers";
-import { eraJoinKey, eraMorphPlan, eraWedge } from "./drawEras";
-import { eraKey } from "./eraData";
+import {
+    eraJoinKey, eraLabelIndex, eraLabelWidthCap, eraMorphPlan, eraWedge,
+    squeezeEraLabel,
+} from "./drawEras";
+import { eraDisplayName } from "./eraData";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
 
 /**
@@ -412,7 +415,34 @@ export function animateTechImages(group, allTechs, count, techImgRadius, game, i
  * as an unhandled rejection; the redraw still happens using whatever data
  * this call closed over; a still-newer render will draw over it shortly.
  */
+/**
+ * Which swap currently owns a layer, so a superseded one can tell.
+ *
+ * Keyed by group *and* childTag, not group alone: makeTable runs two
+ * independent swaps against its marks layer, one for the req squares and
+ * one for the opt circles, and they must not cancel each other.
+ *
+ * A WeakMap so a layer whose node is discarded takes its counter with it.
+ */
+const swapGeneration = new WeakMap();
+
+function claimLayer(node, childTag) {
+    let byTag = swapGeneration.get(node);
+    if (!byTag) swapGeneration.set(node, (byTag = new Map()));
+    const mine = (byTag.get(childTag) || 0) + 1;
+    byTag.set(childTag, mine);
+    return mine;
+}
+
+function stillOwns(node, childTag, generation) {
+    const byTag = swapGeneration.get(node);
+    return Boolean(byTag) && byTag.get(childTag) === generation;
+}
+
 export async function fadeSwapLayer(group, childTag, redraw) {
+    const node = group.node();
+    const generation = claimLayer(node, childTag);
+
     const existing = group.selectAll(childTag);
     if (!existing.empty()) {
         try {
@@ -423,8 +453,26 @@ export async function fadeSwapLayer(group, childTag, redraw) {
             // identically on both, so one code path covers both views.
             await existing.transition().duration(FADE_OUT_MS).style("opacity", 0).end();
         } catch {
-            // interrupted — fall through and redraw anyway
+            // Interrupted, which on its own says nothing about who should
+            // redraw — the generation check below is what decides.
         }
+
+        // A newer swap of this same layer began while this one was fading
+        // out; it owns the layer now, so stop here and touch nothing.
+        //
+        // This is the only await in the file, and it opened a real race.
+        // Switching twice in quick succession meant the second call's
+        // `existing.transition()` interrupted the first's fade-out, which
+        // rejected the first's `.end()` — and the first then fell straight
+        // through to remove and redraw the layer from the dataset it had
+        // closed over, which is now a game out of date. So the layer drew
+        // the *intermediate* game's arcs and faded them in, while the
+        // second call sat waiting on a fade-out whose nodes had just been
+        // deleted from under it. The end state was right, because the
+        // second call redrew last, but a stale layer was visible for the
+        // whole fade. Same counter trick initWheelData.js uses with
+        // loadRequestId, for the same reason.
+        if (!stillOwns(node, childTag, generation)) return;
     }
     group.selectAll(childTag).remove();
     fadeInToResting(redraw(group), FADE_IN_MS);
@@ -448,7 +496,7 @@ export async function fadeSwapLayer(group, childTag, redraw) {
  * Every read happens before the first write, so this costs one style
  * recalc for the selection rather than one per element.
  */
-function fadeInToResting(selection, duration) {
+export function fadeInToResting(selection, duration) {
     const resting = new Map();
     selection.each(function () {
         resting.set(this, getComputedStyle(this).opacity || "1");
@@ -598,6 +646,149 @@ export function animateEraBackgrounds(group, eraRanges, color, outerRadius) {
     moving.filter((d) => d.index !== null).attr("fill", (d) => color(d.index));
 
     return all;
+}
+
+// --------------------------- Era labels ---------------------------
+
+/**
+ * Era names travel with their wedge.
+ *
+ * These used to go through fadeSwapLayer like every other range-shaped
+ * layer, which blanks the whole layer and redraws it. That was fine while
+ * the wedges crossfaded too — but now that a wedge morphs, it left the
+ * name of an era blinking out and back while the band it names slid
+ * underneath, visibly breaking the association between the two for the
+ * length of the switch.
+ *
+ * Staying put isn't the answer either. Measured across every switch in
+ * the project, a surviving era's label travels a median of 21 degrees and
+ * as much as 97, so a stationary name would be sitting over a different
+ * era's band by the time the morph landed. So the label is keyed on era
+ * identity and moved, and what happens to its *text* depends on whether
+ * the two games even spell the era differently:
+ *
+ *   - 72% of surviving labels read identically on both sides — Civ 4, 5
+ *     and 6 all spell it ERA_MODERN and eraDisplayName renders the same
+ *     word — so the one node is carried across with no fade whatsoever.
+ *     There is nothing to cross between, and crossfading a word into
+ *     itself is just a blink.
+ *   - the other 28% genuinely change wording ("Industrial Revolution" ->
+ *     "Industrial", "Ancient" -> "Antiquity"). Glyphs can't tween, so the
+ *     outgoing text fades out along the same path the incoming text fades
+ *     in along: the two-node technique animateTechImages uses for a tech
+ *     icon whose href changes, and fadeSwapCenterImage for the hub.
+ *
+ * Arrivals and departures just fade. A wedge can collapse to zero width
+ * on a boundary because it *is* a span; a label is a single point with no
+ * equivalent, and growing text out of nothing reads as a glitch.
+ *
+ * Opacity is deliberately untouched for a survivor that keeps its text.
+ * These carry `.fade` while something is selected, and `.fade`'s 0.05 is
+ * a class rule that any inline opacity outranks — the precedence trap
+ * that made the era wedges flash. A survivor never writes inline opacity,
+ * so it cannot fall into it; the two paths that do fade go through
+ * fadeInToResting, which handles it.
+ *
+ * Travel runs at ROTATE_MS on easeInOutCubic, matching the wedge beneath
+ * it, so a band and its name arrive together.
+ */
+export function animateEraLabels(group, eraRanges, color, radius, dimAll = false) {
+    const widthCap = eraLabelWidthCap(radius);
+
+    // Live state, read before anything rebinds data or appends a node.
+    // Angles come off the rendered transform rather than a snapshot of the
+    // outgoing data, so rapid switching redirects from wherever a label
+    // actually is — the principle the rest of this file follows.
+    const resident = new Map();
+    group.selectAll("text").each(function (d) {
+        if (d) resident.set(eraJoinKey(d), this);
+    });
+
+    const arriving = new Set(eraRanges.map(eraJoinKey));
+    for (const [key, node] of resident) {
+        if (arriving.has(key)) continue;
+        select(node).interrupt()
+            .transition().duration(FADE_OUT_MS)
+            .style("opacity", 0)
+            .remove();
+    }
+
+    // Both halves of a crossfade follow one path, so the motion is one
+    // shared tween. A plain .tween rather than attrTween because it writes
+    // the whole transform string itself — see transformAtAngle for why the
+    // 180-degree flip has to be recomputed every frame from the
+    // *instantaneous* angle rather than fixed up front: a label crossing
+    // the wheel's vertical meridian mid-flight has to flip exactly when it
+    // crosses, or it reads mirrored for the rest of the journey.
+    const travel = (start, delta) => function () {
+        return (t) => {
+            this.setAttribute("transform", transformAtAngle(start + delta * t, radius));
+        };
+    };
+
+    // Pin the settled transform to the exact formula drawEraLabels uses,
+    // same reasoning as animateTechLabels' `settle`: transformAtAngle's
+    // flip is a razor's-edge cos(angle) < 0 test, and the tween's
+    // accumulated start+delta arithmetic can land on the wrong side of it
+    // for a label sitting exactly on the meridian — which renders the name
+    // mirrored, running back into the hub. Only reachable on natural
+    // completion, never mid-flight. The squeeze is reapplied here too, so
+    // an arriving label ends on the same glyph spacing the static path
+    // would give it.
+    const settle = (d) => function () {
+        this.setAttribute("transform", wheelTransform(d.count, eraLabelIndex(d), radius));
+        squeezeEraLabel(this, widthCap);
+    };
+
+    eraRanges.forEach((d, i) => {
+        const old = resident.get(eraJoinKey(d));
+        const text = eraDisplayName(d.era);
+        const end = targetAngle(d.count, eraLabelIndex(d));
+        const start = old ? readTransformAngle(old) : end;
+        const delta = old ? shortestDelta(start, end) : 0;
+
+        // Survivor keeping its wording: move the one node, no fade.
+        if (old && old.textContent === text) {
+            select(old).interrupt()
+                .classed("fade", dimAll)
+                .transition().duration(ROTATE_MS).ease(easeInOutCubic)
+                .attr("fill", color(i))
+                .tween("era-label-travel", travel(start, delta))
+                .on("end", settle(d));
+            return;
+        }
+
+        // Renamed: the outgoing text leaves along the incoming one's path.
+        if (old) {
+            select(old).interrupt()
+                .transition().duration(ROTATE_MS).ease(easeInOutCubic)
+                .style("opacity", 0)
+                .tween("era-label-travel", travel(start, delta))
+                .remove();
+        }
+
+        const node = group.append("text")
+            .attr("class", "era-label")
+            .classed("fade", dimAll)
+            .datum(d)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "middle")
+            .attr("fill", color(i))
+            .attr("transform", transformAtAngle(start, radius))
+            .text(text);
+        squeezeEraLabel(node.node(), widthCap);
+
+        // fadeInToResting, not a fade to 1: an arrival drawn while
+        // something is pinned carries `.fade`, whose resting opacity is
+        // 0.05. A replacement travels alongside the text it replaces; a
+        // genuine arrival has nowhere to travel from and only fades.
+        // "end.settle" rather than "end" so this adds a listener instead
+        // of replacing the one fadeInToResting uses to clear its inline
+        // opacity.
+        const tr = fadeInToResting(node, old ? ROTATE_MS : FADE_IN_MS);
+        if (old) tr.tween("era-label-travel", travel(start, delta));
+        tr.on("end.settle", settle(d));
+    });
 }
 
 /**

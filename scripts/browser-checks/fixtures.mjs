@@ -25,7 +25,10 @@ const TREES = [
 ];
 
 /** Games the render checks switch between; needs the full wheelData shape. */
-const RENDERABLE = ["civ4", "civ5", "civ7"];
+// civ2/civ3 are here for the era-label checks specifically: they are
+// the pair whose eras survive but are *spelled* differently
+// ("Industrial Revolution" vs "Industrial Ages").
+const RENDERABLE = ["civ2", "civ3", "civ4", "civ5", "civ7"];
 
 function nodesFor(game, key) {
     const file = path.join("public", game, "civdata.json");

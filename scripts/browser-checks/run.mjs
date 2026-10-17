@@ -73,6 +73,7 @@ const RUNS = [
     { hash: "motion-reduced", label: "motion — prefers-reduced-motion", size: "1400,1000",
       flags: ["--force-prefers-reduced-motion"] },
     { hash: "table", label: "table layout (narrow viewport)", size: "390,900" },
+    { hash: "race", label: "fadeSwapLayer race (rapid switching)", size: "1400,1000" },
 ];
 
 /** execFileSync, but reporting a tool's own stderr instead of burying it

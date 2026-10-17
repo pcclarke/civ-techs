@@ -1,9 +1,10 @@
 import { select } from "d3-selection";
 
-import { animateRows, animateSpokeLines } from "./animateTableSwitch";
+import { animateEraRows, animateRows, animateSpokeLines } from "./animateTableSwitch";
 import { fadeSwapLayer } from "./animateWheelSwitch";
 import { ROW_H } from "./constants";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
+import { eraJoinKey } from "./drawEras";
 import { eraDisplayName } from "./eraData";
 import { fadeCheck } from "./helpers";
 import { color } from "./makeWheel";
@@ -504,11 +505,10 @@ export function renderTable({ animate = false } = {}) {
             .attr("fill", "#FFF")
             .attr("stroke", (d) => color(d.step)));
 
-        fadeSwapLayer(root, "div.tt-era", (g) => g.selectAll("div.tt-era")
-            .data(eraRanges, (d) => d.era)
-            .join("div")
-            .attr("class", "tt-era")
-            .style("top", (d) => `${d.first * ROW_H}px`));
+        // Keyed on canonical era identity, so a boundary both games have
+        // slides to its new row instead of blinking out and back — the
+        // table's counterpart to the wheel's morphing era wedges.
+        animateEraRows(root, eraRanges);
     } else {
         drawSpokeLines(layer.spokes, spokeData)
             .classed("fade", Boolean(selected));
@@ -603,8 +603,11 @@ export function renderTable({ animate = false } = {}) {
         // absolutely-positioned layer rather than inside the row, so they
         // span the full width without taking any of it from the advance
         // name.
+        // eraJoinKey, not the raw `d.era` string: the two paths have to
+        // agree about what counts as the same era, or a hover re-render
+        // landing after a switch would treat every boundary as new.
         root.selectAll("div.tt-era")
-            .data(eraRanges, (d) => d.era)
+            .data(eraRanges, eraJoinKey)
             .join("div")
             .attr("class", "tt-era")
             .style("top", (d) => `${d.first * ROW_H}px`);

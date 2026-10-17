@@ -17,6 +17,7 @@ import { drawEraBackgrounds, drawEraLabels } from "./drawEras";
 import { setupHighlights } from "./setupHighlights";
 import {
     animateEraBackgrounds,
+    animateEraLabels,
     animateSpokes,
     animateTechImages,
     animateTechLabels,
@@ -114,15 +115,12 @@ export async function renderWheel({ animate = false } = {}) {
           .classed("fade", (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId));
       fadeSwapLayer(svg.unlockCircles, "circle", (g) => drawUnlockCircles(g, circleData, count, color, arcSpace)
           .classed("fade", (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId));
-      // Keyed on canonical era identity, so an era both games have slides
-      // to its new span instead of fading out and back in — see
-      // animateEraBackgrounds. The labels still crossfade: their *text*
-      // changes between games ("Ancient" -> "Ancient Times"), which has no
-      // tween, and their radial rotation carries the same cos(angle) < 0
-      // flip animateTechLabels has to manage per-frame.
+      // Both era layers are keyed on canonical era identity, so an era
+      // both games have slides to its new place rather than fading out and
+      // back in — the wedge morphing its span, the label travelling with
+      // it so the band and its name stay associated throughout.
       animateEraBackgrounds(svg.eraBackgrounds, eraRanges, eraColor, eraBackgroundRadius);
-      fadeSwapLayer(svg.eraLabels, "text", (g) => drawEraLabels(g, eraRanges, eraColor, eraLabelRadius)
-          .classed("fade", Boolean(selected)));
+      animateEraLabels(svg.eraLabels, eraRanges, eraColor, eraLabelRadius, Boolean(selected));
 
       drawArcs(
           svg.selectedArcs,

@@ -236,7 +236,7 @@ export function drawEraBackgrounds(element, eraRanges, color, outerRadius) {
  * overlap).
  */
 export function drawEraLabels(element, eraRanges, color, radius) {
-    const widthCap = 2 * (radius - GAME_IMG_WIDTH / 2 - LABEL_PADDING);
+    const widthCap = eraLabelWidthCap(radius);
     return element
         .selectAll("text")
         .data(eraRanges, eraJoinKey)
@@ -244,17 +244,37 @@ export function drawEraLabels(element, eraRanges, color, radius) {
         .attr("class", "era-label")
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "middle")
-        .attr("transform", (d) => wheelTransform(d.count, (d.first + d.last) / 2, radius))
+        .attr("transform", (d) => wheelTransform(d.count, eraLabelIndex(d), radius))
         .attr("fill", (_, i) => color(i))
         .text((d) => eraDisplayName(d.era))
-        .each(function () {
-            const w = this.getComputedTextLength();
-            if (widthCap > 0 && w > widthCap) {
-                this.setAttribute("textLength", widthCap);
-                this.setAttribute("lengthAdjust", "spacingAndGlyphs");
-            } else {
-                this.removeAttribute("textLength");
-                this.removeAttribute("lengthAdjust");
-            }
-        });
+        .each(function () { squeezeEraLabel(this, widthCap); });
+}
+
+/** The wheel index an era's label sits at: its angular midpoint. Shared
+ *  with animateEraLabels, which has to know where a label is travelling
+ *  to without going through wheelTransform. */
+export function eraLabelIndex(d) {
+    return (d.first + d.last) / 2;
+}
+
+/** Room an era label has to run radially: twice the distance from its
+ *  anchor to the centre image's edge, since `radius` splits the annulus
+ *  evenly. See drawEraLabels for why anything wider is squeezed. */
+export function eraLabelWidthCap(radius) {
+    return 2 * (radius - GAME_IMG_WIDTH / 2 - LABEL_PADDING);
+}
+
+/** Apply (or clear) that squeeze on one label node. Factored out so the
+ *  animated path lands on exactly the same glyph spacing the static path
+ *  would give it — a label that arrives un-squeezed would overlap the
+ *  centre image. */
+export function squeezeEraLabel(node, widthCap) {
+    const w = node.getComputedTextLength();
+    if (widthCap > 0 && w > widthCap) {
+        node.setAttribute("textLength", widthCap);
+        node.setAttribute("lengthAdjust", "spacingAndGlyphs");
+    } else {
+        node.removeAttribute("textLength");
+        node.removeAttribute("lengthAdjust");
+    }
 }

@@ -1,7 +1,9 @@
 import { select } from "d3-selection";
 import "d3-transition";
 
+import { fadeInToResting } from "./animateWheelSwitch";
 import { ROW_H } from "./constants";
+import { eraJoinKey } from "./drawEras";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
 import { fadeCheck } from "./helpers";
 
@@ -265,4 +267,72 @@ export function animateSpokeLines(layer, spokeData, count, spokeX1, textLeft, di
                 })
                 .remove())
         );
+}
+
+
+/**
+ * Era boundaries: the table's counterpart to the wheel's era wedges.
+ *
+ * These went through fadeSwapLayer, which empties the layer and redraws
+ * it, so every boundary blinked out and back on a switch — including the
+ * ones belonging to an era both games have. Two things made that worse
+ * than it looked: fadeSwapLayer removes every child *before* the redraw
+ * runs, so the keyed join behind it never matched anything; and the key
+ * was the raw `d.era` string, which would have failed anyway, since Civ 3
+ * calls it "Modern Times" where Civ 6 calls it ERA_MODERN. Keyed on
+ * eraJoinKey, the same canonical identity the wheel uses, a boundary that
+ * exists in both games now slides from its old row to its new one.
+ *
+ * Far simpler than the wheel's equivalent: a boundary's position is one
+ * number (`first * ROW_H`), so there are no angles to unwrap, no 180
+ * degree flip, and no partition to keep airtight — the wedges had to
+ * share moving edges because they tile the wheel, whereas these are
+ * independent hairlines with nothing between them to leave a gap in.
+ *
+ * Arrivals and departures fade, like the wheel's era labels: a boundary
+ * is a single row position, so there's no span to collapse onto a
+ * neighbour.
+ */
+export function animateEraRows(root, eraRanges) {
+    const resident = new Map();
+    root.selectAll("div.tt-era").each(function (d) {
+        if (d) resident.set(eraJoinKey(d), this);
+    });
+
+    const arriving = new Set(eraRanges.map(eraJoinKey));
+    for (const [key, node] of resident) {
+        if (arriving.has(key)) continue;
+        select(node).interrupt()
+            .transition().duration(MOVE_MS).ease(easeInOutCubic)
+            .style("opacity", 0)
+            .remove();
+    }
+
+    for (const d of eraRanges) {
+        const target = d.first * ROW_H;
+        const old = resident.get(eraJoinKey(d));
+
+        if (old) {
+            // Rebind the datum: the next switch reads the key off it.
+            select(old).interrupt().datum(d)
+                .transition().duration(MOVE_MS).ease(easeInOutCubic)
+                .styleTween("top", () => {
+                    const move = lerp(readTop(old), target);
+                    return (t) => `${move(t)}px`;
+                })
+                // Land on the exact value rather than the tween's last
+                // step, so a later switch reads a clean start position.
+                .on("end", function () { this.style.top = `${target}px`; });
+            continue;
+        }
+
+        // fadeInToResting rather than a fade to 1: nothing sets a resting
+        // opacity on .tt-era today, but hard-coding the target is the
+        // mistake that made the era wedges flash, and this is the one
+        // shared implementation that reads it instead of assuming.
+        fadeInToResting(
+            root.append("div").attr("class", "tt-era").datum(d).style("top", `${target}px`),
+            MOVE_MS,
+        );
+    }
 }

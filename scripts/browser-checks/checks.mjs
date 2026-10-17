@@ -23,8 +23,10 @@ import {
     TECH_LABEL_FONT_MIN, TOTAL_WIDTH, TWO_PI_ADJ, ROW_H,
 } from "../../src/constants";
 import { computeWheelLayout, refreshWheelLayout } from "../../src/computeWheelLayout";
-import { calculatePointOnWheel } from "../../src/helpers";
-import { eraAngles, eraWedge } from "../../src/drawEras";
+import { calculatePointOnWheel, wheelTransform } from "../../src/helpers";
+import { eraAngles, eraLabelIndex, eraWedge } from "../../src/drawEras";
+import { fadeSwapLayer } from "../../src/animateWheelSwitch";
+import { eraDisplayName } from "../../src/eraData";
 import { prefersReducedMotion, renderActiveView, isTableView } from "../../src/renderView";
 import svgInit from "../../src/svgInit";
 // Written by run.mjs from the real data pipeline before this is bundled.
@@ -199,6 +201,170 @@ function motionChecks() {
             after.length === expected.length && expected.every((d) => after.includes(d)),
             `${after.length} wedges`);
     }
+
+    labelChecks(reduced);
+}
+
+/* ---------------------- fadeSwapLayer race --------------------------- */
+
+/**
+ * Drain the microtask queue.
+ *
+ * fadeSwapLayer is the only function in the animators that awaits, and
+ * its post-await half is a promise continuation — which window.__tick,
+ * being plain synchronous JS, never lets run. So this is the one suite
+ * that has to be async, and it is also why the rest of the harness has
+ * never exercised that code path at all.
+ *
+ * Only resolved promises are awaited, never a timer, so the whole suite
+ * still completes before the load event --dump-dom snapshots on.
+ */
+const drain = async (rounds = 20) => {
+    for (let i = 0; i < rounds; i++) await Promise.resolve();
+};
+
+const arcCount = () => document.querySelectorAll("#chart g.arcs path").length;
+
+async function raceChecks() {
+    const arcs = (g) => WHEEL[g].prerequisites.length;
+
+    // The check below distinguishes games by arc count, so it is only
+    // meaningful while those counts differ.
+    ok("race fixture: the three games have distinct arc counts",
+        new Set([arcs("civ4"), arcs("civ7"), arcs("civ5")]).size === 3,
+        `civ4=${arcs("civ4")} civ7=${arcs("civ7")} civ5=${arcs("civ5")}`);
+
+    setupApp("civ4");
+    renderActiveView();
+    ok("starting layer is the first game's", arcCount() === arcs("civ4"), `${arcCount()} arcs`);
+
+    // Switch, let the fade-out get underway, then switch again before it
+    // finishes. The second call's transition interrupts the first's,
+    // rejecting its .end() — and the drain is where the superseded call
+    // would resume and redraw the layer from data a game out of date.
+    switchTo("civ7", { animate: true });
+    window.__tick(120);                       // inside FADE_OUT_MS (250)
+    switchTo("civ5", { animate: true });
+    // One frame, which matters: d3 resolves transition conflicts when a
+    // transition *starts*, not when it is created, so this is the tick on
+    // which the second call's fade-out pre-empts the first's and rejects
+    // its .end(). Sampling before it (as a first version of this check
+    // did) found nothing wrong even with the guard removed — the two
+    // continuations then drained back to back and the stale layer existed
+    // for no observable time.
+    window.__tick(16);
+    await drain();
+
+    const observed = arcCount();
+    ok("superseded swap does not draw its stale layer",
+        observed !== arcs("civ7"),
+        `${observed} arcs — civ4=${arcs("civ4")} (held, correct), civ7=${arcs("civ7")} (stale)`);
+    ok("the layer is still the outgoing game's while the new fade-out runs",
+        observed === arcs("civ4"), `${observed} arcs`);
+
+    window.__tick(500);
+    await drain();
+    window.__tick(500);
+    await drain();
+    ok("the newest switch owns the layer once settled",
+        arcCount() === arcs("civ5"), `${arcCount()} arcs, expected ${arcs("civ5")}`);
+
+    // Two independent swaps share one group in makeTable: the req squares
+    // and the opt circles both live in its marks layer. A generation
+    // counter keyed by group alone would make the second evict the first.
+    const probe = select("#chart svg").append("g").attr("class", "probe-layer");
+    probe.append("rect");
+    probe.append("circle");
+    fadeSwapLayer(probe, "rect", (g) =>
+        g.selectAll("rect").data([1, 2, 3]).join("rect"));
+    fadeSwapLayer(probe, "circle", (g) =>
+        g.selectAll("circle").data([1, 2]).join("circle"));
+    for (let i = 0; i < 4; i++) { window.__tick(400); await drain(); }
+    ok("two swaps sharing a group don't cancel each other",
+        probe.selectAll("rect").size() === 3 && probe.selectAll("circle").size() === 2,
+        `${probe.selectAll("rect").size()} rects, ${probe.selectAll("circle").size()} circles`);
+    probe.remove();
+}
+
+/* ------------------------- era label checks -------------------------- */
+
+const labelNodes = () =>
+    [...document.querySelectorAll("#chart g.era-labels text")];
+
+/** The transform drawEraLabels would give each era statically. A settled
+ *  animated label must match it exactly — if the per-frame flip lands on
+ *  the wrong side of its cos(angle) < 0 test, the name renders mirrored,
+ *  and this string is where that shows up. */
+const staticTransforms = () => {
+    const { eraRanges, eraLabelRadius } = window.app.wheelData;
+    return eraRanges.map((d) => wheelTransform(d.count, eraLabelIndex(d), eraLabelRadius));
+};
+
+function switchTo(game, opts) {
+    window.app.game = game;
+    window.app.wheelData = structuredClone(WHEEL[game]);
+    refreshWheelLayout();
+    renderActiveView(opts);
+}
+
+function labelChecks(reduced) {
+    // --- survivors that keep their wording must keep their DOM node ---
+    setupApp("civ4");
+    renderActiveView();
+    labelNodes().forEach((n, i) => { n.__probe = i; });
+    const before = labelNodes().length;
+
+    switchTo("civ5", { animate: true });
+    if (!reduced) window.__tick(1200);
+
+    const after = labelNodes();
+    ok("label count matches the new game", after.length === window.app.wheelData.eraRanges.length,
+        `${after.length} labels, ${window.app.wheelData.eraRanges.length} eras`);
+    // Civ 4 and Civ 5 both use the ERA_* vocabulary, so every surviving
+    // label reads identically and should have been carried, not replaced.
+    ok("same-wording survivors are moved, not re-created",
+        after.length === before && after.every((n) => n.__probe !== undefined),
+        `${after.filter((n) => n.__probe !== undefined).length}/${after.length} carried`);
+
+    const want = staticTransforms();
+    const got = after.map((n) => n.getAttribute("transform"));
+    ok("settled transforms match the static formula exactly",
+        want.every((t) => got.includes(t)) && got.length === want.length,
+        got.length === want.length ? "all match" : `${got.length} vs ${want.length}`);
+
+    // --- renamed eras: one node each, carrying the new wording ---
+    setupApp("civ2");
+    renderActiveView();
+    switchTo("civ3", { animate: true });
+    if (!reduced) window.__tick(1200);
+
+    const texts = labelNodes().map((n) => n.textContent).sort();
+    const expect = window.app.wheelData.eraRanges.map((d) => eraDisplayName(d.era)).sort();
+    ok("renamed eras end with exactly one label each",
+        texts.length === expect.length && texts.every((t, i) => t === expect[i]),
+        `[${texts.join(", ")}] vs [${expect.join(", ")}]`);
+    ok("no stranded inline opacity on labels",
+        labelNodes().every((n) => n.style.opacity === ""),
+        `${labelNodes().filter((n) => n.style.opacity !== "").length} stranded`);
+
+    if (!reduced) {
+        // Mid-flight, a renamed era is genuinely two nodes crossfading.
+        setupApp("civ2");
+        renderActiveView();
+        switchTo("civ3", { animate: true });
+        window.__tick(350);
+        const live = labelNodes();
+        ok("mid-flight: a renamed era is two nodes crossfading",
+            live.length > window.app.wheelData.eraRanges.length,
+            `${live.length} nodes vs ${window.app.wheelData.eraRanges.length} eras at rest`);
+        ok("mid-flight: labels are in motion, not parked",
+            live.some((n) => !staticTransforms().includes(n.getAttribute("transform"))),
+            "at least one label off its final transform");
+        window.__tick(1200);
+        ok("crossfade cleans up to one node per era",
+            labelNodes().length === window.app.wheelData.eraRanges.length,
+            `${labelNodes().length} labels`);
+    }
 }
 
 /* --------------------------- table checks ---------------------------- */
@@ -246,24 +412,65 @@ function tableChecks() {
 
     note.push(`table: ${rows.length} rows, contentLeft=${contentLeft.toFixed(1)}, ` +
         `widest name ${widest.toFixed(1)}px, ${laneCount} lanes`);
+
+    // --- era boundaries slide, keyed on canonical era identity ---
+    // civ2 -> civ3 is the pair that exercises every branch at once, and
+    // the one the old raw-`d.era` key could never have matched: Ancient /
+    // Ancient Times, Industrial Revolution / Industrial Ages and Modern /
+    // Modern Times all survive under eraKey, Renaissance departs, and
+    // Middle Ages arrives.
+    setupApp("civ2");
+    renderActiveView();
+    const eras = () => [...document.querySelectorAll("#table div.tt-era")];
+    const startCount = eras().length;
+    eras().forEach((n, i) => { n.__probe = i; });
+
+    switchTo("civ3", { animate: true });
+    window.__tick(1200);
+
+    const nowEras = eras();
+    const want = window.app.wheelData.eraRanges;
+    ok("era boundary count matches the new game",
+        nowEras.length === want.length, `${nowEras.length} vs ${want.length}`);
+    ok("surviving boundaries are moved, not re-created",
+        nowEras.filter((n) => n.__probe !== undefined).length === 3,
+        `${nowEras.filter((n) => n.__probe !== undefined).length}/3 carried ` +
+        `(started with ${startCount})`);
+    const tops = nowEras.map((n) => Math.round(parseFloat(n.style.top))).sort((a, b) => a - b);
+    const wantTops = want.map((d) => d.first * ROW_H).sort((a, b) => a - b);
+    ok("boundaries land on exact row positions",
+        tops.length === wantTops.length && tops.every((t, i) => t === wantTops[i]),
+        `[${tops.join(",")}] vs [${wantTops.join(",")}]`);
+    ok("no stranded inline opacity on boundaries",
+        nowEras.every((n) => n.style.opacity === ""),
+        `${nowEras.filter((n) => n.style.opacity !== "").length} stranded`);
 }
 
 /* ------------------------------- driver ------------------------------ */
 
-try {
-    if (location.hash.includes("layout")) layoutChecks();
-    else if (location.hash.includes("table")) tableChecks();
-    else motionChecks();
-} catch (e) {
-    ok("suite ran without throwing", false, `${e && e.message}\n${e && e.stack}`);
-}
+// Async because the race suite has to drain microtasks; every other
+// suite stays synchronous. Only resolved promises are ever awaited —
+// never a timer — so this finishes before the load event --dump-dom
+// snapshots on, which is also why the results are written from *inside*
+// the async function rather than after it. (No top-level await: the
+// bundle is iife, which doesn't support it.)
+(async () => {
+    try {
+        if (location.hash.includes("layout")) layoutChecks();
+        else if (location.hash.includes("table")) tableChecks();
+        else if (location.hash.includes("race")) await raceChecks();
+        else motionChecks();
+    } catch (e) {
+        ok("suite ran without throwing", false, `${e && e.message}\n${e && e.stack}`);
+    }
 
-// Built with DOM APIs rather than an HTML string on purpose: --dump-dom
-// serialises the inlined <script> along with everything else, so a literal
-// `<pre id="check-output">` in this source would be the FIRST match the
-// runner's regex finds — it would parse this file's own text instead of
-// the results.
-const pre = document.createElement("pre");
-pre.id = "check-output";
-pre.textContent = JSON.stringify({ results, note });
-document.body.appendChild(pre);
+    // Built with DOM APIs rather than an HTML string on purpose:
+    // --dump-dom serialises the inlined <script> along with everything
+    // else, so a literal `<pre id="check-output">` in this source would be
+    // the FIRST match the runner's regex finds — it would parse this
+    // file's own text instead of the results.
+    const pre = document.createElement("pre");
+    pre.id = "check-output";
+    pre.textContent = JSON.stringify({ results, note });
+    document.body.appendChild(pre);
+})();
