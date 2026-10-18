@@ -148,9 +148,9 @@ export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
         .attr("text-anchor", (_, i) => (i > allTechs.length / 2) ? "end" : "start")
         .text(d => d.name)
         // Labels share the same hover behaviour as the icons: pointing at
-        // either side of the same node should activate it. Keep the cursor
-        // styling here in sync with .tech-image (.spokeText already sets
-        // cursor: pointer in CSS).
+        // either side of the same node should activate it. Their font size
+        // is not set in CSS — computeWheelLayout picks it per dataset and
+        // applies it to the whole group.
         .on("mouseover", onNodeHover)
         .on("mouseleave", onNodeLeave)
         .on("click", onNodeClick);

@@ -22,7 +22,7 @@ import { showTooltip } from "./tooltip";
 
 /** Below this width the wheel's labels are too small to read (~4.8px at
  *  375px), so the table takes over. Keep in sync with techs.css. */
-export const TABLE_BREAKPOINT = 700;
+const TABLE_BREAKPOINT = 700;
 
 const tableQuery = window.matchMedia(`(max-width: ${TABLE_BREAKPOINT - 1}px)`);
 

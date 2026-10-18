@@ -79,7 +79,7 @@ export function eraWedge(outerRadius) {
  * to the outgoing dataset — it's replaced wholesale on every load — so
  * the node is the only thing that persists across a switch.
  */
-export function rememberEraAngles(selection) {
+function rememberEraAngles(selection) {
     return selection.each(function (d) {
         this.__eraAngles = eraAngles(d);
     });
