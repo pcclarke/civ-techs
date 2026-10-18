@@ -1029,6 +1029,34 @@ p {
 }
 
 
+/* Keyboard focus.
+ *
+ * Both views are listboxes with a roving tab stop (src/keyboardNav.js):
+ * exactly one advance is tabbable and the arrow keys move between them,
+ * which is only usable if you can see where you are.
+ *
+ * :focus-visible rather than :focus, so clicking an advance with a mouse
+ * doesn't leave a ring behind — the browser shows it for keyboard
+ * interaction and withholds it for pointer interaction, which is exactly
+ * the distinction wanted here.
+ *
+ * outline-offset is negative on the row so the ring sits inside the full
+ * width rather than overlapping its neighbours. */
+.tt-row:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: -2px;
+}
+
+/* The wheel's advances are SVG <image> elements. `outline` on SVG
+ * children is honoured by current Chrome, Firefox and Safari and follows
+ * the bounding box, which is what's wanted; `stroke` would not work at
+ * all, since <image> has no stroke to paint. A positive offset keeps the
+ * ring clear of the 25px icon it surrounds. */
+.tech-image:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 2px;
+}
+
 /* Honour the OS "reduce motion" setting.
  *
  * The switch animations are suppressed on the JS side — see

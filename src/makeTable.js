@@ -11,6 +11,7 @@ import {
 } from "./animateTableSwitch";
 import { ROW_H } from "./constants";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
+import { ariaSelectedFor, onNodeFocus, onNodeKeyDown, tabIndexFor } from "./keyboardNav";
 import { markKey } from "./arcs";
 import { eraJoinKey } from "./drawEras";
 import { eraDisplayName } from "./eraData";
@@ -277,6 +278,12 @@ function drawRows(root, allTechs, opts) {
         // Lets tooltip.js find a row's box without importing ROW_H or
         // reproducing the position → y mapping.
         .attr("data-id", (d) => d.id)
+        // One option per advance, carrying the layer's single roving tab
+        // stop — see keyboardNav.js for why it isn't tabindex="0" on all
+        // ninety-two of them.
+        .attr("role", "option")
+        .attr("tabindex", tabIndexFor)
+        .attr("aria-selected", ariaSelectedFor)
         .classed("fade", (d) => fadeCheck(d, highlightedIds))
         .classed("pinned", (d) => Boolean(window.app.pinned)
             && window.app.pinned.id === d.id)
@@ -287,6 +294,8 @@ function drawRows(root, allTechs, opts) {
         .on("mouseover", onNodeHover)
         .on("mouseleave", onNodeLeave)
         .on("click", onNodeClick)
+        .on("keydown", onNodeKeyDown)
+        .on("focus", onNodeFocus)
         // decoding="sync" because the default lets the browser decode off
         // the main thread and paint the row before the bitmap is ready —
         // which is what makes the icons blink on iOS as rows scroll in and
@@ -377,6 +386,9 @@ export function renderTable({ animate = false } = {}) {
     // spokes can reach across to the icon they belong to.
     const svg = root.selectAll("svg.tt-lanes").data([null]).join("svg")
         .attr("class", "tt-lanes")
+        // Decoration inside a listbox: everything here restates the
+        // relationships the tooltip spells out in words.
+        .attr("aria-hidden", "true")
         .attr("width", textLeft)
         .attr("height", bodyH);
 
@@ -587,6 +599,7 @@ export function renderTable({ animate = false } = {}) {
             .data(eraRanges, eraJoinKey)
             .join("div")
             .attr("class", "tt-era")
+            .attr("aria-hidden", "true")
             .style("top", (d) => `${d.first * ROW_H}px`);
     }
 

@@ -155,9 +155,21 @@ function setupApp(game) {
     const svg = freshWheel();
     window.app = {
         game, tree: { id: "tech", folder: "technologies", dataKey: "technologies" },
-        _selected: null, selected: null, pinned: null, svg,
+        _selected: null, pinned: null, svg,
         wheelData: structuredClone(WHEEL[game]),
     };
+    // The same accessor main.js installs, and it has to be here: assigning
+    // `selected` is what triggers a re-render in the real app, so a plain
+    // property would let every check that depends on the redraw — anything
+    // reading tabindex, aria-selected or a .fade class after a selection —
+    // silently pass against a stale DOM.
+    Object.defineProperty(window.app, "selected", {
+        get() { return window.app._selected; },
+        set(value) {
+            window.app._selected = value;
+            if (window.app.wheelData) renderActiveView();
+        },
+    });
     refreshWheelLayout();
     return svg;
 }
@@ -203,6 +215,155 @@ function motionChecks() {
     }
 
     labelChecks(reduced);
+}
+
+/* -------------------------- keyboard nav ----------------------------- */
+
+/** The focusable advances in whichever view is live. */
+const options = () => isTableView()
+    ? [...document.querySelectorAll("#table .tt-row")]
+    : [...document.querySelectorAll("#chart .tech-image")];
+
+const press = (el, key) => el.dispatchEvent(
+    new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
+
+const stops = () => options().filter((n) => n.getAttribute("tabindex") === "0");
+
+function keyboardChecks() {
+    const view = isTableView() ? "table" : "wheel";
+    setupApp("civ4");
+    renderActiveView();
+
+    const opts = options();
+    const techs = window.app.wheelData.allTechs;
+    ok(`${view}: one option per advance`, opts.length === techs.length,
+        `${opts.length} options, ${techs.length} advances`);
+    ok(`${view}: every option has role=option`,
+        opts.every((n) => n.getAttribute("role") === "option"), "");
+
+    // The whole point of a roving tabindex: Tab reaches the chart once,
+    // not ninety-two times.
+    ok(`${view}: exactly one tab stop`, stops().length === 1,
+        `${stops().length} elements with tabindex=0 out of ${opts.length}`);
+
+    // Decoration must not be announced as a stray child of the listbox.
+    const decor = isTableView()
+        ? [...document.querySelectorAll("#table svg.tt-lanes, #table div.tt-era")]
+        : [...document.querySelectorAll("#chart g.arcs, #chart g.spokes, #chart g.era-backgrounds, #chart g.tech-labels")];
+    ok(`${view}: relationship layers are aria-hidden`,
+        decor.length > 0 && decor.every((n) => n.getAttribute("aria-hidden") === "true"),
+        `${decor.filter((n) => n.getAttribute("aria-hidden") === "true").length}/${decor.length}`);
+
+    // --- navigation ---
+    const first = options()[0];
+    first.focus();
+    ok(`${view}: an option can take focus`, document.activeElement === first,
+        document.activeElement ? document.activeElement.tagName : "none");
+    ok(`${view}: focusing previews the advance`,
+        window.app.selected && window.app.selected.id === techs[0].id,
+        window.app.selected ? window.app.selected.id : "nothing selected");
+
+    press(document.activeElement, "ArrowDown");
+    ok(`${view}: ArrowDown moves to the next advance`,
+        window.app.selected && window.app.selected.id === techs[1].id,
+        window.app.selected ? window.app.selected.id : "nothing");
+    ok(`${view}: focus follows, and the tab stop with it`,
+        document.activeElement === options()[1] && stops().length === 1
+        && stops()[0] === options()[1],
+        `focus=${document.activeElement.getAttribute("data-id")}, ` +
+        `stop=${stops()[0] && stops()[0].getAttribute("data-id")}`);
+
+    press(document.activeElement, "ArrowUp");
+    press(document.activeElement, "ArrowUp");
+    ok(`${view}: clamps at the first advance`,
+        window.app.selected && window.app.selected.id === techs[0].id,
+        window.app.selected ? window.app.selected.id : "nothing");
+
+    press(document.activeElement, "End");
+    ok(`${view}: End jumps to the last advance`,
+        window.app.selected && window.app.selected.id === techs[techs.length - 1].id,
+        window.app.selected ? window.app.selected.id : "nothing");
+    press(document.activeElement, "ArrowDown");
+    ok(`${view}: clamps at the last advance`,
+        window.app.selected && window.app.selected.id === techs[techs.length - 1].id, "");
+    press(document.activeElement, "Home");
+    ok(`${view}: Home jumps back to the first`,
+        window.app.selected && window.app.selected.id === techs[0].id, "");
+
+    // --- pin / release, through the mouse's own handlers ---
+    press(document.activeElement, "Enter");
+    ok(`${view}: Enter pins the advance`,
+        window.app.pinned && window.app.pinned.id === techs[0].id,
+        window.app.pinned ? window.app.pinned.id : "nothing pinned");
+    ok(`${view}: a pinned option reports aria-selected`,
+        options()[0].getAttribute("aria-selected") === "true",
+        `${options()[0].getAttribute("data-id")} -> aria-selected=` +
+        `${options()[0].getAttribute("aria-selected")}`);
+
+    // Arrowing while pinned moves the preview — a keyboard has no
+    // accidental travel, so unlike hover it is not inert.
+    press(document.activeElement, "ArrowDown");
+    ok(`${view}: arrowing while pinned still moves`,
+        window.app.selected && window.app.selected.id === techs[1].id,
+        window.app.selected ? window.app.selected.id : "nothing");
+
+    press(document.activeElement, "Escape");
+    ok(`${view}: Escape releases everything`,
+        !window.app.pinned && !window.app.selected,
+        `pinned=${Boolean(window.app.pinned)} selected=${Boolean(window.app.selected)}`);
+
+    // The tab stop has to survive the redraw every hover triggers.
+    options()[5].focus();
+    window.app.selected = techs[9];
+    ok(`${view}: one tab stop survives a re-render`, stops().length === 1,
+        `${stops().length} stops after redraw`);
+
+    ok(`${view}: tooltip is announced as it changes`,
+        document.querySelector("#tooltip").getAttribute("role") === "status",
+        document.querySelector("#tooltip").getAttribute("role") || "no role");
+
+    // --- where Tab lands must not depend on the route taken ---
+    // Reported from the real thing: Civ 4 opens on Fishing, but after a
+    // round trip through Civ 5 it opened on Agriculture. Civ 5 has no
+    // TECH_FISHING to hold the stop, so it fell back to Civ 5's first
+    // advance — and Civ 4 *does* have that Agriculture, so it persisted
+    // on the way back.
+    const stopId = () => {
+        const n = stops()[0];
+        return n && n.getAttribute("data-id");
+    };
+    setupApp("civ4");
+    renderActiveView();
+    const civ4First = window.app.wheelData.allTechs[0].id;
+    ok(`${view}: Civ 4 opens on its first advance`, stopId() === civ4First,
+        `${stopId()} vs ${civ4First}`);
+
+    options()[0].focus();                          // as a user tabbing in would
+    switchTo("civ5", { animate: false });
+    const civ5First = window.app.wheelData.allTechs[0].id;
+    ok(`${view}: Civ 5 opens on its own first advance`, stopId() === civ5First,
+        `${stopId()} vs ${civ5First}`);
+    // The precondition that made the bug possible, asserted so this check
+    // can't quietly stop testing anything if the data changes.
+    ok(`${view}: Civ 4 does contain Civ 5's first advance`,
+        WHEEL.civ4.allTechs.some((t) => t.id === civ5First),
+        `${civ5First} present in civ4: ${WHEEL.civ4.allTechs.some((t) => t.id === civ5First)}`);
+
+    switchTo("civ4", { animate: false });
+    ok(`${view}: returning to Civ 4 opens on Fishing again, not Agriculture`,
+        stopId() === civ4First, `${stopId()} vs ${civ4First}`);
+
+    // A pin that survives the switch should hold the stop instead, so the
+    // keyboard entry point agrees with the advance still on screen.
+    const keep = window.app.wheelData.allTechs.find((t) =>
+        WHEEL.civ5.allTechs.some((o) => o.id === t.id));
+    window.app.pinned = keep;
+    switchTo("civ5", { animate: false });
+    ok(`${view}: a carried pin holds the tab stop`, stopId() === keep.id,
+        `${stopId()} vs ${keep.id}`);
+    window.app.pinned = null;
+
+    note.push(`${view}: ${opts.length} options, 1 tab stop, focus ring via :focus-visible`);
 }
 
 /* ---------------------------- arc layer ------------------------------ */
@@ -524,9 +685,11 @@ function tableChecks() {
 // than after it. (No top-level await: the bundle is iife.)
 (async () => {
     try {
-        if (location.hash.includes("layout")) layoutChecks();
-        else if (location.hash.includes("table")) tableChecks();
+        // Order matters: "#keyboard-table" contains "table".
+        if (location.hash.includes("keyboard")) keyboardChecks();
+        else if (location.hash.includes("layout")) layoutChecks();
         else if (location.hash.includes("arcs")) arcChecks();
+        else if (location.hash.includes("table")) tableChecks();
         else motionChecks();
     } catch (e) {
         ok("suite ran without throwing", false, `${e && e.message}\n${e && e.stack}`);

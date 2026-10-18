@@ -5,6 +5,7 @@ import {
 import {
     calculatePointOnWheel, calculateSingleRadialLinePath, fadeCheck, wheelTransform,
 } from "./helpers";
+import { ariaSelectedFor, onNodeFocus, onNodeKeyDown, tabIndexFor } from "./keyboardNav";
 import { hideTooltip, isSheetView, showTooltip } from "./tooltip";
 
 /**
@@ -108,7 +109,9 @@ export function drawUnlockCircles(element, circleData, count, color, arcSpace, b
 export function drawTechImages(element, allTechs, game, highlightedIds, folder = "technologies", techImgRadius = TECH_IMG_RADIUS) {
     return element
         .selectAll(".tech-image")
-        .data(allTechs)
+        // Keyed: keyboard focus lives on one of these nodes, so a hover
+        // re-render must reuse it rather than rebind by position.
+        .data(allTechs, (d) => d.id)
         .join("image")
         .attr("class", "tech-image")
         .classed("fade", (d) => fadeCheck(d, highlightedIds))
@@ -118,9 +121,20 @@ export function drawTechImages(element, allTechs, game, highlightedIds, folder =
         .attr("x", -TECH_IMG_WIDTH / 2)
         .attr("y", -TECH_IMG_WIDTH / 2)
         .attr("xlink:href", (d) => `${game}/img/${folder}/${d.id}.png`)
+        // The icon is the advance's one focusable element. Its label is a
+        // separate <text> node pointing at the same advance, so making
+        // both focusable would double every tab stop; the label is left
+        // out and aria-hidden instead, with the name carried here.
+        .attr("data-id", (d) => d.id)
+        .attr("role", "option")
+        .attr("tabindex", tabIndexFor)
+        .attr("aria-selected", ariaSelectedFor)
+        .attr("aria-label", (d) => d.name)
         .on("mouseover", onNodeHover)
         .on("mouseleave", onNodeLeave)
-        .on("click", onNodeClick);
+        .on("click", onNodeClick)
+        .on("keydown", onNodeKeyDown)
+        .on("focus", onNodeFocus);
 }
 
 export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
@@ -174,6 +188,26 @@ export function onNodeHover(_, d) {
 export function onNodeLeave() {
     if (!hoverQuery.matches) return;
     if (window.app.pinned) return;
+    window.app.selected = null;
+    hideTooltip();
+}
+
+/**
+ * Drop whatever is showing, pinned or not.
+ *
+ * Bound to the things that mean "I'm done": empty wheel space, the
+ * table's lane gutter, the tooltip's close button (see main.js), and the
+ * Escape key (see keyboardNav.js). Lives here rather than in main.js so
+ * the keyboard path can reuse the one implementation.
+ *
+ * Dismisses an unpinned selection too. Returning early unless something
+ * was pinned made the close button dead in the one state where it is the
+ * only way out: a tooltip opened by a hover with no pin behind it. Touch
+ * devices produce exactly that state (see hoverQuery above).
+ */
+export function releasePin() {
+    if (!window.app.pinned && !window.app.selected) return;
+    window.app.pinned = null;
     window.app.selected = null;
     hideTooltip();
 }

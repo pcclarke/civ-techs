@@ -12,6 +12,7 @@ import {
 } from "./drawEras";
 import { eraDisplayName } from "./eraData";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
+import { ariaSelectedFor, onNodeFocus, onNodeKeyDown, tabIndexFor } from "./keyboardNav";
 
 /**
  * Animates the wheel's spokes/icons/labels when a game/expansion/tree
@@ -384,12 +385,19 @@ export function animateTechImages(group, allTechs, count, techImgRadius, game, i
             .attr("x", -TECH_IMG_WIDTH / 2)
             .attr("y", -TECH_IMG_WIDTH / 2)
             .attr("xlink:href", href)
+            .attr("data-id", d.id)
+            .attr("role", "option")
+            .attr("tabindex", tabIndexFor(d))
+            .attr("aria-selected", ariaSelectedFor(d))
+            .attr("aria-label", d.name)
             .style("transition", "none")
             .attr("opacity", 0)
             .attr("transform", transformAtAngle(start, techImgRadius))
             .on("mouseover", onNodeHover)
             .on("mouseleave", onNodeLeave)
             .on("click", onNodeClick)
+            .on("keydown", onNodeKeyDown)
+            .on("focus", onNodeFocus)
             .transition().duration(ROTATE_MS).ease(easeInOutCubic)
             .attr("opacity", 1)
             .attrTween("transform", () => (t) => transformAtAngle(start + delta * t, techImgRadius))

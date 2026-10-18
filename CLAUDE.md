@@ -22,6 +22,9 @@ Checks the parts of the app that genuinely need a rendering engine, which is why
 - **Reduced motion** — that a switch animates normally, and lands on its final frame instantly under `--force-prefers-reduced-motion`.
 - **Table layout** — `contentLeft`'s contract that the widest advance name finishes flush against the right edge, measured the same way `makeTable` does it (canvas `measureText`), plus the fixed `ROW_H` row pitch the lane overlay depends on. Also that the table's arc layer travels, and that an animated settle lands byte-identical to a static re-render.
 - **Arc layer** — that the wheel's arc layer never empties or goes faint mid-switch (the regression the old crossfade had), that survivors are moved rather than re-created, and that settled arcs match the static generator exactly.
+- **Keyboard navigation** — the same suite run in both views: one tab stop, arrow/Home/End movement, clamping, Enter to pin, Escape to release, decorative layers `aria-hidden`, and that the single tab stop survives the re-render every selection triggers.
+
+One harness-fidelity trap worth knowing: `setupApp` must install the same `selected` accessor `main.js` does. Assigning `window.app.selected` is what triggers a re-render in the real app, so a plain property would let any check that reads the DOM *after* a selection — `tabindex`, `aria-selected`, `.fade` — silently pass against a stale DOM. That bug produced two confusing failures before it was found.
 
 No new dependencies: it bundles with the esbuild inside Vite and drives whichever Chrome is installed (`CHROME=/path` to override). The page under test is the project's own `index.html` with its module script swapped out, so the DOM and CSS are the real ones.
 
@@ -82,6 +85,18 @@ Stale-response guard: a `loadRequestId` counter means a slow fetch that resolves
 ### Paint order
 
 SVG paints in document order and d3's `join` appends entrants at the end, so stacking is pinned down with fixed groups created once: `svgInit.js` for the wheel, the `tt-l-*` groups in `makeTable.js` for the table. Don't rely on element creation order.
+
+### Keyboard and ARIA
+
+Both views are single-selection listboxes over the same advances: `#chart` and `#table` carry `role="listbox"`, and one element per advance carries `role="option"` — the `.tech-image` on the wheel (its label is a second node for the same advance, so only the icon is focusable) and the `.tt-row` in the table. Everything else is decoration and is `aria-hidden`: the wheel's layers get it by group in `svgInit.js`, the table's lane overlay and era hairlines individually.
+
+`keyboardNav.js` owns the interaction, shared by both views. Three things to know before changing it:
+
+- **The tab stop roves.** The layer holds exactly one `tabindex="0"`; arrows move it. `tabindex="0"` on all 92 advances would mean 92 Tab presses to get past the chart. The stop is tracked as an *id* rather than a node, because every hover redraws every layer — but only within one dataset. `resolveStop` reseeds on a game switch, to the carried pin if one survived and otherwise to the new tree's first advance, and it detects the switch by the **identity of the `allTechs` array** rather than an explicit call from `initWheelData`. That's deliberate: identity is an exact signal (a fresh array per load, never mutated after) and can't be forgotten if another load path is ever added. Letting the stop survive a switch by id made where Tab landed depend on the route taken — Civ 4 opened on Fishing, but Civ 4 → Civ 5 → Civ 4 opened on Agriculture, because Civ 5 has no Fishing to hold the stop and Civ 4 does have the Agriculture it fell back to.
+- **Focus implies selection**, so a keyboard user gets the highlight and tooltip a mouse user gets on hover. This deliberately ignores `pinned` where hover does not — `onNodeHover` bails while pinned because the pointer crosses the wheel accidentally on its way to the close button, and a keyboard has no equivalent accidental travel.
+- **Enter/Escape reuse the mouse's handlers** (`onNodeClick`, `releasePin`), which is why `releasePin` lives in `drawTools.js` rather than `main.js`.
+
+The tooltip is `role="status"`, so its content is announced as the selection moves.
 
 ### Selection / pin model
 

@@ -4,8 +4,8 @@ import { DEFAULT_GAME, GAMES } from "./constants";
 import { initWheelData } from "./initWheelData";
 import { updateEraIndicator } from "./makeTable";
 import { isTableView, renderActiveView } from "./renderView";
+import { releasePin } from "./drawTools";
 import svgInit from "./svgInit";
-import { hideTooltip } from "./tooltip";
 
 let gameInfo = DEFAULT_GAME;
 
@@ -33,21 +33,9 @@ window.app.svg = svgInit();
 
 // Releasing a pin: clicking empty wheel space (node/arc clicks stop
 // propagation before reaching the SVG), the table's lane gutter, or the
-// tooltip's close button. All clear the highlight state entirely; on a
-// device with a pointer, hover takes over again.
-//
-// Dismisses whatever is showing, pinned or not. This used to return early
-// unless something was pinned, which made the close button dead in the one
-// state where it's the only way out: a tooltip opened by a hover with no
-// pin behind it. Touch devices produce exactly that state (see hoverQuery
-// in drawTools), so on a phone the button did nothing at all.
-function releasePin() {
-    if (!window.app.pinned && !window.app.selected) return;
-    window.app.pinned = null;
-    window.app.selected = null;
-    hideTooltip();
-}
-
+// tooltip's close button. Escape does the same from the keyboard — see
+// keyboardNav.js. releasePin itself lives in drawTools.js so both paths
+// share one implementation.
 select("#chart svg").on("click", releasePin);
 select("#tipCloseButton").on("click", releasePin);
 // The table's equivalent of empty wheel space: the lane gutter left of

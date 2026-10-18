@@ -37,6 +37,7 @@
 
                     <h3>Exploring</h3>
                     <p>Hover an advance (its icon, its label, or any of its arcs) to focus on what it requires, what it leads to, and everything it unlocks, while the rest of the wheel dims. Click to pin that view in place while you read it, then click the same advance again, or the background, to release it.</p>
+                    <p>The keyboard works too: Tab into the chart, then use the arrow keys to move between advances, Home and End to jump to either end, Enter to pin one, and Escape to release it.</p>
                 </div>
             </div>
 
@@ -109,8 +110,14 @@
             <!-- Two renderings of the same data: the wheel on wide screens,
                  the table on narrow ones. CSS decides which is visible and
                  src/renderView.js only renders the visible one. -->
-            <div id="chart"></div>
-            <div id="table"></div>
+            <!-- Both are single-selection listboxes over the same
+                 advances: one tab stop, arrow keys to move, Enter to pin,
+                 Escape to release. See src/keyboardNav.js. Their
+                 relationship layers (arcs, spokes, era bands) are
+                 aria-hidden, because everything they encode is also
+                 spelled out in words in the tooltip below. -->
+            <div id="chart" role="listbox" aria-label="Advances (wheel)"></div>
+            <div id="table" role="listbox" aria-label="Advances (list)"></div>
             <!-- Names the era you are currently scrolled into. A label at
                  the era boundary answers "where does it change?", but the
                  question while scrolling a long table is "which era am I
@@ -118,7 +125,7 @@
                  the era it names. Positioned by src/makeTable.js. -->
             <div id="era-indicator" class="hidden"></div>
 
-            <div id="tooltip" class="hidden">
+            <div id="tooltip" class="hidden" role="status" aria-label="Selected advance">
                 <div id="tipHead">
                     <img id="tipImg"></img>
                     <p id="tipName"></p>

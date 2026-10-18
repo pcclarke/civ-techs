@@ -6,6 +6,7 @@ import { arcKey, markKey } from "./arcs";
 import { ROW_H } from "./constants";
 import { eraJoinKey } from "./drawEras";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
+import { ariaSelectedFor, onNodeFocus, onNodeKeyDown, tabIndexFor } from "./keyboardNav";
 import { fadeCheck } from "./helpers";
 
 /**
@@ -134,6 +135,9 @@ export function animateRows(root, allTechs, count, opts) {
             (enter) => enter.append("div")
                 .attr("class", "tt-row")
                 .attr("data-id", (d) => d.id)
+                .attr("role", "option")
+                .attr("tabindex", tabIndexFor)
+                .attr("aria-selected", ariaSelectedFor)
                 .attr("data-era", eraAttr)
                 .classed("fade", fade)
                 .classed("pinned", pinned)
@@ -150,6 +154,8 @@ export function animateRows(root, allTechs, count, opts) {
                 .on("mouseover", onNodeHover)
                 .on("mouseleave", onNodeLeave)
                 .on("click", onNodeClick)
+                .on("keydown", onNodeKeyDown)
+                .on("focus", onNodeFocus)
                 .call((sel) => sel.transition().duration(MOVE_MS).ease(easeInOutCubic)
                     .style("opacity", opacityFor)
                     .styleTween("top", (d) => {
@@ -168,6 +174,8 @@ export function animateRows(root, allTechs, count, opts) {
                 .classed("fade", fade)
                 .classed("pinned", pinned)
                 .style("opacity", opacityFor)
+                .attr("tabindex", tabIndexFor)
+                .attr("aria-selected", ariaSelectedFor)
                 .attr("data-era", eraAttr)
                 .each(function (d) {
                     crossfadeIcon(this, d, game, iconFolder);
