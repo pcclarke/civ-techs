@@ -116,18 +116,30 @@ function layoutChecks() {
             `font=${fontSize}px icon=${r.techImgRadius.toFixed(0)} label=${r.labelRadius.toFixed(0)}`);
     }
 
-    // Density drives the font down: the densest tree in the project is
-    // what LABEL_SLOT_FRACTION was calibrated against (see constants.js),
-    // so it must land on the minimum, while the sparsest must not.
+    // Density drives the font down, and that direction is the invariant:
+    // a tree with more advances can never be given a larger label font
+    // than a sparser one.
+    //
+    // Asserted as a relationship rather than absolute sizes on purpose.
+    // constants.js documents LABEL_SLOT_FRACTION as calibrated so Civ 4
+    // BTS lands exactly on the minimum, but which size any tree lands on
+    // depends on the *metrics of the font that actually loaded* — the
+    // labels inherit body's "helvetica neue, Helvetica, …, sans-serif",
+    // and a Linux CI runner has none of those and falls back to something
+    // wider. Pinning the absolute value would make this check report a
+    // machine difference as a regression.
     const fontFor = (key) => {
         const svg = freshWheel();
         computeWheelLayout(svg.techLabels, NAMES[key]);
         return parseFloat(svg.techLabels.style("font-size"));
     };
-    ok("densest tree (civ4bts tech, 92) uses the minimum font",
-        fontFor("civ4bts:technologies") === TECH_LABEL_FONT_MIN);
-    ok("sparsest tree (civ4 civics, 20) gets a larger font",
-        fontFor("civ4:civics") > TECH_LABEL_FONT_MIN);
+    const dense = fontFor("civ4bts:technologies");   // 92 advances
+    const sparse = fontFor("civ4:civics");           // 20 advances
+    ok("a denser tree never gets a larger font than a sparser one",
+        dense <= sparse, `92 advances -> ${dense}px, 20 advances -> ${sparse}px`);
+    ok("both stay within the configured bounds",
+        dense >= TECH_LABEL_FONT_MIN && sparse <= TECH_LABEL_FONT_MAX,
+        `${TECH_LABEL_FONT_MIN}..${TECH_LABEL_FONT_MAX}`);
 
     // The documented display:none hazard: text inside a hidden subtree
     // measures as zero width, which collapses every radius to its
