@@ -42,6 +42,20 @@ const HERE = path.join(ROOT, "scripts", "browser-checks");
 const OUT = path.join(HERE, ".generated");
 const ESBUILD = path.join(ROOT, "node_modules", ".bin", "esbuild");
 
+/**
+ * Headless Chrome's sandbox relies on unprivileged user namespaces, which
+ * CI images commonly restrict — so it is switched off there. Safe in that
+ * context specifically: the runner is a throwaway VM executing only this
+ * repository's own code, and there is no untrusted input to contain.
+ *
+ * Opt-in rather than unconditional, so a local run keeps its sandbox.
+ * --disable-dev-shm-usage goes with it: CI containers often give /dev/shm
+ * only a few megabytes, which Chrome will happily run out of.
+ */
+const SANDBOX_FLAGS = (process.env.CI || process.env.CHROME_NO_SANDBOX)
+    ? ["--no-sandbox", "--disable-dev-shm-usage"]
+    : [];
+
 const CHROME_CANDIDATES = [
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "/Applications/Chromium.app/Contents/MacOS/Chromium",
@@ -140,7 +154,7 @@ function buildPage() {
 function runOne(chrome, page, spec) {
     const args = [
         "--headless", "--disable-gpu", "--no-first-run", "--no-default-browser-check",
-        "--allow-file-access-from-files", `--window-size=${spec.size}`,
+        "--allow-file-access-from-files", ...SANDBOX_FLAGS, `--window-size=${spec.size}`,
         ...(spec.flags || []), "--dump-dom", `file://${page}#${spec.hash}`,
     ];
     const dom = run(chrome, args, { stdio: ["ignore", "pipe", "ignore"],
@@ -155,7 +169,7 @@ function runOne(chrome, page, spec) {
 }
 
 const chrome = findChrome();
-console.log(`browser: ${path.basename(chrome)}`);
+console.log(`browser: ${path.basename(chrome)}` + (SANDBOX_FLAGS.length ? " (sandbox off: CI)" : ""));
 const page = buildPage();
 
 let total = 0;

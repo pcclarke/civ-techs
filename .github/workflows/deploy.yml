@@ -27,6 +27,12 @@ jobs:
 
       - run: npm ci
 
+      # Belt and braces: pushing to master publishes, so the checks run
+      # here too rather than relying solely on branch protection having
+      # been configured (and not bypassed). A failure stops the deploy
+      # instead of putting a broken wheel on the live site.
+      - run: npm run check:browser
+
       - run: npm run build
 
       - uses: actions/upload-pages-artifact@v5

@@ -1,0 +1,53 @@
+# Build and browser checks.
+#
+# This is the workflow worth requiring as a status check in branch
+# protection: npm run check:browser is where the 170 assertions live, and
+# until this existed they only ran when someone typed the command locally.
+#
+# It runs on pull_request so protection can gate a merge, and on pushes to
+# master so a direct push is still checked.
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# A newer push to the same branch makes the older run pointless.
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      # Chrome is preinstalled on the ubuntu runner image, and
+      # scripts/browser-checks/run.mjs looks for /usr/bin/google-chrome;
+      # if that ever stops being true it exits 2 naming the CHROME variable
+      # to set, rather than failing obscurely.
+      #
+      # CI is set by Actions, which is what switches Chrome's sandbox off
+      # inside run.mjs — see SANDBOX_FLAGS there for why that is both
+      # necessary and safe here.
+      #
+      # The checks assert invariants rather than absolute measurements
+      # precisely so this runner's fonts (no Helvetica or Arial on Linux)
+      # don't read as regressions. The per-tree numbers it prints will
+      # differ from a local macOS run; that is expected.
+      - run: npm run check:browser
