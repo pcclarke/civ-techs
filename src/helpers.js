@@ -1,9 +1,5 @@
 import { PI_DIFF, TWO_PI_ADJ } from "./constants";
 
-export function imageLink(game, category, id) {
-  return `${game}/img/${category}/${id}.png`;
-}
-
 /** Determine if item should be faded out when a tech is selected */
 export function fadeCheck(tech, relatedIds = [], selectedOnly = false) {
     var { selected } = window.app;

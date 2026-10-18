@@ -8,8 +8,10 @@ have prereq edges between nodes; across Ages, no edges exist (the trees
 reset when an Age ends).
 
 Since none of us own the game, this scraper reads HTML pages saved from
-the community Fandom wiki rather than the game's XML. Drop the saved HTML
-files into this directory (or pass paths on the CLI) and run it.
+the community Fandom wiki rather than the game's XML. Save the pages into
+./data/ (gitignored, same as the other games' raw asset dumps) and pass
+each one on the CLI — there is no auto-discovery, every path is an
+explicit flag.
 
 Source pages, expected structure:
     "List of technologies in Civ7" — three <h3>s (Antiquity Age,
@@ -58,7 +60,7 @@ Wheel-renderer integration:
       eventually enables this."
 
 Run from this directory:
-    python3 scraper.py --tech-html "../../List of technologies in Civ7 ....html"
+    python3 scraper.py --tech-html "data/List of technologies in Civ7 ....html"
     python3 scraper.py --civic-html ...
     python3 scraper.py --buildings-html ...  # requires tech+civic in civdata.json
     python3 scraper.py --units-html ... --tech-html ... --civic-html ...

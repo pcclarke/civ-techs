@@ -1,19 +1,32 @@
 import { scaleOrdinal } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
 
-import { ARC_BASE } from "./constants";
-import { calculateSingleRadialLinePath, wheelTransform } from "./helpers";
 import {
     drawArcs,
     drawSpokes,
     drawTechImages,
     drawTechLabels,
+    drawUnlockCircles,
+    drawUnlockPins,
+    drawUnlockSquares,
     onNodeClick,
     onNodeHover,
     onNodeLeave,
 } from "./drawTools";
 import { drawEraBackgrounds, drawEraLabels } from "./drawEras";
 import { setupHighlights } from "./setupHighlights";
+import {
+    animateArcs,
+    animateEraBackgrounds,
+    animateEraLabels,
+    animateUnlockCircles,
+    animateUnlockPins,
+    animateUnlockSquares,
+    animateSpokes,
+    animateTechImages,
+    animateTechLabels,
+    fadeSwapCenterImage,
+} from "./animateWheelSwitch";
 
 // Exported so the mobile table view (makeTable.js) colours a given arc
 // step identically — the two views are the same data drawn differently.
@@ -40,8 +53,20 @@ const eraColor = scaleOrdinal([
 /**
  * Render the wheel visualization using cached data.
  * Call this when the selection changes.
+ *
+ * `animate: true` is set only by initWheelData.js, only when a game/
+ * expansion/tree switch just replaced `wheelData` with a new dataset (not
+ * on the initial page load, and not on the ordinary hover/pin re-renders
+ * that make up the vast majority of calls here). `selected`/`pinned`
+ * usually are null on an animated call — initWheelData releases them
+ * unless the pinned advance's id also exists in the new dataset — but
+ * when a pin does survive, the animated branch below applies the same
+ * `.fade`/highlight logic the non-animated path does, so the highlight
+ * chain stays legible through the transition instead of popping back only
+ * once it settles. See animateWheelSwitch.js for what that path actually
+ * does; every other call takes the instant path below exactly as before.
  */
-export async function renderWheel() {
+export async function renderWheel({ animate = false } = {}) {
     var { game, tree, selected, svg, wheelData } = window.app;
     var iconFolder = (tree && tree.folder) || "technologies";
     const {
@@ -63,6 +88,52 @@ export async function renderWheel() {
         selectedSpokes,
         prerequisiteIds
     } = setupHighlights(allTechs);
+
+  if (animate) {
+      const count = allTechs.length;
+
+      // `selected` (and `pinned`) can survive a switch now — initWheelData
+      // carries a pinned advance over to its own copy in the new dataset
+      // when the id still exists there — so this isn't always the "nothing
+      // selected" case the rest of this branch used to assume. Every layer
+      // below applies the exact same `.fade`/highlight logic the
+      // non-animated path below uses, just layered onto the animated draw
+      // calls, so a surviving pin's spoke, arc chain, and dimmed
+      // surroundings stay correct and legible all through the transition
+      // instead of popping back only once it ends.
+      animateSpokes(svg.spokes, spokeData, count, techImgRadius, arcSpace, Boolean(selected));
+      drawSpokes(svg.selectedSpokes, selectedSpokes, count, techImgRadius, arcSpace);
+
+      animateTechImages(svg.techImages, allTechs, count, techImgRadius, game, iconFolder, highlightedIds);
+      animateTechLabels(svg.techLabels, allTechs, count, labelRadius, highlightedIds);
+
+      // The arc layer travels instead of crossfading — see animateArcs for
+      // what the data does to the motion, and why it is still better than
+      // the layer vanishing out of the middle of the switch. The marks and
+      // pins ride on the arcs, so they move on the same curve.
+      animateArcs(svg.arcs, prerequisites, color, arcSpace, Boolean(selected));
+      animateUnlockPins(svg.unlockPins, prerequisites, count, color, arcSpace,
+          (d) => Boolean(selected) && d.id !== selected.id && !prerequisiteIds.includes(d.id));
+      animateUnlockSquares(svg.unlockSquares, squareData, count, color, arcSpace,
+          (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId);
+      animateUnlockCircles(svg.unlockCircles, circleData, count, color, arcSpace,
+          (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId);
+      // Both era layers are keyed on canonical era identity, so an era
+      // both games have slides to its new place rather than fading out and
+      // back in — the wedge morphing its span, the label travelling with
+      // it so the band and its name stay associated throughout.
+      animateEraBackgrounds(svg.eraBackgrounds, eraRanges, eraColor, eraBackgroundRadius);
+      animateEraLabels(svg.eraLabels, eraRanges, eraColor, eraLabelRadius, Boolean(selected));
+
+      drawArcs(
+          svg.selectedArcs,
+          selected ? selectionPrerequisites.filter((d) => d.step !== undefined) : [],
+          color,
+          arcSpace
+      );
+      fadeSwapCenterImage(svg.centerImage, `${game}/img/${game}-center.png`);
+      return;
+  }
 
   // Era layers — backgrounds sit behind everything (groups are drawn in
   // SVG paint order set by svgInit), labels render radially in the annulus
@@ -103,53 +174,14 @@ export async function renderWheel() {
       arcSpace
   );
 
-  svg.unlockPins
-    .selectAll("path")
-    .data(prerequisites)
-    .join("path")
-    .classed("fade", (d) => {
-        if (!selected) return false;
-        if (d.id == selected.id || prerequisiteIds.includes(d.id)) return false;
+  drawUnlockPins(svg.unlockPins, prerequisites, spokeData.length, color, arcSpace)
+      .classed("fade", (d) => Boolean(selected) && d.id !== selected.id && !prerequisiteIds.includes(d.id));
 
-        return true;
-    })
-    .attr("d", function pinPath(d, i) {
-      return calculateSingleRadialLinePath(
-        spokeData.length,
-        ARC_BASE - 5 + arcSpace * d.step,
-        ARC_BASE + 5 + arcSpace * d.step,
-        d.position
-      );
-    })
-    .attr("stroke", (d) => color(d.step));
+  drawUnlockSquares(svg.unlockSquares, squareData, allTechs.length, color, arcSpace)
+      .classed("fade", (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId);
 
-  svg.unlockSquares
-    .selectAll("rect")
-    .data(squareData)
-    .join("rect")
-    .classed("fade", (d) => {
-        if (!selected || selected.id == d.id || selected.id == d.arcId) return false;
-        return true;
-    })
-    .attr("x", -2.5)
-    .attr("y", -2.5)
-    .attr("transform", (d) => wheelTransform(allTechs.length, d.pos, ARC_BASE + arcSpace * d.step))
-    .attr("width", 5)
-    .attr("height", 5)
-    .attr("fill", (d) => color(d.step));
-
-  svg.unlockCircles
-    .selectAll("circle")
-    .data(circleData)
-    .join("circle")
-    .classed("fade", (d) => {
-        if (!selected || selected.id == d.id || selected.id == d.arcId) return false;
-        return true;
-    })
-    .attr("r", 2.5)
-    .attr("transform", (d) => wheelTransform(allTechs.length, d.pos, ARC_BASE + arcSpace * d.step))
-    .attr("fill", "#FFF")
-    .attr("stroke", (d) => color(d.step));
+  drawUnlockCircles(svg.unlockCircles, circleData, allTechs.length, color, arcSpace)
+      .classed("fade", (d) => Boolean(selected) && selected.id !== d.id && selected.id !== d.arcId);
 
   svg.centerImage
     .attr("xlink:href", `${game}/img/${game}-center.png`);

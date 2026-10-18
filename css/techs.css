@@ -330,8 +330,7 @@ p {
   color: var(--ui-on-accent);
 }
 
-.tech-image,
-.unlock {
+.tech-image {
   cursor: pointer;
   transition: opacity 0.5s ease;
 }
@@ -349,56 +348,6 @@ p {
 .spoke-line {
   stroke: #bcbec0;
   stroke-width: 0.5px;
-}
-
-.line-selected {
-  stroke: #1f1f1f;
-  stroke-width: 1.5px;
-}
-
-.line-required {
-  stroke: #1f1f1f;
-}
-
-.line-optional {
-  stroke: #1f1f1f;
-}
-
-.lineLeads {
-  stroke: #1f1f1f;
-  stroke-dasharray: 15px 5px;
-}
-
-.spokeText {
-  cursor: pointer;
-
-  font-size: 12px;
-  font-weight: normal;
-  text-transform: capitalize;
-}
-
-.textSelected {
-  fill: #fff;
-}
-
-.spokeTextBox {
-  cursor: pointer;
-  stroke: #bcbec0;
-  fill: #fff;
-}
-
-.spokeTextBoxSelected {
-  fill: #1f1f1f;
-}
-
-.techImg,
-.unlockIcon {
-  cursor: pointer;
-}
-
-.opaque {
-  opacity: 0;
-  transition: all 0.5s ease;
 }
 
 .hidden {
@@ -796,10 +745,22 @@ p {
   outline-offset: -2px;
 }
 
-.tt-icon {
+/* Wraps .tt-icon so a game switch can briefly overlay a second one on top
+ * of it (crossfading old art to new, same as the wheel) without disturbing
+ * the row's flex layout — the slot is the flex item; the image(s) inside
+ * it are simply stacked. */
+.tt-icon-slot {
+  position: relative;
   width: 24px;
   height: 24px;
   flex-shrink: 0;
+}
+
+.tt-icon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
@@ -1013,5 +974,73 @@ p {
   /* The doubled pinned border would sit under the sheet's top rule. */
   #tooltip.pinned {
     border-width: 1px 0 0;
+  }
+}
+
+
+/* Keyboard focus.
+ *
+ * Both views are listboxes with a roving tab stop (src/keyboardNav.js):
+ * exactly one advance is tabbable and the arrow keys move between them,
+ * which is only usable if you can see where you are.
+ *
+ * :focus-visible rather than :focus, so clicking an advance with a mouse
+ * doesn't leave a ring behind — the browser shows it for keyboard
+ * interaction and withholds it for pointer interaction, which is exactly
+ * the distinction wanted here.
+ *
+ * outline-offset is negative on the row so the ring sits inside the full
+ * width rather than overlapping its neighbours. */
+.tt-row:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: -2px;
+}
+
+/* The wheel's advances are SVG <image> elements. `outline` on SVG
+ * children is honoured by current Chrome, Firefox and Safari and follows
+ * the bounding box, which is what's wanted; `stroke` would not work at
+ * all, since <image> has no stroke to paint. A positive offset keeps the
+ * ring clear of the 25px icon it surrounds. */
+.tech-image:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 2px;
+}
+
+/* Honour the OS "reduce motion" setting.
+ *
+ * The switch animations are suppressed on the JS side — see
+ * prefersReducedMotion in src/renderView.js, which renderActiveView
+ * consults before taking any animated path — so what is left for CSS is
+ * the hover dimming on icons, labels and table rows (the two
+ * `transition: opacity` rules above).
+ *
+ * Deliberately a blanket rule rather than a list of those selectors.
+ * Someone adding a transition later should not have to remember to come
+ * back here and exempt it, and an accessibility guard that silently stops
+ * covering new code is worse than a blunt one. `!important` is needed
+ * because a media query adds no specificity: a bare `*` loses to
+ * `.tech-image` on its own. The matching rules in src/animate*.js already
+ * set `transition: none` inline while their tweens run, for the unrelated
+ * reason that a 0.5s CSS transition would otherwise fight a per-frame
+ * attribute tween.
+ *
+ * Opacity, colour and position all still *change* — nothing is removed,
+ * no state or cue is lost. They just arrive at their final value directly
+ * instead of travelling there.
+ *
+ * 0.01ms rather than `none` so a transition still technically runs and
+ * fires its `transitionend`. Nothing here listens for one today (the
+ * animators are d3/rAF-driven and settle on d3's own "end" event), but
+ * `none` silently swallows that event, which is an unpleasant thing for
+ * an accessibility rule to do to code written later. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

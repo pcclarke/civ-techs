@@ -36,6 +36,7 @@ export default function() {
     groupObj.wheel
         .append("image")
         .attr("class", "start-slice")
+        .attr("aria-hidden", "true")
         .attr("x", 0)
         .attr("y", -CENTER_Y)
         .attr("width", 167)
@@ -65,11 +66,20 @@ export default function() {
         const svgGroup = groupObj.wheel.append("g")
             .attr("class", group.class);
 
+        // #chart is a listbox and the tech icons are its options (see
+        // keyboardNav.js). Every other layer is decoration: the arcs,
+        // spokes and era bands encode relationships the tooltip also
+        // states in words, and the labels repeat the icons' own names.
+        // Hiding them by group keeps it to one place instead of an
+        // aria-hidden on every draw call.
+        if (group.prop !== "techImages") svgGroup.attr("aria-hidden", "true");
+
         groupObj[group.prop] = svgGroup;
     }
 
     // Civ game image center of wheel
     groupObj.centerImage = groupObj.wheel.append("image")
+        .attr("aria-hidden", "true")
         .attr("x", -(GAME_IMG_WIDTH / 2))
         .attr("y", -(GAME_IMG_WIDTH / 2))
         .attr("width", GAME_IMG_WIDTH)

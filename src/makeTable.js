@@ -1,6 +1,19 @@
 import { select } from "d3-selection";
 
+import {
+    animateEraRows,
+    animateRows,
+    animateSpokeLines,
+    animateTableArcs,
+    animateTableCircles,
+    animateTablePins,
+    animateTableSquares,
+} from "./animateTableSwitch";
+import { ROW_H } from "./constants";
 import { onNodeClick, onNodeHover, onNodeLeave } from "./drawTools";
+import { ariaSelectedFor, onNodeFocus, onNodeKeyDown, tabIndexFor } from "./keyboardNav";
+import { markKey } from "./arcs";
+import { eraJoinKey } from "./drawEras";
 import { eraDisplayName } from "./eraData";
 import { fadeCheck } from "./helpers";
 import { color } from "./makeWheel";
@@ -33,16 +46,6 @@ import { setupHighlights } from "./setupHighlights";
  *     arc spans an angular range   line spans a row range
  */
 
-/** Row pitch. Every row is exactly this tall — no exceptions — because
- *  the lane overlay computes y positions as `position * ROW_H` rather
- *  than measuring the DOM. That's also why era captions are absolutely
- *  positioned in their own layer instead of being blocks in the flow:
- *  anything that added height would desynchronise the two.
- *
- *  34 rather than a touch-target 44: the longest tree is 92 rows, and
- *  every pixel here is multiplied by that. The row spans the full width,
- *  so the tap target stays large in the axis that's easy to miss in. */
-const ROW_H = 34;
 /** Bounds on the horizontal pitch between arc lanes. The pitch isn't
  *  fixed: lane *count* comes from the data (Civ 4 BTS packs 17, Civ 7
  *  only 6), so the lanes are spread to fill whatever room sits left of
@@ -275,6 +278,12 @@ function drawRows(root, allTechs, opts) {
         // Lets tooltip.js find a row's box without importing ROW_H or
         // reproducing the position → y mapping.
         .attr("data-id", (d) => d.id)
+        // One option per advance, carrying the layer's single roving tab
+        // stop — see keyboardNav.js for why it isn't tabindex="0" on all
+        // ninety-two of them.
+        .attr("role", "option")
+        .attr("tabindex", tabIndexFor)
+        .attr("aria-selected", ariaSelectedFor)
         .classed("fade", (d) => fadeCheck(d, highlightedIds))
         .classed("pinned", (d) => Boolean(window.app.pinned)
             && window.app.pinned.id === d.id)
@@ -285,13 +294,15 @@ function drawRows(root, allTechs, opts) {
         .on("mouseover", onNodeHover)
         .on("mouseleave", onNodeLeave)
         .on("click", onNodeClick)
+        .on("keydown", onNodeKeyDown)
+        .on("focus", onNodeFocus)
         // decoding="sync" because the default lets the browser decode off
         // the main thread and paint the row before the bitmap is ready —
         // which is what makes the icons blink on iOS as rows scroll in and
         // their decoded data is re-fetched. These are 24px; decoding one
         // synchronously costs less than the blank frame does.
         .html((d) =>
-            `<img class="tt-icon" decoding="sync" src="${game}/img/${iconFolder}/${d.id}.png" alt="">`
+            `<span class="tt-icon-slot"><img class="tt-icon" decoding="sync" src="${game}/img/${iconFolder}/${d.id}.png" alt=""></span>`
             + `<span class="tt-name">${d.name}</span>`);
 }
 
@@ -299,8 +310,14 @@ function drawRows(root, allTechs, opts) {
 /**
  * Render the table into #table. Reads the same window.app.wheelData the
  * wheel does, so switching views needs no data reload.
+ *
+ * `animate: true` is set only by initWheelData.js, only when a game/
+ * expansion/tree switch just replaced `wheelData` — see makeWheel.js's
+ * renderWheel, which this mirrors. `selected` is always null on an
+ * animated call for the same reason it is there, so there's no fade/pin
+ * state to reconcile with the animation.
  */
-export function renderTable() {
+export function renderTable({ animate = false } = {}) {
     const { game, tree, selected, wheelData } = window.app;
     if (!wheelData) return;
 
@@ -345,9 +362,13 @@ export function renderTable() {
     // from where the text starts, and that in turn is measured from a
     // rendered name (for its font). Rows themselves need no lane geometry
     // — their left offset arrives afterwards as a CSS variable.
-    drawRows(root, allTechs, {
-        game, iconFolder, selected, highlightedIds, eraOf,
-    });
+    if (animate) {
+        animateRows(root, allTechs, allTechs.length, { game, iconFolder, eraOf, highlightedIds });
+    } else {
+        drawRows(root, allTechs, {
+            game, iconFolder, selected, highlightedIds, eraOf,
+        });
+    }
 
     // The text block's left edge depends only on the widest name, so it's
     // a fixed wall the lanes can be fitted against.
@@ -365,6 +386,9 @@ export function renderTable() {
     // spokes can reach across to the icon they belong to.
     const svg = root.selectAll("svg.tt-lanes").data([null]).join("svg")
         .attr("class", "tt-lanes")
+        // Decoration inside a listbox: everything here restates the
+        // relationships the tooltip spells out in words.
+        .attr("aria-hidden", "true")
         .attr("width", textLeft)
         .attr("height", bodyH);
 
@@ -408,6 +432,9 @@ export function renderTable() {
         const ownStep = ownArcStepById.get(d.id);
         return ownStep !== undefined ? laneX(ownStep) : 0;
     };
+    // Shared by both branches: the selection's own spoke overlay is always
+    // drawn as a plain instant join, animated or not — it's a small
+    // supplementary highlight layer, not core content.
     const drawSpokeLines = (sel, data) => sel.selectAll("line")
         .data(data, (d) => d.id)
         .join("line")
@@ -417,101 +444,164 @@ export function renderTable() {
         .attr("y1", (d) => rowY(d.position))
         .attr("y2", (d) => rowY(d.position));
 
-    drawSpokeLines(layer.spokes, spokeData)
-        .classed("fade", Boolean(selected));
+    if (animate) {
+        // Spokes track their own advance's row, same as the wheel's spokes
+        // track their tech's angle — and, same as the wheel, carry the
+        // `.fade` dimming through the move so a pin that survives the
+        // switch (see initWheelData.js) stays legible throughout rather
+        // than only once it settles. Everything else in this branch now
+        // travels too, on the same curve — the arc layer by interpolating
+        // its lane and row positions (animateTableArcs), the era
+        // boundaries by sliding to their new row (animateEraRows). Nothing
+        // in either view crossfades a whole layer any more.
+        animateSpokeLines(layer.spokes, spokeData, allTechs.length, spokeX1, textLeft, Boolean(selected));
+        // The selection's own spokes/arc chain, undimmed on top — drawn
+        // instantly (not animated) since it's a small supplementary
+        // overlay, same as the wheel's svg.selectedSpokes/selectedArcs.
+        // Empty (and so exit-clearing) whenever nothing survived the switch.
+        drawSpokeLines(layer.spokesSel, selected ? selectedSpokes : [])
+            .classed("tt-spoke-sel", true);
 
-    // The selection's own spokes, redrawn undimmed on top — the same
-    // two-layer treatment the arcs get.
-    drawSpokeLines(layer.spokesSel, selected ? selectedSpokes : [])
-        .classed("tt-spoke-sel", true);
+        // The arc layer travels instead of crossfading, mirroring the
+        // wheel — see animateTableArcs. The selection's own arc chain
+        // stays an instant join below: it's a small supplementary overlay,
+        // same as the wheel's svg.selectedArcs.
+        animateTableArcs(layer.arcs, arcs, laneX, rowY, color, Boolean(selected));
 
-    // The arc itself: a vertical line from the origin advance down to the
-    // furthest advance it leads to. When something is selected the whole
-    // base layer dims and the highlight is drawn separately below, the
-    // same two-layer scheme the wheel uses — see the note there.
-    layer.arcs.selectAll("line")
-        .data(arcs, (d) => d.id)
-        .join("line")
-        .attr("class", "tt-arc")
-        .classed("fade", Boolean(selected))
-        .attr("x1", (d) => laneX(d.step))
-        .attr("x2", (d) => laneX(d.step))
-        .attr("y1", (d) => rowY(d.range[0]))
-        .attr("y2", (d) => rowY(d.range[1]))
-        .attr("stroke", (d) => color(d.step));
+        const selectedArcs = selected
+            ? selectionPrerequisites.filter((d) => Number.isFinite(d.step) && d.range)
+            : [];
+        layer.sel.selectAll("line")
+            .data(selectedArcs, (d) => d.id)
+            .join("line")
+            .attr("class", "tt-arc-sel")
+            .attr("x1", (d) => laneX(d.step))
+            .attr("x2", (d) => laneX(d.step))
+            .attr("y1", (d) => rowY(d.range[0]))
+            .attr("y2", (d) => rowY(d.range[1]))
+            .attr("stroke", (d) => color(d.step));
 
-    // Highlight layer, drawn over the dimmed base. These are not the same
-    // lines re-coloured: getHighlightedTechs rebuilds each prerequisite
-    // with its range clipped to the selected row
-    // (`[start, min(end, selected.position)]`), so the lit segment stops
-    // at the selection instead of running on to that advance's furthest
-    // dependent. Selecting Animal Husbandry should light Agriculture's
-    // line only as far as Animal Husbandry, not onward to Sailing.
-    //
-    // Entries without a `step` are the dependents and are spans of
-    // nothing, so they're filtered out; the selected advance's own entry
-    // keeps its full range, which is correct — that span is what it
-    // leads to.
-    const selectedArcs = selected
-        ? selectionPrerequisites.filter((d) => Number.isFinite(d.step) && d.range)
-        : [];
+        animateTablePins(layer.pins, arcs, laneX, rowY, pinHalf, color,
+            (d) => Boolean(selected)
+                && d.id !== (selected && selected.id)
+                && !prerequisiteIds.includes(d.id));
 
-    layer.sel.selectAll("line")
-        .data(selectedArcs, (d) => d.id)
-        .join("line")
-        .attr("class", "tt-arc-sel")
-        .attr("x1", (d) => laneX(d.step))
-        .attr("x2", (d) => laneX(d.step))
-        .attr("y1", (d) => rowY(d.range[0]))
-        .attr("y2", (d) => rowY(d.range[1]))
-        .attr("stroke", (d) => color(d.step));
+        animateTableSquares(layer.marks, squareData, laneX, rowY, mark, color,
+            (d) => Boolean(selected)
+                && selected.id !== d.id && selected.id !== d.arcId);
 
-    // Origin tick — the wheel's perpendicular "pin", rotated 90°.
-    layer.pins.selectAll("line")
-        .data(arcs, (d) => d.id)
-        .join("line")
-        .attr("class", "tt-pin")
-        .classed("fade", (d) => Boolean(selected)
-            && d.id !== (selected && selected.id)
-            && !prerequisiteIds.includes(d.id))
-        .attr("x1", (d) => laneX(d.step) - pinHalf)
-        .attr("x2", (d) => laneX(d.step) + pinHalf)
-        .attr("y1", (d) => rowY(d.position))
-        .attr("y2", (d) => rowY(d.position))
-        .attr("stroke", (d) => color(d.step));
+        animateTableCircles(layer.marks, circleData, laneX, rowY, mark, color,
+            (d) => Boolean(selected)
+                && selected.id !== d.id && selected.id !== d.arcId);
 
-    layer.marks.selectAll("rect")
-        .data(squareData)
-        .join("rect")
-        .attr("class", "tt-req")
-        .classed("fade", (d) => Boolean(selected)
-            && selected.id !== d.id && selected.id !== d.arcId)
-        .attr("x", (d) => laneX(d.step) - mark / 2)
-        .attr("y", (d) => rowY(d.pos) - mark / 2)
-        .attr("width", mark)
-        .attr("height", mark)
-        .attr("fill", (d) => color(d.step));
+        // Keyed on canonical era identity, so a boundary both games have
+        // slides to its new row instead of blinking out and back — the
+        // table's counterpart to the wheel's morphing era wedges.
+        animateEraRows(root, eraRanges);
+    } else {
+        drawSpokeLines(layer.spokes, spokeData)
+            .classed("fade", Boolean(selected));
 
-    layer.marks.selectAll("circle")
-        .data(circleData)
-        .join("circle")
-        .attr("class", "tt-opt")
-        .classed("fade", (d) => Boolean(selected)
-            && selected.id !== d.id && selected.id !== d.arcId)
-        .attr("cx", (d) => laneX(d.step))
-        .attr("cy", (d) => rowY(d.pos))
-        .attr("r", mark / 2)
-        .attr("stroke", (d) => color(d.step));
+        // The selection's own spokes, redrawn undimmed on top — the same
+        // two-layer treatment the arcs get.
+        drawSpokeLines(layer.spokesSel, selected ? selectedSpokes : [])
+            .classed("tt-spoke-sel", true);
 
-    // Era boundaries are rules only — see #era-indicator, which names the
-    // era you're actually in. They ride in their own absolutely-positioned
-    // layer rather than inside the row, so they span the full width without
-    // taking any of it from the advance name.
-    root.selectAll("div.tt-era")
-        .data(eraRanges, (d) => d.era)
-        .join("div")
-        .attr("class", "tt-era")
-        .style("top", (d) => `${d.first * ROW_H}px`);
+        // The arc itself: a vertical line from the origin advance down to
+        // the furthest advance it leads to. When something is selected the
+        // whole base layer dims and the highlight is drawn separately
+        // below, the same two-layer scheme the wheel uses — see the note
+        // there.
+        layer.arcs.selectAll("line")
+            .data(arcs, (d) => d.id)
+            .join("line")
+            .attr("class", "tt-arc")
+            .classed("fade", Boolean(selected))
+            .attr("x1", (d) => laneX(d.step))
+            .attr("x2", (d) => laneX(d.step))
+            .attr("y1", (d) => rowY(d.range[0]))
+            .attr("y2", (d) => rowY(d.range[1]))
+            .attr("stroke", (d) => color(d.step));
+
+        // Highlight layer, drawn over the dimmed base. These are not the
+        // same lines re-coloured: getHighlightedTechs rebuilds each
+        // prerequisite with its range clipped to the selected row
+        // (`[start, min(end, selected.position)]`), so the lit segment
+        // stops at the selection instead of running on to that advance's
+        // furthest dependent. Selecting Animal Husbandry should light
+        // Agriculture's line only as far as Animal Husbandry, not onward
+        // to Sailing.
+        //
+        // Entries without a `step` are the dependents and are spans of
+        // nothing, so they're filtered out; the selected advance's own
+        // entry keeps its full range, which is correct — that span is what
+        // it leads to.
+        const selectedArcs = selected
+            ? selectionPrerequisites.filter((d) => Number.isFinite(d.step) && d.range)
+            : [];
+
+        layer.sel.selectAll("line")
+            .data(selectedArcs, (d) => d.id)
+            .join("line")
+            .attr("class", "tt-arc-sel")
+            .attr("x1", (d) => laneX(d.step))
+            .attr("x2", (d) => laneX(d.step))
+            .attr("y1", (d) => rowY(d.range[0]))
+            .attr("y2", (d) => rowY(d.range[1]))
+            .attr("stroke", (d) => color(d.step));
+
+        // Origin tick — the wheel's perpendicular "pin", rotated 90°.
+        layer.pins.selectAll("line")
+            .data(arcs, (d) => d.id)
+            .join("line")
+            .attr("class", "tt-pin")
+            .classed("fade", (d) => Boolean(selected)
+                && d.id !== (selected && selected.id)
+                && !prerequisiteIds.includes(d.id))
+            .attr("x1", (d) => laneX(d.step) - pinHalf)
+            .attr("x2", (d) => laneX(d.step) + pinHalf)
+            .attr("y1", (d) => rowY(d.position))
+            .attr("y2", (d) => rowY(d.position))
+            .attr("stroke", (d) => color(d.step));
+
+        layer.marks.selectAll("rect")
+            .data(squareData, markKey)
+            .join("rect")
+            .attr("class", "tt-req")
+            .classed("fade", (d) => Boolean(selected)
+                && selected.id !== d.id && selected.id !== d.arcId)
+            .attr("x", (d) => laneX(d.step) - mark / 2)
+            .attr("y", (d) => rowY(d.pos) - mark / 2)
+            .attr("width", mark)
+            .attr("height", mark)
+            .attr("fill", (d) => color(d.step));
+
+        layer.marks.selectAll("circle")
+            .data(circleData, markKey)
+            .join("circle")
+            .attr("class", "tt-opt")
+            .classed("fade", (d) => Boolean(selected)
+                && selected.id !== d.id && selected.id !== d.arcId)
+            .attr("cx", (d) => laneX(d.step))
+            .attr("cy", (d) => rowY(d.pos))
+            .attr("r", mark / 2)
+            .attr("stroke", (d) => color(d.step));
+
+        // Era boundaries are rules only — see #era-indicator, which names
+        // the era you're actually in. They ride in their own
+        // absolutely-positioned layer rather than inside the row, so they
+        // span the full width without taking any of it from the advance
+        // name.
+        // eraJoinKey, not the raw `d.era` string: the two paths have to
+        // agree about what counts as the same era, or a hover re-render
+        // landing after a switch would treat every boundary as new.
+        root.selectAll("div.tt-era")
+            .data(eraRanges, eraJoinKey)
+            .join("div")
+            .attr("class", "tt-era")
+            .attr("aria-hidden", "true")
+            .style("top", (d) => `${d.first * ROW_H}px`);
+    }
 
     root.style("height", `${bodyH}px`);
 

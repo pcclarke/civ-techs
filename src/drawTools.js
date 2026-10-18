@@ -1,16 +1,44 @@
 import { ARC_BASE, ARC_SPACE, TECH_IMG_RADIUS, TECH_IMG_WIDTH } from "./constants";
-import { makeUnlockArc } from "./arcs";
-import { calculateSingleRadialLinePath, wheelTransform, fadeCheck } from "./helpers";
+import {
+    arcKey, makeUnlockArc, markKey, PIN_REACH, ringRadius, unlockArcGeom,
+} from "./arcs";
+import {
+    calculatePointOnWheel, calculateSingleRadialLinePath, fadeCheck, wheelTransform,
+} from "./helpers";
+import { ariaSelectedFor, onNodeFocus, onNodeKeyDown, tabIndexFor } from "./keyboardNav";
 import { hideTooltip, isSheetView, showTooltip } from "./tooltip";
+
+/**
+ * Remember the geometry each element of the arc layer is drawn at, on the
+ * node itself, so a later switch can interpolate *from* it.
+ *
+ * Needed because none of it survives otherwise: an annular sector's radii
+ * aren't recoverable from its `d` string, and the integer `step` the
+ * radius comes from belongs to the outgoing dataset — which is replaced
+ * wholesale on every load, with arcSpace differing per game on top. The
+ * node is the only thing that persists across a switch.
+ * animateWheelSwitch.js reads `__ringGeom`.
+ */
+function rememberRing(selection, geomOf) {
+    return selection.each(function (d) { this.__ringGeom = geomOf(d); });
+}
+
+/** Angle of wheel position `i`, for the point-shaped parts of the layer. */
+function angleAt(count, i) {
+    return calculatePointOnWheel(count, i, 1).angle;
+}
 
 export function drawArcs(element, data, color, arcSpace = ARC_SPACE) {
       const unlockArc = makeUnlockArc(arcSpace);
-      return element
+      // Keyed, so a static re-render after an animated one matches
+      // elements up the same way animateArcs does.
+      return rememberRing(element
           .selectAll("path")
-          .data(data)
+          .data(data, arcKey)
           .join("path")
           .attr("d", (d) => unlockArc(d))
-          .attr("fill", (d) => color(d.step));
+          .attr("fill", (d) => color(d.step)),
+          (d) => unlockArcGeom(d, arcSpace));
 }
 
 export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_RADIUS, arcSpace = ARC_SPACE) {
@@ -34,10 +62,56 @@ export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_
         });
 }
 
+/** Perpendicular "pin" tick marking the spoke an arc originates from. */
+export function drawUnlockPins(element, prerequisites, spokeCount, color, arcSpace, base = ARC_BASE) {
+    return rememberRing(element
+        .selectAll("path")
+        .data(prerequisites, arcKey)
+        .join("path")
+        .attr("d", (d) => calculateSingleRadialLinePath(
+            spokeCount,
+            base - PIN_REACH + arcSpace * d.step,
+            base + PIN_REACH + arcSpace * d.step,
+            d.position
+        ))
+        .attr("stroke", (d) => color(d.step)),
+        (d) => ({ angle: angleAt(spokeCount, d.position), radius: ringRadius(d.step, arcSpace) }));
+}
+
+/** Square mark on a spoke: the arc's origin is a hard requirement for it. */
+export function drawUnlockSquares(element, squareData, count, color, arcSpace, base = ARC_BASE) {
+    return rememberRing(element
+        .selectAll("rect")
+        .data(squareData, markKey)
+        .join("rect")
+        .attr("x", -2.5)
+        .attr("y", -2.5)
+        .attr("transform", (d) => wheelTransform(count, d.pos, base + arcSpace * d.step))
+        .attr("width", 5)
+        .attr("height", 5)
+        .attr("fill", (d) => color(d.step)),
+        (d) => ({ angle: angleAt(count, d.pos), radius: ringRadius(d.step, arcSpace) }));
+}
+
+/** Circle mark on a spoke: the arc's origin is an optional requirement for it. */
+export function drawUnlockCircles(element, circleData, count, color, arcSpace, base = ARC_BASE) {
+    return rememberRing(element
+        .selectAll("circle")
+        .data(circleData, markKey)
+        .join("circle")
+        .attr("r", 2.5)
+        .attr("transform", (d) => wheelTransform(count, d.pos, base + arcSpace * d.step))
+        .attr("fill", "#FFF")
+        .attr("stroke", (d) => color(d.step)),
+        (d) => ({ angle: angleAt(count, d.pos), radius: ringRadius(d.step, arcSpace) }));
+}
+
 export function drawTechImages(element, allTechs, game, highlightedIds, folder = "technologies", techImgRadius = TECH_IMG_RADIUS) {
     return element
         .selectAll(".tech-image")
-        .data(allTechs)
+        // Keyed: keyboard focus lives on one of these nodes, so a hover
+        // re-render must reuse it rather than rebind by position.
+        .data(allTechs, (d) => d.id)
         .join("image")
         .attr("class", "tech-image")
         .classed("fade", (d) => fadeCheck(d, highlightedIds))
@@ -47,9 +121,20 @@ export function drawTechImages(element, allTechs, game, highlightedIds, folder =
         .attr("x", -TECH_IMG_WIDTH / 2)
         .attr("y", -TECH_IMG_WIDTH / 2)
         .attr("xlink:href", (d) => `${game}/img/${folder}/${d.id}.png`)
+        // The icon is the advance's one focusable element. Its label is a
+        // separate <text> node pointing at the same advance, so making
+        // both focusable would double every tab stop; the label is left
+        // out and aria-hidden instead, with the name carried here.
+        .attr("data-id", (d) => d.id)
+        .attr("role", "option")
+        .attr("tabindex", tabIndexFor)
+        .attr("aria-selected", ariaSelectedFor)
+        .attr("aria-label", (d) => d.name)
         .on("mouseover", onNodeHover)
         .on("mouseleave", onNodeLeave)
-        .on("click", onNodeClick);
+        .on("click", onNodeClick)
+        .on("keydown", onNodeKeyDown)
+        .on("focus", onNodeFocus);
 }
 
 export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
@@ -63,9 +148,9 @@ export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
         .attr("text-anchor", (_, i) => (i > allTechs.length / 2) ? "end" : "start")
         .text(d => d.name)
         // Labels share the same hover behaviour as the icons: pointing at
-        // either side of the same node should activate it. Keep the cursor
-        // styling here in sync with .tech-image (.spokeText already sets
-        // cursor: pointer in CSS).
+        // either side of the same node should activate it. Their font size
+        // is not set in CSS — computeWheelLayout picks it per dataset and
+        // applies it to the whole group.
         .on("mouseover", onNodeHover)
         .on("mouseleave", onNodeLeave)
         .on("click", onNodeClick);
@@ -103,6 +188,26 @@ export function onNodeHover(_, d) {
 export function onNodeLeave() {
     if (!hoverQuery.matches) return;
     if (window.app.pinned) return;
+    window.app.selected = null;
+    hideTooltip();
+}
+
+/**
+ * Drop whatever is showing, pinned or not.
+ *
+ * Bound to the things that mean "I'm done": empty wheel space, the
+ * table's lane gutter, the tooltip's close button (see main.js), and the
+ * Escape key (see keyboardNav.js). Lives here rather than in main.js so
+ * the keyboard path can reuse the one implementation.
+ *
+ * Dismisses an unpinned selection too. Returning early unless something
+ * was pinned made the close button dead in the one state where it is the
+ * only way out: a tooltip opened by a hover with no pin behind it. Touch
+ * devices produce exactly that state (see hoverQuery above).
+ */
+export function releasePin() {
+    if (!window.app.pinned && !window.app.selected) return;
+    window.app.pinned = null;
     window.app.selected = null;
     hideTooltip();
 }

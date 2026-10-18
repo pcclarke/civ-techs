@@ -59,6 +59,45 @@ export function computeEraRanges(allTechs) {
 }
 
 /**
+ * Canonical cross-game identity for an era, used to key the wheel's era
+ * joins so a switch morphs the eras two games share rather than fading
+ * one out while its counterpart fades in (see animateEraBackgrounds in
+ * animateWheelSwitch.js).
+ *
+ * The series spells the same era three different ways. Civ 4-6 use enum
+ * ids (`ERA_MEDIEVAL`), while Civ 2, 3 and 7 use prose that drifts
+ * between titles — `Ancient` vs `Ancient Times`, `Modern` vs `Modern
+ * Times`, `Industrial Revolution` vs `Industrial Ages`, `Middle Ages`
+ * for what every other game calls Medieval. Stripping the prefix and
+ * case-folding handles the enum/prose split; the alias table handles the
+ * prose-to-prose drift.
+ *
+ * Civ 7's `Antiquity` folds into `ancient` on purpose: it covers the same
+ * stretch of history under a different name, and folding it means a
+ * Civ 4 -> Civ 7 switch slides that wedge to its new span instead of
+ * crossfading two wedges that mean the same thing. `Exploration` has no
+ * counterpart anywhere else in the series and keeps its own key.
+ *
+ * Only used for identity, never for display — eraDisplayName below still
+ * shows each game's own wording.
+ */
+const ERA_ALIASES = new Map([
+    ["ancient times",        "ancient"],
+    ["antiquity",            "ancient"],
+    ["middle ages",          "medieval"],
+    ["industrial revolution", "industrial"],
+    ["industrial ages",      "industrial"],
+    ["modern times",         "modern"],
+]);
+
+export function eraKey(era) {
+    if (!era) return "";
+    const base = era.startsWith("ERA_") ? era.slice(4) : era;
+    const normalised = base.toLowerCase().replace(/_/g, " ").trim();
+    return ERA_ALIASES.get(normalised) || normalised;
+}
+
+/**
  * Civ 5+ store eras as enum-style ids (`ERA_INFORMATION`); Civ 2 and 3
  * use plain English (`Industrial Ages`). Normalise to a friendly label
  * for display.
