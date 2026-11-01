@@ -1,50 +1,26 @@
 import { select, selectAll } from "d3-selection";
 
+import { bindDismissals, createApp, setupStickyToolbar } from "./appShell";
 import { DEFAULT_GAME, GAMES } from "./constants";
 import { initWheelData } from "./initWheelData";
-import { updateEraIndicator } from "./makeTable";
-import { isTableView, renderActiveView } from "./renderView";
-import { onSheetLeave, releasePin } from "./drawTools";
 import svgInit from "./svgInit";
 
 let gameInfo = DEFAULT_GAME;
 
-window.app = {
+// Page wiring lives in appShell.js so the browser checks run the same
+// code rather than copies of it — see that module's doc comment.
+createApp({
   game: gameInfo.id,
   // Tree picker (Civ 6 and 7). Always populated so downstream code can read
   // it unconditionally; defaults match the legacy single-tree-per-game shape.
   tree: (gameInfo.trees && gameInfo.trees[0]) || { id: "tech", folder: "technologies", dataKey: "technologies" },
-  _selected: null,
   // Click-to-pin: while set, `selected` is locked to this tech and hover
   // previews are inert (see onNodeHover/onNodeClick in drawTools).
-  pinned: null
-};
-
-// Auto-render when selected changes
-Object.defineProperty(window.app, 'selected', {
-  get() { return window.app._selected; },
-  set(value) {
-    window.app._selected = value;
-    if (window.app.wheelData) renderActiveView();
-  }
+  pinned: null,
 });
 
 window.app.svg = svgInit();
-
-// Releasing a pin: clicking empty wheel space (icon and label clicks stop
-// propagation before reaching the SVG; arcs take no pointer events), the table's lane gutter, or the
-// tooltip's close button. Escape does the same from the keyboard — see
-// keyboardNav.js. releasePin itself lives in drawTools.js so both paths
-// share one implementation.
-select("#chart svg").on("click", releasePin);
-select("#tipCloseButton").on("click", releasePin);
-// A hover preview in the sheet view lasts until the pointer leaves the
-// sheet (see onSheetLeave). Bound on the tooltip itself: the wheel's box
-// never receives pointer events, so this only ever fires for the sheet.
-select("#tooltip").on("mouseleave", onSheetLeave);
-// The table's equivalent of empty wheel space: the lane gutter left of
-// the names. Rows stop propagation, so only a miss reaches this.
-select("#table").on("click", releasePin);
+bindDismissals();
 
 const expansion = select("#expansion");
 const selectExpansion = select("#select-expansion");
@@ -126,64 +102,7 @@ if (gameInfo.trees && gameInfo.trees.length > 1) {
     addTrees();
 }
 
-// Sticky toolbar. Once the page scrolls past #select-wrap the panel pins
-// to the top of the viewport (.stuck); scrolling back returns it to the
-// flow. On a wide screen it also collapses to the slim bar at that moment
-// (.compact) and expands again on the way back; on a narrow one it is
-// compact throughout, so pinning is the only thing that changes. Two
-// details keep this stable:
-//   - The check reads the WRAPPER's position (a pinned panel never leaves
-//     the viewport, so its own rect can't signal anything) from scroll and
-//     resize listeners rather than an IntersectionObserver — jump scrolls
-//     (End key, anchors, restored positions) can move the wrapper from
-//     below the viewport to above it without ever intersecting, which an
-//     observer reports as no change at all.
-//   - The wrapper's height is frozen at whatever the panel measured just
-//     before it left the flow. Otherwise the document would shrink, the
-//     browser would clamp the scroll position back, and near the bottom of
-//     the page the panel would flip-flop between states.
-const selectWrap = document.querySelector("#select-wrap");
-const selectOptions = document.querySelector("#select-options");
-if (selectWrap && selectOptions) {
-    const updateCompact = () => {
-        const stuck = selectWrap.getBoundingClientRect().top < 0;
-        // Freeze the space the bar occupies *before* taking it out of
-        // flow — whatever height it happens to have, which is the compact
-        // one on a phone and the expanded one on a wide screen. Keying
-        // this off .compact instead was what left the gap on mobile:
-        // reserving the tall version's height for a short pinned bar.
-        if (stuck && !selectOptions.classList.contains("stuck")) {
-            selectWrap.style.height = `${selectWrap.offsetHeight}px`;
-        }
-        selectOptions.classList.toggle("stuck", stuck);
-        // Narrow screens keep the compact look at every scroll position;
-        // wide ones adopt it only while pinned.
-        selectOptions.classList.toggle("compact", stuck || isTableView());
-        if (!stuck) {
-            selectWrap.style.height = "";
-        }
-        // The table's era indicator parks against the bar's bottom edge,
-        // which just moved. It has its own scroll listener, but this one
-        // is what changed the geometry — update from here so the two never
-        // disagree for a frame.
-        updateEraIndicator();
-    };
-    // Coalesced to one pass per frame. iOS delivers scroll events during
-    // momentum faster than it paints, and this handler reads a rect and
-    // may write a height and two classes — run per event, those reads and
-    // writes interleave into repeated forced layouts of the whole table.
-    let frame = 0;
-    const scheduleCompact = () => {
-        if (frame) return;
-        frame = requestAnimationFrame(() => {
-            frame = 0;
-            updateCompact();
-        });
-    };
-    window.addEventListener("scroll", scheduleCompact, { passive: true });
-    window.addEventListener("resize", scheduleCompact);
-    updateCompact();
-}
+setupStickyToolbar();
 
 initWheelData();
 

@@ -30,7 +30,7 @@ import { eraDisplayName } from "../../src/eraData";
 import { prefersReducedMotion, renderActiveView, isTableView } from "../../src/renderView";
 import svgInit from "../../src/svgInit";
 import { hideTooltip, showTooltip } from "../../src/tooltip";
-import { onSheetLeave, releasePin } from "../../src/drawTools";
+import { bindDismissals, createApp, setupStickyToolbar } from "../../src/appShell";
 // Written by run.mjs from the real data pipeline before this is bundled.
 import { NAMES, WHEEL } from "./.generated/fixtures.generated.js";
 
@@ -167,23 +167,18 @@ function layoutChecks() {
 
 function setupApp(game) {
     const svg = freshWheel();
-    window.app = {
+    // The app's own constructor and bindings (appShell.js), not copies:
+    // createApp's `selected` accessor is what re-renders on a selection,
+    // and bindDismissals is what makes clicks and the sheet's mouseleave
+    // release anything. The harness replaces main.js, so before these
+    // were shared each had to be duplicated here, and a missing one made
+    // checks read a DOM that never updated. Rebound per setup because the
+    // wheel's binding is on the SVG, which freshWheel just replaced.
+    createApp({
         game, tree: { id: "tech", folder: "technologies", dataKey: "technologies" },
-        _selected: null, pinned: null, svg,
-        wheelData: structuredClone(WHEEL[game]),
-    };
-    // The same accessor main.js installs, and it has to be here: assigning
-    // `selected` is what triggers a re-render in the real app, so a plain
-    // property would let every check that depends on the redraw — anything
-    // reading tabindex, aria-selected or a .fade class after a selection —
-    // silently pass against a stale DOM.
-    Object.defineProperty(window.app, "selected", {
-        get() { return window.app._selected; },
-        set(value) {
-            window.app._selected = value;
-            if (window.app.wheelData) renderActiveView();
-        },
+        svg, wheelData: structuredClone(WHEEL[game]),
     });
+    bindDismissals();
     refreshWheelLayout();
     return svg;
 }
@@ -611,6 +606,30 @@ function tableChecks() {
     hideTooltip();
     window.scrollTo(0, 0);
 
+    // --- page wiring (appShell.js) in the table view ---
+    {
+        const t = window.app.wheelData.allTechs[3];
+        window.app.pinned = t;
+        window.app.selected = t;
+        showTooltip(t);
+        document.querySelector("#table").dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        ok("shell: a click on the table's lane gutter releases a pin",
+            !window.app.pinned && !window.app.selected &&
+            document.querySelector("#tooltip").classList.contains("hidden"));
+        const row = document.querySelector("#table .tt-row");
+        row.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        ok("shell: a click on a row pins it rather than reaching the gutter",
+            window.app.pinned && window.app.pinned.id === row.dataset.id,
+            window.app.pinned ? window.app.pinned.id : "nothing pinned");
+        document.querySelector("#tipCloseButton").click();
+        ok("shell: the close button releases it", !window.app.pinned && !window.app.selected);
+
+        window.scrollTo(0, 0);
+        setupStickyToolbar()();
+        ok("shell: the toolbar is compact from the top of the page on a narrow screen",
+            document.querySelector("#select-options").classList.contains("compact"));
+    }
+
     // --- a hover preview that opens under the pointer stays open ---
     // On a narrow desktop window the sheet is docked over the bottom of
     // the viewport, so hovering a row there opens it right under the
@@ -627,10 +646,6 @@ function tableChecks() {
             const r = el.getBoundingClientRect();
             return [r.left + r.width / 2, r.top + r.height / 2];
         };
-        // The two bindings main.js makes, which this harness replaces:
-        // without them the sheet's leave and close have no listener at all.
-        select("#tooltip").on("mouseleave", onSheetLeave);
-        select("#tipCloseButton").on("click", releasePin);
         window.app.pinned = null;
         window.app.selected = null;
         window.scrollTo(0, document.documentElement.scrollHeight);
@@ -1193,6 +1208,72 @@ function hoverSwitchChecks() {
     }
 }
 
+/* --------------------------- page wiring ----------------------------- */
+
+/**
+ * appShell.js on the wheel: the dismissal clicks and the sticky toolbar.
+ * Neither had any coverage while it lived inline in main.js, which the
+ * harness replaces.
+ */
+function shellChecks() {
+    setupApp("civ4");
+    renderActiveView();
+    ok("wheel view is active for these checks", !isTableView());
+
+    // Dismissals. Icon clicks stop propagation; the SVG's own click is
+    // what "empty space" means.
+    const techs = window.app.wheelData.allTechs;
+    const icon = () => document.querySelector(`#chart .tech-image[data-id="${techs[5].id}"]`);
+    icon().dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    ok("shell: clicking an icon pins it", window.app.pinned && window.app.pinned.id === techs[5].id,
+        window.app.pinned ? window.app.pinned.id : "nothing pinned");
+    document.querySelector("#chart svg").dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    ok("shell: clicking empty wheel space releases it",
+        !window.app.pinned && !window.app.selected &&
+        document.querySelector("#tooltip").classList.contains("hidden"));
+    icon().dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    document.querySelector("#tipCloseButton").click();
+    ok("shell: the close button releases it", !window.app.pinned && !window.app.selected);
+    const arc = document.querySelector("#chart g.arcs path");
+    icon().dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    arc.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    // Dispatched straight at the arc, so this skips hit-testing (which
+    // pointer-events:none already rules out): what it shows is that no
+    // arc handler stops the click on its way up to the SVG's.
+    ok("shell: a click on an arc bubbles through to the empty-space handler",
+        !window.app.pinned);
+
+    // Sticky toolbar, driven through its real scroll listener: the
+    // handler is coalesced to an animation frame, which the stubbed clock
+    // runs on __tick.
+    const wrap = document.querySelector("#select-wrap");
+    const bar = document.querySelector("#select-options");
+    setupStickyToolbar();
+    const settle = () => { window.dispatchEvent(new Event("scroll")); window.__tick(16); };
+
+    window.scrollTo(0, 0);
+    settle();
+    const flowHeight = wrap.offsetHeight;
+    ok("shell: at the top, the toolbar is in the flow and expanded",
+        !bar.classList.contains("stuck") && !bar.classList.contains("compact"));
+
+    window.scrollTo(0, wrap.getBoundingClientRect().top + window.scrollY + flowHeight + 50);
+    settle();
+    ok("shell: scrolled past, it pins to the top and compacts",
+        bar.classList.contains("stuck") && bar.classList.contains("compact") &&
+        Math.abs(bar.getBoundingClientRect().top) < 1,
+        `top ${bar.getBoundingClientRect().top.toFixed(1)}`);
+    ok("shell: the space it left is held at its in-flow height",
+        Math.abs(wrap.offsetHeight - flowHeight) < 1,
+        `${wrap.offsetHeight}px held vs ${flowHeight}px in flow`);
+
+    window.scrollTo(0, 0);
+    settle();
+    ok("shell: scrolled back, it returns to the flow",
+        !bar.classList.contains("stuck") && !bar.classList.contains("compact") &&
+        wrap.style.height === "");
+}
+
 /* ------------------------------- driver ------------------------------ */
 
 // Wrapped in an async IIFE so a suite can await if it needs to. None do
@@ -1210,6 +1291,7 @@ function hoverSwitchChecks() {
         else if (location.hash.includes("arcs")) arcChecks();
         else if (location.hash.includes("tooltip")) tooltipChecks();
         else if (location.hash.includes("hover-switch")) hoverSwitchChecks();
+        else if (location.hash.includes("shell")) shellChecks();
         else if (location.hash.includes("table")) tableChecks();
         else motionChecks();
     } catch (e) {

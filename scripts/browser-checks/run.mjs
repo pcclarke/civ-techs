@@ -20,6 +20,7 @@
  *   #arcs     wide viewport                  — the arc layer's travel
  *   #tooltip  wide viewport                  — tooltip stays docked on scroll
  *   #hover-switch  wide viewport             — hovering mid-switch
+ *   #shell    wide viewport                  — page wiring (appShell.js)
  *   #keyboard-wheel / #keyboard-table — the same nav suite in each view
  *
  * One environment constraint worth knowing: headless Chrome on macOS
@@ -94,6 +95,7 @@ const RUNS = [
     { hash: "arcs", label: "arc layer travel", size: "1400,1000" },
     { hash: "tooltip", label: "tooltip docking on scroll", size: "1400,1000" },
     { hash: "hover-switch", label: "hovering during a switch", size: "1400,1000" },
+    { hash: "shell", label: "page wiring", size: "1400,1000" },
     { hash: "keyboard-wheel", label: "keyboard nav — wheel", size: "1400,1000" },
     { hash: "keyboard-table", label: "keyboard nav — table", size: "390,900" },
 ];

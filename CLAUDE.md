@@ -20,17 +20,26 @@ Checks the parts of the app that genuinely need a rendering engine, which is why
 
 - **Wheel layout** — `computeWheelLayout` derives every radius from *measured* text (`getComputedTextLength`, `getBBox`), across all 11 game/tree combinations. Also covers the documented `display: none` hazard (hidden text measures as zero width, collapsing the radii) and that `refreshWheelLayout` repairs it.
 - **Reduced motion** — that a switch animates normally, and lands on its final frame instantly under `--force-prefers-reduced-motion`.
-- **Table layout** — `contentLeft`'s contract that the widest advance name finishes flush against the right edge, measured the same way `makeTable` does it (canvas `measureText`), plus the fixed `ROW_H` row pitch the lane overlay depends on. Also that the table's arc layer travels, and that an animated settle lands byte-identical to a static re-render.
-- **Arc layer** — that the wheel's arc layer never empties or goes faint mid-switch (the regression the old crossfade had), that survivors are moved rather than re-created, and that settled arcs match the static generator exactly.
+- **Table layout** — `contentLeft`'s contract that the widest advance name finishes flush against the right edge, measured the same way `makeTable` does it (canvas `measureText`), plus the fixed `ROW_H` row pitch the lane overlay depends on. Also that the table's arc layer travels, and that an animated settle lands byte-identical to a static re-render. And the bottom sheet: that it stays viewport-fixed, and that a hover preview which opens *under the pointer* stays open (replayed with `elementFromPoint`, so the `mouseleave` is the one a real pointer would produce).
+- **Arc layer** — that the wheel's arc layer never empties or goes faint mid-switch (the regression the old crossfade had), that survivors are moved rather than re-created, that settled arcs match the static generator exactly, and that arcs take no pointer events from either draw path.
 - **Keyboard navigation** — the same suite run in both views: one tab stop, arrow/Home/End movement, clamping, Enter to pin, Escape to release, decorative layers `aria-hidden`, and that the single tab stop survives the re-render every selection triggers.
+- **Tooltip placement** — that the wheel's tooltip stays docked to its corner through scrolling and resizing; corner choice over every advance of three games, in three scroll positions, checked against the *rendered* ink of the lit selection (never covers it when some corner avoids it; never off screen when a clear corner is on screen); and the "Details above/below" hint.
+- **Hovering during a switch** — a hover mid-animation, then the DOM inspected after settling *without another render* (the next render repairs the damage, which is what hid the bug). Includes a no-hover control and chained switches that revive departing nodes.
+- **Page wiring** — `appShell.js`: dismissal clicks (empty wheel space, table gutter, close button) and the sticky toolbar, driven through its real scroll listener.
 
-One harness-fidelity trap worth knowing: `setupApp` must install the same `selected` accessor `main.js` does. Assigning `window.app.selected` is what triggers a re-render in the real app, so a plain property would let any check that reads the DOM *after* a selection — `tabindex`, `aria-selected`, `.fade` — silently pass against a stale DOM. That bug produced two confusing failures before it was found.
+The harness replaces `main.js` (it can't run the data fetch), so **anything `main.js` wires up doesn't exist under test** unless it's shared. That's why `src/appShell.js` exists: `createApp` (the `window.app` constructor with its re-rendering `selected` accessor) and `bindDismissals` are called by both `main.js` and `setupApp`. Before that, each was hand-copied into the harness, and each missing copy produced confusing failures — a plain `selected` property let checks read a DOM that never re-rendered; missing dismissal bindings meant the sheet had no listeners at all. Put new page-level wiring there, not in `main.js`, if a check will ever depend on it. What stays in `main.js` (the game/expansion/tree pickers) drives `initWheelData`'s fetch and can't run under the harness anyway.
+
+Three traps that have each produced a check that passed while testing nothing:
+
+- **Stale references across `setupApp`.** `freshWheel()` replaces the SVG, so a `#chart svg` node grabbed before setup measures as a detached 0×0 box. Look elements up after setup, or through a function.
+- **Scroll positions the browser clamps.** The page ends shortly below the wheel, so `scrollTo` a position that needs the wheel's top above the fold gets silently clamped back. Pad the body for the check, and **assert the scenario was reached** before asserting anything about it.
+- **A check that has never failed.** For a regression check, run it against the code before the fix (or with the one fixing line removed) and confirm it fails for the right reason. Several checks here were only trustworthy after that step.
 
 No new dependencies: it bundles with the esbuild inside Vite and drives whichever Chrome is installed (`CHROME=/path` to override). The page under test is the project's own `index.html` with its module script swapped out, so the DOM and CSS are the real ones.
 
 Assertions are **invariants, not pixel values** ("every label fits inside the SVG", not "labelRadius is 418.5") — absolute numbers move with font availability and platform text rasterisation. Measured values are printed as diagnostics.
 
-Two things to know before extending it. Animation time comes from a stubbed `performance.now` + rAF queue, because Chrome's `--virtual-time-budget` advances `setTimeout` but *not* the rAF clock d3-timer uses, which makes every transition look like it barely started. And `--dump-dom` serialises the inlined `<script>` too, so results are collected via DOM APIs rather than an HTML string — a literal result marker in the source would be matched before the real element.
+Two things to know before extending it. Animation time comes from a stubbed `performance.now` + rAF queue, because Chrome's `--virtual-time-budget` advances `setTimeout` but *not* the rAF clock d3-timer uses, which makes every transition look like it barely started. (CSS transitions and smooth scrolling run on real time, outside the stub — a check that needs where a smooth scroll lands has to make it instant.) And `--dump-dom` serialises the inlined `<script>` too, so results are collected via DOM APIs rather than an HTML string — a literal result marker in the source would be matched before the real element.
 
 CI is two workflows:
 
@@ -56,7 +65,7 @@ Each scraper's module docstring documents its flags and the exact JSON shape it 
 
 ## Architecture
 
-Vanilla ES modules + individual `d3-*` packages, bundled by Vite. No framework, no router, no build-time data step. Everything hangs off one global, `window.app`.
+Vanilla ES modules + individual `d3-*` packages, bundled by Vite. No framework, no router, no build-time data step. Everything hangs off one global, `window.app`, built by `createApp` in `appShell.js`.
 
 ### Two renderings, one dataset
 
@@ -99,7 +108,7 @@ Both views are single-selection listboxes over the same advances: `#chart` and `
 
 - **The tab stop roves.** The layer holds exactly one `tabindex="0"`; arrows move it. `tabindex="0"` on all 92 advances would mean 92 Tab presses to get past the chart. The stop is tracked as an *id* rather than a node, because every hover redraws every layer — but only within one dataset. `resolveStop` reseeds on a game switch, to the carried pin if one survived and otherwise to the new tree's first advance, and it detects the switch by the **identity of the `allTechs` array** rather than an explicit call from `initWheelData`. That's deliberate: identity is an exact signal (a fresh array per load, never mutated after) and can't be forgotten if another load path is ever added. Letting the stop survive a switch by id made where Tab landed depend on the route taken — Civ 4 opened on Fishing, but Civ 4 → Civ 5 → Civ 4 opened on Agriculture, because Civ 5 has no Fishing to hold the stop and Civ 4 does have the Agriculture it fell back to.
 - **Focus implies selection**, so a keyboard user gets the highlight and tooltip a mouse user gets on hover. This deliberately ignores `pinned` where hover does not — `onNodeHover` bails while pinned because the pointer crosses the wheel accidentally on its way to the close button, and a keyboard has no equivalent accidental travel.
-- **Enter/Escape reuse the mouse's handlers** (`onNodeClick`, `releasePin`), which is why `releasePin` lives in `drawTools.js` rather than `main.js`.
+- **Enter/Escape reuse the mouse's handlers** (`onNodeClick`, `releasePin`), which is why `releasePin` lives in `drawTools.js` rather than with the bindings in `appShell.js`.
 
 The tooltip is `role="status"`, so its content is announced as the selection moves.
 
@@ -107,8 +116,24 @@ The tooltip is `role="status"`, so its content is announced as the selection mov
 
 - `window.app.selected` is an accessor — assigning it re-renders the active view. Unrelated elements get the `.fade` class (`opacity: 0.05`).
 - Hover sets `selected`; click sets `pinned`, which makes hover inert. Hover handlers bail unless `matchMedia("(hover: hover)")` matches — a tap synthesises `mouseover` before `click` and would otherwise open an unpinned tooltip with no way out.
+- Only advances are pointer targets: wheel icons and labels, table rows. Arcs are `pointer-events: none` — at 1.5px they were too thin to stay on, so hovering one flickered the whole wheel — and a click on one falls through to the SVG's release handler like any empty space.
+- In the sheet view, a hover preview that opens under the pointer (the sheet covers the bottom rows) stays open: `onNodeLeave` ignores a leave *onto* the tooltip, and `onSheetLeave` dismisses it when the pointer leaves the sheet, unless it lands on another row, which takes over. The sheet shows its close button for previews too.
 - `setupHighlights` / `createSelectedUnlocks` compute the lit set (the node, its prereqs, its dependents) plus the overlay arcs/spokes drawn undimmed on top.
 - A pin survives a game switch by **id**, re-looked-up in the new dataset; the old object never carries over.
+
+### Tooltip placement
+
+Two different boxes from one element. On the wheel, `#tooltip` is `position: absolute` in **document** coordinates (no ancestor is positioned), so it scrolls with the wheel it's docked to; `positionTooltipAt` adds `window.scrollX/Y`. In the sheet view the media query makes it `position: fixed` to the viewport bottom. It used to be fixed on the wheel too, which left it stranded below the fold however far you scrolled.
+
+Placement is computed when the tooltip is shown and again on resize (`repositionTooltip`, from `renderView.js`'s resize handler — the SVG has a `viewBox`, so its corners move with the window width). **Not** on scroll: a box that jumps corners under you while scrolling is worse than one that stays put.
+
+`chooseCorner` docks to one of the SVG's four corners:
+
+1. Only corners whose box, at its real size, touches none of the lit selection (icons, labels, spokes, arcs, with a clearance margin) are candidates.
+2. Among those, the most visible wins — inside the viewport and below the toolbar while it's stuck. The angle gap from the selection breaks ties — so with the whole wheel on screen it picks what the older angle-only rule did (identically, for every advance of Civ 4, 5 and 7 when this was measured).
+3. If no corner is clear, the angle-only pick, **even off screen**. Covering the thing being explained is worse than making the reader scroll; `detailsHint.js` then shows a "Details above/below" chip (informational during a preview — it can't be clickable, since moving toward it ends the hover — and a button that scrolls the tooltip into view once pinned).
+
+The lit geometry is computed from `wheelData` (`litSamples`), **not read off the DOM**, for two reasons: a pin carried across a game switch is placed the moment the animation starts, with every element still at its old position; and an arc's bounding box is useless — a quarter-circle arc's box is a whole quadrant. The checks verify that model against the rendered ink independently.
 
 ### Switch animations
 
@@ -128,6 +153,8 @@ Three things that look like free choices but aren't:
 - **Start values are read live off the DOM**, not from a snapshot, so rapid switching redirects from wherever an element actually is. Where a value can't be recovered from the DOM — an annular sector's radii, an era wedge's angles — it's stashed on the node instead (`__ringGeom`, `__eraAngles`), which is why the *static* draw paths write those stashes too.
 - **Opacity is never animated for a surviving element.** Every layer carries a selection-driven `.fade` class at `opacity: 0.05`, and an inline opacity outranks a class rule — so anything that does fade goes through `fadeInToResting`, which reads the resting value instead of assuming `1`.
 - **Sizes snap, positions travel.** Label radii, icon widths, `mark`/`pinHalf` are properties of the layout (recomputed per game), not of where a thing is.
+
+And one contract between the animated and static draw paths, because a hover mid-switch runs the static path while the animation is still in flight: **departing nodes carry `.leaving`, and every static join selects `RESIDENT(selector)`** (`helpers.js`, i.e. `:not(.leaving)`). During a switch a continuing icon briefly has two nodes under one id (old art out, new art in), as does a renamed era label; a keyed static join binds the first in DOM order — the departing one — and drops the arrival, and the advance then vanishes when the departing node removes itself. Static joins are also keyed by id, never by index, for the same reason. Any animated branch that reclaims a departing node as a survivor (rapid switching) must clear `.leaving`, or that node becomes invisible to every later static join and duplicates pile up. `.leaving` also turns off pointer events, so a hover can't select an advance from the previous game.
 
 ## Data conventions
 
