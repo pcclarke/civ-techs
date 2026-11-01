@@ -10,7 +10,7 @@
         "check:browser": "node scripts/browser-checks/run.mjs"
     },
     "devDependencies": {
-        "vite": "^6.4.3"
+        "vite": "^6.4.5"
     },
     "dependencies": {
         "d3-fetch": "^3.0.1",
