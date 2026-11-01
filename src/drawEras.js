@@ -2,7 +2,7 @@ import { arc } from "d3-shape";
 
 import { GAME_IMG_WIDTH, LABEL_PADDING, PI_DIFF, TWO_PI_ADJ } from "./constants";
 import { eraDisplayName, eraKey } from "./eraData";
-import { wheelTransform } from "./helpers";
+import { RESIDENT, wheelTransform } from "./helpers";
 
 /**
  * Era visualization is two layers, drawn together so eras read as both a
@@ -207,7 +207,7 @@ export function eraMorphPlan(oldByKey, newRanges) {
 export function drawEraBackgrounds(element, eraRanges, color, outerRadius) {
     const wedge = eraWedge(outerRadius);
     return rememberEraAngles(element
-        .selectAll("path")
+        .selectAll(RESIDENT("path"))
         // Keyed by canonical era identity, not array index, so the eras
         // two games share stay the same DOM node across a switch — which
         // is what lets animateEraBackgrounds morph them instead of
@@ -238,7 +238,7 @@ export function drawEraBackgrounds(element, eraRanges, color, outerRadius) {
 export function drawEraLabels(element, eraRanges, color, radius) {
     const widthCap = eraLabelWidthCap(radius);
     return element
-        .selectAll("text")
+        .selectAll(RESIDENT("text"))
         .data(eraRanges, eraJoinKey)
         .join("text")
         .attr("class", "era-label")

@@ -63,6 +63,29 @@ const FADE_IN_MS = 450;
  *  direction the wheel already reads in. */
 const TOP_ANGLE = -Math.PI / 2 + PI_DIFF;
 
+/**
+ * Marks a node that's on its way out — fading to nothing ahead of its own
+ * .remove() — so the static draw paths in drawTools.js / drawEras.js skip
+ * it (they select `:not(.leaving)`).
+ *
+ * Needed because a hover mid-switch runs the static path while this one is
+ * still in flight, and the two disagreed about which node was which. A
+ * continuing icon briefly has two nodes under one id (old art leaving, new
+ * art arriving), as does a renamed era label; a keyed static join binds the
+ * first in DOM order — the leaving one — and removes the arrival as a
+ * duplicate. Labels and spokes were joined by index, so a dying node got
+ * rebound to some other advance. Either way, the node the static path kept
+ * then removed itself on schedule, and the advance was simply missing until
+ * the next render recreated it.
+ *
+ * Every branch that can reclaim a leaving node as a survivor (rapid
+ * switching interrupts a removal that hasn't happened yet) clears the
+ * class again, or the node would be invisible to every later static join.
+ * `.leaving` also turns off pointer events (techs.css), so a hover can't
+ * land on an outgoing node and select an advance from the previous game.
+ */
+const LEAVING = "leaving";
+
 function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
@@ -197,6 +220,7 @@ export function animateSpokes(group, spokeData, count, techImgRadius, arcSpace, 
                 // that window: it kills the old schedule synchronously,
                 // before opacity is reasserted or the new transition starts.
                 .interrupt()
+                .classed(LEAVING, false)
                 .attr("opacity", 1)
                 .classed("fade", fade)
                 .call((sel) => sel.transition().duration(ROTATE_MS).ease(easeInOutCubic)
@@ -206,7 +230,7 @@ export function animateSpokes(group, spokeData, count, techImgRadius, arcSpace, 
                         const delta = shortestDelta(start, targetAngle(count, d.position));
                         return (t) => spokeD(start + delta * t, inner, techImgRadius);
                     })),
-            (exit) => exit.interrupt().call((sel) => sel.transition().duration(ROTATE_MS).ease(easeInOutCubic)
+            (exit) => exit.interrupt().classed(LEAVING, true).call((sel) => sel.transition().duration(ROTATE_MS).ease(easeInOutCubic)
                 .attr("opacity", 0)
                 .attrTween("d", function (d) {
                     const inner = spokeInnerRadius(d.step, arcSpace);
@@ -296,6 +320,7 @@ export function animateTechLabels(group, allTechs, count, labelRadius, highlight
                 // frame could still land afterward and re-freeze opacity
                 // wherever it left off.
                 .interrupt()
+                .classed(LEAVING, false)
                 .attr("opacity", 1)
                 .classed("fade", fade)
                 .text((d) => d.name)
@@ -305,7 +330,7 @@ export function animateTechLabels(group, allTechs, count, labelRadius, highlight
                         return angleTween(start, shortestDelta(start, targetAngle(count, d.position)));
                     })
                     .on("end", function (d) { settle(this, d); })),
-            (exit) => exit.interrupt().call((sel) => sel.transition().duration(ROTATE_MS).ease(easeInOutCubic)
+            (exit) => exit.interrupt().classed(LEAVING, true).call((sel) => sel.transition().duration(ROTATE_MS).ease(easeInOutCubic)
                 .attr("opacity", 0)
                 .tween("angle", function () {
                     const start = readTransformAngle(this);
@@ -354,7 +379,7 @@ export function animateTechImages(group, allTechs, count, techImgRadius, game, i
         // before this one, still easing toward opacity 1) — superseding
         // via the new .transition() alone left a window where that dying
         // schedule's already-queued frame could still land afterward.
-        select(node).interrupt().style("transition", "none")
+        select(node).interrupt().classed(LEAVING, true).style("transition", "none")
             .transition().duration(ROTATE_MS).ease(easeInOutCubic)
             .attr("opacity", 0)
             .attrTween("transform", () => (t) => transformAtAngle(start + delta * t, techImgRadius))
@@ -369,7 +394,7 @@ export function animateTechImages(group, allTechs, count, techImgRadius, game, i
         const delta = oldNode ? shortestDelta(start, end) : forwardDelta(start, end);
 
         if (oldNode) {
-            select(oldNode).interrupt().style("transition", "none")
+            select(oldNode).interrupt().classed(LEAVING, true).style("transition", "none")
                 .transition().duration(ROTATE_MS).ease(easeInOutCubic)
                 .attr("opacity", 0)
                 .attrTween("transform", () => (t) => transformAtAngle(start + delta * t, techImgRadius))
@@ -491,7 +516,7 @@ function animateRingPart({ group, tag, data, keyOf, geomOf, apply, paintAttr, pa
     const arriving = new Set(data.map(keyOf));
     for (const [key, node] of resident) {
         if (arriving.has(key)) continue;
-        select(node).interrupt()
+        select(node).interrupt().classed(LEAVING, true)
             .transition().duration(ROTATE_MS).ease(easeInOutCubic)
             .style("opacity", 0)
             .remove();
@@ -506,7 +531,7 @@ function animateRingPart({ group, tag, data, keyOf, geomOf, apply, paintAttr, pa
             old.__ringGeom = to;
             // Rebind: the next switch keys off this datum, and so do the
             // hover handlers already attached to the node.
-            select(old).interrupt().datum(d).classed("fade", fadeOf(d, i))
+            select(old).interrupt().classed(LEAVING, false).datum(d).classed("fade", fadeOf(d, i))
                 .transition().duration(ROTATE_MS).ease(easeInOutCubic)
                 // Colour interpolates: the ordinal scale is keyed by step,
                 // so a survivor that changes ring changes hue too.
@@ -720,6 +745,10 @@ export function animateEraBackgrounds(group, eraRanges, color, outerRadius) {
         (exit) => exit.remove(),
     );
 
+    // Departures (fading or collapsing) are leaving; any other slot is
+    // resident, including one reclaimed from a previous switch's departure.
+    all.classed(LEAVING, (d) => d.kind === "exit");
+
     // No era in common, so no shared geometry to travel through: fade.
     const arriving = all.filter((d) => d.fade && d.kind !== "exit");
     if (!arriving.empty()) fadeInToResting(arriving, FADE_IN_MS);
@@ -820,7 +849,7 @@ export function animateEraLabels(group, eraRanges, color, radius, dimAll = false
     const arriving = new Set(eraRanges.map(eraJoinKey));
     for (const [key, node] of resident) {
         if (arriving.has(key)) continue;
-        select(node).interrupt()
+        select(node).interrupt().classed(LEAVING, true)
             .transition().duration(FADE_OUT_MS)
             .style("opacity", 0)
             .remove();
@@ -863,6 +892,7 @@ export function animateEraLabels(group, eraRanges, color, radius, dimAll = false
         // Survivor keeping its wording: move the one node, no fade.
         if (old && old.textContent === text) {
             select(old).interrupt()
+                .classed(LEAVING, false)
                 .classed("fade", dimAll)
                 .transition().duration(ROTATE_MS).ease(easeInOutCubic)
                 .attr("fill", color(i))
@@ -873,7 +903,7 @@ export function animateEraLabels(group, eraRanges, color, radius, dimAll = false
 
         // Renamed: the outgoing text leaves along the incoming one's path.
         if (old) {
-            select(old).interrupt()
+            select(old).interrupt().classed(LEAVING, true)
                 .transition().duration(ROTATE_MS).ease(easeInOutCubic)
                 .style("opacity", 0)
                 .tween("era-label-travel", travel(start, delta))

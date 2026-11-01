@@ -1007,6 +1007,109 @@ function detailsHintChecks() {
     window.scrollTo(0, 0);
 }
 
+/* ---------------------- hover during a switch ------------------------ */
+
+/**
+ * Hovering while a switch is animating triggers the static draw path in
+ * the middle of the animated one. The two have to agree on which node is
+ * which: during a switch, a continuing icon briefly has two nodes (old art
+ * leaving, new art arriving), and every layer has exiting nodes that are
+ * fading out and will remove themselves. A static join that binds to a
+ * leaving node keeps the one that's about to disappear.
+ *
+ * Inspected after the animation settles *without* another render, since
+ * the next static render repairs the damage — which is exactly why, in
+ * the app, hovering again made the missing icons come back.
+ */
+function hoverSwitchChecks() {
+    const hover = () => {
+        const techs = window.app.wheelData.allTechs;
+        window.app.selected = techs[Math.floor(techs.length / 3)];   // hover in...
+        window.__tick(80);
+        window.app.selected = null;                                  // ...and out
+    };
+    const cases = [];
+    for (const [from, to] of [["civ4", "civ5"], ["civ5", "civ7"], ["civ7", "civ4"]]) {
+        // null: no hover at all — the control, so a failure elsewhere is
+        // known to come from the hover and not the switch itself.
+        for (const at of [null, 60, 250, 500]) cases.push({ path: [from, to], at });
+    }
+    // Rapid switching back to where it started: the second switch reclaims
+    // nodes the first marked leaving (their ids return), which is the path
+    // that has to clear the mark again.
+    cases.push({ path: ["civ4", "civ5", "civ4"], at: 200 });
+    cases.push({ path: ["civ5", "civ7", "civ5"], at: 200 });
+
+    for (const { path, at } of cases) {
+        {
+            setupApp(path[0]);
+            window.app.game = path[0];
+            renderActiveView();
+            for (const game of path.slice(1)) {
+                switchTo(game, { animate: true });
+                if (at !== null) {
+                    window.__tick(at);
+                    hover();
+                }
+            }
+            window.__tick(1500);
+
+            const techs = window.app.wheelData.allTechs;
+            const wd = window.app.wheelData;
+            const label = `${path.join("→")}, ${at === null ? "no hover" : `hover at ${at}ms`}`;
+            const ids = (nodes) => nodes.map((n) => n.__data__ && n.__data__.id);
+            const sameIds = (nodes, want) => {
+                const got = ids(nodes);
+                const w = new Set(want);
+                return got.length === w.size && new Set(got).size === got.length &&
+                    got.every((id) => w.has(id));
+            };
+            const missing = (nodes, want) => {
+                const got = new Set(ids(nodes));
+                return want.filter((id) => !got.has(id));
+            };
+            const nameOf = new Map(techs.map((t) => [t.id, t.name]));
+            const visible = (n) => n.getAttribute("opacity") !== "0" && n.style.opacity !== "0";
+
+            const icons = [...document.querySelectorAll("#chart .tech-image")];
+            const labels = [...document.querySelectorAll("#chart g.tech-labels text")];
+            const spokes = [...document.querySelectorAll("#chart g.spokes .spoke-line")];
+            const techIds = techs.map((t) => t.id);
+            ok(`${label}: one icon per advance`, sameIds(icons, techIds) && icons.every(visible),
+                `${icons.length} icons for ${techIds.length}; missing ` +
+                (missing(icons, techIds).map((id) => nameOf.get(id)).slice(0, 5).join(", ") || "none"));
+            ok(`${label}: one label per advance, reading its own name`,
+                sameIds(labels, techIds) && labels.every(visible) &&
+                labels.every((n) => n.textContent === nameOf.get(n.__data__.id)),
+                `${labels.length} labels for ${techIds.length}; missing ` +
+                (missing(labels, techIds).map((id) => nameOf.get(id)).slice(0, 5).join(", ") || "none"));
+            ok(`${label}: labels settle where the static path puts them`,
+                labels.every((n) => n.getAttribute("transform") ===
+                    wheelTransform(techs.length, n.__data__.position, wd.labelRadius)),
+                `${labels.filter((n) => n.getAttribute("transform") !==
+                    wheelTransform(techs.length, n.__data__.position, wd.labelRadius)).length} misplaced`);
+            ok(`${label}: one spoke per advance`,
+                sameIds(spokes, wd.spokeData.map((d) => d.id)) && spokes.every(visible),
+                `${spokes.length} spokes for ${wd.spokeData.length}`);
+
+            const arcs = wd.prerequisites.filter((p) => Number.isFinite(p.step)).length;
+            const count = (sel) => document.querySelectorAll(`#chart ${sel}`).length;
+            ok(`${label}: arc layer complete`,
+                count("g.arcs path") === arcs && count("g.unlock-pins path") === arcs &&
+                count("g.unlock-squares rect") === wd.squareData.length &&
+                count("g.unlock-circles circle") === wd.circleData.length,
+                `${count("g.arcs path")}/${arcs} arcs, ${count("g.unlock-pins path")} pins, ` +
+                `${count("g.unlock-squares rect")}/${wd.squareData.length} squares, ` +
+                `${count("g.unlock-circles circle")}/${wd.circleData.length} circles`);
+            ok(`${label}: era layers complete`,
+                count("g.era-backgrounds path") === wd.eraRanges.length &&
+                count("g.era-labels text") >= wd.eraRanges.length,
+                `${count("g.era-backgrounds path")} wedges, ${count("g.era-labels text")} labels ` +
+                `for ${wd.eraRanges.length} eras`);
+        }
+    }
+}
+
 /* ------------------------------- driver ------------------------------ */
 
 // Wrapped in an async IIFE so a suite can await if it needs to. None do
@@ -1023,6 +1126,7 @@ function detailsHintChecks() {
         else if (location.hash.includes("layout")) layoutChecks();
         else if (location.hash.includes("arcs")) arcChecks();
         else if (location.hash.includes("tooltip")) tooltipChecks();
+        else if (location.hash.includes("hover-switch")) hoverSwitchChecks();
         else if (location.hash.includes("table")) tableChecks();
         else motionChecks();
     } catch (e) {

@@ -409,6 +409,13 @@ p {
   visibility: hidden;
 }
 
+/* A wheel element on its way out during a game switch (see LEAVING in
+ * animateWheelSwitch.js). Hovering one would select an advance from the
+ * game being switched away from. */
+#chart .leaving {
+  pointer-events: none;
+}
+
 /* Points to the tooltip when it's docked off screen (src/detailsHint.js
  * places it and says when). Pill-shaped so it reads as part of the same
  * chrome as the toolbar.

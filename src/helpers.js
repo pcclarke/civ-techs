@@ -64,3 +64,12 @@ export function wheelTransform(count, index, radius) {
   return `translate(${point.x}, ${point.y}) rotate(${rotate})`;
 }
 
+/**
+ * Restrict a static draw's join to resident nodes, skipping any a switch
+ * animation has marked `.leaving` (see LEAVING in animateWheelSwitch.js).
+ * A hover during a switch runs these draws mid-animation; joined against
+ * a node that's fading out ahead of its own removal, the static path kept
+ * that node and dropped its replacement, and the advance vanished when
+ * the fade finished. Leaving nodes are left alone to finish.
+ */
+export const RESIDENT = (selector) => `${selector}:not(.leaving)`;

@@ -3,7 +3,7 @@ import {
     arcKey, makeUnlockArc, markKey, PIN_REACH, ringRadius, unlockArcGeom,
 } from "./arcs";
 import {
-    calculatePointOnWheel, calculateSingleRadialLinePath, fadeCheck, wheelTransform,
+    calculatePointOnWheel, calculateSingleRadialLinePath, fadeCheck, RESIDENT, wheelTransform,
 } from "./helpers";
 import { ariaSelectedFor, onNodeFocus, onNodeKeyDown, tabIndexFor } from "./keyboardNav";
 import { hideTooltip, isSheetView, showTooltip } from "./tooltip";
@@ -33,7 +33,7 @@ export function drawArcs(element, data, color, arcSpace = ARC_SPACE) {
       // Keyed, so a static re-render after an animated one matches
       // elements up the same way animateArcs does.
       return rememberRing(element
-          .selectAll("path")
+          .selectAll(RESIDENT("path"))
           .data(data, arcKey)
           .join("path")
           .attr("d", (d) => unlockArc(d))
@@ -42,8 +42,11 @@ export function drawArcs(element, data, color, arcSpace = ARC_SPACE) {
 }
 
 export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_RADIUS, arcSpace = ARC_SPACE) {
-    return element.selectAll(".spoke-line")
-        .data(spokeData)
+    return element.selectAll(RESIDENT(".spoke-line"))
+        // Keyed for the same reason as the icons, and for the one in
+        // RESIDENT's comment: bound by index, a hover mid-switch rebound
+        // spokes that were fading out to other advances.
+        .data(spokeData, (d) => d.id)
         .join("path")
         .attr("class", "spoke-line")
         .attr("d", (d) => {
@@ -65,7 +68,7 @@ export function drawSpokes(element, spokeData, length, techImgRadius = TECH_IMG_
 /** Perpendicular "pin" tick marking the spoke an arc originates from. */
 export function drawUnlockPins(element, prerequisites, spokeCount, color, arcSpace, base = ARC_BASE) {
     return rememberRing(element
-        .selectAll("path")
+        .selectAll(RESIDENT("path"))
         .data(prerequisites, arcKey)
         .join("path")
         .attr("d", (d) => calculateSingleRadialLinePath(
@@ -81,7 +84,7 @@ export function drawUnlockPins(element, prerequisites, spokeCount, color, arcSpa
 /** Square mark on a spoke: the arc's origin is a hard requirement for it. */
 export function drawUnlockSquares(element, squareData, count, color, arcSpace, base = ARC_BASE) {
     return rememberRing(element
-        .selectAll("rect")
+        .selectAll(RESIDENT("rect"))
         .data(squareData, markKey)
         .join("rect")
         .attr("x", -2.5)
@@ -96,7 +99,7 @@ export function drawUnlockSquares(element, squareData, count, color, arcSpace, b
 /** Circle mark on a spoke: the arc's origin is an optional requirement for it. */
 export function drawUnlockCircles(element, circleData, count, color, arcSpace, base = ARC_BASE) {
     return rememberRing(element
-        .selectAll("circle")
+        .selectAll(RESIDENT("circle"))
         .data(circleData, markKey)
         .join("circle")
         .attr("r", 2.5)
@@ -108,7 +111,7 @@ export function drawUnlockCircles(element, circleData, count, color, arcSpace, b
 
 export function drawTechImages(element, allTechs, game, highlightedIds, folder = "technologies", techImgRadius = TECH_IMG_RADIUS) {
     return element
-        .selectAll(".tech-image")
+        .selectAll(RESIDENT(".tech-image"))
         // Keyed: keyboard focus lives on one of these nodes, so a hover
         // re-render must reuse it rather than rebind by position.
         .data(allTechs, (d) => d.id)
@@ -139,8 +142,10 @@ export function drawTechImages(element, allTechs, game, highlightedIds, folder =
 
 export function drawTechLabels(element, allTechs, highlightedIds, labelRadius) {
     return element
-        .selectAll("text")
-        .data(allTechs)
+        .selectAll(RESIDENT("text"))
+        // Keyed: bound by index, a hover mid-switch handed labels that
+        // were fading out to other advances (see RESIDENT).
+        .data(allTechs, (d) => d.id)
         .join("text")
         .classed("fade", (d) => fadeCheck(d, highlightedIds))
         .attr("transform", (_, i) => wheelTransform(allTechs.length, i, labelRadius))
