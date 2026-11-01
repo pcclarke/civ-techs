@@ -1285,6 +1285,15 @@ function shellChecks() {
 // than after it. (No top-level await: the bundle is iife.)
 (async () => {
     try {
+        // Environment first. run.mjs emulates a mouse; if that ever stops
+        // taking effect, every hover handler bails and the hover checks
+        // fail (or, for the ones expecting no effect, pass vacuously) for
+        // reasons that look like app bugs. Say so directly instead.
+        ok("harness: the browser reports a hovering, fine pointer",
+            matchMedia("(hover: hover)").matches && matchMedia("(pointer: fine)").matches,
+            `(hover: hover) ${matchMedia("(hover: hover)").matches}, ` +
+            `(pointer: fine) ${matchMedia("(pointer: fine)").matches}`);
+
         // Order matters: "#keyboard-table" contains "table".
         if (location.hash.includes("keyboard")) keyboardChecks();
         else if (location.hash.includes("layout")) layoutChecks();

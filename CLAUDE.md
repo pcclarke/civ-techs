@@ -46,6 +46,8 @@ CI is two workflows:
 - `.github/workflows/checks.yml` — `npm run build` + `npm run check:browser` on every pull request and on pushes to `master`. This is the one to require as a status check in branch protection.
 - `.github/workflows/deploy.yml` — a push to **`master`** runs the checks, builds, and publishes `dist/` to GitHub Pages. The checks run here as well as in `checks.yml` on purpose: pushing to master *is* publishing, so the live site shouldn't depend on branch protection having been configured and not bypassed. (`master` is the default branch and what ships; `gh-pages` is a legacy branch. A clone made before the default changed keeps a stale `origin/HEAD` — `git remote set-head origin --auto` re-syncs it.)
 
+`run.mjs` also pins the pointer environment with `--blink-settings` (a hovering, fine pointer — i.e. a mouse), and every run's first check asserts it took effect. Headless Chrome otherwise reports the machine's real input devices: a Mac's trackpad gives `(hover: hover)`, but the Linux CI runner has none and gives `(hover: none)`, which makes every hover handler bail (the tap guard in `drawTools.js`). That once failed a hover check on CI only — and let a "hovering an arc selects nothing" check pass there without testing anything.
+
 `CI=true` (set by Actions) makes `run.mjs` pass `--no-sandbox --disable-dev-shm-usage`, because headless Chrome's sandbox needs unprivileged user namespaces that CI images restrict. Set `CHROME_NO_SANDBOX=1` to get the same locally. Expect the checks' printed diagnostics to differ between a local macOS run and the Linux runner — no Helvetica or Arial there, so measured text is wider. That is exactly why the assertions are invariants rather than absolute numbers.
 
 ### Data scrapers

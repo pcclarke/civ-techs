@@ -59,6 +59,21 @@ const SANDBOX_FLAGS = (process.env.CI || process.env.CHROME_NO_SANDBOX)
     ? ["--no-sandbox", "--disable-dev-shm-usage"]
     : [];
 
+// Emulate a mouse: a hovering, fine pointer. Headless Chrome otherwise
+// reports whatever input devices the machine has, and that differs: on a
+// Mac it finds the trackpad and reports (hover: hover), but on the Linux CI
+// runner it finds none and reports (hover: none). Every hover handler in
+// the app bails unless (hover: hover) matches (the tap guard in
+// drawTools.js), so on CI hover-driven checks failed — and worse, checks
+// that hover expecting *nothing* to happen passed without testing
+// anything. Pinned here so every machine runs the same environment.
+// Blink's enums: hover 2 = hover (1 = none); pointer 4 = fine (2 = coarse,
+// 1 = none).
+const POINTER_FLAGS = [
+    "--blink-settings=primaryHoverType=2,availableHoverTypes=2," +
+        "primaryPointerType=4,availablePointerTypes=4",
+];
+
 const CHROME_CANDIDATES = [
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "/Applications/Chromium.app/Contents/MacOS/Chromium",
@@ -160,7 +175,7 @@ function buildPage() {
 function runOne(chrome, page, spec) {
     const args = [
         "--headless", "--disable-gpu", "--no-first-run", "--no-default-browser-check",
-        "--allow-file-access-from-files", ...SANDBOX_FLAGS, `--window-size=${spec.size}`,
+        "--allow-file-access-from-files", ...SANDBOX_FLAGS, ...POINTER_FLAGS, `--window-size=${spec.size}`,
         ...(spec.flags || []), "--dump-dom", `file://${page}#${spec.hash}`,
     ];
     const dom = run(chrome, args, { stdio: ["ignore", "pipe", "ignore"],
