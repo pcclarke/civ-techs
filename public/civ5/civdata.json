@@ -736,13 +736,15 @@
       "id": "PROJECT_MANHATTAN_PROJECT",
       "requires": [
         "TECH_ATOMIC_THEORY"
-      ]
+      ],
+      "name": "Manhattan Project"
     },
     {
       "id": "PROJECT_APOLLO_PROGRAM",
       "requires": [
         "TECH_ROCKETRY"
-      ]
+      ],
+      "name": "Apollo Program"
     }
   ],
   "build": [

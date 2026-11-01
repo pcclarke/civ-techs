@@ -1,13 +1,13 @@
 """
 Civilization 5 data scraper.
 
-Reads Firaxis XML from data_scrapers/civ5/{base,gnk,bnw}/XML/ and emits
+Reads Firaxis XML from data_scrapers/civ5/data/{base,gnk,bnw}/XML/ and emits
 civdata.json in the shape consumed by src/initWheelData.js:
 
     {
       "technologies": [ { "id", "name", "cost", "era", "requires"? }, ... ],
       "promotions":   [ { "id", "name", "requires" }, ... ],
-      "projects":     [ { "id", "requires" }, ... ],
+      "projects":     [ { "id", "name", "requires" }, ... ],
       "build":        [ { "id", "name", "requires" }, ... ],
       "buildings":    [ { "id", "requires", "CIVILIZATION_*": {id, name} }, ... ],
       "resources":    [ { "id", "name", "requires" }, ... ],
@@ -26,7 +26,7 @@ Inherited_Expansion2 overrides + Expansion2 additions; GnK reads base +
 Expansion overrides). The package layout under data_scrapers/civ5/ tracks
 the shape Firaxis ships in the SDK.
 
-Layout of one package, e.g. base/:
+Layout of one package, e.g. data/base/:
     base/XML/Buildings/        CIV5Buildings.xml, CIV5BuildingClasses.xml, ...
     base/XML/Civilizations/    CIV5Civilizations.xml
     base/XML/GameInfo/         CIV5Projects.xml
@@ -54,6 +54,9 @@ REPO_ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 # Game data and icons live under public/ so Vite copies them verbatim
 # into the build output; the paths below are relative to that.
 PUBLIC_DIR = os.path.join(REPO_ROOT, 'public')
+# Raw Firaxis XML, one package per subdirectory. Gitignored (see the repo
+# .gitignore), so it only exists on a machine that has the game assets.
+DATA_DIR = os.path.join(HERE, 'data')
 
 # Per-variant config:
 #   text_dir: relative path under <package>/XML/ that holds the LOC files
@@ -84,7 +87,7 @@ DATA_KEYS = [
 
 def get_root(pkg: str, subdir: str, filename: str) -> Optional[ET.Element]:
     """Return the root element of <pkg>/XML/<subdir>/<filename>.xml, or None."""
-    path = os.path.join(HERE, pkg, 'XML', subdir, f'{filename}.xml')
+    path = os.path.join(DATA_DIR, pkg, 'XML', subdir, f'{filename}.xml')
     try:
         return ET.parse(path).getroot()
     except FileNotFoundError:
@@ -103,7 +106,7 @@ def map_text(pkg: str, text_dir: str, filename: str) -> Dict[str, str]:
             <Row Tag="TXT_KEY_TECH_AGRICULTURE"><Text>Agriculture</Text></Row>
             ...
     """
-    path = os.path.join(HERE, pkg, 'XML', text_dir, f'{filename}.xml')
+    path = os.path.join(DATA_DIR, pkg, 'XML', text_dir, f'{filename}.xml')
     out: Dict[str, str] = {}
     try:
         root = ET.parse(path).getroot()
@@ -189,10 +192,10 @@ def prep_promotions(pkg: str, text_maps: List[Dict[str, str]]) -> List[dict]:
     return out
 
 
-def prep_projects(pkg: str) -> List[dict]:
-    """Wonders / national projects that gate on a tech. Names live elsewhere
-    in the data files and aren't worth threading text maps through for —
-    the wheel's tooltip uses the id as the name when no name is set."""
+def prep_projects(pkg: str, text_maps: List[Dict[str, str]]) -> List[dict]:
+    """Wonders / national projects that gate on a tech. The Description is a
+    LOC tag (TXT_KEY_PROJECT_*) that lives in the Objects text family —
+    resolve it before storing, or the tooltip shows the raw PROJECT_* id."""
     root = get_root(pkg, 'GameInfo', 'CIV5Projects')
     if root is None:
         return []
@@ -200,9 +203,11 @@ def prep_projects(pkg: str) -> List[dict]:
     for proj in root.find('Projects'):
         prereq = proj.find('TechPrereq')
         if prereq is not None:
+            pid = proj.find('Type').text
             out.append({
-                'id':       proj.find('Type').text,
+                'id':       pid,
                 'requires': [prereq.text],
+                'name':     lookup(text_maps, proj.find('Description').text) or pid,
             })
     return out
 
@@ -451,7 +456,7 @@ def build_civdata(game: str) -> dict:
     tech_maps = [tech_text_bnw, tech_text_gnk, tech_text_base]
     civ_data['technologies'] = prep_technologies(game, tech_maps)
     civ_data['promotions']   = prep_promotions(game, [unit_text_bnw, unit_text_inh, unit_text_gnk, unit_text_base])
-    civ_data['projects']     = prep_projects('base')
+    civ_data['projects']     = prep_projects('base', [objects_text_bnw, objects_text_base])
     civ_data['resources']    = prep_resources(game, [objects_text_bnw, objects_text_base])
 
     # Worker builds, buildings, units, civilizations layer differently per
