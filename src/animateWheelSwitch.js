@@ -562,12 +562,6 @@ export function animateArcs(group, prerequisites, color, arcSpace, dimAll = fals
         geomOf: (d) => unlockArcGeom(d, arcSpace),
         apply: (node, g) => node.setAttribute("d", at(g)),
         paintAttr: "fill", paintOf: (d) => color(d.step),
-        // Arcs share the node handlers, so hovering an arc behaves like
-        // hovering its origin advance — same as the static path.
-        shape: (sel) => sel
-            .on("mouseover", onNodeHover)
-            .on("mouseleave", onNodeLeave)
-            .on("click", onNodeClick),
         fadeOf: () => dimAll,
     });
 }

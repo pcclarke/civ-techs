@@ -31,8 +31,8 @@ Object.defineProperty(window.app, 'selected', {
 
 window.app.svg = svgInit();
 
-// Releasing a pin: clicking empty wheel space (node/arc clicks stop
-// propagation before reaching the SVG), the table's lane gutter, or the
+// Releasing a pin: clicking empty wheel space (icon and label clicks stop
+// propagation before reaching the SVG; arcs take no pointer events), the table's lane gutter, or the
 // tooltip's close button. Escape does the same from the keyboard — see
 // keyboardNav.js. releasePin itself lives in drawTools.js so both paths
 // share one implementation.

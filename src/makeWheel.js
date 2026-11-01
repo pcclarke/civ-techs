@@ -9,9 +9,6 @@ import {
     drawUnlockCircles,
     drawUnlockPins,
     drawUnlockSquares,
-    onNodeClick,
-    onNodeHover,
-    onNodeLeave,
 } from "./drawTools";
 import { drawEraBackgrounds, drawEraLabels } from "./drawEras";
 import { setupHighlights } from "./setupHighlights";
@@ -154,13 +151,10 @@ export async function renderWheel({ animate = false } = {}) {
   drawTechImages(svg.techImages, allTechs, game, highlightedIds, iconFolder, techImgRadius);
   drawTechLabels(svg.techLabels, allTechs, highlightedIds, labelRadius);
 
-  // Arcs share the node handlers so hovering or clicking an arc behaves
-  // exactly like hovering or clicking its origin tech.
+  // Arcs are decoration, not targets: only icons and labels respond to
+  // the pointer (see `.arcs path` in techs.css for why).
   drawArcs(svg.arcs, prerequisites, color, arcSpace)
-      .classed("fade", Boolean(selected))
-      .on("mouseover", onNodeHover)
-      .on("mouseleave", onNodeLeave)
-      .on("click", onNodeClick);
+      .classed("fade", Boolean(selected));
 
   // Always join the highlight arcs — with an empty array when nothing is
   // selected — so the previous hover's paths exit-clear. Drawing this layer

@@ -447,6 +447,21 @@ function arcChecks() {
 
     note.push(`arcs: civ4 ${WHEEL.civ4.prerequisites.length} -> civ5 ${want.length}, ` +
         `${survivors} shared ids`);
+
+    // Arcs aren't pointer targets: no handlers from either draw path, and
+    // no hit-testing, so a click on one reaches the SVG's release-pin
+    // handler. `__on` is where d3-selection keeps a node's listeners.
+    const inert = (nodes) => nodes.filter(
+        (n) => n.__on || getComputedStyle(n).pointerEvents !== "none");
+    ok("arcs drawn by the switch animation take no pointer events",
+        inert(arcEls()).length === 0, `${inert(arcEls()).length} of ${arcEls().length} live`);
+    renderActiveView();
+    ok("arcs drawn by the static path take no pointer events",
+        inert(arcEls()).length === 0, `${inert(arcEls()).length} of ${arcEls().length} live`);
+    window.app.selected = null;
+    arcEls()[0].dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+    ok("hovering an arc selects nothing", !window.app.selected,
+        `(hover: hover) ${matchMedia("(hover: hover)").matches}`);
 }
 
 /* ------------------------- era label checks -------------------------- */

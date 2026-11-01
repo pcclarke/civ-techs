@@ -335,10 +335,16 @@ p {
   transition: opacity 0.5s ease;
 }
 
-/* Arcs share the node hover/click handlers, so they should invite the
- * same interaction. */
+/* Arcs used to share the advance hover/click handlers, standing in for
+ * their origin advance. Removed: at 1.5px wide an arc is too thin to stay
+ * on, so the pointer slipped on and off it and the whole wheel flickered
+ * between highlighted and not — and nobody aimed for an arc on purpose.
+ * Only icons and labels are targets now. pointer-events:none rather than
+ * just no handlers, so a click on an arc reaches the SVG's release-pin
+ * handler (main.js) like any other empty space, instead of the arc's
+ * fill swallowing it. */
 .arcs path {
-  cursor: pointer;
+  pointer-events: none;
 }
 
 .fade {
