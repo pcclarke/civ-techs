@@ -584,6 +584,9 @@ function tableChecks() {
     showTooltip(window.app.wheelData.allTechs[0]);
     window.scrollBy(0, 200);
     const sheet = tip.getBoundingClientRect();
+    ok("no details hint in the sheet view",
+        !document.querySelector("#details-hint").classList.contains("shown") &&
+        getComputedStyle(document.querySelector("#details-hint")).display === "none");
     ok("bottom sheet stays docked to the viewport while scrolling",
         getComputedStyle(tip).position === "fixed" &&
         Math.abs(sheet.bottom - window.innerHeight) < 1,
@@ -788,6 +791,219 @@ function tooltipChecks() {
     ok("a hidden tooltip parks at the top-left",
         tip.style.left === "" && tip.style.top === "",
         `left=${tip.style.left || "''"} top=${tip.style.top || "''"}`);
+    window.scrollTo(0, 0);
+
+    tooltipCornerChecks();
+    detailsHintChecks();
+}
+
+/**
+ * Viewport points along the outline of every element the wheel draws
+ * undimmed for the current selection, read from the rendered DOM through
+ * each element's own screen CTM. Deliberately independent of tooltip.js's
+ * geometry model (which works from wheelData): this is what's on screen.
+ * No clearance is added, so "covers" here means overlapping actual ink.
+ */
+function litInkPoints() {
+    const pts = [];
+    const push = (el, x, y) => {
+        const m = el.getScreenCTM();
+        pts.push({ x: m.a * x + m.c * y + m.e, y: m.b * x + m.d * y + m.f });
+    };
+    const boxes = document.querySelectorAll(
+        "#chart .tech-image:not(.fade), #chart g.tech-labels text:not(.fade), " +
+        "#chart g.unlock-squares rect:not(.fade), #chart g.unlock-circles circle:not(.fade)");
+    for (const el of boxes) {
+        const b = el.getBBox();
+        for (let x = b.x; x <= b.x + b.width; x += 2) {
+            for (let y = b.y; y <= b.y + b.height; y += 2) push(el, x, y);
+        }
+    }
+    const paths = document.querySelectorAll(
+        "#chart g.selected-spokes path, #chart g.selected-arcs path, " +
+        "#chart g.unlock-pins path:not(.fade)");
+    for (const el of paths) {
+        const len = el.getTotalLength();
+        for (let l = 0; l <= len; l += 2) {
+            const p = el.getPointAtLength(l);
+            push(el, p.x, p.y);
+        }
+    }
+    return pts;
+}
+
+const covers = (rect, pts) => pts.some((p) =>
+    p.x > rect.left && p.x < rect.right && p.y > rect.top && p.y < rect.bottom);
+
+/** The four rects tooltip.js can dock to, rebuilt from the SVG's rect the
+ *  way its CORNERS table does (10px margin, clamped inside the SVG). */
+function cornerRects(w, h) {
+    const r = document.querySelector("#chart svg").getBoundingClientRect();
+    const at = (left, top) => {
+        left = Math.max(r.left, Math.min(r.right - w, left));
+        top = Math.max(r.top, Math.min(r.bottom - h, top));
+        return { left, top, right: left + w, bottom: top + h };
+    };
+    return [
+        at(r.left + 10, r.top + 10), at(r.right - 10 - w, r.top + 10),
+        at(r.right - 10 - w, r.bottom - 10 - h), at(r.left + 10, r.bottom - 10 - h),
+    ];
+}
+
+/**
+ * Corner choice, checked over every advance of several wheels in the two
+ * scroll positions it exists for: the wheel's top on screen with its
+ * bottom below the fold, and the mirror image.
+ */
+function tooltipCornerChecks() {
+    const tip = document.querySelector("#tooltip");
+    // Looked up live: setupApp replaces the SVG, and a reference taken
+    // before it measures as a detached 0×0 box.
+    const svgRect = () => document.querySelector("#chart svg").getBoundingClientRect();
+    const H = document.documentElement.clientHeight;
+    const onScreen = (c) => c.top >= 0 && c.bottom <= H;
+    // tooltip.js keeps a clearance margin around lit ink that this doesn't,
+    // so a corner that only clears the ink by less than that doesn't count
+    // as one it should have used.
+    const inflate = (c, m) => ({
+        left: c.left - m, top: c.top - m, right: c.right + m, bottom: c.bottom + m });
+
+    const scenarios = [
+        // The svg's top a quarter of the way down the window: its bottom
+        // is well below the fold at this viewport (svg ≈ window height).
+        { label: "bottom below the fold", top: () => H * 0.25, cut: true },
+        { label: "top above the fold", top: () => H * 0.75 - svgRect().height, cut: true },
+        // Fits at this viewport (svg ≈ 870px, window ≈ 910px). Here the
+        // choice differs from the old angle-only rule only where that
+        // rule's pick covered lit ink.
+        { label: "whole wheel on screen", top: () => (H - svgRect().height) / 2, cut: false },
+    ];
+
+    // The page ends shortly below the wheel, so without room to scroll
+    // into, the browser clamps the "top above the fold" position until
+    // the whole wheel is back on screen — and that scenario silently
+    // checks nothing. Each scenario asserts it was actually reached.
+    document.body.style.paddingBottom = `${H}px`;
+
+    for (const game of ["civ4", "civ5", "civ7"]) {
+        setupApp(game);
+        renderActiveView();
+        for (const sc of scenarios) {
+            window.scrollTo(0, 0);
+            window.scrollTo(0, svgRect().top - sc.top());
+            const sr = svgRect();
+            const reached = Math.abs(sr.top - sc.top()) < 1 &&
+                (sr.top < 0 || sr.bottom > H) === sc.cut;
+            ok(`${game}, ${sc.label}: scenario reached`, reached,
+                `svg ${sr.top.toFixed(0)}..${sr.bottom.toFixed(0)}, window ${H}`);
+            if (!reached) continue;
+
+            const covered = [], hidden = [];
+            let shown = 0, total = 0, inked = 0;
+            for (const t of window.app.wheelData.allTechs) {
+                window.app.selected = t;            // re-renders, as hover does
+                showTooltip(t);
+                const r = tip.getBoundingClientRect();
+                const ink = litInkPoints();
+                const corners = cornerRects(r.width, r.height);
+                total++;
+                if (onScreen(r)) shown++;
+                if (covers(r, ink)) inked++;
+                // Never on top of the selection when some corner avoids it.
+                if (corners.some((c) => !covers(c, ink)) && covers(r, ink)) covered.push(t.name);
+                // Never off screen when a corner is clear and on screen.
+                if (!onScreen(r) && corners.some((c) => onScreen(c) && !covers(inflate(c, 16), ink))) {
+                    hidden.push(t.name);
+                }
+            }
+            window.app.selected = null;
+            hideTooltip();
+
+            ok(`${game}, ${sc.label}: never covers lit ink when a corner avoids it`,
+                covered.length === 0, covered.slice(0, 5).join(", ") || `${total} advances`);
+            ok(`${game}, ${sc.label}: never off screen when a clear corner is on screen`,
+                hidden.length === 0, hidden.slice(0, 5).join(", ") || `${total} advances`);
+            note.push(`${game}, ${sc.label}: ${shown}/${total} tooltips fully on screen, ` +
+                `${inked} over lit ink`);
+        }
+    }
+    document.body.style.paddingBottom = "";
+    window.scrollTo(0, 0);
+}
+
+/**
+ * The "Details above/below" hint: shown exactly when the wheel's tooltip
+ * is mostly off screen, informational until pinned, then a button that
+ * scrolls the tooltip into view and hands focus to its close button.
+ */
+function detailsHintChecks() {
+    const tip = document.querySelector("#tooltip");
+    const hint = document.querySelector("#details-hint");
+    const H = document.documentElement.clientHeight;
+    const svgRect = () => document.querySelector("#chart svg").getBoundingClientRect();
+    const seen = (r) => Math.max(0, Math.min(r.bottom, H) - Math.max(r.top, 0)) / r.height;
+
+    setupApp("civ4");
+    renderActiveView();
+    document.body.style.paddingBottom = `${H}px`;  // room to scroll the top off
+    window.scrollTo(0, 0);
+    window.scrollTo(0, svgRect().top - (H * 0.75 - svgRect().height));
+
+    const techs = window.app.wheelData.allTechs;
+    const show = (t) => { window.app.selected = t; showTooltip(t); return tip.getBoundingClientRect(); };
+    const off = techs.find((t) => seen(show(t)) < 0.5);
+    const on = techs.find((t) => seen(show(t)) === 1);
+    ok("hint: some tooltip is mostly off screen in this position", Boolean(off && on),
+        `off: ${off && off.name}, on: ${on && on.name}`);
+    if (!off || !on) return;
+
+    show(on);
+    ok("hint: hidden while the tooltip is on screen", !hint.classList.contains("shown"), on.name);
+
+    const r = show(off);
+    const h = hint.getBoundingClientRect();
+    const above = (r.top + r.bottom) / 2 < H / 2;
+    ok("hint: shown while the tooltip is mostly off screen", hint.classList.contains("shown"),
+        `${off.name}: tooltip ${r.top.toFixed(0)}..${r.bottom.toFixed(0)}, window ${H}`);
+    ok("hint: sits inside the viewport", h.top >= 0 && h.bottom <= H && h.left >= 0 &&
+        h.right <= document.documentElement.clientWidth,
+        `${h.left.toFixed(0)},${h.top.toFixed(0)} ${h.width.toFixed(0)}×${h.height.toFixed(0)}`);
+    ok("hint: points the way the tooltip went",
+        hint.textContent.includes(above ? "above" : "below"), hint.textContent);
+    ok("hint: a preview is informational, not a control",
+        hint.disabled && hint.getAttribute("aria-hidden") === "true" &&
+        hint.textContent.includes("to pin"), hint.textContent);
+
+    window.app.pinned = off;
+    show(off);
+    ok("hint: a pin makes it a button",
+        !hint.disabled && !hint.hasAttribute("aria-hidden") && hint.classList.contains("now") &&
+        !hint.textContent.includes("to pin"), hint.textContent);
+
+    // Smooth scrolling runs on the compositor, outside the stubbed clock,
+    // so the click's scroll is made instant to observe where it lands.
+    const scrollBy = window.scrollBy;
+    window.scrollBy = (o) => scrollBy.call(window, { top: o.top, behavior: "instant" });
+    hint.focus();
+    hint.click();
+    window.scrollBy = scrollBy;
+    const after = tip.getBoundingClientRect();
+    ok("hint: clicking scrolls the whole tooltip into view", after.top >= 0 && after.bottom <= H,
+        `tooltip ${after.top.toFixed(0)}..${after.bottom.toFixed(0)}, window ${H}`);
+    ok("hint: focus moves on to the tooltip's close button",
+        document.activeElement === document.querySelector("#tipCloseButton"),
+        document.activeElement && (document.activeElement.id || document.activeElement.tagName));
+    window.dispatchEvent(new Event("scroll"));
+    window.__tick(16);
+    ok("hint: gone once the tooltip is on screen", !hint.classList.contains("shown"));
+
+    show(off);  // re-placed for this scroll position, which may move it
+    hideTooltip();
+    ok("hint: hidden with the tooltip", !hint.classList.contains("shown"));
+
+    window.app.pinned = null;
+    window.app.selected = null;
+    document.body.style.paddingBottom = "";
     window.scrollTo(0, 0);
 }
 

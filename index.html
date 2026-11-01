@@ -117,6 +117,13 @@
                  aria-hidden, because everything they encode is also
                  spelled out in words in the tooltip below. -->
             <div id="chart" role="listbox" aria-label="Advances (wheel)"></div>
+            <!-- Points to the wheel's tooltip when it's docked off screen
+                 (it never covers the selection just to stay visible).
+                 Right after #chart on purpose: once an advance is pinned
+                 this is a button, and the next Tab stop after the wheel.
+                 Disabled and aria-hidden while it's only a preview hint.
+                 See src/detailsHint.js. -->
+            <button id="details-hint" type="button" disabled aria-hidden="true"></button>
             <div id="table" role="listbox" aria-label="Advances (list)"></div>
             <!-- Names the era you are currently scrolled into. A label at
                  the era boundary answers "where does it change?", but the

@@ -409,6 +409,52 @@ p {
   visibility: hidden;
 }
 
+/* Points to the tooltip when it's docked off screen (src/detailsHint.js
+ * places it and says when). Pill-shaped so it reads as part of the same
+ * chrome as the toolbar.
+ *
+ * Hidden with visibility rather than display, so its size can be measured
+ * for placement before it shows — and so that hiding it also takes it out
+ * of the tab order. A preview fades in after a delay: the pointer crossing
+ * the wheel shows and hides a tooltip per advance, and without the delay
+ * the chip would flicker along with it. A pin (.now) shows it at once.
+ * Hiding is always immediate. */
+#details-hint {
+  position: fixed;
+  z-index: 10;
+  padding: 6px 16px;
+  border: var(--ui-control-border);
+  border-radius: var(--ui-pill-radius);
+  background: var(--ui-control-bg);
+  color: var(--ui-control-ink);
+  font-family: var(--ui-font-body);
+  font-size: 13px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#details-hint.shown {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 150ms ease 300ms, visibility 0s 300ms;
+}
+
+#details-hint.shown.now {
+  transition-delay: 0s;
+}
+
+#details-hint.shown:not(:disabled) {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+#details-hint:not(:disabled):hover {
+  border-color: var(--ui-accent);
+}
+
 /* The close button only exists for the pinned state: hover previews
  * dismiss themselves on mouseleave, but a pinned tooltip needs an
  * explicit way out. pointer-events:auto punches through the tooltip's
@@ -831,6 +877,8 @@ p {
 @media (max-width: 699px) {
   #chart { display: none; }
   #table { display: block; }
+  /* The sheet is always on screen, so there's never anything to point at. */
+  #details-hint { display: none; }
 
   /* The bar is compact from the moment the page loads here — main.js
    * keeps the class on below this breakpoint — so these rules describe

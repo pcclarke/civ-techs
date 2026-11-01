@@ -1,8 +1,12 @@
 import { select } from "d3-selection";
 
+import { ringRadius, unlockArcGeom } from "./arcs";
+import { TECH_IMG_WIDTH } from "./constants";
+import { updateDetailsHint, visibleBand, visibleFraction } from "./detailsHint";
 import { eraDisplayName } from "./eraData";
 import { calculatePointOnWheel } from "./helpers";
 import getHighlightedTechs from "./createSelectedUnlocks";
+import { setupHighlights } from "./setupHighlights";
 
 /**
  * Hover tooltip for tech / civic nodes. Reuses the markup originally
@@ -17,10 +21,12 @@ import getHighlightedTechs from "./createSelectedUnlocks";
  * arc running far around the rim — e.g. Iron Working in Civilization IV,
  * whose prerequisite sits many positions away. The corner is chosen from
  * the whole lit selection (the hovered node plus everything its arcs
- * touch), not just the node itself — see pickCorner. (An experiment
+ * touch), not just the node itself — see chooseCorner. (An experiment
  * docking the tooltip in the wheel's hub was rejected for the same reason:
  * it sat on top of the inner arcs, including the selection's own highlight
- * chain.)
+ * chain.) Within that, chooseCorner prefers a corner that's on screen,
+ * but only among corners that cover nothing lit. When it has to go off
+ * screen, detailsHint.js says where it went.
  */
 
 const SELECTORS = {
@@ -170,6 +176,7 @@ export function hideTooltip() {
     if (!tipBox.empty()) resetSheetStyles(tipBox.node());
     shownTech = null;
     releaseSheetSpace();
+    updateDetailsHint();
 }
 
 
@@ -472,31 +479,187 @@ function litPositions(tech, allTechs) {
 }
 
 /**
- * Pick whichever corner is farthest, in angle, from the nearest lit
- * position — the corner the tooltip can extend inward from with the least
- * chance of its edge crossing a highlighted spoke or label.
+ * How close the angle-nearest lit position comes to each corner, in
+ * radians. Larger is safer: the box extends inward from its corner, so the
+ * farther the selection is from that corner, the less chance of its edge
+ * crossing a highlighted spoke or label.
  */
-function pickCorner(tech, allTechs) {
+function cornerGaps(tech, allTechs) {
     const count = allTechs.length;
     const litAngles = [...litPositions(tech, allTechs)]
         .map((pos) => calculatePointOnWheel(count, pos, 1).angle);
+    return new Map(CORNERS.map((corner) => [
+        corner,
+        Math.min(...litAngles.map((a) => angleGap(corner.angle, a))),
+    ]));
+}
 
+/**
+ * The corner farthest, in angle, from the nearest lit position. This was
+ * the whole of the placement rule before chooseCorner; it's now the
+ * fallback for when no corner is clear, and that choice is deliberate:
+ * when every corner would cover part of the selection, the tooltip goes
+ * where it covers the least likely part, even if that's off screen.
+ * Covering the thing being explained is worse than making the reader
+ * scroll to the explanation.
+ */
+function pickCorner(gaps) {
     let best = CORNERS[0];
-    let bestGap = -Infinity;
     for (const corner of CORNERS) {
-        const gap = Math.min(...litAngles.map((a) => angleGap(corner.angle, a)));
-        if (gap > bestGap) {
-            bestGap = gap;
-            best = corner;
-        }
+        if (gaps.get(corner) > gaps.get(best)) best = corner;
     }
     return best;
 }
 
+/** Clearance a docked tooltip keeps from each lit feature, in wheel units
+ *  (the SVG's viewBox space). Icons are TECH_IMG_WIDTH square; a label is
+ *  roughly a line box either side of its radial baseline; spokes and arcs
+ *  are hairlines. */
+const CLEAR_ICON = TECH_IMG_WIDTH / 2 + 2;
+const CLEAR_LABEL = 11;
+const CLEAR_LINE = 3;
+/** Spacing between samples along a lit feature, in wheel units. Must stay
+ *  under twice the smallest clearance, or a box edge could slip between
+ *  two neighbouring samples of a hairline. */
+const SAMPLE_STEP = 4;
+
+let measureCtx = null;
+
+/** Label widths, measured on a canvas at the label group's font, the way
+ *  makeTable measures its names. Not read off the <text> nodes: during a
+ *  switch animation they're mid-crossfade, and a carried pin is placed
+ *  the moment that animation starts. */
+function labelWidth(name) {
+    const group = document.querySelector("#chart g.tech-labels");
+    if (!group) return 0;
+    if (!measureCtx) measureCtx = document.createElement("canvas").getContext("2d");
+    const cs = getComputedStyle(group);
+    measureCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    return measureCtx.measureText(name).width;
+}
+
+/**
+ * Points along everything the wheel draws undimmed for the current
+ * selection, each with the clearance it needs, in wheel coordinates
+ * (origin at the wheel's centre). Taken from the same setupHighlights
+ * call makeWheel draws from, so this is the lit set by construction.
+ *
+ * Computed from wheelData rather than read off the DOM, for two reasons.
+ * A carried pin is placed while the switch animation has every element
+ * at its *old* position. And an arc's bounding box is useless here: a
+ * quarter-circle arc's box is a whole quadrant, while the arc itself is a
+ * hairline along one edge of it.
+ */
+function litSamples(wheelData) {
+    const { allTechs, labelRadius, techImgRadius, arcSpace } = wheelData;
+    const count = allTechs.length;
+    const { highlightedIds, selectionPrerequisites, selectedSpokes } = setupHighlights(allTechs);
+    const lit = new Set(highlightedIds);
+    if (window.app.selected) lit.add(window.app.selected.id);
+
+    const samples = [];
+    const radial = (pos, from, to, clear) => {
+        const n = Math.max(0, Math.ceil((to - from) / SAMPLE_STEP));
+        for (let k = 0; k <= n; k++) {
+            const p = calculatePointOnWheel(count, pos, n ? from + (to - from) * k / n : from);
+            samples.push({ x: p.x, y: p.y, clear });
+        }
+    };
+
+    allTechs.forEach((t, i) => {
+        if (!lit.has(t.id)) return;
+        radial(i, techImgRadius, techImgRadius, CLEAR_ICON);
+        // Labels read outward from labelRadius on both halves of the wheel
+        // (the far half is flipped and end-anchored — see wheelTransform).
+        radial(i, labelRadius, labelRadius + labelWidth(t.name), CLEAR_LABEL);
+    });
+
+    for (const spoke of selectedSpokes) {
+        // Same inner radius rule as drawSpokes.
+        const inner = spoke.step >= 0 ? ringRadius(spoke.step, arcSpace) : 0;
+        radial(spoke.position, inner, techImgRadius, CLEAR_LINE);
+    }
+
+    for (const d of selectionPrerequisites) {
+        if (d.step === undefined) continue;
+        const { startAngle, endAngle, radius } = unlockArcGeom(d, arcSpace);
+        const n = Math.max(1, Math.ceil(Math.abs(endAngle - startAngle) * radius / SAMPLE_STEP));
+        for (let k = 0; k <= n; k++) {
+            // d3-shape measures from 12 o'clock; calculatePointOnWheel's
+            // angles (and Math.cos/sin) from 3 o'clock. Same direction.
+            const a = startAngle + (endAngle - startAngle) * k / n - Math.PI / 2;
+            samples.push({ x: Math.cos(a) * radius, y: Math.sin(a) * radius, clear: CLEAR_LINE });
+        }
+    }
+    return samples;
+}
+
+/** Where `corner` puts a tipW × tipH box: anchored, then clamped inside
+ *  the SVG as a safety net for a box too big for the space. Viewport
+ *  coordinates. */
+function cornerRect(corner, svgRect, tipW, tipH) {
+    let { left, top } = corner.anchor(svgRect, tipW, tipH);
+    left = clamp(left, svgRect.left, svgRect.right - tipW);
+    top = clamp(top, svgRect.top, svgRect.bottom - tipH);
+    return { left, top, right: left + tipW, bottom: top + tipH };
+}
+
+/**
+ * Choose the corner to dock to, as a placed rect.
+ *
+ * Corners are filtered on what the box would actually cover: one is clear
+ * when its rect, at its real size and position, touches none of the lit
+ * samples. Among the clear ones, the most visible wins — that's what lets
+ * a selection at the top of a wheel whose bottom is below the fold get its
+ * tooltip in a top corner, where the old angle-only rule always sent it
+ * to the bottom and out of sight. The angle gap breaks ties, so on a fully
+ * visible wheel the choice matches the old rule whenever that rule's pick
+ * was clear.
+ *
+ * Visibility never overrides clearance: if no corner is clear, it's
+ * pickCorner's choice, on screen or not (see pickCorner for why).
+ */
+function chooseCorner(tech, allTechs, svgRect, tipW, tipH) {
+    const gaps = cornerGaps(tech, allTechs);
+    const placed = (corner) => cornerRect(corner, svgRect, tipW, tipH);
+
+    const wheel = document.querySelector("#chart g.wheel");
+    const ctm = wheel && wheel.getScreenCTM();
+    if (!ctm || !window.app.wheelData) return placed(pickCorner(gaps));
+
+    // Wheel coordinates -> viewport pixels. The wheel group's transform is
+    // a fixed translate (svgInit), never animated, so this is exact even
+    // mid-switch. Uniform scale: the viewBox is square and preserved.
+    const scale = Math.hypot(ctm.a, ctm.b);
+    const points = litSamples(window.app.wheelData).map((p) => ({
+        x: ctm.a * p.x + ctm.c * p.y + ctm.e,
+        y: ctm.b * p.x + ctm.d * p.y + ctm.f,
+        clear: p.clear * scale,
+    }));
+    const isClear = (r) => points.every((p) =>
+        p.x < r.left - p.clear || p.x > r.right + p.clear ||
+        p.y < r.top - p.clear || p.y > r.bottom + p.clear);
+
+    const band = visibleBand();
+    const clear = CORNERS
+        .map((corner) => ({ corner, rect: placed(corner) }))
+        .filter((c) => isClear(c.rect))
+        .map((c) => ({ ...c, seen: visibleFraction(c.rect, band) }));
+    if (clear.length === 0) return placed(pickCorner(gaps));
+
+    // Visibility compared to the nearest percent, so a sliver of
+    // difference between two mostly-hidden corners doesn't outrank the
+    // angle gap.
+    const seen = (c) => Math.round(c.seen * 100);
+    clear.sort((a, b) => seen(b) - seen(a) || gaps.get(b.corner) - gaps.get(a.corner));
+    return clear[0].rect;
+}
+
 /**
  * Dock the tooltip to whichever SVG corner clears the current selection
- * (see pickCorner), then clamp inside the SVG bounding box as a safety net
- * for a tooltip too big for the space it was docked into.
+ * and is most visible (see chooseCorner), clamped inside the SVG bounding
+ * box as a safety net for a tooltip too big for the space it was docked
+ * into.
  *
  * The box is absolutely positioned in document coordinates (see #tooltip
  * in techs.css), so the viewport rect is shifted by the scroll offset.
@@ -516,6 +679,7 @@ function positionTooltipAt(tech, allTechs) {
     if (svgRect.width === 0) {
         positionTooltipAsSheet(tipBox);
         fitSheetToTable(tipBox, tech);
+        updateDetailsHint();
         return;
     }
     releaseSheetSpace();
@@ -526,13 +690,11 @@ function positionTooltipAt(tech, allTechs) {
     const tipW = tipBox.offsetWidth || 400;
     const tipH = tipBox.offsetHeight || 200;
 
-    const corner = pickCorner(tech, allTechs);
-    let { left, top } = corner.anchor(svgRect, tipW, tipH);
-    left = clamp(left, svgRect.left, svgRect.right - tipW);
-    top = clamp(top, svgRect.top, svgRect.bottom - tipH);
+    const { left, top } = chooseCorner(tech, allTechs, svgRect, tipW, tipH);
 
     tipBox.style.left = `${left + window.scrollX}px`;
     tipBox.style.top = `${top + window.scrollY}px`;
+    updateDetailsHint();
 }
 
 
