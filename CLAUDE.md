@@ -44,7 +44,7 @@ Two things to know before extending it. Animation time comes from a stubbed `per
 CI is two workflows:
 
 - `.github/workflows/checks.yml` — `npm run build` + `npm run check:browser` on every pull request and on pushes to `master`. This is the one to require as a status check in branch protection.
-- `.github/workflows/deploy.yml` — a push to **`master`** runs the checks, builds, and publishes `dist/` to GitHub Pages. The checks run here as well as in `checks.yml` on purpose: pushing to master *is* publishing, so the live site shouldn't depend on branch protection having been configured and not bypassed. (`origin/HEAD` points at `gh-pages`, a legacy branch; `master` is what ships.)
+- `.github/workflows/deploy.yml` — a push to **`master`** runs the checks, builds, and publishes `dist/` to GitHub Pages. The checks run here as well as in `checks.yml` on purpose: pushing to master *is* publishing, so the live site shouldn't depend on branch protection having been configured and not bypassed. (`master` is the default branch and what ships; `gh-pages` is a legacy branch. A clone made before the default changed keeps a stale `origin/HEAD` — `git remote set-head origin --auto` re-syncs it.)
 
 `CI=true` (set by Actions) makes `run.mjs` pass `--no-sandbox --disable-dev-shm-usage`, because headless Chrome's sandbox needs unprivileged user namespaces that CI images restrict. Set `CHROME_NO_SANDBOX=1` to get the same locally. Expect the checks' printed diagnostics to differ between a local macOS run and the Linux runner — no Helvetica or Arial there, so measured text is wider. That is exactly why the assertions are invariants rather than absolute numbers.
 
