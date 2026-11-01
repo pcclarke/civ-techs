@@ -4,7 +4,7 @@ import { DEFAULT_GAME, GAMES } from "./constants";
 import { initWheelData } from "./initWheelData";
 import { updateEraIndicator } from "./makeTable";
 import { isTableView, renderActiveView } from "./renderView";
-import { releasePin } from "./drawTools";
+import { onSheetLeave, releasePin } from "./drawTools";
 import svgInit from "./svgInit";
 
 let gameInfo = DEFAULT_GAME;
@@ -38,6 +38,10 @@ window.app.svg = svgInit();
 // share one implementation.
 select("#chart svg").on("click", releasePin);
 select("#tipCloseButton").on("click", releasePin);
+// A hover preview in the sheet view lasts until the pointer leaves the
+// sheet (see onSheetLeave). Bound on the tooltip itself: the wheel's box
+// never receives pointer events, so this only ever fires for the sheet.
+select("#tooltip").on("mouseleave", onSheetLeave);
 // The table's equivalent of empty wheel space: the lane gutter left of
 // the names. Rows stop propagation, so only a miss reaches this.
 select("#table").on("click", releasePin);

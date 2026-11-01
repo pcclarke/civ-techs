@@ -30,6 +30,7 @@ import { eraDisplayName } from "../../src/eraData";
 import { prefersReducedMotion, renderActiveView, isTableView } from "../../src/renderView";
 import svgInit from "../../src/svgInit";
 import { hideTooltip, showTooltip } from "../../src/tooltip";
+import { onSheetLeave, releasePin } from "../../src/drawTools";
 // Written by run.mjs from the real data pipeline before this is bundled.
 import { NAMES, WHEEL } from "./.generated/fixtures.generated.js";
 
@@ -609,6 +610,73 @@ function tableChecks() {
         `vs ${window.innerHeight}, scrollY ${window.scrollY}`);
     hideTooltip();
     window.scrollTo(0, 0);
+
+    // --- a hover preview that opens under the pointer stays open ---
+    // On a narrow desktop window the sheet is docked over the bottom of
+    // the viewport, so hovering a row there opens it right under the
+    // pointer. The browser then sends the row a mouseleave whose
+    // relatedTarget is the sheet; replayed here with elementFromPoint, so
+    // the event is the one a real pointer would produce.
+    {
+        const tipEl = document.querySelector("#tooltip");
+        const open = () => !tipEl.classList.contains("hidden");
+        const leave = (el, to) => el.dispatchEvent(
+            new MouseEvent("mouseleave", { relatedTarget: to }));
+        const hoverRow = (row) => row.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+        const centre = (el) => {
+            const r = el.getBoundingClientRect();
+            return [r.left + r.width / 2, r.top + r.height / 2];
+        };
+        // The two bindings main.js makes, which this harness replaces:
+        // without them the sheet's leave and close have no listener at all.
+        select("#tooltip").on("mouseleave", onSheetLeave);
+        select("#tipCloseButton").on("click", releasePin);
+        window.app.pinned = null;
+        window.app.selected = null;
+        window.scrollTo(0, document.documentElement.scrollHeight);
+
+        // The last row that ends up under the sheet once it's open.
+        const rowsNow = [...document.querySelectorAll("#table .tt-row")];
+        let row = null, under = null;
+        for (const r of rowsNow.reverse()) {
+            const [x, y] = centre(r);
+            if (y < 0 || y > window.innerHeight) continue;
+            hoverRow(r);
+            const el = document.elementFromPoint(x, y);
+            if (el && el.closest("#tooltip")) { row = r; under = el; break; }
+            leave(r, document.body);
+        }
+        ok("sheet: a hovered row can end up under the sheet", Boolean(row),
+            row ? row.querySelector(".tt-name").textContent : "none found");
+        if (row) {
+            const id = row.dataset.id;
+            leave(row, under);
+            ok("sheet: moving from the row onto the sheet keeps it open",
+                open() && window.app.selected && window.app.selected.id === id,
+                `open=${open()} selected=${window.app.selected && window.app.selected.id}`);
+            const close = document.querySelector("#tipCloseButton");
+            ok("sheet: a hover preview offers the close button",
+                getComputedStyle(close).display !== "none" && close.getBoundingClientRect().width > 0);
+
+            const other = [...document.querySelectorAll("#table .tt-row")].find((r) => {
+                const [, y] = centre(r);
+                return y > 0 && y < tipEl.getBoundingClientRect().top;
+            });
+            leave(tipEl, other);
+            ok("sheet: leaving it onto another row leaves the handoff to that row", open());
+
+            leave(tipEl, document.body);
+            ok("sheet: leaving it for anywhere else dismisses the preview",
+                !open() && !window.app.selected);
+
+            hoverRow(row);
+            leave(row, under);
+            close.click();
+            ok("sheet: the close button dismisses a hover preview",
+                !open() && !window.app.selected);
+        }
+        window.scrollTo(0, 0);
+    }
 
     // --- era boundaries slide, keyed on canonical era identity ---
     // civ2 -> civ3 is the pair that exercises every branch at once, and

@@ -190,9 +190,38 @@ export function onNodeHover(_, d) {
     showTooltip(d);
 }
 
-export function onNodeLeave() {
+export function onNodeLeave(event) {
     if (!hoverQuery.matches) return;
     if (window.app.pinned) return;
+    // In the sheet view the tooltip is docked to the bottom of the
+    // viewport and takes pointer events (it has to scroll on touch), so
+    // hovering one of the last rows opens it right under the pointer.
+    // Treating that as leaving the row hid the sheet, which uncovered the
+    // row, whose mouseover showed it again: a flicker for as long as the
+    // pointer stayed put. Moving onto the sheet keeps it open instead;
+    // onSheetLeave dismisses it once the pointer leaves the sheet too.
+    if (isSheetView() && insideTooltip(event && event.relatedTarget)) return;
+    window.app.selected = null;
+    hideTooltip();
+}
+
+const insideTooltip = (el) => Boolean(el && el.closest && el.closest("#tooltip"));
+
+/**
+ * The sheet's half of the hover-preview lifetime that onNodeLeave hands
+ * off: a preview that the pointer followed onto the sheet stays until the
+ * pointer leaves the sheet, or until its close button is used. Onto a row
+ * isn't a dismissal — that row's own mouseover replaces the preview, in
+ * the same event dispatch, so nothing paints in between.
+ *
+ * A pin is untouched, as with onNodeLeave. The wheel never gets here: its
+ * tooltip is pointer-events:none, so the pointer can't be on it.
+ */
+export function onSheetLeave(event) {
+    if (!hoverQuery.matches) return;
+    if (window.app.pinned || !isSheetView()) return;
+    const to = event && event.relatedTarget;
+    if (to && to.closest && to.closest("#table .tt-row")) return;
     window.app.selected = null;
     hideTooltip();
 }

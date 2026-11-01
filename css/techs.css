@@ -468,24 +468,25 @@ p {
   border-color: var(--ui-accent);
 }
 
-/* The close button only exists for the pinned state: hover previews
- * dismiss themselves on mouseleave, but a pinned tooltip needs an
- * explicit way out. pointer-events:auto punches through the tooltip's
- * own pointer-events:none so the button is clickable while the rest of
- * the box stays hover-transparent. */
+/* The close button only exists for the pinned state on the wheel: hover
+ * previews there dismiss themselves on mouseleave, but a pinned tooltip
+ * needs an explicit way out. pointer-events:auto punches through the
+ * tooltip's own pointer-events:none so the button is clickable while the
+ * rest of the box stays hover-transparent. (The sheet view shows it for
+ * hover previews too — see the narrow-screen block.) */
 #tipCloseButton {
   display: none;
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: 14px;
+  padding: 2px 6px;
 }
 
 #tooltip.pinned #tipCloseButton {
   display: block;
   pointer-events: auto;
   cursor: pointer;
-  border: none;
-  background: none;
-  color: inherit;
-  font-size: 14px;
-  padding: 2px 6px;
 }
 
 /* Doubled border marks a tooltip that will stay put. */
@@ -997,6 +998,14 @@ p {
   /* Touch needs the sheet to accept events so it can be scrolled. */
   #tooltip {
     pointer-events: auto;
+  }
+
+  /* A hover preview on the sheet stays open while the pointer is on it
+   * (onSheetLeave in drawTools.js), so it needs the same way out a pin
+   * has. On touch every open sheet is already pinned. */
+  #tipCloseButton {
+    display: block;
+    cursor: pointer;
   }
 
   /* The head stays put while the body scrolls. It carries the only way
