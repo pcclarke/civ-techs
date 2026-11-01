@@ -757,6 +757,31 @@ function tooltipChecks() {
         Math.abs(reshown.x - before.x) < 0.5 && Math.abs(reshown.y - before.y) < 0.5,
         `(${reshown.x.toFixed(1)}, ${reshown.y.toFixed(1)})`);
 
+    // The SVG scales with the page width (viewBox), so a resize moves the
+    // corner the tooltip is docked to. Narrowing the page column stands in
+    // for narrowing the window — the headless window can't be resized —
+    // and the resize event is what the app listens for.
+    window.scrollTo(0, 0);
+    const container = document.querySelector(".container");
+    for (const width of ["900px", ""]) {
+        const prior = tip.getBoundingClientRect().top;
+        container.style.maxWidth = width;
+        window.dispatchEvent(new Event("resize"));
+        const resized = tip.getBoundingClientRect();
+        showTooltip(below);                  // where a fresh placement lands
+        const fresh = tip.getBoundingClientRect();
+        ok(`a resize to ${width || "full width"} re-places the open tooltip`,
+            Math.abs(resized.left - fresh.left) < 0.5 &&
+            Math.abs(resized.top - fresh.top) < 0.5 &&
+            Math.abs(fresh.top - prior) > 1,
+            `top ${prior.toFixed(1)} -> ${resized.top.toFixed(1)}, ` +
+            `fresh placement ${fresh.top.toFixed(1)}`);
+        ok(`after a resize to ${width || "full width"} the tooltip stays inside the wheel`,
+            resized.bottom <= svgEl.getBoundingClientRect().bottom + 0.5,
+            `tooltip bottom ${resized.bottom.toFixed(1)}, ` +
+            `svg bottom ${svgEl.getBoundingClientRect().bottom.toFixed(1)}`);
+    }
+
     // A hidden tooltip keeps its layout box, and an absolutely positioned
     // one counts toward the page's scrollable area wherever it was left.
     hideTooltip();

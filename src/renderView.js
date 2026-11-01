@@ -1,7 +1,7 @@
 import { refreshWheelLayout } from "./computeWheelLayout";
 import { renderTable, updateEraIndicator } from "./makeTable";
 import { renderWheel } from "./makeWheel";
-import { showTooltip } from "./tooltip";
+import { repositionTooltip, showTooltip } from "./tooltip";
 
 /**
  * Picks between the two renderings of the wheel data: the circular wheel
@@ -97,8 +97,15 @@ export function renderActiveView({ animate = false } = {}) {
 // rendered against a stale selection. `resize` is a belt-and-braces
 // companion to the media query: both are cheap, and renderActiveView is
 // idempotent, so a duplicate call costs only a redraw.
+//
+// An open tooltip is re-placed here rather than inside renderActiveView:
+// that also runs on every hover, where showTooltip follows immediately
+// for the new advance and a re-place of the old one would be wasted.
 const onViewportChange = () => {
-    if (window.app && window.app.wheelData) renderActiveView();
+    if (window.app && window.app.wheelData) {
+        renderActiveView();
+        repositionTooltip();
+    }
 };
 tableQuery.addEventListener("change", onViewportChange);
 window.addEventListener("resize", onViewportChange);

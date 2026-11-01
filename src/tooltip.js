@@ -80,6 +80,10 @@ const SOURCE_ORDER = [
 ];
 
 
+/** The advance the tooltip is showing, or null while hidden — what
+ *  repositionTooltip needs to re-place it without the caller saying. */
+let shownTech = null;
+
 /**
  * Show the tooltip for `tech`. Pulls render context (allTechs, game,
  * iconFolder) off `window.app` so callers don't have to thread it through.
@@ -112,7 +116,33 @@ export function showTooltip(tech) {
     // otherwise), and the sheet path measures its own height to pad the
     // table. Both happen in one task, so nothing paints in between.
     tipBox.classed("hidden", false);
+    shownTech = tech;
     positionTooltipAt(tech, allTechs);
+}
+
+/**
+ * Re-place an open tooltip for the current viewport. Placement is written
+ * once, when the tooltip is shown, from where the SVG is at that moment —
+ * but the SVG scales with the window (it has a viewBox), so a resize moves
+ * every corner the tooltip docks to. Left alone, widening grew the wheel
+ * out from under the box and narrowing left a bottom-docked one hanging
+ * below the shrunken wheel, stretching the page to reach it.
+ *
+ * In the sheet view only the table's bottom margin is refreshed (the
+ * sheet's height follows the viewport width). fitSheetToTable's scroll to
+ * the pinned row is deliberately not repeated: resize fires continuously
+ * during a drag, and the page would be yanked to that row on every event.
+ */
+export function repositionTooltip() {
+    const tipBox = select(SELECTORS.box).node();
+    if (!shownTech || !tipBox || tipBox.classList.contains("hidden")) return;
+    if (isSheetView()) {
+        const table = document.querySelector("#table");
+        if (table) table.style.marginBottom = `${tipBox.offsetHeight}px`;
+        return;
+    }
+    const app = window.app;
+    if (app && app.wheelData) positionTooltipAt(shownTech, app.wheelData.allTechs);
 }
 
 /**
@@ -138,6 +168,7 @@ export function hideTooltip() {
     // narrows the window, that's a horizontal scrollbar to nowhere. Park
     // it back at the stylesheet's top-left.
     if (!tipBox.empty()) resetSheetStyles(tipBox.node());
+    shownTech = null;
     releaseSheetSpace();
 }
 
