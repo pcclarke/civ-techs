@@ -29,6 +29,7 @@ import { makeUnlockArc } from "../../src/arcs";
 import { eraDisplayName } from "../../src/eraData";
 import { prefersReducedMotion, renderActiveView, isTableView } from "../../src/renderView";
 import svgInit from "../../src/svgInit";
+import { hideTooltip, showTooltip } from "../../src/tooltip";
 // Written by run.mjs from the real data pipeline before this is bundled.
 import { NAMES, WHEEL } from "./.generated/fixtures.generated.js";
 
@@ -575,6 +576,22 @@ function tableChecks() {
     note.push(`table: ${rows.length} rows, contentLeft=${contentLeft.toFixed(1)}, ` +
         `widest name ${widest.toFixed(1)}px, ${laneCount} lanes`);
 
+    // --- the tooltip is a viewport-fixed bottom sheet here ---
+    // The wheel's box is document-anchored so it scrolls with the wheel;
+    // the sheet must not inherit that, or it would scroll off with the
+    // rows instead of staying docked to the bottom edge.
+    const tip = document.querySelector("#tooltip");
+    showTooltip(window.app.wheelData.allTechs[0]);
+    window.scrollBy(0, 200);
+    const sheet = tip.getBoundingClientRect();
+    ok("bottom sheet stays docked to the viewport while scrolling",
+        getComputedStyle(tip).position === "fixed" &&
+        Math.abs(sheet.bottom - window.innerHeight) < 1,
+        `position ${getComputedStyle(tip).position}, bottom ${sheet.bottom.toFixed(1)} ` +
+        `vs ${window.innerHeight}, scrollY ${window.scrollY}`);
+    hideTooltip();
+    window.scrollTo(0, 0);
+
     // --- era boundaries slide, keyed on canonical era identity ---
     // civ2 -> civ3 is the pair that exercises every branch at once, and
     // the one the old raw-`d.era` key could never have matched: Ancient /
@@ -686,6 +703,69 @@ function tableChecks() {
         `${laneAll().length} elements in the layer`);
 }
 
+/* ---------------------------- tooltip ------------------------------- */
+
+/**
+ * The wheel's tooltip docks to a corner of the SVG, and has to stay docked
+ * when the page scrolls. It used to be position:fixed, placed once from the
+ * SVG's viewport rect, so a box docked below the fold stayed below it no
+ * matter how far you scrolled. At this viewport the SVG is taller than the
+ * window, which is exactly that case.
+ */
+function tooltipChecks() {
+    setupApp("civ4");
+    renderActiveView();
+    ok("wheel view is active for these checks", !isTableView());
+
+    const tip = document.querySelector("#tooltip");
+    const svgEl = document.querySelector("#chart svg");
+    const offset = () => {
+        const t = tip.getBoundingClientRect();
+        const r = svgEl.getBoundingClientRect();
+        return { x: t.left - r.left, y: t.top - r.top, bottom: t.bottom };
+    };
+
+    // The first advance whose tooltip lands partly below the viewport.
+    window.scrollTo(0, 0);
+    const techs = window.app.wheelData.allTechs;
+    const below = techs.find((t) => {
+        showTooltip(t);
+        return offset().bottom > window.innerHeight;
+    });
+    ok("some tooltip starts below the fold at this viewport", Boolean(below),
+        `svg ${svgEl.getBoundingClientRect().height.toFixed(0)}px tall, ` +
+        `window ${window.innerHeight}px`);
+    if (!below) return;
+
+    const before = offset();
+    const dy = Math.ceil(before.bottom - window.innerHeight) + 20;
+    window.scrollBy(0, dy);
+    const after = offset();
+    ok("scrolling moves the tooltip with the wheel",
+        Math.abs(after.x - before.x) < 0.5 && Math.abs(after.y - before.y) < 0.5,
+        `${below.name}: offset from svg (${before.x.toFixed(1)}, ${before.y.toFixed(1)}) ` +
+        `-> (${after.x.toFixed(1)}, ${after.y.toFixed(1)}) after scrolling ${window.scrollY}px`);
+    ok("scrolling brings a below-the-fold tooltip into view",
+        after.bottom <= window.innerHeight,
+        `bottom ${after.bottom.toFixed(1)} vs window ${window.innerHeight}`);
+
+    // Shown while already scrolled: placement has to account for the
+    // offset itself, not just survive a scroll after the fact.
+    showTooltip(below);
+    const reshown = offset();
+    ok("a tooltip shown mid-scroll docks to the same corner",
+        Math.abs(reshown.x - before.x) < 0.5 && Math.abs(reshown.y - before.y) < 0.5,
+        `(${reshown.x.toFixed(1)}, ${reshown.y.toFixed(1)})`);
+
+    // A hidden tooltip keeps its layout box, and an absolutely positioned
+    // one counts toward the page's scrollable area wherever it was left.
+    hideTooltip();
+    ok("a hidden tooltip parks at the top-left",
+        tip.style.left === "" && tip.style.top === "",
+        `left=${tip.style.left || "''"} top=${tip.style.top || "''"}`);
+    window.scrollTo(0, 0);
+}
+
 /* ------------------------------- driver ------------------------------ */
 
 // Wrapped in an async IIFE so a suite can await if it needs to. None do
@@ -701,6 +781,7 @@ function tableChecks() {
         if (location.hash.includes("keyboard")) keyboardChecks();
         else if (location.hash.includes("layout")) layoutChecks();
         else if (location.hash.includes("arcs")) arcChecks();
+        else if (location.hash.includes("tooltip")) tooltipChecks();
         else if (location.hash.includes("table")) tableChecks();
         else motionChecks();
     } catch (e) {

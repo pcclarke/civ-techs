@@ -129,9 +129,15 @@ export function isSheetView() {
 }
 
 export function hideTooltip() {
-    select(SELECTORS.box)
+    const tipBox = select(SELECTORS.box)
         .classed("pinned", false)
         .classed("hidden", true);
+    // The hidden box keeps its layout (see #tooltip.hidden), and on the
+    // wheel it's absolutely positioned, so left at its last corner it
+    // still counts toward the page's scrollable area — after a resize
+    // narrows the window, that's a horizontal scrollbar to nowhere. Park
+    // it back at the stylesheet's top-left.
+    if (!tipBox.empty()) resetSheetStyles(tipBox.node());
     releaseSheetSpace();
 }
 
@@ -460,6 +466,11 @@ function pickCorner(tech, allTechs) {
  * Dock the tooltip to whichever SVG corner clears the current selection
  * (see pickCorner), then clamp inside the SVG bounding box as a safety net
  * for a tooltip too big for the space it was docked into.
+ *
+ * The box is absolutely positioned in document coordinates (see #tooltip
+ * in techs.css), so the viewport rect is shifted by the scroll offset.
+ * That's what keeps it attached to its corner when the page scrolls: a
+ * corner below the fold comes into view along with the wheel.
  */
 function positionTooltipAt(tech, allTechs) {
     const tipBox = select(SELECTORS.box).node();
@@ -489,8 +500,8 @@ function positionTooltipAt(tech, allTechs) {
     left = clamp(left, svgRect.left, svgRect.right - tipW);
     top = clamp(top, svgRect.top, svgRect.bottom - tipH);
 
-    tipBox.style.left = `${left}px`;
-    tipBox.style.top = `${top}px`;
+    tipBox.style.left = `${left + window.scrollX}px`;
+    tipBox.style.top = `${top + window.scrollY}px`;
 }
 
 

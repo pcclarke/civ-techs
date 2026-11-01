@@ -355,12 +355,21 @@ p {
 }
 
 #tooltip {
-  /* position:fixed lets us use viewport-relative coords from
-   * getBoundingClientRect directly; pointer-events:none means hovering
-   * over the tooltip itself doesn't dismiss it (the tooltip is purely
-   * informational and can sit on top of underlying labels without
-   * stealing their hover). */
-  position: fixed;
+  /* position:absolute, in document coordinates (no ancestor is
+   * positioned), so the tooltip scrolls with the wheel it's docked to.
+   * It used to be fixed: placed once from the SVG's viewport rect, it
+   * then stayed put while the page scrolled, so a box docked to a corner
+   * below the fold never came into view. tooltip.js adds the scroll
+   * offset to the rect when placing it. top/left 0 is where a hidden box
+   * rests (see hideTooltip): a stale corner from a wider window would
+   * otherwise stretch the page's scrollable area.
+   *
+   * pointer-events:none means hovering over the tooltip itself doesn't
+   * dismiss it (the tooltip is purely informational and can sit on top
+   * of underlying labels without stealing their hover). */
+  position: absolute;
+  top: 0;
+  left: 0;
   pointer-events: none;
   border: var(--ui-tip-border);
   border-radius: var(--ui-radius);
@@ -893,6 +902,9 @@ p {
    * variants. src/tooltip.js pads the table by the sheet's height so the
    * rows underneath stay reachable. */
   #tooltip {
+    /* Fixed, unlike the wheel's document-anchored box: the sheet belongs
+     * to the viewport, not to anything on the page. */
+    position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
